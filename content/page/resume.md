@@ -1,7 +1,7 @@
 ---
 title: "Résumé"
 date: 2023-01-26T14:14:24+01:00
-draft: true
+draft: false
 menu:
     main:
         weight: 1

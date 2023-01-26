@@ -1,7 +1,7 @@
 ---
 title: "Impressum"
 date: 2023-01-03T01:04:51+01:00
-draft: true
+draft: false
 menu:
     footer:
         weight: 3
@@ -18,9 +18,9 @@ Postleitzahl und Ort
 Vertreten durch:
 Tobias Theel
 
-Kontakt:
+Kontakt: Tobias Theel
 
-Telefon: 
+Telefon: 015222338195
 
 E-Mail: info@noobygames.de
 

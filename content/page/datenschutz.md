@@ -1,7 +1,7 @@
 ---
 title: "Datenschutz"
 date: 2023-01-03T01:04:56+01:00
-draft: true
+draft: false
 menu:
     footer:
         weight: 3

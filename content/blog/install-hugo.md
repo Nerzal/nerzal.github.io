@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Introduction to Hugo #1"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "hugo"]
