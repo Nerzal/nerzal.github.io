@@ -1,0 +1,158 @@
+:root {
+    --highlight-color: #00ff7f;
+    --background-color: #222635;
+    --background-color-light: #262833;
+    --text-color: #e4f1fe;
+}
+
+html {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body>header:first-of-type {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+main {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.background-dark {
+    background-color: var(--background-color);
+}
+
+.background-dark-light {
+    background-color: var(--background-color-light);
+}
+
+.foreground-dark {
+    color: var(--text-color);
+}
+
+.highlight-color {
+    color: var(--highlight-color);
+}
+
+.highlight {
+    color: var(--highlight-color);
+}
+
+strong {
+    color: var(--highlight-color);
+}
+
+h1 {
+    color: var(--highlight-color);
+}
+
+h2 {
+    color: var(--highlight-color);
+}
+
+h3 {
+    color: var(--highlight-color);
+}
+
+
+/* Links */
+
+li a:hover {
+    color: var(--highlight-color);
+    transition: color 0.5s;
+}
+
+.link-transition-highlight {
+    color: var(--text-color);
+}
+
+.link-transition-highlight:focus,
+.link-transition-highlight:hover {
+    color: var(--highlight-color);
+    transition: color 0.5s;
+}
+
+
+/* Socials */
+
+.socials a {
+    display: inline-block;
+    vertical-align: middle;
+    color: var(--text-color);
+    fill: currentColor;
+}
+
+.socials a .icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.socials a:hover {
+    color: var(--highlight-color);
+    transition: color 0.5s;
+}
+
+
+/* Jo image text container  */
+
+@media (max-width: 500px) {
+    .image-text-container {
+        flex-direction: column;
+    }
+}
+
+.image-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.image-container {
+    width: 16rem;
+    height: 16rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.text-container {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+#TableOfContents ul li {
+    margin-bottom: 1em;
+}
+
+.lh-copy blockquote {
+    display: block;
+    font-size: .875em;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid #ccc;
+    padding-left: 1rem;
+}
+
+.nested-links a {
+    overflow-wrap: break-word;
+}

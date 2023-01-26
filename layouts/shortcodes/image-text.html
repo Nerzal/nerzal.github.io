@@ -1,0 +1,11 @@
+<div class="image-text-container">
+    <div class="image-container">
+        {{ $src := .Get "image"}} {{ $alt := .Get "imageAlt"}}
+        <img src="{{ $src }}" alt="{{ $alt }}">
+    </div>
+    <div class="text-container">
+        <p>
+            {{ .Inner | markdownify }}
+        </p>
+    </div>
+</div>

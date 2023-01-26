@@ -1,0 +1,5 @@
+items:
+  - title: Disqus
+    description: Disqus is used to enable comments.
+    is_functional: true
+    script_file: disqus.js
