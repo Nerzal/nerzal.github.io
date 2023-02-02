@@ -21,3 +21,11 @@ menu:
 {{< youtube src=https://www.youtube-nocookie.com/embed/F1UWNr4HaIo title="IoT in TinyGo">}}
 Tobias Theel giving a talk at the EmbeddedFest about IoT in TinyGo
 {{< /youtube >}}
+
+## 2021: GoDevNet
+
+### Hello TinyGopher
+
+{{< youtube src=https://www.youtube-nocookie.com/embed/8MhRldqCkX8 title="IoT in TinyGo">}}
+Tobias Theel giving a talk at the EmbeddedFest about IoT in TinyGo
+{{< /youtube >}}
