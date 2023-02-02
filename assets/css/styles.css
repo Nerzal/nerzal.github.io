@@ -125,7 +125,7 @@ li a:hover {
 }
 
 .image-container img {
-    width: 100%;
+    /* width: 100%; */
     height: 100%;
     align-items: center;
     padding-top: 8px;

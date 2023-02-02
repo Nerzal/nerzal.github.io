@@ -9,13 +9,10 @@ menu:
 
 ## 2021: Creative DIY Microcontroller Projects With TinyGo and WebAssembly
 
-{{< image-text image="book-cover.png" imageAlt="book cover" >}}
+{{< image-text image="../../book-cover.png" imageAlt="book cover" >}}
 
-**Creative DIY Microcontroller Projects With Tinygo and WebAssembly** is a comprehensive guide to microcontroller programming using Tinygo and WebAssembly. Published in May 2021 by Packt, this book contains 322 pages of insightful knowledge and hands-on projects. ISBN 9781800560208. Explore the world of microcontrollers powered by TinyGo with this informative and engaging book.
-
-[Buy now](https://www.packtpub.com/product/creative-diy-microcontroller-projects-with-tinygo-and-webassembly/9781800560208)
+Creative DIY Microcontroller Projects With Tinygo and WebAssembly is a comprehensive guide to microcontroller programming using Tinygo and WebAssembly. Published in May 2021 by Packt, this book contains 322 pages of insightful knowledge and hands-on projects. ISBN 9781800560208. Explore the world of microcontrollers powered by TinyGo with this informative and engaging book. [Buy now](https://www.packtpub.com/product/creative-diy-microcontroller-projects-with-tinygo-and-webassembly/9781800560208)
 {{< /image-text >}}
-
 
 ## 2021: GoTime FM 
 
