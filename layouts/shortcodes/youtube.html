@@ -1,0 +1,16 @@
+<p>
+    {{ .Inner | markdownify }}
+</p>
+{{ $src := .Get "src" }}
+{{ $title := .Get "title" }}
+<iframe 
+    width="560" 
+    height="315" 
+    src="{{ $src }}" 
+    title="{{ $title }}" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    allowfullscreen>
+</iframe>
+
+<!-- https://www.youtube-nocookie.com/embed/F1UWNr4HaIo -->
