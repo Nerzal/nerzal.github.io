@@ -1,4 +1,4 @@
-baseURL = 'https://noobygames.de'
+baseURL = 'https://blog.noobygames.de'
 languageCode = 'de-de'
 title = 'NoobyGames'
 DefaultContentLanguage = "en"
