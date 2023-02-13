@@ -14,7 +14,7 @@ omit_header_image: true
 Hi! I'm a multitalented individual with a passion for technology and programming. I have expertise in software development, independent game development, hobby embedded development, and writing.
 {{< /image-text >}}
 
-{{< image-text image="img1.jpg" imageAlt="A picture of Tobias Theel" >}}
+{{< image-text image="journey.png" imageAlt="A picture of Tobias Theel" >}}
 My journey in game development started in 2012 using libGDX and Java. Later, I expanded my skillset to Unity3D and C# and actively participate in Ludum Dare gamejams. I have a passion for creating immersive and engaging games that offer unique experiences to players.
 {{< /image-text >}}
 
