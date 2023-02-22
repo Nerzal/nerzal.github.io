@@ -22,6 +22,6 @@ My journey in game development started in 2012 using libGDX and Java. Later, I e
 I also believe in giving back to the tech community. That's why I contribute to open source projects like Gocloak, where I am a maintainer, and TinyGo. I take pride in helping others and making the technology world a better place.
 {{< /image-text >}}
 
-{{< image-text image="journey.png" imageAlt="A picture of Tobias Theel" >}}
+{{< image-text image="statically_linked.png" imageAlt="A picture of Tobias Theel" >}}
 If you're looking for an experienced software developer who can help with software architecture or consult you on programming tasks, I'm here to help. I have a deep understanding of programming concepts and can offer expert guidance to make your project a success.
 {{< /image-text >}}

@@ -3,7 +3,7 @@ draft: false
 title: "How to check if a binary is statically or dynamically linked"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "golang", "linking"]
-featured_image: "statically-linked.png"
+featured_image: "statically_linked.png"
 toc: true
 ---
 
