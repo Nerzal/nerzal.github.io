@@ -81,6 +81,18 @@ You could use [excalidraw](https://excalidraw.com/) or [draw.io](https://draw.io
     1. Add notes
 4. Identify bounded contexts and aggregates in each context
 
+### Identifying the domain events
+
+The domain experts identify the domain events. The events are formulated in the past tense.
+
+Examples:
+
+1. **Scheduled** an appointment
+2. **Received** a payment
+3. **Waiting** for a patient
+
+At this stage do not focus on all the values an appointment consists of like a date, the patients name etc instead focus on the behavior.
+
 ## Benefits
 
 After the event storming session you should have achieved the following:
