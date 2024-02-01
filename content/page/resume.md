@@ -24,15 +24,18 @@ In my free time, I enjoy staying up to date with the latest technology trends an
 - REST & gRPC
 - Docker
 - Kubernetes
+- React
 
 ## Additional Skills
 
 - Administration of Azure Devops 
 - Azure Pipelines
 - micro k8s
-- basic HTML, CSS and JavaScript
+- intermediate HTML, CSS and JavaScript
 - Hugo
 - Unity3D
+- React
+- postgresSQL
 
 ## Timeline
 
