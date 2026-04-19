@@ -81,11 +81,11 @@ Example:
 ```docker
 FROM alpine:latest as build
 
-ENV HUGO_VERSION 0.109.0
+ENV HUGO_VERSION 0.124.1
 
 RUN wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
-    tar -xf hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
-    rm hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
+    tar -xf hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
+    rm hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
     mv hugo /usr/local/bin/hugo
 
 FROM gcr.io/distroless/static:nonroot
@@ -198,7 +198,3 @@ We finally have reached the last step. Now we can start a hugo server to see, wh
 That command starts a server in development mode, which includes pages that are in draft status. Now visit [http://localhost:1313/](http://localhost:1313/) in your browser.
 
 {{< image image="/img/hugo-world.png" imageAlt="Image of hello world result" >}}
-
-{{< image image="images/hugo-world.png" imageAlt="Image of hello world result" >}}
-
-{{< image image="/images/hugo-world.png" imageAlt="Image of hello world result" >}}
