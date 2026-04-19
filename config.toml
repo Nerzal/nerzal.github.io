@@ -5,7 +5,6 @@ DefaultContentLanguage = "en"
 Paginate = 10
 googleAnalytics = ""
 enableRobotsTXT = true
-menu = ['main', 'footer']
 
 [params.disqus]
   shortname = "https://blog.noobygames.de"
