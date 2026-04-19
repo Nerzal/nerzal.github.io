@@ -1,8 +1,16 @@
-{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
 {{ define "main" }}
-    <article class="center cf pv5 measure-wide-l">
-      <h1>
-        This is not the page you were looking for
-      </h1>
-    </article>
+<article class="pa3 pa4-ns nexus-7 tc">
+  <section class="cf ph3 ph5-l pv5 f4">
+    <h1 class="f1 lh-title">404: Page Not Found</h1>
+    <p class="f4 gray mb5">Oops! It looks like the page you are looking for has moved or doesn't exist.</p>
+    
+    <div class="bg-near-white pa4 br3 dib shadow-4">
+      <h2 class="f3 mt0">Are you a Recruiter?</h2>
+      <p class="f5">You might be looking for my professional background and experience.</p>
+      <a href="/page/resume/" class="f4 link dim br2 ph4 pv3 mb2 dib white bg-blue">View My Résumé</a>
+    </div>
+
+    <p class="mt5"><a href="/" class="link blue hover-dark-blue f5">Return to the Homepage</a></p>
+  </section>
+</article>
 {{ end }}

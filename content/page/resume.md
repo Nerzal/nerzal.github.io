@@ -1,7 +1,8 @@
 ---
 title: "Résumé"
-date: 2023-01-26T14:14:24+01:00
+date: 2026-04-16T11:53:00+02:00
 draft: false
+description: "Professional resume of Tobias Theel, a Senior Software Engineer with 12+ years of experience in Go, C#, Kubernetes, and Game Development."
 menu:
     main:
         weight: 1
@@ -9,11 +10,11 @@ menu:
 
 ![Image of Tobias Theel](/img/profile2.jpg)
 
-I am a highly experienced software engineer with a proven track record of success in the industry. At 30 years old, I have been working in the field for 9 years and have a wealth of knowledge and skills to offer. My expertise extends beyond just my day job, as I have also published a book and regularly give talks at tech conferences. I was also a guest on the GoTimeFM podcast.
+I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. Beyond code, I am a published author, a tech conference speaker, and have been featured on the [GoTimeFM podcast](https://changelog.com/gotime).
 
-In my free time, I enjoy staying up to date with the latest technology trends and am particularly interested in embedded development and home automation using TinyGo and game development using Unity.
+I am passionate about staying at the forefront of technology, specifically focusing on embedded systems via **TinyGo**, home automation, and professional game development with **Unity** in my free time..
 
-## Profiles
+## Digital Presence
 
 - [StackOverflow](https://stackoverflow.com/users/4992212/tobias-theel)
 - [GitHub](https://github.com/Nerzal)

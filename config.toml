@@ -1,8 +1,8 @@
 baseURL = 'https://blog.noobygames.de'
-languageCode = 'de-de'
-title = 'NoobyGames'
+languageCode = 'en-us'
+title = 'Tobias Theel | Senior Software Engineer'
 DefaultContentLanguage = "en"
-Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
+Paginate = 10
 googleAnalytics = ""
 enableRobotsTXT = true
 menu = ['main', 'footer']
@@ -21,7 +21,7 @@ menu = ['main', 'footer']
   author = "Tobias Theel"
   favicon = ""
   site_logo = ""
-  description = "The last theme you'll ever need. Maybe."
+  description = "Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. Explore my technical insights and open-source contributions."
   # choose a background color from any on this page: https://tachyons.io/docs/themes/skins/ and preface it with "bg-"
   background_color_class = "background-dark"
   recent_posts_number = 3

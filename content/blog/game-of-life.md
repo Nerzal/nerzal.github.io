@@ -2,6 +2,8 @@
 title: "Conway's Game of Life in Go: A Step-by-Step Guide"
 date: 2023-03-16
 draft: false
+description: "A comprehensive tutorial on implementing Conway's Game of Life using Go, covering grid logic, terminal rendering, and concurrency."
+images: ["img/game-of-live.gif"]
 tags: ["go", "game of life"]
 ---
 

@@ -3,6 +3,8 @@ draft: false
 title: "Bounded Context"
 date: 2023-02-26T17:46:14+01:00
 tags: ["ddd", "requirements engineering", "bounded context"]
+description: "A deep dive into Bounded Contexts in Domain-Driven Design, exploring how to define boundaries and manage domain logic effectively."
+images: ["img/event-storming.png"]
 featured_image: "img/event-storming.png"
 toc: true
 ---

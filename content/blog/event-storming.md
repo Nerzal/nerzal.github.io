@@ -3,6 +3,8 @@ draft: false
 title: "Event Storming"
 date: 2023-02-26T14:46:14+01:00
 tags: ["ddd", "requirements engineering", "bounded context"]
+description: "An introduction to Event Storming: a collaborative modeling technique for understanding complex business domains and processes."
+images: ["img/event-storming.png"]
 featured_image: "img/event-storming.png"
 toc: true
 ---

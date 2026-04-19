@@ -3,6 +3,8 @@ draft: false
 title: "Introduction to Hugo #1"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "hugo"]
+description: "Get started with Hugo, the world's fastest framework for building websites. Learn installation, theme creation, and deployment basics."
+images: ["hugo-logo-wide.svg"]
 featured_image: "hugo-logo-wide.svg"
 toc: true
 ---
@@ -33,26 +35,42 @@ It is also well-suited for handling large sites and is more secure than dynamic 
 
 ## Install Hugo
 
-Here are the general steps to install Hugo:
+To ensure you have the full functionality, especially if your theme uses Sass/SCSS, it's recommended to install the **Hugo Extended** version.
 
-Download the Hugo executable for your operating system from the Hugo website: [hugo-website](https://gohugo.io/getting-started/installing/)
+### Install on Windows (Recommended)
+The easiest way to install Hugo Extended on Windows is using **Winget** (Windows Package Manager), which is built into modern Windows 10/11.
 
-Extract the downloaded file and move the Hugo executable to a directory that is in your PATH. This will allow you to run the Hugo command from any directory.
+1.  Open PowerShell or Command Prompt as an administrator.
+2.  Run the following command:
+    ```powershell
+    winget install Hugo.Hugo.Extended
+    ```
+3.  Restart your terminal to ensure the new PATH is loaded.
 
-Test the installation by opening a terminal and running the following command:
+### Install on Linux
 
-> hugo version
+For Debian-based systems (like Ubuntu):
+1.  Download the latest Hugo Extended `.deb` file from the Hugo Releases page. Look for `hugo_extended_VERSION_linux-amd64.deb`.
+2.  Install it using `dpkg`:
+    ```bash
+    sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
+    ```
 
-### Install on debian based linux
+For other Linux distributions, you can download the tarball:
+1.  Download the `hugo_extended_VERSION_linux-amd64.tar.gz` from the Hugo Releases page.
+2.  Extract it and move the executable to your PATH:
+    ```bash
+    tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
+    sudo mv hugo /usr/local/bin/
+    ```
 
-1. Download the latest hugo release .deb file
-2. Run the following command, you must exchange the filename and location for the actual path of your download:
+### Verify Installation
+After installation, open your terminal and run:
 
-> sudo dpkg -i ~/Downloads/hugo_105.00.deb
-
-Now hugo should be installed on your machine. Test it using the following command:
-
-> hugo version
+```bash
+hugo version
+```
+You should see the installed Hugo version, e.g., `hugo v0.124.1+extended`.
 
 ## Use Docker
 
@@ -65,7 +83,7 @@ FROM alpine:latest as build
 
 ENV HUGO_VERSION 0.109.0
 
-RUN wget https://github.com/gohugoio/hugo/releases/latest/download/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
+RUN wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
     tar -xf hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
     rm hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
     mv hugo /usr/local/bin/hugo
@@ -79,7 +97,7 @@ WORKDIR /site
 
 EXPOSE 80
 
-ENTRYPOINT ["hugo" "server" "-p" "1313" "--bind" "0.0.0.0"]
+ENTRYPOINT ["hugo", "server", "-p", "1313", "--bind", "0.0.0.0"]
 ```
 
 Now you can build the image using the following commands:
@@ -179,8 +197,8 @@ We finally have reached the last step. Now we can start a hugo server to see, wh
 
 That command starts a server in development mode, which includes pages that are in draft status. Now visit [http://localhost:1313/](http://localhost:1313/) in your browser.
 
-{{< image image="/static/img/hugo-world.png" imageAlt="Image of hello world result" >}}
+{{< image image="/img/hugo-world.png" imageAlt="Image of hello world result" >}}
 
 {{< image image="images/hugo-world.png" imageAlt="Image of hello world result" >}}
 
-{{< image image="/assets/images/hugo-world.png" imageAlt="Image of hello world result" >}}
+{{< image image="/images/hugo-world.png" imageAlt="Image of hello world result" >}}

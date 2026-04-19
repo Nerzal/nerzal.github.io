@@ -2,6 +2,8 @@
 title: "Containerization and Go: A Powerful Combination"
 date: 2023-03-16
 draft: false
+description: "Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images."
+images: ["img/go-docker.png"]
 tags: ["go", "docker"]
 featured_image: "img/go-docker.png"
 toc: true
@@ -31,7 +33,7 @@ In this blog post, we will explore why Go is an excellent choice for containeriz
 
 ```dockerfile
 #Start with the official Golang base image
-FROM golang:alpine AS build
+FROM golang:1.22-alpine AS build
 
 #Set the working directory
 WORKDIR /app
@@ -49,7 +51,7 @@ COPY . .
 RUN go build -o myapp
 
 #Start a new stage from the Alpine base image
-FROM alpine:latest
+FROM alpine:3.19
 
 #Set the working directory
 WORKDIR /app
