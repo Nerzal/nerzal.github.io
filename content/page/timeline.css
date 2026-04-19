@@ -51,7 +51,7 @@
 .timeline-title { font-weight: bold; font-size: 1.25rem; }
 .timeline-description { color: #e4f1fe; margin-top: 0.5rem; line-height: 1.5; }
 
-/* Print Styles: Optimized for PDF export */
+/* Print Styles: Ensure HR gets a perfect PDF */
 @media print {
   .no-print, 
   nav, 
@@ -62,28 +62,23 @@
   }
 
   @page {
-    margin: 2cm;
+    margin: 1.5cm;
   }
 
   body {
     background-color: white !important;
     color: black !important;
-    font-size: 11pt;
+    font-size: 10pt;
   }
 
   .timeline::before {
-    background: #333 !important;
+    background: #ccc !important;
   }
 
   .timeline-item::before {
     background: white !important;
-    border: 2px solid #333 !important;
-  }
-
-  .timeline-date, 
-  .timeline-title, 
-  .timeline-description {
-    color: black !important;
+    border: 2px solid #357edd !important;
+    -webkit-print-color-adjust: exact;
   }
 
   article {

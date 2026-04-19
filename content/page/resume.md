@@ -16,7 +16,7 @@ menu:
 
 I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. **I am currently seeking new challenges in remote-first or fully remote organizations.**
 
-Beyond code, I am a published author and a frequent tech conference speaker. **I am available for speaking engagements and workshops focusing on Golang and Software Architecture.** I have been featured on the [GoTimeFM podcast](https://changelog.com/gotime) and love traveling to conferences to stay ahead of industry trends.
+Beyond code, I am a published author and a frequent tech conference speaker. **I am available for speaking engagements focusing on Golang and Software Architecture.** I have been featured on the [GoTimeFM podcast](https://changelog.com/gotime) and love traveling to conferences to stay ahead of industry trends.
 
 I am passionate about staying at the forefront of technology, specifically focusing on embedded systems via **TinyGo**, home automation, and professional game development with **Unity**. When I'm not at my desk or at a conference, I’m usually out for a walk with my **two dogs**.
 
@@ -33,27 +33,20 @@ I am passionate about staying at the forefront of technology, specifically focus
 - **German**: Native
 - **English**: Fluent
 
-## Prefered Technologies
+## Core Technical Expertise
 
-- Go
-- C#
-- NoSQL databases
-- REST & gRPC
-- Docker
-- Kubernetes
-- React
+- **Languages**: Go (Expert), C# (Senior), TypeScript/JavaScript, Python
+- **Systems**: Distributed Systems, Microservices, Event-Driven Architecture
+- **Databases**: PostgreSQL, NoSQL (MongoDB, Redis)
+- **Communication**: gRPC, REST, Message Queues
 
-## Additional Skills
+## Infrastructure & Ecosystem
 
-- Administration of Azure Devops 
-- Azure Pipelines
-- Self-hosted **microk8s** server management
-- intermediate HTML, CSS and JavaScript
-- Hugo
-- Unity3D
-- React
-- postgresSQL
-- Python
+- **DevOps**: Kubernetes (microk8s home-lab), Docker, GitOps
+- **CI/CD**: Azure Pipelines, GitHub Actions, Jenkins
+- **Cloud**: Azure, Linux Server Administration
+- **Web & Tooling**: React, Hugo
+- **Game Engineering**: Unity3D
 
 ## Timeline
 
