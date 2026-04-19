@@ -16,7 +16,7 @@ menu:
 
 I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. **I am currently seeking new challenges in remote-first or fully remote organizations.**
 
-Beyond code, I am a published author and a frequent tech conference speaker. **I am available for speaking engagements focusing on Golang and Software Architecture.** I have been featured on the [GoTimeFM podcast](https://changelog.com/gotime) and love traveling to conferences to stay ahead of industry trends.
+Beyond code, I am a published author and a frequent tech conference speaker, including regular appearances at the [Kassel Code Meetup](https://www.meetup.com/de-de/kasselcodemeetup/). **I am available for speaking engagements focusing on Golang and Software Architecture.** I have been featured on the [GoTimeFM podcast](https://changelog.com/gotime) and love traveling to conferences to stay ahead of industry trends.
 
 I am passionate about staying at the forefront of technology, specifically focusing on embedded systems via **TinyGo**, home automation, and professional game development with **Unity**. When I'm not at my desk or at a conference, I’m usually out for a walk with my **two dogs**.
 

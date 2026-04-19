@@ -15,7 +15,7 @@ I am available for keynote speaking, technical talks, and workshops at internati
 - **Software Architecture**: Domain-Driven Design (DDD), Monoliths, Microservices, and Event-Driven systems.
 - **Open Source**: Community building and maintainership (Gocloak).
 
-Interested in having me speak at your event? [Get in touch](mailto:info@noobygames.de).
+Interested in having me speak at your event or meetup? [Get in touch](mailto:info@noobygames.de).
 
 ## 2021: Creative DIY Microcontroller Projects With TinyGo and WebAssembly
 
