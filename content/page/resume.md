@@ -10,6 +10,10 @@ menu:
 
 ![Image of Tobias Theel](/img/profile2.jpg)
 
+<div class="mt3 mb4 no-print">
+  <a href="javascript:window.print()" class="f5 link dim br2 ph3 pv2 mb2 dib white bg-blue">Download as PDF / Print</a>
+</div>
+
 I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. Beyond code, I am a published author, a tech conference speaker, and have been featured on the [GoTimeFM podcast](https://changelog.com/gotime).
 
 I am passionate about staying at the forefront of technology, specifically focusing on embedded systems via **TinyGo**, home automation, and professional game development with **Unity** in my free time..
@@ -39,6 +43,7 @@ I am passionate about staying at the forefront of technology, specifically focus
 - Unity3D
 - React
 - postgresSQL
+- Python
 
 ## Timeline
 
