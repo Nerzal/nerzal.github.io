@@ -25,5 +25,5 @@ I also believe in giving back to the tech community. That's why I contribute to 
 {{< /image-text >}}
 
 {{< image-text image="statically_linked.png" imageAlt="A picture of Tobias Theel" >}}
-If you're looking for an experienced software developer who can help with software architecture or consult you on programming tasks, I'm here to help. I have a deep understanding of programming concepts and can offer expert guidance to make your project a success.
+If you're looking for an experienced software developer who can help with software architecture, consult on programming tasks, or **speak at your next tech conference** — I'm here to help. I specialize in deep-dives into **Golang** and **Software Architecture**, bringing real-world experience from the field to the stage.
 {{< /image-text >}}

@@ -5,9 +5,8 @@ DefaultContentLanguage = "en"
 Paginate = 10
 googleAnalytics = ""
 enableRobotsTXT = true
-
 [params.disqus]
-  shortname = "https://blog.noobygames.de"
+  shortname = "nerzal-blog" # Usually a short identifier, not the full URL
 
 
 [sitemap]
@@ -20,7 +19,7 @@ enableRobotsTXT = true
   author = "Tobias Theel"
   favicon = ""
   site_logo = ""
-  description = "Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. Explore my technical insights and open-source contributions."
+  description = "Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. 12+ years of experience in distributed environments."
   # choose a background color from any on this page: https://tachyons.io/docs/themes/skins/ and preface it with "bg-"
   background_color_class = "background-dark"
   recent_posts_number = 3

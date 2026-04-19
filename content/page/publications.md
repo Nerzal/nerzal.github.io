@@ -7,6 +7,16 @@ menu:
         weight: 3
 ---
 
+## Speaking & Workshops
+
+I am available for keynote speaking, technical talks, and workshops at international conferences and internal company events. My areas of expertise include:
+
+- **Golang**: Concurrency patterns, TinyGo for IoT, and high-performance backend systems.
+- **Software Architecture**: Domain-Driven Design (DDD), Monoliths, Microservices, and Event-Driven systems.
+- **Open Source**: Community building and maintainership (Gocloak).
+
+Interested in having me speak at your event? [Get in touch](mailto:info@noobygames.de).
+
 ## 2021: Creative DIY Microcontroller Projects With TinyGo and WebAssembly
 
 {{< image-text image="../../book-cover.png" imageAlt="book cover" >}}
