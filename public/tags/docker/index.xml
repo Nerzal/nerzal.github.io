@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/docker/</link>
+    <description>Recent content in Docker on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Containerization and Go: A Powerful Combination</title>
+      <link>http://localhost:1313/blog/go-docker/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/go-docker/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-advantages-for-containerization&#34;&gt;Go&amp;rsquo;s Advantages for Containerization&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lightweight binaries&lt;/strong&gt;: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

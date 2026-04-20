@@ -3,10 +3,10 @@ languageCode = 'en-us'
 title = 'Tobias Theel | Senior Software Engineer'
 DefaultContentLanguage = "en"
 Paginate = 10
-googleAnalytics = ""
 enableRobotsTXT = true
-[params.disqus]
-  shortname = "nerzal-blog" # Usually a short identifier, not the full URL
+
+[services.disqus]
+  shortname = "nerzal-blog"
 
 
 [sitemap]
@@ -25,27 +25,36 @@ enableRobotsTXT = true
   recent_posts_number = 3
   custom_css = ["styles.css", "timeline.css"]
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
  
 [params.footer]
     enable_menu_footer_primary = true
     footer_primary_menu_title = "Impressum"
 
-[[params.socials]]
-  name = "twitter"
-  url = "https://twitter.com/nooby_games"
-
-
-[[params.socials]]
-  name = "mastodon"
-  url = "https://mastodon.lol/@nerzal"
 
 [[params.socials]]
   name = "linkedin"
   url = "https://www.linkedin.com/in/tobias-theel-3353a9181"
+  follow = true
+  share = true
+  color = "#0077b5"
 
 [[params.socials]]
   name = "github"
   url = "https://github.com/Nerzal"
+  follow = true
+  color = "#333"
+
+[[params.socials]]
+  name = "bluesky"
+  url = "https://bsky.app/profile/nerzal.bsky.social"
+  share = true
+  follow = true
+  color = "#0560ff"
 
 
 [privacy]
@@ -54,8 +63,6 @@ enableRobotsTXT = true
   [privacy.googleAnalytics]
     disable = true
   [privacy.instagram]
-    disable = true
-  [privacy.twitter]
     disable = true
   [privacy.vimeo]
     disable = true

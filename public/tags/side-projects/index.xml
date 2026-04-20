@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Side-Projects on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/side-projects/</link>
+    <description>Recent content in Side-Projects on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/side-projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the Backend: My React Side Projects</title>
+      <link>http://localhost:1313/blog/react-showcase/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/react-showcase/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&amp;rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.&lt;/p&gt;&#xA;&lt;p&gt;Today, I want to &amp;ldquo;show off&amp;rdquo; a couple of these projects to give you a glimpse into what I build when I&amp;rsquo;m not writing Go services.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

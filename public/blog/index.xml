@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/blog/</link>
+    <description>Recent content in Blog on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the Backend: My React Side Projects</title>
+      <link>http://localhost:1313/blog/react-showcase/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/react-showcase/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&amp;rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.&lt;/p&gt;&#xA;&lt;p&gt;Today, I want to &amp;ldquo;show off&amp;rdquo; a couple of these projects to give you a glimpse into what I build when I&amp;rsquo;m not writing Go services.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</title>
+      <link>http://localhost:1313/blog/gemini-agent-mode/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/gemini-agent-mode/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Software development often involves tasks that aren&amp;rsquo;t contained within a single function or file. Whether you&amp;rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.&lt;/p&gt;&#xA;&lt;p&gt;Standard AI chat assistants are great for snippets, but &lt;strong&gt;Gemini Code Assist&amp;rsquo;s Agent Mode&lt;/strong&gt; is designed for the big picture. It doesn&amp;rsquo;t just suggest code; it plans and executes changes across your entire workspace.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Architecture of Instructions: Mastering GEMINI.md</title>
+      <link>http://localhost:1313/blog/gemini-instructions/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/gemini-instructions/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my &lt;a href=&#34;http://localhost:1313/blog/gemini-agent-mode/&#34;&gt;previous post&lt;/a&gt;, we explored how Gemini Code Assist&amp;rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&amp;rsquo;s architectural standards.&lt;/p&gt;&#xA;&lt;p&gt;To solve this, Gemini supports a special file: &lt;code&gt;GEMINI.md&lt;/code&gt;. Think of this as the &amp;ldquo;System Prompt&amp;rdquo; for your entire repository.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-geminimd&#34;&gt;What is GEMINI.md?&lt;/h2&gt;&#xA;&lt;p&gt;The &lt;code&gt;GEMINI.md&lt;/code&gt; file is a Markdown document placed in your project&amp;rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Containerization and Go: A Powerful Combination</title>
+      <link>http://localhost:1313/blog/go-docker/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/go-docker/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-advantages-for-containerization&#34;&gt;Go&amp;rsquo;s Advantages for Containerization&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lightweight binaries&lt;/strong&gt;: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Conway&#39;s Game of Life in Go: A Step-by-Step Guide</title>
+      <link>http://localhost:1313/blog/game-of-life/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/game-of-life/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life&#34;&gt;Conway&amp;rsquo;s Game of Life&lt;/a&gt; is a famous cellular automaton devised by the British mathematician John Horton Conway. It is a zero-player game that evolves over time based on its initial state, requiring no further input from the player. The game takes place on an infinite two-dimensional grid of square cells, with each cell being either alive or dead.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we&amp;rsquo;ll explore how to implement Conway&amp;rsquo;s Game of Life in Go. We&amp;rsquo;ll provide step-by-step instructions, complete with functioning example code and detailed explanations.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bounded Context</title>
+      <link>http://localhost:1313/blog/bounded-context/</link>
+      <pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/bounded-context/</guid>
+      <description>&lt;h3 id=&#34;what-is-a-bounded-context&#34;&gt;What is a bounded context?&lt;/h3&gt;&#xA;&lt;p&gt;Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.&lt;/p&gt;&#xA;&lt;p&gt;Think of a large enterprise. The term &amp;ldquo;Customer&amp;rdquo; might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term &amp;ldquo;Customer&amp;rdquo; has a precise, unambiguous meaning.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Event Storming</title>
+      <link>http://localhost:1313/blog/event-storming/</link>
+      <pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/event-storming/</guid>
+      <description>&lt;h2 id=&#34;what-is-event-storming&#34;&gt;What is Event Storming?&lt;/h2&gt;&#xA;&lt;p&gt;Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.&lt;/p&gt;&#xA;&lt;p&gt;In event storming, the participants work together to &lt;strong&gt;identify events&lt;/strong&gt; that occur within the system or process, and then organize these events into a &lt;strong&gt;timeline&lt;/strong&gt; that represents the &lt;strong&gt;flow of actions&lt;/strong&gt; and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How to check if a binary is statically or dynamically linked</title>
+      <link>http://localhost:1313/blog/check-static-linking/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/check-static-linking/</guid>
+      <description>&lt;h2 id=&#34;what-is-the-difference-between-statically-and-dynamically-linked-binaries&#34;&gt;What is the difference between statically and dynamically linked binaries?&lt;/h2&gt;&#xA;&lt;p&gt;Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.&lt;/p&gt;&#xA;&lt;p&gt;A statically linked binary &lt;strong&gt;includes all necessary libraries&lt;/strong&gt; within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Introduction to Hugo #1</title>
+      <link>http://localhost:1313/blog/install-hugo/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/install-hugo/</guid>
+      <description>&lt;h2 id=&#34;what-is-hugo&#34;&gt;What is Hugo?&lt;/h2&gt;&#xA;&lt;p&gt;Hugo is a static site generator that offers several benefits for building fast and secure websites.&lt;/p&gt;&#xA;&lt;p&gt;It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.&lt;/p&gt;&#xA;&lt;p&gt;Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

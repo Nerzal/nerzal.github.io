@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ddd on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/ddd/</link>
+    <description>Recent content in Ddd on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 26 Feb 2023 17:46:14 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ddd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bounded Context</title>
+      <link>http://localhost:1313/blog/bounded-context/</link>
+      <pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/bounded-context/</guid>
+      <description>&lt;h3 id=&#34;what-is-a-bounded-context&#34;&gt;What is a bounded context?&lt;/h3&gt;&#xA;&lt;p&gt;Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.&lt;/p&gt;&#xA;&lt;p&gt;Think of a large enterprise. The term &amp;ldquo;Customer&amp;rdquo; might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term &amp;ldquo;Customer&amp;rdquo; has a precise, unambiguous meaning.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Event Storming</title>
+      <link>http://localhost:1313/blog/event-storming/</link>
+      <pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/event-storming/</guid>
+      <description>&lt;h2 id=&#34;what-is-event-storming&#34;&gt;What is Event Storming?&lt;/h2&gt;&#xA;&lt;p&gt;Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.&lt;/p&gt;&#xA;&lt;p&gt;In event storming, the participants work together to &lt;strong&gt;identify events&lt;/strong&gt; that occur within the system or process, and then organize these events into a &lt;strong&gt;timeline&lt;/strong&gt; that represents the &lt;strong&gt;flow of actions&lt;/strong&gt; and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

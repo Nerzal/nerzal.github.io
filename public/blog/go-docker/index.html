@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en-us"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Containerization and Go: A Powerful Combination | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+     
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/blog/go-docker/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="Containerization and Go: A Powerful Combination">
+  <meta property="og:description" content="Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2023-03-16T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-03-16T00:00:00+00:00">
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Docker">
+    <meta property="og:image" content="http://localhost:1313/img/go-docker.png">
+
+  <meta itemprop="name" content="Containerization and Go: A Powerful Combination">
+  <meta itemprop="description" content="Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images.">
+  <meta itemprop="datePublished" content="2023-03-16T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2023-03-16T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1224">
+  <meta itemprop="image" content="http://localhost:1313/img/go-docker.png">
+  <meta itemprop="keywords" content="Go,Docker">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/img/go-docker.png">
+  <meta name="twitter:title" content="Containerization and Go: A Powerful Combination">
+  <meta name="twitter:description" content="Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/" title="">
+              Home
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/resume/" title="">
+              Résumé
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/publications/" title="">
+              Publications
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <img src="http://localhost:1313/img/go-docker.png" alt="Featured image" class="flex-l flex-wrap justify-between mw8 center">    
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/blog/go-docker/&amp;title=Containerization%20and%20Go:%20A%20Powerful%20Combination" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=Containerization&#43;and&#43;Go%3A&#43;A&#43;Powerful&#43;Combination%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fblog%2Fgo-docker%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">Containerization and Go: A Powerful Combination</h1>
+        
+        <p class="tracked">
+            By <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2023-03-16T00:00:00Z" >March 16, 2023</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h2 id="introduction">Introduction</h2>
+<p>Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is <a href="https://golang.org/">Go</a>.</p>
+<p>In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.</p>
+<h2 id="gos-advantages-for-containerization">Go&rsquo;s Advantages for Containerization</h2>
+<ol>
+<li>
+<p><strong>Lightweight binaries</strong>: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.</p>
+</li>
+<li>
+<p><strong>Cross-compilation</strong>: Go makes it easy to cross-compile binaries for different platforms and architectures, simplifying the process of building multi-platform container images.</p>
+</li>
+<li>
+<p><strong>Performance</strong>: Go is known for its high performance, which is especially important in containerized environments where resources are often limited.</p>
+</li>
+<li>
+<p><strong>Concurrency</strong>: Go&rsquo;s built-in support for concurrency, via goroutines and channels, allows developers to write highly efficient and responsive applications that can make the most of containerized environments.</p>
+</li>
+<li>
+<p><strong>Simple and maintainable code</strong>: Go&rsquo;s clean and straightforward syntax encourages the development of readable, maintainable code, which is vital for large-scale, containerized applications.</p>
+</li>
+</ol>
+<h2 id="integrating-go-with-docker">Integrating Go with Docker</h2>
+<p><a href="https://www.docker.com/">Docker</a> is a popular containerization platform that makes it easy to package, distribute, and run applications in containers. Here&rsquo;s a simple example of a <code>Dockerfile</code> for a Go application:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#75715e">#Start with the official Golang base image</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> <span style="color:#e6db74">golang:1.22-alpine</span> <span style="color:#66d9ef">AS</span> <span style="color:#e6db74">build</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Set the working directory</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">WORKDIR</span> <span style="color:#e6db74">/app</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy go.mod and go.sum files</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> go.mod go.sum ./<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Download dependencies</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> go mod download<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy source files</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> . .<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Build the application</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> go build -o myapp<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Start a new stage from the Alpine base image</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> <span style="color:#e6db74">alpine:3.19</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Set the working directory</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">WORKDIR</span> <span style="color:#e6db74">/app</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the binary from the build stage</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>build /app/myapp /app/<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#Expose the application&#39;s port</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">EXPOSE</span> <span style="color:#e6db74">8080</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># Run the application</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;/app/myapp&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>This <code>Dockerfile</code> describes the steps required to build a Docker image for a Go application, starting with the official Golang base image, downloading dependencies, and compiling the application.</p>
+<h2 id="multi-stage-dockerfiles">Multi-Stage Dockerfiles</h2>
+<p>Multi-stage Dockerfiles are a powerful feature that can help optimize the build process and reduce the size of the final Docker image. In our example <code>Dockerfile</code> provided earlier, we used a multi-stage build to create a more efficient and lightweight image. Let&rsquo;s explore the advantages of using multi-stage Dockerfiles:</p>
+<ol>
+<li>
+<p><strong>Separation of build and runtime environments</strong>: Multi-stage Dockerfiles allow you to use separate base images for building and running your application. This means you can use an image with all the necessary build tools and dependencies for the build stage, and then switch to a minimal, lightweight image for the runtime stage, reducing the size of the final image.</p>
+</li>
+<li>
+<p><strong>Reduced image size</strong>: By only copying the compiled binary and required assets from the build stage to the runtime stage, you can significantly reduce the size of the final image. Smaller images result in faster download times, reduced storage requirements, and lower bandwidth consumption.</p>
+</li>
+<li>
+<p><strong>Enhanced security</strong>: Using a minimal runtime image with only the necessary components reduces the attack surface of your application. This can help minimize the risk of vulnerabilities being exploited in the runtime environment.</p>
+</li>
+<li>
+<p><strong>Faster builds</strong>: Multi-stage Dockerfiles enable better caching of intermediate build layers. By separating the build steps into different stages, you can leverage Docker&rsquo;s build cache more effectively, resulting in faster build times.</p>
+</li>
+</ol>
+<p>Here&rsquo;s a breakdown of the multi-stage <code>Dockerfile</code> used in our example:</p>
+<ul>
+<li>The first stage, <code>FROM golang:alpine AS build</code>, uses the official Golang Alpine image as the base for the build environment. This image includes the Go compiler and other necessary build tools.</li>
+<li>The second stage, <code>FROM alpine:latest</code>, uses a minimal Alpine base image for the runtime environment. This image is lightweight and contains only the essential components required to run the compiled application.</li>
+<li>The <code>COPY --from=build</code> command copies the compiled binary from the build stage to the runtime stage, ensuring that only the necessary files are included in the final image.</li>
+</ul>
+<p>By using a multi-stage Dockerfile, you can create efficient, lightweight, and secure container images for your Go applications.</p>
+<h2 id="security-aspects-containers-vs-virtual-machines">Security Aspects: Containers vs. Virtual Machines</h2>
+<p>When it comes to deploying applications, both containers and virtual machines offer unique advantages and challenges in terms of security. Let&rsquo;s take a closer look at some of the key differences:</p>
+<h3 id="isolation">Isolation</h3>
+<p><strong>Virtual Machines</strong>: VMs provide strong isolation between instances, as each VM runs its own operating system and is separated at the hypervisor level. This isolation minimizes the risk of one compromised VM affecting others on the same host.</p>
+<p><strong>Containers</strong>: Containers share the host&rsquo;s operating system kernel and run in isolated user-space instances. While containers provide a level of isolation, it is generally weaker than that of VMs, as vulnerabilities in the host kernel or container runtime can potentially impact all containers running on the host.</p>
+<h3 id="resource-consumption-and-attack-surface">Resource Consumption and Attack Surface</h3>
+<p><strong>Virtual Machines</strong>: Each VM runs a full operating system, which results in higher resource consumption and a larger attack surface. This means that VMs may be more vulnerable to attacks due to the increased number of components that could potentially contain vulnerabilities.</p>
+<p><strong>Containers</strong>: Containers are lightweight and minimal, running only the necessary components to execute the application. This reduced footprint results in lower resource consumption and a smaller attack surface, making containers less susceptible to certain types of attacks.</p>
+<h3 id="patching-and-updates">Patching and Updates</h3>
+<p><strong>Virtual Machines</strong>: Patching and updating VMs can be more time-consuming and resource-intensive, as each VM must be updated individually. This can lead to situations where outdated or vulnerable software remains in use due to the challenges of keeping VMs up-to-date.</p>
+<p><strong>Containers</strong>: Containers make it easier to manage updates and patches, as the container image can be updated, and new containers can be deployed with the updated image. This allows for faster and more efficient updates, helping to ensure that applications remain secure.</p>
+<h3 id="security-tools-and-practices">Security Tools and Practices</h3>
+<p><strong>Virtual Machines</strong>: Traditional security tools and practices, such as firewalls, intrusion detection systems, and antivirus software, can be used to protect VMs. However, these tools may not be optimized for containerized environments and may not provide the same level of protection for containers.</p>
+<p><strong>Containers</strong>: Container-specific security tools and best practices, such as vulnerability scanning, image signing, and runtime security monitoring, have been developed to address the unique challenges of containerized environments. By leveraging these tools and practices, it is possible to create secure and resilient container deployments.</p>
+<p>In conclusion, both containers and virtual machines offer different security advantages and challenges. It&rsquo;s essential to understand these differences and choose the right deployment model for your application based on its specific security requirements. By following best practices and employing appropriate security measures, you can build and deploy secure applications using either containers or VMs.</p>
+<h2 id="go-and-kubernetes">Go and Kubernetes</h2>
+<p><a href="https://kubernetes.io/">Kubernetes</a> is an orchestration platform for managing containerized applications at scale. Go is often used to develop applications that run on Kubernetes, as well as tools and services that interact with the Kubernetes API.</p>
+<p>The Kubernetes project itself is written primarily in Go, which means that developers familiar with Go can easily contribute to the project and develop custom extensions and integrations.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Containerization and Go are a powerful combination that simplifies the deployment, scaling, and management of applications. By leveraging Go&rsquo;s strengths, like lightweight binaries, cross-compilation, and performance, developers can build efficient, responsive containerized applications that work seamlessly with platforms like Docker and Kubernetes.</p>
+<ul class="pa0">
+    
+    <li class="list di">
+        <a href="/tags/go/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Go</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/docker/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Docker</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l"><div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">What&#39;s in this blog</p>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#gos-advantages-for-containerization">Go&rsquo;s Advantages for Containerization</a></li>
+    <li><a href="#integrating-go-with-docker">Integrating Go with Docker</a></li>
+    <li><a href="#multi-stage-dockerfiles">Multi-Stage Dockerfiles</a></li>
+    <li><a href="#security-aspects-containers-vs-virtual-machines">Security Aspects: Containers vs. Virtual Machines</a>
+      <ul>
+        <li><a href="#isolation">Isolation</a></li>
+        <li><a href="#resource-consumption-and-attack-surface">Resource Consumption and Attack Surface</a></li>
+        <li><a href="#patching-and-updates">Patching and Updates</a></li>
+        <li><a href="#security-tools-and-practices">Security Tools and Practices</a></li>
+      </ul>
+    </li>
+    <li><a href="#go-and-kubernetes">Go and Kubernetes</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+  </div>
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Related</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/blog/game-of-life/">Conway&#39;s Game of Life in Go: A Step-by-Step Guide</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Datenschutz</a> 
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Impressum</a> 
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

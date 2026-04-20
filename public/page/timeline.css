@@ -1,0 +1,89 @@
+/* Timeline Container */
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* The Vertical Line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #357edd; /* Blue accent color matching your 404 button */
+  left: 31px;
+}
+
+/* Timeline Item */
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 70px;
+}
+
+/* The Dot/Marker */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: 5px;
+  width: 20px;
+  height: 20px;
+  background: #111; /* Matches your dark background */
+  border: 3px solid #357edd;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+/* Date/Period Styling */
+.timeline-date {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #357edd;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title { font-weight: bold; font-size: 1.25rem; }
+.timeline-description { color: #e4f1fe; margin-top: 0.5rem; line-height: 1.5; }
+
+/* Print Styles: Ensure HR gets a perfect PDF */
+@media print {
+  .no-print, 
+  nav, 
+  header, 
+  footer,
+  #disqus_thread {
+    display: none !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+    font-size: 10pt;
+  }
+
+  .timeline::before {
+    background: #ccc !important;
+  }
+
+  .timeline-item::before {
+    background: white !important;
+    border: 2px solid #357edd !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  article {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}

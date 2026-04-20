@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/go/</link>
+    <description>Recent content in Go on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Containerization and Go: A Powerful Combination</title>
+      <link>http://localhost:1313/blog/go-docker/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/go-docker/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-advantages-for-containerization&#34;&gt;Go&amp;rsquo;s Advantages for Containerization&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lightweight binaries&lt;/strong&gt;: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Conway&#39;s Game of Life in Go: A Step-by-Step Guide</title>
+      <link>http://localhost:1313/blog/game-of-life/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/game-of-life/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life&#34;&gt;Conway&amp;rsquo;s Game of Life&lt;/a&gt; is a famous cellular automaton devised by the British mathematician John Horton Conway. It is a zero-player game that evolves over time based on its initial state, requiring no further input from the player. The game takes place on an infinite two-dimensional grid of square cells, with each cell being either alive or dead.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we&amp;rsquo;ll explore how to implement Conway&amp;rsquo;s Game of Life in Go. We&amp;rsquo;ll provide step-by-step instructions, complete with functioning example code and detailed explanations.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -38,13 +38,13 @@ FROM golang:1.22-alpine AS build
 #Set the working directory
 WORKDIR /app
 
-Copy go.mod and go.sum files
+# Copy go.mod and go.sum files
 COPY go.mod go.sum ./
 
 #Download dependencies
 RUN go mod download
 
-Copy source files
+# Copy source files
 COPY . .
 
 #Build the application
@@ -56,13 +56,13 @@ FROM alpine:3.19
 #Set the working directory
 WORKDIR /app
 
-Copy the binary from the build stage
+# Copy the binary from the build stage
 COPY --from=build /app/myapp /app/
 
 #Expose the application's port
 EXPOSE 8080
 
-Run the application
+# Run the application
 CMD ["/app/myapp"]
 ```
 

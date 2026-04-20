@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Productivity on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/productivity/</link>
+    <description>Recent content in Productivity on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/productivity/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</title>
+      <link>http://localhost:1313/blog/gemini-agent-mode/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/gemini-agent-mode/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Software development often involves tasks that aren&amp;rsquo;t contained within a single function or file. Whether you&amp;rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.&lt;/p&gt;&#xA;&lt;p&gt;Standard AI chat assistants are great for snippets, but &lt;strong&gt;Gemini Code Assist&amp;rsquo;s Agent Mode&lt;/strong&gt; is designed for the big picture. It doesn&amp;rsquo;t just suggest code; it plans and executes changes across your entire workspace.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

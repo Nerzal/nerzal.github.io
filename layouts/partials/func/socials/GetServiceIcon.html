@@ -1,21 +1,18 @@
 {{/*
-  GetServiceIcon
-
-  User can overwrite/complement in assets/socials/{service_name}.svg
+  socials/GetServiceIcon
+  Returns the SVG icon for the given service name if found in `partials/svg/`
 
   @author @regisphilibert
 
-  @context String (.)
+  @context String (service name)
 
-  @access private
-
-  @return String of safe HTML
-
-  @example - Go Template
-    {{ $icon := partialCached "tnd-socials/private/GetIcon" $icon $icon }}
+  @returns Template
 */}}
 {{ $icon := "" }}
-{{ with resources.Get (printf "socials/%s.svg" $) }}
-  {{ $icon = .Content | safeHTML }}
+{{ $name := . }}
+{{ $path := printf "svg/%s.svg" $name }}
+{{/* Check if the SVG file exists in the partials folder */}}
+{{ if templates.Exists (printf "partials/%s" $path) }}
+  {{ $icon = partial $path (dict "size" "32px") }}
 {{ end }}
 {{ return $icon }}

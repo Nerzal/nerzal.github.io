@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Game Development on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/game-development/</link>
+    <description>Recent content in Game Development on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Mar 2023 10:00:00 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/game-development/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating your own Unity library package</title>
+      <link>http://localhost:1313/blog/unity-libraries/</link>
+      <pubDate>Mon, 20 Mar 2023 10:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/blog/unity-libraries/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&amp;rsquo;ll explore the must-have libraries for any serious Unity project.&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;(Content placeholder for Unity libraries)&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

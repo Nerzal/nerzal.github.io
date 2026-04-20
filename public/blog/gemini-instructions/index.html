@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en-us"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>The Architecture of Instructions: Mastering GEMINI.md | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Deep dive into creating a GEMINI.md file to enforce SOLID, IOSP, and idiomatic Go patterns when using Gemini Code Assist&#39;s Agent Mode."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+     
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/blog/gemini-instructions/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="The Architecture of Instructions: Mastering GEMINI.md">
+  <meta property="og:description" content="Deep dive into creating a GEMINI.md file to enforce SOLID, IOSP, and idiomatic Go patterns when using Gemini Code Assist&#39;s Agent Mode.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2026-04-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-20T00:00:00+00:00">
+    <meta property="article:tag" content="Ai">
+    <meta property="article:tag" content="Gemini">
+    <meta property="article:tag" content="Clean-Code">
+    <meta property="article:tag" content="Golang">
+    <meta property="article:tag" content="Tutorial">
+
+  <meta itemprop="name" content="The Architecture of Instructions: Mastering GEMINI.md">
+  <meta itemprop="description" content="Deep dive into creating a GEMINI.md file to enforce SOLID, IOSP, and idiomatic Go patterns when using Gemini Code Assist&#39;s Agent Mode.">
+  <meta itemprop="datePublished" content="2026-04-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-04-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="652">
+  <meta itemprop="keywords" content="Ai,Gemini,Clean-Code,Golang,Tutorial">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The Architecture of Instructions: Mastering GEMINI.md">
+  <meta name="twitter:description" content="Deep dive into creating a GEMINI.md file to enforce SOLID, IOSP, and idiomatic Go patterns when using Gemini Code Assist&#39;s Agent Mode.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/" title="">
+              Home
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/resume/" title="">
+              Résumé
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/publications/" title="">
+              Publications
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/blog/gemini-instructions/&amp;title=The%20Architecture%20of%20Instructions:%20Mastering%20GEMINI.md" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=The&#43;Architecture&#43;of&#43;Instructions%3A&#43;Mastering&#43;GEMINI.md%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fblog%2Fgemini-instructions%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">The Architecture of Instructions: Mastering GEMINI.md</h1>
+        
+        <p class="tracked">
+            By <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2026-04-20T00:00:00Z" >April 20, 2026</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h2 id="introduction">Introduction</h2>
+<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
+<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
+<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
+<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
+<ol>
+<li><strong>Coding Standards:</strong> (e.g., SOLID, DRY).</li>
+<li><strong>Architectural Patterns:</strong> (e.g., IOSP, Hexagonal).</li>
+<li><strong>Language Preferences:</strong> (e.g., Idiomatic Go, strict TypeScript).</li>
+<li><strong>Testing Requirements:</strong> (e.g., Table-driven tests, specific libraries).</li>
+</ol>
+<h2 id="where-to-start">Where to Start?</h2>
+<p>Simply create a file named <code>GEMINI.md</code> in your root directory. The Agent is pre-programmed to look for this specific filename.</p>
+<h3 id="recommended-structure">Recommended Structure</h3>
+<p>A well-structured <code>GEMINI.md</code> follows a hierarchy from general philosophy to technical specifics:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Gemini Code Assist Instructions
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 1. General Engineering Principles
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">## 2. Architectural Patterns (e.g., IOSP)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">## 3. Language Specific Rules (e.g., Go)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">## 4. Testing &amp; Documentation
+</span></span></span></code></pre></div><hr>
+<h2 id="universal-examples">Universal Examples</h2>
+<p>Here are some high-quality, universally applicable rules you can add to your project today.</p>
+<h3 id="1-clean-code--solid">1. Clean Code &amp; SOLID</h3>
+<p>This ensures the Agent doesn&rsquo;t create &ldquo;God Classes&rdquo; and follows industry-standard object-oriented design.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">### General Principles
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **SOLID:** Strictly follow SOLID principles. Prioritize the Single Responsibility Principle; if a function does two things, it must be split.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **KISS &amp; YAGNI:** Do not build for the future. Only implement the requested logic without adding unnecessary abstractions or &#34;just in case&#34; interfaces.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Fail Fast:** Validate all inputs at the start of a function. Never swallow errors or exceptions.
+</span></span></code></pre></div><h3 id="2-iosp-integrationoperation-separation-principle">2. IOSP (Integration/Operation Separation Principle)</h3>
+<p>IOSP is a game-changer for AI-generated code. It forces the AI to separate &ldquo;Logic&rdquo; from &ldquo;Orchestration,&rdquo; making the code much easier to test and review.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">### Architecture (IOSP)
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Strict Separation:** Every function must be either an <span style="font-weight:bold">**Integration**</span> or an <span style="font-weight:bold">**Operation**</span>.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Operations:** These contain pure logic and computations. They must not call other complex functions or side-effect heavy methods. They are 100% unit testable.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Integrations:** these coordinate the flow by calling Operations. They must not contain complex logic (like <span style="color:#e6db74">`if`</span> statements with complex math) themselves.
+</span></span></code></pre></div><h3 id="3-idiomatic-go-golang">3. Idiomatic Go (Golang)</h3>
+<p>Go is a &ldquo;less is more&rdquo; language. Use these instructions to prevent the Agent from bringing patterns from other languages (like Java) into your Go code.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">### Go Specific Rules
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Error Handling:** Use idiomatic error wrapping: <span style="color:#e6db74">`return fmt.Errorf(&#34;user service: %w&#34;, err)`</span>. This allows callers to use <span style="color:#e6db74">`errors.Is()`</span>.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Package Naming:** Never use <span style="color:#e6db74">`util`</span>, <span style="color:#e6db74">`common`</span>, or <span style="color:#e6db74">`helpers`</span>. Name packages after their capability (e.g., <span style="color:#e6db74">`auth`</span>, <span style="color:#e6db74">`storage`</span>, <span style="color:#e6db74">`handlers`</span>).
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Pointers:** Pass by value by default. Only use pointers for large structs or when mutation is explicitly required.
+</span></span></code></pre></div><h3 id="4-meaningful-testing">4. Meaningful Testing</h3>
+<p>Force the Agent to use modern testing tools properly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#75715e">### Testing with Testify
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Table-Driven Tests:** All unit tests must use the <span style="color:#e6db74">`[]struct{ name string... }`</span> pattern.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">-</span> **Assert vs Require:** 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">-</span> Use <span style="color:#e6db74">`require.NoError`</span> for setup and critical checks to stop the test execution early.
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">-</span> Use <span style="color:#e6db74">`assert.Equal`</span> for verifying multiple independent values.
+</span></span></code></pre></div><hr>
+<h2 id="why-this-works">Why This Works</h2>
+<p>When you prompt the Agent to <em>&ldquo;Add a new payment provider,&rdquo;</em> the Agent doesn&rsquo;t just look at the request. It checks <code>GEMINI.md</code>, sees the <strong>IOSP</strong> requirement, and automatically creates a clean separation between the API client (Operation) and the payment workflow (Integration).</p>
+<p>By maintaining this file, you are essentially training the AI on your specific engineering culture.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The <code>GEMINI.md</code> file is the bridge between generic AI and a world-class coding partner. By defining your expectations for <strong>SOLID</strong>, <strong>IOSP</strong>, and <strong>Language Idioms</strong>, you ensure that the &ldquo;Agent Mode&rdquo; produces code that is not only functional but maintainable.</p>
+<p>What rules are you putting in your <code>GEMINI.md</code>? Let&rsquo;s discuss in the comments!</p>
+<hr>
+<p><em>Want to see the Agent in action? Check out my Introduction to Agent Mode.</em></p>
+<ul class="pa0">
+    
+    <li class="list di">
+        <a href="/tags/ai/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Ai</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/gemini/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Gemini</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/clean-code/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Clean-Code</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/golang/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Golang</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/tutorial/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Tutorial</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l"><div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">What&#39;s in this blog</p>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#what-is-geminimd">What is GEMINI.md?</a></li>
+    <li><a href="#where-to-start">Where to Start?</a>
+      <ul>
+        <li><a href="#recommended-structure">Recommended Structure</a></li>
+      </ul>
+    </li>
+    <li><a href="#universal-examples">Universal Examples</a>
+      <ul>
+        <li><a href="#1-clean-code--solid">1. Clean Code &amp; SOLID</a></li>
+        <li><a href="#2-iosp-integrationoperation-separation-principle">2. IOSP (Integration/Operation Separation Principle)</a></li>
+        <li><a href="#3-idiomatic-go-golang">3. Idiomatic Go (Golang)</a></li>
+        <li><a href="#4-meaningful-testing">4. Meaningful Testing</a></li>
+      </ul>
+    </li>
+    <li><a href="#why-this-works">Why This Works</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+  </div>
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Related</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/blog/gemini-agent-mode/">Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/blog/check-static-linking/">How to check if a binary is statically or dynamically linked</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/blog/install-hugo/">Introduction to Hugo #1</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Datenschutz</a> 
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Impressum</a> 
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

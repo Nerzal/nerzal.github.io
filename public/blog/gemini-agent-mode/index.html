@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en-us"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Learn how to leverage the Agent mode in Gemini Code Assist to automate complex refactoring, feature implementation, and cross-file code changes."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+     
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/blog/gemini-agent-mode/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode">
+  <meta property="og:description" content="Learn how to leverage the Agent mode in Gemini Code Assist to automate complex refactoring, feature implementation, and cross-file code changes.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2026-04-20T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-20T00:00:00+00:00">
+    <meta property="article:tag" content="Ai">
+    <meta property="article:tag" content="Gemini">
+    <meta property="article:tag" content="Tutorial">
+    <meta property="article:tag" content="Productivity">
+
+  <meta itemprop="name" content="Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode">
+  <meta itemprop="description" content="Learn how to leverage the Agent mode in Gemini Code Assist to automate complex refactoring, feature implementation, and cross-file code changes.">
+  <meta itemprop="datePublished" content="2026-04-20T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-04-20T00:00:00+00:00">
+  <meta itemprop="wordCount" content="645">
+  <meta itemprop="keywords" content="Ai,Gemini,Tutorial,Productivity">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode">
+  <meta name="twitter:description" content="Learn how to leverage the Agent mode in Gemini Code Assist to automate complex refactoring, feature implementation, and cross-file code changes.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/" title="">
+              Home
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/resume/" title="">
+              Résumé
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/publications/" title="">
+              Publications
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/blog/gemini-agent-mode/&amp;title=Mastering%20Multi-File%20Tasks:%20A%20Guide%20to%20Gemini%20Code%20Assist%20Agent%20Mode" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=Mastering&#43;Multi-File&#43;Tasks%3A&#43;A&#43;Guide&#43;to&#43;Gemini&#43;Code&#43;Assist&#43;Agent&#43;Mode%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fblog%2Fgemini-agent-mode%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</h1>
+        
+        <p class="tracked">
+            By <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2026-04-20T00:00:00Z" >April 20, 2026</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h2 id="introduction">Introduction</h2>
+<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
+<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
+<p>In this guide, we&rsquo;ll walk through how to effectively use the Agent mode to handle complex engineering tasks.</p>
+<h2 id="what-is-agent-mode">What is Agent Mode?</h2>
+<p>Agent mode allows Gemini to act as an autonomous collaborator. Instead of you manually copying and pasting suggestions, the agent:</p>
+<ol>
+<li><strong>Analyzes</strong> your entire codebase to understand dependencies.</li>
+<li><strong>Proposes a plan</strong> consisting of multiple steps.</li>
+<li><strong>Executes changes</strong> by directly modifying files in your IDE.</li>
+<li><strong>Iterates</strong> based on your feedback or compiler errors.</li>
+</ol>
+<hr>
+<h2 id="step-by-step-working-with-the-agent">Step-by-Step: Working with the Agent</h2>
+<h3 id="1-identify-a-complex-task">1. Identify a Complex Task</h3>
+<p>Don&rsquo;t use the Agent for simple logic (standard Chat is faster for that). Use it for tasks like:</p>
+<ul>
+<li>&ldquo;Add a new &lsquo;Status&rsquo; field to the User entity and update all associated DTOs and mappers.&rdquo;</li>
+<li>&ldquo;Refactor the authentication logic to use JWT instead of session cookies.&rdquo;</li>
+<li>&ldquo;Migrate this project from using <code>fmt.Print</code> to a structured logging library like <code>uber-go/zap</code>.&rdquo;</li>
+</ul>
+<h3 id="2-enter-agent-mode">2. Enter Agent Mode</h3>
+<p>In your IDE (VS Code or JetBrains), open the Gemini Code Assist panel. Depending on your version, you can usually trigger the agentic behavior by selecting the <strong>Agent</strong> toggle or using a specific command like <code>@agent</code>.</p>
+<h3 id="3-provide-a-clear-objective">3. Provide a Clear Objective</h3>
+<p>The prompt is the most important part. Be specific about your goal and any constraints.</p>
+<p><strong>Example Prompt:</strong></p>
+<blockquote>
+<p>&ldquo;@agent Implement a global error handling middleware for our Gin-based API. Log all errors to the console using our existing logger and return a standardized JSON response structure. Update the main router to use this middleware.&rdquo;</p>
+</blockquote>
+<h3 id="4-review-the-proposed-plan">4. Review the Proposed Plan</h3>
+<p>Before touching your code, Gemini will present a plan. It might look like this:</p>
+<ol>
+<li>Create <code>internal/middleware/error_handler.go</code>.</li>
+<li>Define <code>ErrorResponse</code> struct in <code>internal/models/response.go</code>.</li>
+<li>Modify <code>cmd/api/main.go</code> to register the middleware.</li>
+</ol>
+<p><strong>Pro Tip:</strong> Read this plan carefully. If the agent missed a step, tell it: <em>&ldquo;Actually, make sure the error handler also captures panics.&rdquo;</em></p>
+<h3 id="5-execute-and-review-diffs">5. Execute and Review Diffs</h3>
+<p>Once you approve the plan, the Agent starts working. It will show you a &ldquo;Diff View&rdquo; for every file it modifies.</p>
+<ul>
+<li><strong>Green:</strong> Added code.</li>
+<li><strong>Red:</strong> Removed code.</li>
+</ul>
+<p>You can review each change individually, accepting or rejecting them as you go. This ensures you remain the &ldquo;pilot&rdquo; while the AI acts as the &ldquo;co-pilot.&rdquo;</p>
+<h3 id="6-verification-and-iteration">6. Verification and Iteration</h3>
+<p>After the Agent finishes, run your tests or build the project. If something breaks, you don&rsquo;t have to fix it manually. Just tell the agent the error message:</p>
+<blockquote>
+<p>&ldquo;The build failed in <code>main.go</code> because the logger wasn&rsquo;t initialized in the middleware package. Can you fix that?&rdquo;</p>
+</blockquote>
+<p>The Agent will analyze the error and propose a follow-up fix.</p>
+<h2 id="best-practices-for-agent-success">Best Practices for Agent Success</h2>
+<ul>
+<li><strong>Keep your workspace clean:</strong> The Agent works best when your git state is clean so you can easily see what it changed.</li>
+<li><strong>Context is King:</strong> Open the files most relevant to your task before starting. While the Agent can search your project, having the key files active helps it prioritize context.</li>
+<li><strong>Incremental Steps:</strong> For massive changes, break them down into smaller Agent sessions.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Agent mode in Gemini Code Assist marks a shift from &ldquo;AI as a search engine&rdquo; to &ldquo;AI as an implementation partner.&rdquo; By trusting it with the boilerplate and the &ldquo;plumbing&rdquo; of your cross-file changes, you free up your mental energy for architectural decisions and complex problem-solving.</p>
+<p>Give it a try on your next refactor!</p>
+<hr>
+<p><em>Have you tried the Agent mode yet? What&rsquo;s the most complex task it has solved for you? Let me know in the comments!</em></p>
+<div class="image-container">
+     
+    <img src="/img/gemini-agent-demo.gif" alt="Gemini Agent Mode in action">
+</div>
+
+<p>Learn more about Gemini Code Assist here</p>
+<ul class="pa0">
+    
+    <li class="list di">
+        <a href="/tags/ai/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Ai</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/gemini/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Gemini</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/tutorial/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Tutorial</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/productivity/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Productivity</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Related</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/blog/gemini-instructions/">The Architecture of Instructions: Mastering GEMINI.md</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/blog/check-static-linking/">How to check if a binary is statically or dynamically linked</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/blog/install-hugo/">Introduction to Hugo #1</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Datenschutz</a> 
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Impressum</a> 
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

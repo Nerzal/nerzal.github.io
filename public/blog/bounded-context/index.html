@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en-us"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Bounded Context | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="A deep dive into Bounded Contexts in Domain-Driven Design, exploring how to define boundaries and manage domain logic effectively."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+     
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/blog/bounded-context/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="Bounded Context">
+  <meta property="og:description" content="A deep dive into Bounded Contexts in Domain-Driven Design, exploring how to define boundaries and manage domain logic effectively.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2023-02-26T17:46:14+01:00">
+    <meta property="article:modified_time" content="2023-02-26T17:46:14+01:00">
+    <meta property="article:tag" content="Ddd">
+    <meta property="article:tag" content="Requirements Engineering">
+    <meta property="article:tag" content="Bounded Context">
+    <meta property="og:image" content="http://localhost:1313/img/event-storming.png">
+
+  <meta itemprop="name" content="Bounded Context">
+  <meta itemprop="description" content="A deep dive into Bounded Contexts in Domain-Driven Design, exploring how to define boundaries and manage domain logic effectively.">
+  <meta itemprop="datePublished" content="2023-02-26T17:46:14+01:00">
+  <meta itemprop="dateModified" content="2023-02-26T17:46:14+01:00">
+  <meta itemprop="wordCount" content="814">
+  <meta itemprop="image" content="http://localhost:1313/img/event-storming.png">
+  <meta itemprop="keywords" content="Ddd,Requirements Engineering,Bounded Context">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/img/event-storming.png">
+  <meta name="twitter:title" content="Bounded Context">
+  <meta name="twitter:description" content="A deep dive into Bounded Contexts in Domain-Driven Design, exploring how to define boundaries and manage domain logic effectively.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/" title="">
+              Home
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/resume/" title="">
+              Résumé
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/publications/" title="">
+              Publications
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <img src="http://localhost:1313/img/event-storming.png" alt="Featured image" class="flex-l flex-wrap justify-between mw8 center">    
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/blog/bounded-context/&amp;title=Bounded%20Context" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=Bounded&#43;Context%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fblog%2Fbounded-context%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">Bounded Context</h1>
+        
+        <p class="tracked">
+            By <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2023-02-26T17:46:14+01:00" >February 26, 2023</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h3 id="what-is-a-bounded-context">What is a bounded context?</h3>
+<p>Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.</p>
+<p>Think of a large enterprise. The term &ldquo;Customer&rdquo; might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term &ldquo;Customer&rdquo; has a precise, unambiguous meaning.</p>
+<p>Event Storming, as discussed in your previous post, is an incredibly useful technique for collaboratively identifying and defining these Bounded Contexts.</p>
+<h4 id="example-an-e-commerce-website">Example: An E-commerce Website</h4>
+<p>Let&rsquo;s consider a fictional e-commerce website that sells clothing. The overall business domain is &ldquo;E-commerce,&rdquo; but within it, we can identify several distinct Bounded Contexts:</p>
+<ul>
+<li>
+<p><strong>Order Management Context</strong>:</p>
+<ul>
+<li><strong>Responsibility</strong>: Managing the process of creating, processing, and fulfilling customer orders.</li>
+<li><strong>Ubiquitous Language</strong>: Terms like &ldquo;Order Placed,&rdquo; &ldquo;Payment Received,&rdquo; &ldquo;Order Shipped,&rdquo; &ldquo;Return Initiated,&rdquo; &ldquo;Refund Processed.&rdquo; Entities include &ldquo;Order,&rdquo; &ldquo;OrderItem,&rdquo; &ldquo;Shipment.&rdquo;</li>
+<li><strong>Rules</strong>: Calculating shipping costs, validating payment, handling returns, managing order status transitions.</li>
+</ul>
+</li>
+<li>
+<p><strong>Product Catalog Context</strong>:</p>
+<ul>
+<li><strong>Responsibility</strong>: Managing the display, search, and details of available products.</li>
+<li><strong>Ubiquitous Language</strong>: &ldquo;Product,&rdquo; &ldquo;SKU,&rdquo; &ldquo;Category,&rdquo; &ldquo;Attribute,&rdquo; &ldquo;Price,&rdquo; &ldquo;Description,&rdquo; &ldquo;Image.&rdquo;</li>
+<li><strong>Rules</strong>: Product availability, pricing rules (e.g., discounts), search indexing.</li>
+</ul>
+</li>
+<li>
+<p><strong>Customer Management Context</strong>:</p>
+<ul>
+<li><strong>Responsibility</strong>: Managing customer accounts, profiles, and personal information.</li>
+<li><strong>Ubiquitous Language</strong>: &ldquo;Customer,&rdquo; &ldquo;User Account,&rdquo; &ldquo;Address,&rdquo; &ldquo;Contact Information,&rdquo; &ldquo;Loyalty Points.&rdquo;</li>
+<li><strong>Rules</strong>: User authentication, profile updates, privacy settings.</li>
+</ul>
+</li>
+<li>
+<p><strong>Inventory Management Context</strong>:</p>
+<ul>
+<li><strong>Responsibility</strong>: Tracking stock levels, managing warehouses, and ensuring product availability.</li>
+<li><strong>Ubiquitous Language</strong>: &ldquo;Stock Item,&rdquo; &ldquo;Warehouse,&rdquo; &ldquo;Quantity On Hand,&rdquo; &ldquo;Restock Alert,&rdquo; &ldquo;Inventory Adjustment.&rdquo;</li>
+<li><strong>Rules</strong>: Stock reservation, reorder points, inventory reconciliation.</li>
+</ul>
+</li>
+</ul>
+<p>Each of these Bounded Contexts has its own distinct model, rules, and, crucially, its own <strong>ubiquitous language</strong>. They interact with each other through well-defined interfaces, often using events or APIs, rather than sharing a single, monolithic database or domain model.</p>
+<h3 id="why-bounded-contexts-matter">Why Bounded Contexts Matter</h3>
+<p>Defining Bounded Contexts offers significant advantages in software development:</p>
+<ol>
+<li><strong>Clarity and Reduced Ambiguity</strong>: By giving terms precise meanings within a specific context, it eliminates confusion among stakeholders (developers, domain experts, business analysts).</li>
+<li><strong>Improved Maintainability</strong>: Changes within one Bounded Context are less likely to break functionality in another, as their internal models are isolated.</li>
+<li><strong>Scalability and Autonomy</strong>: Bounded Contexts often align well with microservices architectures, allowing teams to work independently on different parts of the system and deploy them separately.</li>
+<li><strong>Better Communication</strong>: The ubiquitous language fosters a shared understanding, making communication more efficient and reducing misunderstandings.</li>
+<li><strong>Strategic Design</strong>: It forces a deliberate design process, helping to identify the core domains and their relationships.</li>
+</ol>
+<h3 id="identifying-bounded-contexts-with-event-storming">Identifying Bounded Contexts with Event Storming</h3>
+<p>Event Storming is a highly effective, collaborative workshop format for discovering Bounded Contexts. Here&rsquo;s a refined approach to finding them during an Event Storming session:</p>
+<ol>
+<li>
+<p><strong>Identify Domain Events (Orange Stickies)</strong>: Start by identifying all significant events that occur within the system. These should be past-tense verbs (e.g., &ldquo;Order Placed,&rdquo; &ldquo;Item Added to Cart&rdquo;). Place them chronologically on a large modeling surface.</p>
+</li>
+<li>
+<p><strong>Find Commands (Blue Stickies)</strong>: For each event, identify the command that caused it (e.g., &ldquo;Place Order&rdquo; command leads to &ldquo;Order Placed&rdquo; event).</p>
+</li>
+<li>
+<p><strong>Identify Aggregates (Yellow Stickies)</strong>: Group related events and commands around the entities that execute the commands and emit the events. These are your aggregates (e.g., an &ldquo;Order&rdquo; aggregate handles &ldquo;Place Order&rdquo; and emits &ldquo;Order Placed&rdquo;).</p>
+</li>
+<li>
+<p><strong>Discover Read Models/Views (Green Stickies)</strong>: Identify where data is needed for user interfaces or reports (e.g., &ldquo;Order History View&rdquo; needs data from &ldquo;Order Placed&rdquo; events).</p>
+</li>
+<li>
+<p><strong>Draw Swimlanes for Bounded Contexts</strong>: As patterns emerge, you&rsquo;ll notice clusters of events, commands, and aggregates that share a common language and purpose. Draw large lines or use different colored areas to delineate these clusters. Each cluster represents a potential Bounded Context.</p>
+</li>
+<li>
+<p><strong>Define the Ubiquitous Language for Each Context</strong>: For each identified Bounded Context, explicitly define the meaning of key terms within that boundary. Discuss how these terms might differ in other contexts.</p>
+</li>
+<li>
+<p><strong>Identify Context Map Relationships</strong>: Once Bounded Contexts are identified, discuss how they interact. Common patterns include:</p>
+<ul>
+<li><strong>Customer-Supplier</strong>: One context provides data/services to another.</li>
+<li><strong>Shared Kernel</strong>: Two contexts share a small, well-defined portion of code/model.</li>
+<li><strong>Anti-Corruption Layer (ACL)</strong>: A translation layer between two contexts to prevent the model of one from being &ldquo;corrupted&rdquo; by the other&rsquo;s different model.</li>
+<li><strong>Published Language</strong>: One context publishes a well-defined API or event stream for others to consume.</li>
+</ul>
+</li>
+<li>
+<p><strong>Refine and Iterate</strong>: Bounded Context discovery is an iterative process. Based on feedback from domain experts and further analysis, you may split, merge, or rename contexts to achieve a clearer, more cohesive design.</p>
+</li>
+</ol>
+<p>By following these steps, you can effectively leverage Event Storming to uncover the natural boundaries within your domain, leading to more robust, maintainable, and scalable software systems.</p>
+<ul class="pa0">
+    
+    <li class="list di">
+        <a href="/tags/ddd/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Ddd</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/requirements-engineering/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Requirements Engineering</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/tags/bounded-context/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Bounded Context</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l"><div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">What&#39;s in this blog</p>
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#what-is-a-bounded-context">What is a bounded context?</a></li>
+        <li><a href="#why-bounded-contexts-matter">Why Bounded Contexts Matter</a></li>
+        <li><a href="#identifying-bounded-contexts-with-event-storming">Identifying Bounded Contexts with Event Storming</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Related</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/blog/event-storming/">Event Storming</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Datenschutz</a> 
+            
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Impressum</a> 
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

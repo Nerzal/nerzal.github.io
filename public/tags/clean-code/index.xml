@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Clean-Code on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/tags/clean-code/</link>
+    <description>Recent content in Clean-Code on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/clean-code/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Architecture of Instructions: Mastering GEMINI.md</title>
+      <link>http://localhost:1313/blog/gemini-instructions/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/gemini-instructions/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my &lt;a href=&#34;http://localhost:1313/blog/gemini-agent-mode/&#34;&gt;previous post&lt;/a&gt;, we explored how Gemini Code Assist&amp;rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&amp;rsquo;s architectural standards.&lt;/p&gt;&#xA;&lt;p&gt;To solve this, Gemini supports a special file: &lt;code&gt;GEMINI.md&lt;/code&gt;. Think of this as the &amp;ldquo;System Prompt&amp;rdquo; for your entire repository.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-geminimd&#34;&gt;What is GEMINI.md?&lt;/h2&gt;&#xA;&lt;p&gt;The &lt;code&gt;GEMINI.md&lt;/code&gt; file is a Markdown document placed in your project&amp;rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
