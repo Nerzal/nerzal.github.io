@@ -1,0 +1,23 @@
+/* TEAM */
+Name: Tobias Theel
+Role: Senior Software Engineer, Author, Speaker
+Location: Fritzlar, Germany
+Website: https://blog.noobygames.de
+Contact: info [at] noobygames [dot] de
+
+/* THANKS */
+Hugo           - https://gohugo.io
+Ananke Theme   - https://github.com/theNewDynamic/gohugo-theme-ananke (base)
+Tachyons CSS   - https://tachyons.io
+
+/* SITE */
+Last update:  2026
+Language:     English / Deutsch
+Standards:    HTML5, CSS3, JSON-LD
+Built with:   Hugo (Go)
+Hosted on:    GitHub Pages
+
+/* FUN FACTS */
+Lines of CSS written during the facelift: probably too many
+Cups of coffee consumed:                  unknown, but several
+Dogs owned:                               2 (see /dogs/)

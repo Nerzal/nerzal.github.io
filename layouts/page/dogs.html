@@ -1,0 +1,48 @@
+{{ define "main" }}
+<div class="dogs-page mw7 center ph3 ph4-l pv5">
+    <div>
+        <span class="dogs-secret-badge">&#127381; Secret Page</span>
+    </div>
+    <h1 class="highlight-color">{{ .Title }}</h1>
+    <p class="dogs-intro">
+        You found it. The real reason this website exists — or at least, the real reason
+        I get up in the morning. Meet my two dogs. They review every blog post
+        (mostly by sitting on the keyboard at the wrong moment).
+    </p>
+
+    <pre class="dogs-ascii">
+   / \__
+  (    @\___
+  /         O
+ /   (_____/
+/_____/   U
+    </pre>
+
+    <div class="dogs-cards">
+        <div class="dogs-card">
+            <div class="dogs-card-paw">&#128054;</div>
+            <div class="dogs-card-name">Dog #1</div>
+            <p class="dogs-card-desc">
+                Chief of Security. Responsible for alerting the household to
+                squirrels, delivery drivers, and suspicious leaves.
+                Specializes in strategic nap placement on laptops.
+            </p>
+        </div>
+        <div class="dogs-card">
+            <div class="dogs-card-paw">&#128054;</div>
+            <div class="dogs-card-name">Dog #2</div>
+            <p class="dogs-card-desc">
+                Head of Morale. Expert in the ancient art of looking very
+                sad until treats appear. Also a surprisingly good rubber
+                duck for debugging Go code.
+            </p>
+        </div>
+    </div>
+
+    <p style="margin-top:2.5rem;font-size:0.9rem;opacity:0.5;font-family:monospace;">
+        &#128073; hint: try the Konami Code on any page (&#8593;&#8593;&#8595;&#8595;&#8592;&#8594;&#8592;&#8594;BA)
+    </p>
+
+    <a href="{{ "/" | relURL }}" class="dogs-back-link">&#8592; back to the blog</a>
+</div>
+{{ end }}

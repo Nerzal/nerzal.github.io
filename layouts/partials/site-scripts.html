@@ -1,5 +1,19 @@
 {{/* For Users's overwrite */}}
 <script>
+// Easter egg #1: console message for curious devs
+(function () {
+    var g = 'color:#00ff7f;font-family:monospace;font-size:13px;font-weight:bold';
+    var w = 'color:#e4f1fe;font-family:monospace;font-size:12px';
+    var d = 'color:#00ff7f;font-family:monospace;font-size:12px';
+    console.log('%c blog.noobygames.de', g);
+    console.log('%c ─────────────────────────────────', 'color:#00ff7f;font-family:monospace;font-size:11px');
+    console.log('%c 👋 Hey! You found the developer console.', w);
+    console.log('%c 📝 Tobias Theel — Senior Software Engineer, Author, Speaker.', w);
+    console.log('%c 📄 /humans.txt   — more about this site', d);
+    console.log('%c 🐕 /dogs/        — the real VIPs around here', d);
+    console.log('%c ✉️  info [at] noobygames [dot] de', w);
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // Lightbox for blog post images
@@ -187,6 +201,168 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         pre.appendChild(button);
     });
+
+    // ─── Easter Eggs ──────────────────────────────────────────────────────
+
+    // Easter egg #2: Konami Code → Game of Life full-screen overlay
+    (function () {
+        var SEQUENCE = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        var buf = [];
+
+        var overlay = document.createElement('div');
+        overlay.id = 'ee-gol-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', 'Game of Life');
+
+        var canvas = document.createElement('canvas');
+        canvas.id = 'ee-gol-canvas';
+
+        var label = document.createElement('p');
+        label.className = 'ee-gol-label';
+        label.textContent = "Conway's Game of Life";
+
+        var hint = document.createElement('p');
+        hint.className = 'ee-gol-hint';
+        hint.textContent = 'click anywhere or press Esc to close';
+
+        overlay.appendChild(label);
+        overlay.appendChild(canvas);
+        overlay.appendChild(hint);
+        document.body.appendChild(overlay);
+
+        var cellSize = 8, cols, rows, cells, nextCells, rafId;
+
+        function initGol() {
+            cols = Math.floor(window.innerWidth / cellSize);
+            rows = Math.floor(window.innerHeight / cellSize);
+            canvas.width = cols * cellSize;
+            canvas.height = rows * cellSize;
+            cells = new Uint8Array(cols * rows);
+            nextCells = new Uint8Array(cols * rows);
+            for (var i = 0; i < cells.length; i++) {
+                cells[i] = Math.random() < 0.28 ? 1 : 0;
+            }
+        }
+
+        function stepGol() {
+            for (var y = 0; y < rows; y++) {
+                for (var x = 0; x < cols; x++) {
+                    var n = 0;
+                    for (var dy = -1; dy <= 1; dy++) {
+                        for (var dx = -1; dx <= 1; dx++) {
+                            if (dx === 0 && dy === 0) continue;
+                            n += cells[((y + dy + rows) % rows) * cols + (x + dx + cols) % cols];
+                        }
+                    }
+                    var alive = cells[y * cols + x];
+                    nextCells[y * cols + x] = (alive && (n === 2 || n === 3)) || (!alive && n === 3) ? 1 : 0;
+                }
+            }
+            var tmp = cells; cells = nextCells; nextCells = tmp;
+        }
+
+        function drawGol() {
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00ff7f';
+            for (var y = 0; y < rows; y++) {
+                for (var x = 0; x < cols; x++) {
+                    if (cells[y * cols + x]) {
+                        ctx.fillRect(x * cellSize, y * cellSize, cellSize - 1, cellSize - 1);
+                    }
+                }
+            }
+        }
+
+        function loopGol() { stepGol(); drawGol(); rafId = requestAnimationFrame(loopGol); }
+
+        function openOverlay() {
+            initGol();
+            overlay.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+            rafId = requestAnimationFrame(loopGol);
+        }
+
+        function closeOverlay() {
+            overlay.classList.remove('is-active');
+            document.body.style.overflow = '';
+            cancelAnimationFrame(rafId);
+        }
+
+        overlay.addEventListener('click', closeOverlay);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('is-active')) {
+                closeOverlay(); return;
+            }
+            buf.push(e.key);
+            if (buf.length > SEQUENCE.length) buf.shift();
+            if (buf.join(',') === SEQUENCE.join(',')) { buf = []; openOverlay(); }
+        });
+    })();
+
+    // Easter egg #3: Profile photo 7× click → toast pointing to /dogs/
+    (function () {
+        var photo = document.querySelector('.home-hero-photo');
+        if (!photo) return;
+        var count = 0, clickTimer;
+
+        var toast = document.createElement('div');
+        toast.className = 'ee-toast';
+        document.body.appendChild(toast);
+
+        function showToast(html) {
+            toast.innerHTML = html;
+            toast.classList.add('ee-toast--visible');
+            setTimeout(function () { toast.classList.remove('ee-toast--visible'); }, 4500);
+        }
+
+        photo.style.cursor = 'pointer';
+        photo.addEventListener('click', function () {
+            clearTimeout(clickTimer);
+            count++;
+            clickTimer = setTimeout(function () { count = 0; }, 1800);
+            if (count === 7) {
+                count = 0;
+                showToast('🐕 You found the secret! <a href="/dogs/">Meet the real bosses →</a>');
+            }
+        });
+    })();
+
+    // Easter egg #4: Logo 5× rapid click → CRT retro mode for 5 seconds
+    (function () {
+        var brand = document.querySelector('.site-nav-brand');
+        if (!brand) return;
+        var count = 0, clickTimer;
+
+        brand.addEventListener('click', function (e) {
+            clearTimeout(clickTimer);
+            count++;
+            clickTimer = setTimeout(function () { count = 0; }, 1000);
+            if (count >= 5) {
+                count = 0;
+                e.preventDefault();
+                document.body.classList.add('crt-mode');
+                setTimeout(function () { document.body.classList.remove('crt-mode'); }, 5000);
+            }
+        });
+    })();
+
+    // Easter egg #5: Idle 3 minutes → subtle body pulse
+    (function () {
+        var idleTimer;
+        function resetIdle() {
+            clearTimeout(idleTimer);
+            document.body.classList.remove('is-idle');
+            idleTimer = setTimeout(function () {
+                document.body.classList.add('is-idle');
+            }, 3 * 60 * 1000);
+        }
+        ['mousemove', 'keydown', 'scroll', 'touchstart', 'click'].forEach(function (evt) {
+            document.addEventListener(evt, resetIdle, { passive: true });
+        });
+        resetIdle();
+    })();
 
 });
 </script>
