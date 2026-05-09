@@ -488,20 +488,30 @@ document.addEventListener('DOMContentLoaded', function () {
         var output = document.getElementById('ee-term-output');
         var input  = document.getElementById('ee-term-input');
         var history = [], histIdx = -1;
+        var activeAnimation = null;
+
+        var RICK_FRAMES = [
+            '  ╭───────────────────────────╮\n  │  ♪ Never gonna give you up ♪  │\n  ╰───────────────────────────╯\n\n        \\o/\n    ♫    |    ♫\n        / \\',
+            '  ╭───────────────────────────╮\n  │  ♪ Never gonna let you down ♪  │\n  ╰───────────────────────────╯\n\n         o/\n    ♫   /|    ♫\n        / \\',
+            '  ╭───────────────────────────╮\n  │  ♪ Never gonna run around  ♪  │\n  ╰───────────────────────────╯\n\n        \\o\n    ♫    |\\   ♫\n        / \\',
+            '  ╭───────────────────────────╮\n  │  ♪     and desert you     ♪  │\n  ╰───────────────────────────╯\n\n        (o)\n    ♫   >|<   ♫\n        > <'
+        ];
 
         var COMMANDS = {
             help: function () {
                 return [
                     ['output', 'Available commands:'],
                     ['output', ''],
-                    ['output', '  whoami          who is this guy?'],
-                    ['output', '  ls              list things'],
-                    ['output', '  blog            go to the blog'],
-                    ['output', '  dogs            the important stuff'],
+                    ['output', '  whoami            who is this guy?'],
+                    ['output', '  ls                list things'],
+                    ['output', '  blog              go to the blog'],
+                    ['output', '  dogs              the important stuff'],
+                    ['output', '  rickroll          never gonna...'],
+                    ['output', '  drop table        you wouldn\'t dare'],
                     ['output', '  sudo make coffee  critical infrastructure'],
-                    ['output', '  matrix          you already know'],
-                    ['output', '  clear           clear the terminal'],
-                    ['output', '  exit            close this window'],
+                    ['output', '  matrix            you already know'],
+                    ['output', '  clear             clear the terminal'],
+                    ['output', '  exit              close this window'],
                     ['output', ''],
                     ['dim',    'tip: press ↑ / ↓ to navigate history']
                 ];
@@ -548,6 +558,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 300);
                 return [['dim', 'Entering the Matrix…']];
             },
+            rickroll: function () {
+                var frameEl = document.createElement('pre');
+                frameEl.className = 'ee-terminal-line ee-terminal-line--output';
+                frameEl.style.lineHeight = '1.5';
+                output.appendChild(frameEl);
+                output.scrollTop = output.scrollHeight;
+                var fi = 0;
+                frameEl.textContent = RICK_FRAMES[0];
+                activeAnimation = setInterval(function () {
+                    fi = (fi + 1) % RICK_FRAMES.length;
+                    frameEl.textContent = RICK_FRAMES[fi];
+                    output.scrollTop = output.scrollHeight;
+                }, 600);
+                return [['dim', '(type any command to stop)']];
+            },
+            drop: function () {
+                setTimeout(function () {
+                    closeTerminal();
+                    setTimeout(function () {
+                        // dissolve the page
+                        document.body.classList.add('is-dissolving');
+                        var overlay = document.createElement('div');
+                        overlay.className = 'ee-drop-overlay';
+                        overlay.innerHTML =
+                            '<p class="ee-drop-line">DROP TABLE users;</p>' +
+                            '<p class="ee-drop-line">DROP TABLE posts;</p>' +
+                            '<p class="ee-drop-line">DROP TABLE sessions;</p>' +
+                            '<p class="ee-drop-line ee-drop-warn">⚠ Dropping all tables…</p>' +
+                            '<p class="ee-drop-line ee-drop-warn">⚠ Database destroyed.</p>';
+                        document.body.appendChild(overlay);
+                        setTimeout(function () { overlay.classList.add('is-visible'); }, 100);
+
+                        // restore after 2.5s
+                        setTimeout(function () {
+                            document.body.classList.remove('is-dissolving');
+                            document.body.classList.add('is-restoring');
+                            overlay.classList.remove('is-visible');
+                            setTimeout(function () {
+                                overlay.remove();
+                                document.body.classList.remove('is-restoring');
+                                // show toast
+                                var toast = document.querySelector('.ee-toast') || document.createElement('div');
+                                toast.className = 'ee-toast';
+                                if (!toast.parentNode) document.body.appendChild(toast);
+                                toast.innerHTML = '✅ Database restored from backup <span style="opacity:0.5">(it\'s a static site lol)</span>';
+                                toast.classList.add('ee-toast--visible');
+                                setTimeout(function () { toast.classList.remove('ee-toast--visible'); }, 4000);
+                            }, 800);
+                        }, 2500);
+                    }, 300);
+                }, 400);
+                return [
+                    ['error',  "Robert'); DROP TABLE students; --"],
+                    ['output', 'Executing query…'],
+                    ['error',  '⚠ OH NO. OH NO NO NO.'],
+                    ['dim',    'Little Bobby Tables strikes again.']
+                ];
+            },
             clear: function () {
                 output.innerHTML = '';
                 return [];
@@ -584,17 +652,26 @@ document.addEventListener('DOMContentLoaded', function () {
             var trimmed = raw.trim();
             if (!trimmed) return;
 
+            // stop any running animation
+            if (activeAnimation) { clearInterval(activeAnimation); activeAnimation = null; }
+
             history.unshift(trimmed);
             histIdx = -1;
 
             println('prompt', 'tobias@blog:~$ ' + trimmed);
 
+            var lower = trimmed.toLowerCase();
             var parts = trimmed.split(/\s+/);
             var cmd   = parts[0].toLowerCase();
             var args  = parts.slice(1);
 
             var lines;
-            if (cmd === 'sudo') {
+            // aliases
+            if (lower === 'never gonna give you up') {
+                lines = COMMANDS.rickroll();
+            } else if (lower.startsWith('drop table') || lower === 'bobby tables' || lower === 'bobby' || lower === 'little bobby tables') {
+                lines = COMMANDS.drop();
+            } else if (cmd === 'sudo') {
                 lines = handleSudo(args);
             } else if (COMMANDS[cmd]) {
                 lines = COMMANDS[cmd](args);
@@ -616,6 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function closeTerminal() {
+            if (activeAnimation) { clearInterval(activeAnimation); activeAnimation = null; }
             overlay.classList.remove('is-active');
             document.body.style.overflow = '';
         }
