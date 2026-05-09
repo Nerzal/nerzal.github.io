@@ -62,9 +62,15 @@ In einer kleinen Hütte im Wald versucht ein junger Mann, einem uralten Bösen z
 
 Du bist ein Nekromant, der von ein paar Typen getötet wurde, die deinen Seelenkristall gestohlen haben. Zum Glück kannst du dich selbst wiederbeleben — und du hast eine Rechnung zu begleichen. Ein 2D-Platformer mit Zaubersprüchen, Teleportation und mehreren Story-Enden.
 
+{{< youtube src=https://www.youtube-nocookie.com/embed/wbMLzsBfuzU title="Dudes of Wizardry">}}
+Dudes of Wizardry — Ludum Dare 44 Einreichung
+{{< /youtube >}}
+
 [Spielen auf itch.io](https://nerzal.itch.io/dudes-of-wizardry) · *Entwickelt mit Wr4thon*
 
 ### 2019: Racoonventure (Ludum Dare 45)
+
+Auf einer kleinen Tropeninsel wird ein Waschbär an den Strand gespült. Umgeben von fremden Tieren, die er noch nie gesehen hat, muss er die Gefahren der Insel überstehen. Kannst du Freundschaft mit den Bewohnern schließen und dem Waschbären helfen, die Prüfungen zu bestehen?
 
 [Spielen auf itch.io](https://nerzal.itch.io/racoonventure)
 
@@ -78,10 +84,18 @@ Die Menschheit hat nicht auf die Wissenschaftler gehört — und die Klimakatast
 
 Ein 3D-Horrorspiel. Seit Jahren bist du dem legendären „Buch des Grauens" auf der Spur — vor Jahrhunderten im Gobi-Wüstensand auf Menschenhaut niedergeschrieben vom wahnsinnigen Kalifen Abril Ab Hazreds. Seine Seiten enthalten jeden Ritus und jeden Zauberspruch, den er je sammeln konnte. Du willst sie alle. Du willst aufsteigen.
 
-[Spielen auf itch.io](https://nerzal.itch.io/book-of-the-dread)
+{{< youtube src=https://www.youtube-nocookie.com/embed/o6ENBsudQEM title="Book of the Dread">}}
+Book of the Dread — Ludum Dare 48 Einreichung
+{{< /youtube >}}
+
+[Spielen auf itch.io](https://nerzal.itch.io/book-of-the-dread) · *Entwickelt mit Wr4thon, Welverin*
 
 ### 2022: Sir Blackmoon's Nightmare (Ludum Dare 50)
 
 Sir Blackmoon ist ein junger Magier aus einer uralten Dynastie, die seit Generationen alle Formen der Magie gemeistert hat. Die Nebenwirkungen der Nekromantie haben ihn dem Tod nahegebracht, und ein Sensenmann aus der Unterwelt wurde ausgesandt, um seine Seele zu ernten. Ein 2D-Platformer, in dem er einem scheinbar unausweichlichen Schicksal entkommen muss.
+
+{{< youtube src=https://www.youtube-nocookie.com/embed/qYhSRkJPrR4 title="Sir Blackmoon's Nightmare">}}
+Sir Blackmoon's Nightmare — Ludum Dare 50 Einreichung
+{{< /youtube >}}
 
 [Spielen auf itch.io](https://nerzal.itch.io/sir-blackmoons-nightmare) · *Entwickelt mit Wr4thon*
