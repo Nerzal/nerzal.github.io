@@ -156,3 +156,30 @@ li a:hover {
 .nested-links a {
     overflow-wrap: break-word;
 }
+
+
+/* Code copy button */
+
+.copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--highlight-color);
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    font-family: inherit;
+}
+
+pre:hover .copy-btn {
+    opacity: 1;
+}
+
+.copy-btn.copied {
+    color: var(--highlight-color);
+}

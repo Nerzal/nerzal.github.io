@@ -6,28 +6,21 @@
     <description>Recent content in Home on Tobias Theel | Senior Software Engineer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to add a global .gitignore</title>
+      <link>http://localhost:1313/blog/global-gitignore/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/global-gitignore/</guid>
+      <description>&lt;p&gt;Every developer has done it at least once: accidentally committed a &lt;code&gt;.DS_Store&lt;/code&gt; file, a &lt;code&gt;.idea/&lt;/code&gt; folder, or some other machine-specific artifact into a shared repository. A per-project &lt;code&gt;.gitignore&lt;/code&gt; helps, but you have to repeat yourself in every repo. The solution is a &lt;strong&gt;global &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; — a single file that Git applies to every repository on your machine.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-git-decides-what-to-ignore&#34;&gt;How Git decides what to ignore&lt;/h2&gt;&#xA;&lt;p&gt;Git evaluates ignore rules from three sources, in order of specificity:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Beyond the Backend: My React Side Projects</title>
       <link>http://localhost:1313/blog/react-showcase/</link>
       <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/react-showcase/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&amp;rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.&lt;/p&gt;&#xA;&lt;p&gt;Today, I want to &amp;ldquo;show off&amp;rdquo; a couple of these projects to give you a glimpse into what I build when I&amp;rsquo;m not writing Go services.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</title>
-      <link>http://localhost:1313/blog/gemini-agent-mode/</link>
-      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/gemini-agent-mode/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Software development often involves tasks that aren&amp;rsquo;t contained within a single function or file. Whether you&amp;rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.&lt;/p&gt;&#xA;&lt;p&gt;Standard AI chat assistants are great for snippets, but &lt;strong&gt;Gemini Code Assist&amp;rsquo;s Agent Mode&lt;/strong&gt; is designed for the big picture. It doesn&amp;rsquo;t just suggest code; it plans and executes changes across your entire workspace.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>The Architecture of Instructions: Mastering GEMINI.md</title>
-      <link>http://localhost:1313/blog/gemini-instructions/</link>
-      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/gemini-instructions/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my &lt;a href=&#34;http://localhost:1313/blog/gemini-agent-mode/&#34;&gt;previous post&lt;/a&gt;, we explored how Gemini Code Assist&amp;rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&amp;rsquo;s architectural standards.&lt;/p&gt;&#xA;&lt;p&gt;To solve this, Gemini supports a special file: &lt;code&gt;GEMINI.md&lt;/code&gt;. Think of this as the &amp;ldquo;System Prompt&amp;rdquo; for your entire repository.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-geminimd&#34;&gt;What is GEMINI.md?&lt;/h2&gt;&#xA;&lt;p&gt;The &lt;code&gt;GEMINI.md&lt;/code&gt; file is a Markdown document placed in your project&amp;rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Datenschutz</title>
@@ -49,6 +42,13 @@
       <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
       <guid>http://localhost:1313/page/resume/</guid>
       <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/profile2.jpg&#34; alt=&#34;Image of Tobias Theel&#34;&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;mt3 mb4 no-print&#34;&gt;&#xA;  &lt;a href=&#34;javascript:window.print()&#34; class=&#34;f5 link dim br2 ph3 pv2 mb2 dib white bg-blue&#34;&gt;Download as PDF / Print&lt;/a&gt;&#xA;&lt;/div&gt;&#xA;&lt;p&gt;I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. &lt;strong&gt;I am currently seeking new challenges in remote-first or fully remote organizations.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Beyond code, I am a published author and a frequent tech conference speaker, including regular appearances at the &lt;a href=&#34;https://www.meetup.com/de-de/kasselcodemeetup/&#34;&gt;Kassel Code Meetup&lt;/a&gt;. &lt;strong&gt;I am available for speaking engagements focusing on Golang and Software Architecture.&lt;/strong&gt; I have been featured on the &lt;a href=&#34;https://changelog.com/gotime&#34;&gt;GoTimeFM podcast&lt;/a&gt; and love traveling to conferences to stay ahead of industry trends.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Creating your own Unity library package</title>
+      <link>http://localhost:1313/blog/unity-libraries/</link>
+      <pubDate>Mon, 20 Mar 2023 10:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/blog/unity-libraries/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&amp;rsquo;ll explore the must-have libraries for any serious Unity project.&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;(Content placeholder for Unity libraries)&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Containerization and Go: A Powerful Combination</title>
@@ -84,6 +84,13 @@
       <pubDate>Tue, 03 Jan 2023 00:36:14 +0100</pubDate>
       <guid>http://localhost:1313/page/publications/</guid>
       <description>&lt;h2 id=&#34;speaking--workshops&#34;&gt;Speaking &amp;amp; Workshops&lt;/h2&gt;&#xA;&lt;p&gt;I am available for keynote speaking, technical talks, and workshops at international conferences and internal company events. My areas of expertise include:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Golang&lt;/strong&gt;: Concurrency patterns, TinyGo for IoT, and high-performance backend systems.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Software Architecture&lt;/strong&gt;: Domain-Driven Design (DDD), Monoliths, Microservices, and Event-Driven systems.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Open Source&lt;/strong&gt;: Community building and maintainership (Gocloak).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Interested in having me speak at your event or meetup? &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;Get in touch&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;2021-creative-diy-microcontroller-projects-with-tinygo-and-webassembly&#34;&gt;2021: Creative DIY Microcontroller Projects With TinyGo and WebAssembly&lt;/h2&gt;&#xA;&lt;div class=&#34;image-text-container&#34;&gt;&#xA;    &lt;div class=&#34;image-container&#34;&gt;&#xA;         &#xA;        &lt;img src=&#34;../../book-cover.png&#34; alt=&#34;book cover&#34;&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;div class=&#34;text-container&#34;&gt;&#xA;        &lt;p&gt;&#xA;            Creative DIY Microcontroller Projects With Tinygo and WebAssembly is a comprehensive guide to microcontroller programming using Tinygo and WebAssembly. Published in May 2021 by Packt, this book contains 322 pages of insightful knowledge and hands-on projects. ISBN 9781800560208. Explore the world of microcontrollers powered by TinyGo with this informative and engaging book. &lt;a href=&#34;https://www.packtpub.com/product/creative-diy-microcontroller-projects-with-tinygo-and-webassembly/9781800560208&#34;&gt;Buy now&lt;/a&gt;&#xA;        &lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Kontakt</title>
+      <link>http://localhost:1313/page/contact/</link>
+      <pubDate>Tue, 03 Jan 2023 00:16:24 +0100</pubDate>
+      <guid>http://localhost:1313/page/contact/</guid>
+      <description>&lt;form class=&#34;black-80 sans-serif&#34; accept-charset=&#34;UTF-8&#34; action=&#34;https://example.com&#34; method=&#34;POST&#34; role=&#34;form&#34;&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34;  for=&#34;name&#34;&gt;Your Name&lt;/label&gt;&#xA;    &lt;input type=&#34;text&#34; id=&#34;name&#34; name=&#34;name&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn&#34;  required placeholder=&#34; &#34;  aria-labelledby=&#34;name&#34;/&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34; for=&#34;email&#34;&gt;Email Address&lt;/label&gt;&#xA;    &lt;input type=&#34;email&#34; id=&#34;email&#34; name=&#34;email&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn&#34;  required placeholder=&#34; &#34;  aria-labelledby=&#34;email&#34;/&gt;&#xA;    &lt;div class=&#34;requirements f6 gray glow i ph3 overflow-hidden&#34;&gt;&#xA;      An email address is required.&#xA;    &lt;/div&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34; for=&#34;message&#34;&gt;Message&lt;/label&gt;&#xA;    &lt;textarea id=&#34;message&#34; name=&#34;message&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn h4&#34; aria-labelledby=&#34;message&#34;&gt;&lt;/textarea&gt;&#xA;&#xA;    &lt;input class=&#34;db w-100 mv2 white pa3 bn hover-shadow hover-bg-black bg-animate bg-black&#34; type=&#34;submit&#34; value=&#34;Send&#34; /&gt;&#xA;&#xA;&lt;/form&gt;</description>
     </item>
     <item>
       <title>How to check if a binary is statically or dynamically linked</title>

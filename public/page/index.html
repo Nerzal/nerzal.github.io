@@ -18,7 +18,29 @@
 
   
  
-     
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(function () {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+});
+</script> 
      
         
  
@@ -82,6 +104,12 @@
                 <li class="list f5 f4-ns fw4 dib pr3 ">
                     <a class="no-underline foreground-dark" href="/page/publications/" title="">
               Publications
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/contact/" title="">
+              Kontakt
             </a>
                 </li>
                 
@@ -241,6 +269,38 @@ Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
         <p>
             Creative DIY Microcontroller Projects With Tinygo and WebAssembly is a comprehensive guide to microcontroller programming using Tinygo and WebAssembly. Published in May 2021 by Packt, this book contains 322 pages of insightful knowledge and hands-on projects. ISBN 9781800560208. Explore the world of microcontrollers powered by TinyGo with this informative and engaging book. <a href="https://www.packtpub.com/product/creative-diy-microcontroller-projects-with-tinygo-and-webassembly/9781800560208">Buy now</a>
         </p>
+        </div>
+    </div>
+</div>
+        </div>
+        
+        <div class="relative w-100 w-30-l mb4">
+            <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Pages</span>
+        <h1 class="f3 near-black">
+            <a href="/page/contact/" class="link-transition-highlight foreground-dark">
+        Kontakt
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <form class="black-80 sans-serif" accept-charset="UTF-8" action="https://example.com" method="POST" role="form">
+
+    <label class="f6 b db mb1 mt3 sans-serif mid-gray"  for="name">Your Name</label>
+    <input type="text" id="name" name="name" class="w-100 f5 pv3 ph3 bg-light-gray bn"  required placeholder=" "  aria-labelledby="name"/>
+
+    <label class="f6 b db mb1 mt3 sans-serif mid-gray" for="email">Email Address</label>
+    <input type="email" id="email" name="email" class="w-100 f5 pv3 ph3 bg-light-gray bn"  required placeholder=" "  aria-labelledby="email"/>
+    <div class="requirements f6 gray glow i ph3 overflow-hidden">
+      An email address is required.
+    </div>
+
+    <label class="f6 b db mb1 mt3 sans-serif mid-gray" for="message">Message</label>
+    <textarea id="message" name="message" class="w-100 f5 pv3 ph3 bg-light-gray bn h4" aria-labelledby="message"></textarea>
+
+    <input class="db w-100 mv2 white pa3 bn hover-shadow hover-bg-black bg-animate bg-black" type="submit" value="Send" />
+
+</form>
         </div>
     </div>
 </div>

@@ -6,21 +6,21 @@
     <description>Recent content in Tutorial on Tobias Theel | Senior Software Engineer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/tutorial/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode</title>
-      <link>http://localhost:1313/blog/gemini-agent-mode/</link>
-      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/gemini-agent-mode/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Software development often involves tasks that aren&amp;rsquo;t contained within a single function or file. Whether you&amp;rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.&lt;/p&gt;&#xA;&lt;p&gt;Standard AI chat assistants are great for snippets, but &lt;strong&gt;Gemini Code Assist&amp;rsquo;s Agent Mode&lt;/strong&gt; is designed for the big picture. It doesn&amp;rsquo;t just suggest code; it plans and executes changes across your entire workspace.&lt;/p&gt;</description>
+      <title>How to add a global .gitignore</title>
+      <link>http://localhost:1313/blog/global-gitignore/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/global-gitignore/</guid>
+      <description>&lt;p&gt;Every developer has done it at least once: accidentally committed a &lt;code&gt;.DS_Store&lt;/code&gt; file, a &lt;code&gt;.idea/&lt;/code&gt; folder, or some other machine-specific artifact into a shared repository. A per-project &lt;code&gt;.gitignore&lt;/code&gt; helps, but you have to repeat yourself in every repo. The solution is a &lt;strong&gt;global &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; — a single file that Git applies to every repository on your machine.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-git-decides-what-to-ignore&#34;&gt;How Git decides what to ignore&lt;/h2&gt;&#xA;&lt;p&gt;Git evaluates ignore rules from three sources, in order of specificity:&lt;/p&gt;</description>
     </item>
     <item>
-      <title>The Architecture of Instructions: Mastering GEMINI.md</title>
-      <link>http://localhost:1313/blog/gemini-instructions/</link>
-      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/gemini-instructions/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my &lt;a href=&#34;http://localhost:1313/blog/gemini-agent-mode/&#34;&gt;previous post&lt;/a&gt;, we explored how Gemini Code Assist&amp;rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&amp;rsquo;s architectural standards.&lt;/p&gt;&#xA;&lt;p&gt;To solve this, Gemini supports a special file: &lt;code&gt;GEMINI.md&lt;/code&gt;. Think of this as the &amp;ldquo;System Prompt&amp;rdquo; for your entire repository.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-geminimd&#34;&gt;What is GEMINI.md?&lt;/h2&gt;&#xA;&lt;p&gt;The &lt;code&gt;GEMINI.md&lt;/code&gt; file is a Markdown document placed in your project&amp;rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:&lt;/p&gt;</description>
+      <title>Creating your own Unity library package</title>
+      <link>http://localhost:1313/blog/unity-libraries/</link>
+      <pubDate>Mon, 20 Mar 2023 10:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/blog/unity-libraries/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&amp;rsquo;ll explore the must-have libraries for any serious Unity project.&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;(Content placeholder for Unity libraries)&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>How to check if a binary is statically or dynamically linked</title>

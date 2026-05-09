@@ -18,7 +18,29 @@
 
   
  
-     
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(function () {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+});
+</script> 
      
         
  
@@ -35,8 +57,8 @@
 
   <meta itemprop="name" content="Tags">
   <meta itemprop="description" content="Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. 12&#43; years of experience in distributed environments.">
-  <meta itemprop="datePublished" content="2026-04-20T00:00:00+00:00">
-  <meta itemprop="dateModified" content="2026-04-20T00:00:00+00:00">
+  <meta itemprop="datePublished" content="2026-05-09T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-05-09T00:00:00+00:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Tags">
   <meta name="twitter:description" content="Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. 12&#43; years of experience in distributed environments.">
@@ -82,6 +104,12 @@
                 <li class="list f5 f4-ns fw4 dib pr3 ">
                     <a class="no-underline foreground-dark" href="/page/publications/" title="">
               Publications
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/contact/" title="">
+              Kontakt
             </a>
                 </li>
                 
@@ -147,60 +175,105 @@
     <section class="ph4">
         
         <h2 class="f1">
-            <a href="/tags/ai/" class="link blue hover-black">
-            Tag: Ai
+            <a href="/tags/developer-tooling/" class="link blue hover-black">
+            Tag: Developer-Tooling
           </a>
         </h2>
          <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-agent-mode/" class="link-transition-highlight foreground-dark">
-        Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode
+            <a href="/blog/global-gitignore/" class="link-transition-highlight foreground-dark">
+        How to add a global .gitignore
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
-<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
+            <p>Every developer has done it at least once: accidentally committed a <code>.DS_Store</code> file, a <code>.idea/</code> folder, or some other machine-specific artifact into a shared repository. A per-project <code>.gitignore</code> helps, but you have to repeat yourself in every repo. The solution is a <strong>global <code>.gitignore</code></strong> — a single file that Git applies to every repository on your machine.</p>
+<h2 id="how-git-decides-what-to-ignore">How Git decides what to ignore</h2>
+<p>Git evaluates ignore rules from three sources, in order of specificity:</p>
+        </div>
+    </div>
+</div>  
+        <h2 class="f1">
+            <a href="/tags/git/" class="link blue hover-black">
+            Tag: Git
+          </a>
+        </h2>
+         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
+            <a href="/blog/global-gitignore/" class="link-transition-highlight foreground-dark">
+        How to add a global .gitignore
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <p>Every developer has done it at least once: accidentally committed a <code>.DS_Store</code> file, a <code>.idea/</code> folder, or some other machine-specific artifact into a shared repository. A per-project <code>.gitignore</code> helps, but you have to repeat yourself in every repo. The solution is a <strong>global <code>.gitignore</code></strong> — a single file that Git applies to every repository on your machine.</p>
+<h2 id="how-git-decides-what-to-ignore">How Git decides what to ignore</h2>
+<p>Git evaluates ignore rules from three sources, in order of specificity:</p>
+        </div>
+    </div>
+</div>  
+        <h2 class="f1">
+            <a href="/tags/tutorial/" class="link blue hover-black">
+            Tag: Tutorial
+          </a>
+        </h2>
+         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
+            <a href="/blog/global-gitignore/" class="link-transition-highlight foreground-dark">
+        How to add a global .gitignore
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <p>Every developer has done it at least once: accidentally committed a <code>.DS_Store</code> file, a <code>.idea/</code> folder, or some other machine-specific artifact into a shared repository. A per-project <code>.gitignore</code> helps, but you have to repeat yourself in every repo. The solution is a <strong>global <code>.gitignore</code></strong> — a single file that Git applies to every repository on your machine.</p>
+<h2 id="how-git-decides-what-to-ignore">How Git decides what to ignore</h2>
+<p>Git evaluates ignore rules from three sources, in order of specificity:</p>
         </div>
     </div>
 </div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
+            <a href="/blog/unity-libraries/" class="link-transition-highlight foreground-dark">
+        Creating your own Unity library package
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
             <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
+<p>Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&rsquo;ll explore the must-have libraries for any serious Unity project.</p>
+<p><em>(Content placeholder for Unity libraries)</em></p>
         </div>
     </div>
-</div>  
-        <h2 class="f1">
-            <a href="/tags/clean-code/" class="link blue hover-black">
-            Tag: Clean-Code
-          </a>
-        </h2>
-         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
+            <a href="/blog/check-static-linking/" class="link-transition-highlight foreground-dark">
+        How to check if a binary is statically or dynamically linked
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
+            <h2 id="what-is-the-difference-between-statically-and-dynamically-linked-binaries">What is the difference between statically and dynamically linked binaries?</h2>
+<p>Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.</p>
+<p>A statically linked binary <strong>includes all necessary libraries</strong> within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.</p>
+        </div>
+    </div>
+</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
+            <a href="/blog/install-hugo/" class="link-transition-highlight foreground-dark">
+        Introduction to Hugo #1
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <h2 id="what-is-hugo">What is Hugo?</h2>
+<p>Hugo is a static site generator that offers several benefits for building fast and secure websites.</p>
+<p>It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.</p>
+<p>Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.</p>
         </div>
     </div>
 </div>  
@@ -221,98 +294,6 @@
             <h2 id="introduction">Introduction</h2>
 <p>While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.</p>
 <p>Today, I want to &ldquo;show off&rdquo; a couple of these projects to give you a glimpse into what I build when I&rsquo;m not writing Go services.</p>
-        </div>
-    </div>
-</div>  
-        <h2 class="f1">
-            <a href="/tags/gemini/" class="link blue hover-black">
-            Tag: Gemini
-          </a>
-        </h2>
-         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/gemini-agent-mode/" class="link-transition-highlight foreground-dark">
-        Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
-<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
-        </div>
-    </div>
-</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
-        </div>
-    </div>
-</div>  
-        <h2 class="f1">
-            <a href="/tags/golang/" class="link blue hover-black">
-            Tag: Golang
-          </a>
-        </h2>
-         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
-        </div>
-    </div>
-</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/check-static-linking/" class="link-transition-highlight foreground-dark">
-        How to check if a binary is statically or dynamically linked
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="what-is-the-difference-between-statically-and-dynamically-linked-binaries">What is the difference between statically and dynamically linked binaries?</h2>
-<p>Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.</p>
-<p>A statically linked binary <strong>includes all necessary libraries</strong> within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.</p>
-        </div>
-    </div>
-</div>  
-        <h2 class="f1">
-            <a href="/tags/productivity/" class="link blue hover-black">
-            Tag: Productivity
-          </a>
-        </h2>
-         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/gemini-agent-mode/" class="link-transition-highlight foreground-dark">
-        Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
-<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
         </div>
     </div>
 </div>  
@@ -377,67 +358,42 @@
     </div>
 </div>  
         <h2 class="f1">
-            <a href="/tags/tutorial/" class="link blue hover-black">
-            Tag: Tutorial
+            <a href="/tags/game-development/" class="link blue hover-black">
+            Tag: Game Development
           </a>
         </h2>
          <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-agent-mode/" class="link-transition-highlight foreground-dark">
-        Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode
+            <a href="/blog/unity-libraries/" class="link-transition-highlight foreground-dark">
+        Creating your own Unity library package
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
             <h2 id="introduction">Introduction</h2>
-<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
-<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
+<p>Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&rsquo;ll explore the must-have libraries for any serious Unity project.</p>
+<p><em>(Content placeholder for Unity libraries)</em></p>
         </div>
     </div>
-</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+</div>  
+        <h2 class="f1">
+            <a href="/tags/unity3d/" class="link blue hover-black">
+            Tag: Unity3d
+          </a>
+        </h2>
+         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
+            <a href="/blog/unity-libraries/" class="link-transition-highlight foreground-dark">
+        Creating your own Unity library package
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
             <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
-        </div>
-    </div>
-</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/check-static-linking/" class="link-transition-highlight foreground-dark">
-        How to check if a binary is statically or dynamically linked
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="what-is-the-difference-between-statically-and-dynamically-linked-binaries">What is the difference between statically and dynamically linked binaries?</h2>
-<p>Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.</p>
-<p>A statically linked binary <strong>includes all necessary libraries</strong> within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.</p>
-        </div>
-    </div>
-</div>  <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/install-hugo/" class="link-transition-highlight foreground-dark">
-        Introduction to Hugo #1
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="what-is-hugo">What is Hugo?</h2>
-<p>Hugo is a static site generator that offers several benefits for building fast and secure websites.</p>
-<p>It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.</p>
-<p>Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.</p>
+<p>Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&rsquo;ll explore the must-have libraries for any serious Unity project.</p>
+<p><em>(Content placeholder for Unity libraries)</em></p>
         </div>
     </div>
 </div>  
@@ -622,6 +578,26 @@
             <h2 id="what-is-event-storming">What is Event Storming?</h2>
 <p>Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.</p>
 <p>In event storming, the participants work together to <strong>identify events</strong> that occur within the system or process, and then organize these events into a <strong>timeline</strong> that represents the <strong>flow of actions</strong> and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.</p>
+        </div>
+    </div>
+</div>  
+        <h2 class="f1">
+            <a href="/tags/golang/" class="link blue hover-black">
+            Tag: Golang
+          </a>
+        </h2>
+         <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
+            <a href="/blog/check-static-linking/" class="link-transition-highlight foreground-dark">
+        How to check if a binary is statically or dynamically linked
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <h2 id="what-is-the-difference-between-statically-and-dynamically-linked-binaries">What is the difference between statically and dynamically linked binaries?</h2>
+<p>Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.</p>
+<p>A statically linked binary <strong>includes all necessary libraries</strong> within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.</p>
         </div>
     </div>
 </div>  

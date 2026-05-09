@@ -18,7 +18,29 @@
 
   
  
-     
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(function () {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+});
+</script> 
      
         
  
@@ -92,6 +114,12 @@ I am constantly researching and learning about new technologies and techniques, 
             </a>
                 </li>
                 
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/page/contact/" title="">
+              Kontakt
+            </a>
+                </li>
+                
             </ul>
              
 <div class="socials">
@@ -153,6 +181,24 @@ I am constantly researching and learning about new technologies and techniques, 
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
+            <a href="/blog/global-gitignore/" class="link-transition-highlight foreground-dark">
+        How to add a global .gitignore
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <p>Every developer has done it at least once: accidentally committed a <code>.DS_Store</code> file, a <code>.idea/</code> folder, or some other machine-specific artifact into a shared repository. A per-project <code>.gitignore</code> helps, but you have to repeat yourself in every repo. The solution is a <strong>global <code>.gitignore</code></strong> — a single file that Git applies to every repository on your machine.</p>
+<h2 id="how-git-decides-what-to-ignore">How Git decides what to ignore</h2>
+<p>Git evaluates ignore rules from three sources, in order of specificity:</p>
+        </div>
+    </div>
+</div>
+        </div>
+        
+        <div class="relative w-100 w-30-l mb4">
+            <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
             <a href="/blog/react-showcase/" class="link-transition-highlight foreground-dark">
         Beyond the Backend: My React Side Projects
       </a>
@@ -171,34 +217,14 @@ I am constantly researching and learning about new technologies and techniques, 
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
-            <a href="/blog/gemini-agent-mode/" class="link-transition-highlight foreground-dark">
-        Mastering Multi-File Tasks: A Guide to Gemini Code Assist Agent Mode
+            <a href="/blog/unity-libraries/" class="link-transition-highlight foreground-dark">
+        Creating your own Unity library package
       </a>
         </h1>
         <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
             <h2 id="introduction">Introduction</h2>
-<p>Software development often involves tasks that aren&rsquo;t contained within a single function or file. Whether you&rsquo;re refactoring a service layer, implementing a new API endpoint that requires changes from the database to the router, or updating dependencies across a monorepo, context is everything.</p>
-<p>Standard AI chat assistants are great for snippets, but <strong>Gemini Code Assist&rsquo;s Agent Mode</strong> is designed for the big picture. It doesn&rsquo;t just suggest code; it plans and executes changes across your entire workspace.</p>
-        </div>
-    </div>
-</div>
-        </div>
-        
-        <div class="relative w-100 w-30-l mb4">
-            <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
-    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
-        <span class="f6 db foreground-dark">Blog</span>
-        <h1 class="f3 near-black">
-            <a href="/blog/gemini-instructions/" class="link-transition-highlight foreground-dark">
-        The Architecture of Instructions: Mastering GEMINI.md
-      </a>
-        </h1>
-        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
-            <h2 id="introduction">Introduction</h2>
-<p>In my <a href="/blog/gemini-agent-mode/">previous post</a>, we explored how Gemini Code Assist&rsquo;s Agent Mode can handle multi-file refactors. However, an agent is only as good as the instructions it follows. Without guidance, AI might generate code that works but violates your team&rsquo;s architectural standards.</p>
-<p>To solve this, Gemini supports a special file: <code>GEMINI.md</code>. Think of this as the &ldquo;System Prompt&rdquo; for your entire repository.</p>
-<h2 id="what-is-geminimd">What is GEMINI.md?</h2>
-<p>The <code>GEMINI.md</code> file is a Markdown document placed in your project&rsquo;s root. It serves as a persistent set of rules and context that the Agent reads before every task. It allows you to define:</p>
+<p>Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&rsquo;ll explore the must-have libraries for any serious Unity project.</p>
+<p><em>(Content placeholder for Unity libraries)</em></p>
         </div>
     </div>
 </div>
