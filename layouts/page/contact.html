@@ -1,0 +1,55 @@
+{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
+{{ define "main" }}
+{{ $p := .Params }}
+{{ $socials := site.Params.socials }}
+<div class="contact-page mw7 center ph3 ph4-l pv5 pv6-l tc">
+
+    {{/* Availability badge */}}
+    <div class="contact-badge-wrap">
+        <span class="contact-badge">
+            <span class="contact-badge-dot"></span>
+            {{ $p.availability }}
+        </span>
+    </div>
+
+    {{/* Headline */}}
+    <h1 class="contact-headline">{{ $p.headline }}</h1>
+    <p class="contact-subline">{{ $p.subline }}</p>
+
+    {{/* mailto CTA */}}
+    <a href="mailto:{{ $p.cta_email }}" class="contact-mailto-btn">
+        {{ $p.cta_label }}
+        <span class="contact-mailto-arrow">→</span>
+    </a>
+
+    <p class="contact-response-time">{{ $p.response_time }}</p>
+
+    {{/* Contact method cards */}}
+    <div class="contact-methods-grid">
+
+        <a href="mailto:{{ $p.cta_email }}" class="contact-method">
+            <span class="contact-method-label">Email</span>
+            <span class="contact-method-value">{{ $p.cta_email }}</span>
+        </a>
+
+        {{ range $socials }}
+        {{ if .follow }}
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="contact-method">
+            <span class="contact-method-label">{{ .name | title }}</span>
+            <span class="contact-method-value contact-method-value--link">
+                {{ .url | strings.TrimPrefix "https://" | strings.TrimPrefix "www." }}
+            </span>
+        </a>
+        {{ end }}
+        {{ end }}
+
+        <div class="contact-method contact-method--static">
+            <span class="contact-method-label">Location</span>
+            <span class="contact-method-value">Kassel, Germany</span>
+            <span class="contact-method-sub">UTC+1/UTC+2 &middot; 100% Remote</span>
+        </div>
+
+    </div>
+
+</div>
+{{ end }}

@@ -23,7 +23,8 @@
       "Bash(cp \"C:/Users/theel/git/github.com/Nerzal/nerzal.github.io/content/page/datenschutz.md\" \"C:/Users/theel/git/github.com/Nerzal/nerzal.github.io/content/page/datenschutz.de.md\")",
       "Bash(curl -s http://localhost:1313/de/)",
       "Bash(curl -s \"http://localhost:1313/de/\")",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(curl -s http://localhost:1314/page/contact/)"
     ]
   }
 }
