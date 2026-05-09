@@ -2,6 +2,26 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Desktop nav dropdown — with hover delay so mouse can travel to dropdown
+    document.querySelectorAll('.site-nav-item--has-sub').forEach(function (item) {
+        var sub = item.querySelector('.site-nav-sub');
+        if (!sub) return;
+        var timer;
+        function open() {
+            clearTimeout(timer);
+            item.classList.add('is-open');
+        }
+        function scheduleClose() {
+            timer = setTimeout(function () {
+                item.classList.remove('is-open');
+            }, 150);
+        }
+        item.addEventListener('mouseenter', open);
+        item.addEventListener('mouseleave', scheduleClose);
+        sub.addEventListener('mouseenter', open);
+        sub.addEventListener('mouseleave', scheduleClose);
+    });
+
     // Hamburger menu — overlay lives outside header stacking context
     var hamburger = document.getElementById('hamburger-btn');
     var mobileNav = document.getElementById('mobile-nav');

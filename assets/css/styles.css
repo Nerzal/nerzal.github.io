@@ -694,14 +694,11 @@ pre:hover .copy-btn {
    ═══════════════════════════════════════════════════════════════ */
 
 .site-plain-header {
-    background: rgba(34, 38, 53, 0.94);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgb(30, 33, 46);
     border-bottom: 1px solid rgba(0, 255, 127, 0.1);
     position: sticky;
     top: 0;
     z-index: 200;
-    overflow: visible;
 }
 
 /* Override old sticky rule — plain-header handles it now */
@@ -1693,7 +1690,7 @@ main.pb7 {
 .site-nav-sub {
     display: none;
     position: absolute;
-    top: calc(100% + 0.5rem);
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     min-width: 170px;
@@ -1702,13 +1699,13 @@ main.pb7 {
     border-radius: 8px;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
     list-style: none;
-    padding: 0.4rem 0;
+    padding: 0.9rem 0 0.4rem;
     margin: 0;
     z-index: 9999;
 }
 
-.site-nav-item--has-sub:hover .site-nav-sub,
-.site-nav-item--has-sub:focus-within .site-nav-sub {
+.site-nav-item--has-sub:focus-within .site-nav-sub,
+.site-nav-item--has-sub.is-open .site-nav-sub {
     display: block;
 }
 
