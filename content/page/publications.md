@@ -17,6 +17,23 @@ I am available for keynote speaking, technical talks, and workshops at internati
 
 Interested in having me speak at your event or meetup? [Get in touch](mailto:info@noobygames.de).
 
+## Open Source
+
+### Gocloak — Keycloak REST Client for Go
+
+[Gocloak](https://github.com/Nerzal/gocloak) is a full-featured Go client library for the [Keycloak](https://www.keycloak.org/) REST API. Keycloak is an open-source Identity and Access Management (IAM) solution widely used to secure applications with features such as Single Sign-On (SSO), OAuth 2.0, and OpenID Connect (OIDC).
+
+Gocloak covers the complete Keycloak Admin REST API and provides a clean, idiomatic Go interface for tasks such as:
+
+- Managing realms, clients, roles, and users
+- Token introspection and refresh
+- Group and role mapping
+- Fine-grained permission management via Keycloak's Authorization Services
+
+The library is actively maintained and used in production by teams integrating Keycloak into Go-based microservice architectures. Contributions, issue reports, and feature requests are welcome.
+
+**Repository:** [github.com/Nerzal/gocloak](https://github.com/Nerzal/gocloak)
+
 ## 2021: Creative DIY Microcontroller Projects With TinyGo and WebAssembly
 
 {{< image-text image="../../book-cover.png" imageAlt="book cover" >}}
