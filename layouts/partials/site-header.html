@@ -1,4 +1,4 @@
-{{ $featured_image := partial "func/GetFeaturedImage.html" . }}
+{{ $featured_image := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 {{ $showHero := and $featured_image (not .Params.omit_header_image) }}
 <header class="site-plain-header">
     {{ partial "site-navigation.html" . }}

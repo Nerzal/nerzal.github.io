@@ -28,8 +28,8 @@
     <div class="contact-methods-grid">
 
         {{/* Email */}}
-        <a href="mailto:{{ $p.cta_email }}" class="contact-method">
-            <span class="contact-method-icon">
+        <a href="mailto:{{ $p.cta_email }}" class="contact-method" aria-label="Send email to {{ $p.cta_email }}">
+            <span class="contact-method-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
                     <path d="m2 7 10 7 10-7"/>
@@ -45,8 +45,8 @@
         {{ range $socials }}
         {{ if .follow }}
         {{ $icon := resources.Get (printf "socials/%s.svg" .name) }}
-        <a href="{{ .url }}" target="_blank" rel="noopener" class="contact-method">
-            <span class="contact-method-icon">
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="contact-method" aria-label="{{ .name | title }} (opens in new tab)">
+            <span class="contact-method-icon" aria-hidden="true">
                 {{ with $icon }}{{ .Content | safeHTML }}{{ end }}
             </span>
             <span class="contact-method-body">
@@ -61,7 +61,7 @@
 
         {{/* Location */}}
         <div class="contact-method contact-method--static">
-            <span class="contact-method-icon">
+            <span class="contact-method-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 21c-4-5-8-9-8-13a8 8 0 0 1 16 0c0 4-4 8-8 13z"/>
                     <circle cx="12" cy="8" r="2.5"/>
@@ -69,8 +69,8 @@
             </span>
             <span class="contact-method-body">
                 <span class="contact-method-label">Location</span>
-                <span class="contact-method-value">Kassel, Germany</span>
-                <span class="contact-method-sub">UTC+1/UTC+2 &middot; 100% Remote</span>
+                <span class="contact-method-value">{{ site.Params.location }}</span>
+                <span class="contact-method-sub">{{ site.Params.location_tz }} &middot; 100% Remote</span>
             </span>
         </div>
 

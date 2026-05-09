@@ -1,4 +1,4 @@
-{{ $imgRaw := partial "func/GetFeaturedImage" . }}
+{{ $imgRaw := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 {{ $img := "" }}
 {{ with $imgRaw }}{{ $img = . | relURL }}{{ end }}
 <article class="blog-card">

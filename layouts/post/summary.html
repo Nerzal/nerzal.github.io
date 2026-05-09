@@ -1,4 +1,4 @@
-{{ $img := partial "func/GetFeaturedImage" . }}
+{{ $img := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 <div class="mb3 foreground-dark overflow-hidden">
     {{ if $img }}
     <a href="{{ .RelPermalink }}" class="db post-summary-img-wrap">

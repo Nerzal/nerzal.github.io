@@ -51,6 +51,18 @@ other = "{{ .Name }} Seite"
 [explore]
 other = "Entdecken"
 
+[catBook]
+other = "Buch"
+
+[catTalks]
+other = "Vorträge"
+
+[catOpenSource]
+other = "Open Source"
+
+[catGames]
+other = "Spiele"
+
 [onThisPage]
 other = "Inhalt"
 

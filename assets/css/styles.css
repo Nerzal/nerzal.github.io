@@ -261,7 +261,7 @@ li a:hover {
     margin-left: 2rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    border-left: 4px solid #ccc;
+    border-left: 4px solid rgba(228, 241, 254, 0.25);
     padding-left: 1rem;
 }
 
@@ -379,7 +379,8 @@ pre:hover .copy-btn {
     .home-hero-cta, .home-hero-photo-wrap,
     .blog-list-header, .blog-grid,
     .post-breadcrumb, .post-article-header, .post-article-body,
-    .page-single-content, .resume-page {
+    .page-single-content, .resume-page,
+    .contact-badge-dot {
         animation: none;
     }
 }
@@ -725,7 +726,7 @@ pre:hover .copy-btn {
    ═══════════════════════════════════════════════════════════════ */
 
 .site-plain-header {
-    background: rgb(30, 33, 46);
+    background: var(--background-color-light);
     border-bottom: 1px solid rgba(0, 255, 127, 0.1);
     position: sticky;
     top: 0;
@@ -837,12 +838,13 @@ body > header:first-of-type {
 }
 
 .site-nav-socials .socials a {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     opacity: 0.55;
     transition: opacity 0.2s;
-    padding: 0 !important;
-    margin: 0 0.1rem !important;
+    /* override Tachyons pt3/mr1 without !important via higher specificity */
+    padding: 0;
+    margin: 0 0.1rem;
     line-height: 0;
 }
 
@@ -2197,6 +2199,8 @@ pre {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     max-width: 100%;
+    box-sizing: border-box;
+    white-space: pre;
 }
 
 /* Long words & URLs in article content */
@@ -2204,6 +2208,36 @@ pre {
 .lh-copy {
     overflow-wrap: break-word;
     word-break: break-word;
+}
+
+/* Contain the post body — pre blocks inside get their own scroll */
+@media (max-width: 60em) {
+    .post-article-body {
+        overflow-x: hidden;
+    }
+
+    .post-article-content {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    /* Code blocks are width-constrained and scroll internally */
+    .post-article-content pre {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Inline code in paragraphs: break aggressively */
+    .post-article-content p code,
+    .post-article-content li code,
+    .post-article-content td code {
+        word-break: break-all;
+    }
+
+    /* Long URLs in links */
+    .post-article-content a {
+        overflow-wrap: anywhere;
+    }
 }
 
 @media (max-width: 52em) {

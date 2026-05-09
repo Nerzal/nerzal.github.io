@@ -4,7 +4,7 @@
             {{- with .Site.Params.site_logo -}}
             <img src="{{ relURL . }}" class="site-nav-logo" alt="{{ $.Site.Title }}">
             {{- else -}}
-            Tobias Theel<span class="site-nav-brand-sub"> | Senior Software Engineer</span>
+            {{ .Site.Params.author }}<span class="site-nav-brand-sub"> | {{ .Site.Params.tagline }}</span>
             {{- end -}}
         </a>
 

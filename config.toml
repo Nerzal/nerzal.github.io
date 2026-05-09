@@ -26,6 +26,9 @@ enableRobotsTXT = true
 [params]
   text_color = "#e4f1fe"
   author = "Tobias Theel"
+  tagline = "Senior Software Engineer"
+  location = "Fritzlar, Germany"
+  location_tz = "UTC+1/UTC+2"
   favicon = ""
   site_logo = ""
   description = "Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and Game Development. 12+ years of experience in distributed environments."

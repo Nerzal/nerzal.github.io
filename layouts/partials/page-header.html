@@ -1,7 +1,7 @@
 <header class="site-plain-header">
     {{ partial "site-navigation.html" . }}
 </header>
-{{ $imgRaw := partial "func/GetFeaturedImage.html" . }}
+{{ $imgRaw := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 {{ with $imgRaw }}
 <div class="post-hero-banner">
     <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager">

@@ -1,10 +1,10 @@
 {{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
 {{ define "main" }}
 {{ $cats := slice
-    (dict "path" "/page/book"        "icon" "Book")
-    (dict "path" "/page/talks"       "icon" "Talks")
-    (dict "path" "/page/open-source" "icon" "Open Source")
-    (dict "path" "/page/games"       "icon" "Games")
+    (dict "path" "/page/book"        "labelKey" "catBook")
+    (dict "path" "/page/talks"       "labelKey" "catTalks")
+    (dict "path" "/page/open-source" "labelKey" "catOpenSource")
+    (dict "path" "/page/games"       "labelKey" "catGames")
 }}
 <div class="pub-overview mw8 center ph3 ph4-l pv4 pv5-l">
     <header class="pub-overview-header">
@@ -18,7 +18,7 @@
         {{ $page := site.GetPage .path }}
         {{ with $page }}
         <a href="{{ .RelPermalink }}" class="pub-cat-card">
-            <p class="pub-cat-label">{{ $cat.icon }}</p>
+            <p class="pub-cat-label">{{ i18n $cat.labelKey }}</p>
             <h2 class="pub-cat-title">{{ .Title }}</h2>
             <p class="pub-cat-desc">{{ .Description }}</p>
             {{ with .Params.metric }}<p class="pub-cat-metric">{{ . }}</p>{{ end }}

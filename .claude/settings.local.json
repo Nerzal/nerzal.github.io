@@ -24,7 +24,8 @@
       "Bash(curl -s http://localhost:1313/de/)",
       "Bash(curl -s \"http://localhost:1313/de/\")",
       "Bash(git rm *)",
-      "Bash(curl -s http://localhost:1314/page/contact/)"
+      "Bash(curl -s http://localhost:1314/page/contact/)",
+      "Bash(xargs grep -l \"forground-dark\")"
     ]
   }
 }
