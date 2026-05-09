@@ -23,5 +23,6 @@
     </div>
     <div class="site-footer-bottom">
         <span class="site-footer-copy">© {{ now.Format "2006" }} {{ with .Site.Copyright }}{{ . | safeHTML }}{{ else }}{{ .Site.Title }}{{ end }}</span>
+        <button id="ee-terminal-btn" class="ee-terminal-btn" aria-label="Open terminal" title="&gt;_">>&shy;_</button>
     </div>
 </footer>

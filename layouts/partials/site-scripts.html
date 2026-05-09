@@ -364,5 +364,288 @@ document.addEventListener('DOMContentLoaded', function () {
         resetIdle();
     })();
 
+    // Easter egg #6: type "matrix" → Matrix Rain overlay
+    (function () {
+        var WORD = 'matrix', buf = '';
+        var CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+
+        var overlay = document.createElement('div');
+        overlay.id = 'ee-matrix-overlay';
+
+        var canvas = document.createElement('canvas');
+        canvas.id = 'ee-matrix-canvas';
+
+        var msg = document.createElement('p');
+        msg.className = 'ee-matrix-msg';
+        msg.textContent = 'Wake up, Neo…';
+
+        var hint = document.createElement('p');
+        hint.className = 'ee-matrix-hint';
+        hint.textContent = 'click or press Esc to exit the Matrix';
+
+        overlay.appendChild(canvas);
+        overlay.appendChild(msg);
+        overlay.appendChild(hint);
+        document.body.appendChild(overlay);
+
+        var ctx, cols, drops, rafId, msgTimer, closeTimer;
+        var fontSize = 16;
+
+        function initMatrix() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            ctx   = canvas.getContext('2d');
+            cols  = Math.floor(canvas.width / fontSize);
+            drops = [];
+            for (var i = 0; i < cols; i++) {
+                drops[i] = Math.random() * -canvas.height / fontSize | 0;
+            }
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + 'px monospace';
+            for (var i = 0; i < drops.length; i++) {
+                var ch = CHARS[Math.random() * CHARS.length | 0];
+                var y  = drops[i] * fontSize;
+                // bright leading character
+                ctx.fillStyle = '#fff';
+                ctx.fillText(ch, i * fontSize, y);
+                // green trail for non-leading chars
+                ctx.fillStyle = '#00ff41';
+                if (drops[i] > 1) {
+                    ctx.fillText(CHARS[Math.random() * CHARS.length | 0], i * fontSize, y - fontSize);
+                }
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+            rafId = requestAnimationFrame(drawMatrix);
+        }
+
+        function openMatrix() {
+            initMatrix();
+            overlay.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+            rafId = requestAnimationFrame(drawMatrix);
+            msgTimer   = setTimeout(function () { msg.classList.add('is-visible'); }, 2000);
+            closeTimer = setTimeout(closeMatrix, 10000);
+        }
+
+        function closeMatrix() {
+            overlay.classList.remove('is-active');
+            msg.classList.remove('is-visible');
+            document.body.style.overflow = '';
+            cancelAnimationFrame(rafId);
+            clearTimeout(msgTimer);
+            clearTimeout(closeTimer);
+            ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        overlay.addEventListener('click', closeMatrix);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('is-active')) {
+                closeMatrix(); return;
+            }
+            // ignore if typing in an input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            buf += e.key.toLowerCase();
+            if (buf.length > WORD.length) buf = buf.slice(-WORD.length);
+            if (buf === WORD) { buf = ''; openMatrix(); }
+        });
+    })();
+
+    // Easter egg #7: Footer >_ button → fake terminal
+    (function () {
+        var btn = document.getElementById('ee-terminal-btn');
+        if (!btn) return;
+
+        var overlay = document.createElement('div');
+        overlay.id = 'ee-terminal-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', 'Terminal');
+
+        overlay.innerHTML = [
+            '<div class="ee-terminal-window">',
+            '  <div class="ee-terminal-titlebar">',
+            '    <span class="ee-terminal-dot ee-terminal-dot--close" id="ee-term-close"></span>',
+            '    <span class="ee-terminal-dot ee-terminal-dot--min"></span>',
+            '    <span class="ee-terminal-dot ee-terminal-dot--max"></span>',
+            '    <span class="ee-terminal-title">tobias@blog:~</span>',
+            '  </div>',
+            '  <div class="ee-terminal-output" id="ee-term-output"></div>',
+            '  <div class="ee-terminal-input-row">',
+            '    <span class="ee-terminal-prompt-label">tobias@blog:~$</span>',
+            '    <input class="ee-terminal-input" id="ee-term-input" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="terminal input">',
+            '  </div>',
+            '</div>'
+        ].join('');
+
+        document.body.appendChild(overlay);
+
+        var output = document.getElementById('ee-term-output');
+        var input  = document.getElementById('ee-term-input');
+        var history = [], histIdx = -1;
+
+        var COMMANDS = {
+            help: function () {
+                return [
+                    ['output', 'Available commands:'],
+                    ['output', ''],
+                    ['output', '  whoami          who is this guy?'],
+                    ['output', '  ls              list things'],
+                    ['output', '  blog            go to the blog'],
+                    ['output', '  dogs            the important stuff'],
+                    ['output', '  sudo make coffee  critical infrastructure'],
+                    ['output', '  matrix          you already know'],
+                    ['output', '  clear           clear the terminal'],
+                    ['output', '  exit            close this window'],
+                    ['output', ''],
+                    ['dim',    'tip: press ↑ / ↓ to navigate history']
+                ];
+            },
+            whoami: function () {
+                return [
+                    ['output', 'Tobias Theel'],
+                    ['output', 'Senior Software Engineer · Author · Speaker'],
+                    ['output', 'Remote-first. Building things with Go, Cloud,'],
+                    ['output', 'and a questionable amount of coffee.'],
+                    ['output', ''],
+                    ['output', 'Location:  Fritzlar, Germany'],
+                    ['output', 'Contact:   info [at] noobygames [dot] de']
+                ];
+            },
+            ls: function () {
+                return [
+                    ['output', 'drwxr-xr-x  blog/'],
+                    ['output', 'drwxr-xr-x  page/resume/'],
+                    ['output', 'drwxr-xr-x  page/publications/'],
+                    ['output', 'drwxr-xr-x  page/contact/'],
+                    ['output', '-rw-r--r--  humans.txt'],
+                    ['output', '-rw-r--r--  site.webmanifest'],
+                    ['output', '🐕  drwxr-xr-x  dogs/          <- the real VIPs']
+                ];
+            },
+            blog: function () {
+                setTimeout(function () { window.location.href = '/blog/'; }, 800);
+                return [['dim', 'Navigating to /blog/ …']];
+            },
+            dogs: function () {
+                setTimeout(function () { window.location.href = '/dogs/'; }, 800);
+                return [['dim', 'Navigating to /dogs/ … 🐶']];
+            },
+            matrix: function () {
+                closeTerminal();
+                setTimeout(function () {
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'm', bubbles: true }));
+                    'atrix'.split('').forEach(function (ch, i) {
+                        setTimeout(function () {
+                            document.dispatchEvent(new KeyboardEvent('keydown', { key: ch, bubbles: true }));
+                        }, (i + 1) * 30);
+                    });
+                }, 300);
+                return [['dim', 'Entering the Matrix…']];
+            },
+            clear: function () {
+                output.innerHTML = '';
+                return [];
+            },
+            exit: function () {
+                setTimeout(closeTerminal, 200);
+                return [['dim', 'Goodbye.']];
+            }
+        };
+
+        // sudo make coffee (and other sudo variants)
+        function handleSudo(args) {
+            var joined = args.join(' ');
+            if (joined === 'make coffee' || joined === 'make coffee') {
+                return [
+                    ['output', '[sudo] password for tobias:'],
+                    ['dim',    '••••••••'],
+                    ['error',  'Sorry, user tobias may not run ‘/usr/bin/make coffee’ on this host.'],
+                    ['output', '… just kidding. ☕ Coffee initiated. Estimated brew time: 3 minutes.']
+                ];
+            }
+            return [['error', 'sudo: ' + args[0] + ': command not found']];
+        }
+
+        function println(type, text) {
+            var line = document.createElement('p');
+            line.className = 'ee-terminal-line ee-terminal-line--' + type;
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function runCommand(raw) {
+            var trimmed = raw.trim();
+            if (!trimmed) return;
+
+            history.unshift(trimmed);
+            histIdx = -1;
+
+            println('prompt', 'tobias@blog:~$ ' + trimmed);
+
+            var parts = trimmed.split(/\s+/);
+            var cmd   = parts[0].toLowerCase();
+            var args  = parts.slice(1);
+
+            var lines;
+            if (cmd === 'sudo') {
+                lines = handleSudo(args);
+            } else if (COMMANDS[cmd]) {
+                lines = COMMANDS[cmd](args);
+            } else {
+                lines = [['error', 'bash: ' + cmd + ': command not found'], ['dim', "type 'help' for available commands"]];
+            }
+
+            lines.forEach(function (l) { println(l[0], l[1]); });
+        }
+
+        function openTerminal() {
+            overlay.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+            output.innerHTML = '';
+            println('dim', 'Welcome to tobias@blog — type ‘help’ to get started.');
+            println('dim', '');
+            input.value = '';
+            input.focus();
+        }
+
+        function closeTerminal() {
+            overlay.classList.remove('is-active');
+            document.body.style.overflow = '';
+        }
+
+        btn.addEventListener('click', openTerminal);
+        document.getElementById('ee-term-close').addEventListener('click', closeTerminal);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) closeTerminal();
+        });
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                runCommand(input.value);
+                input.value = '';
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (histIdx < history.length - 1) { histIdx++; input.value = history[histIdx]; }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (histIdx > 0) { histIdx--; input.value = history[histIdx]; }
+                else { histIdx = -1; input.value = ''; }
+            } else if (e.key === 'Escape') {
+                closeTerminal();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('is-active')) closeTerminal();
+        });
+    })();
+
 });
 </script>
