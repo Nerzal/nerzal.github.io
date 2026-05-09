@@ -1422,6 +1422,202 @@ main.pb7 {
 
 
 /* ═══════════════════════════════════════════════════════════════
+   MOBILE — HAMBURGER NAV
+   ═══════════════════════════════════════════════════════════════ */
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 4px;
+    flex-shrink: 0;
+}
+
+.hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-color);
+    border-radius: 1px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+    transform-origin: center;
+}
+
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.site-nav-brand-sub {
+    opacity: 0.6;
+}
+
+@media (max-width: 42em) {
+    .hamburger {
+        display: flex;
+    }
+
+    .site-nav-brand-sub {
+        display: none;
+    }
+
+    .site-nav-right {
+        display: none;
+        position: fixed;
+        top: 3.5rem;
+        left: 0;
+        right: 0;
+        background: rgba(28, 31, 44, 0.98);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(0, 255, 127, 0.1);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem 1.5rem 1.5rem;
+        gap: 0.25rem;
+        z-index: 199;
+    }
+
+    .site-nav-right.is-open {
+        display: flex;
+    }
+
+    .site-nav-menu {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    .site-nav-item {
+        width: 100%;
+        border-bottom: 1px solid rgba(228, 241, 254, 0.06);
+    }
+
+    .site-nav-item:last-child {
+        border-bottom: none;
+    }
+
+    .site-nav-link {
+        display: block;
+        padding: 0.7rem 0;
+        font-size: 0.95rem;
+    }
+
+    .site-nav-link::after {
+        display: none;
+    }
+
+    .site-nav-socials {
+        padding-top: 0.75rem;
+    }
+
+    .site-nav-socials .socials a .icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .lang-switcher {
+        padding-top: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(228, 241, 254, 0.06);
+        margin-bottom: 0.25rem;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE — GENERAL FIXES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Code blocks — horizontal scroll instead of layout break */
+pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+}
+
+/* Long words & URLs in article content */
+.post-article-content,
+.lh-copy {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+@media (max-width: 52em) {
+    /* Hero tagline — allow wrap on mobile (column layout) */
+    .home-hero-tagline {
+        white-space: normal;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 42em) {
+    /* Post hero banner — shorter on small screens */
+    .post-hero-banner {
+        height: 200px;
+    }
+
+    /* Scroll-to-top button — tighter position */
+    #scroll-to-top {
+        bottom: 1.25rem;
+        right: 1rem;
+        width: 2.4rem;
+        height: 2.4rem;
+        font-size: 1.2rem;
+    }
+
+    /* Blog list header — tighter */
+    .blog-list-page {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    /* Post article — less top space */
+    .post-article-header-wrap {
+        padding-top: 0;
+    }
+
+    .post-breadcrumb {
+        padding-top: 1.25rem;
+    }
+
+    /* Resume profile card — smaller avatar */
+    .resume-avatar-wrap {
+        width: 72px;
+        height: 72px;
+    }
+
+    .resume-print-btn {
+        display: none;
+    }
+
+    /* Publications video — full bleed feel */
+    .pub-video-figure {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+
+    .pub-video-wrap {
+        border-radius: 0;
+    }
+
+    /* Footer brand col — center on single column */
+    .site-footer-brand-col {
+        text-align: center;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
    PUBLICATIONS PAGE
    ═══════════════════════════════════════════════════════════════ */
 

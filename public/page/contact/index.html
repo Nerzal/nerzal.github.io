@@ -37,6 +37,29 @@
     
 <script>
 (function () {
+    var hamburger = document.querySelector('.hamburger');
+    var navRight  = document.getElementById('site-nav-right');
+    if (hamburger && navRight) {
+        hamburger.addEventListener('click', function () {
+            var open = navRight.classList.toggle('is-open');
+            hamburger.setAttribute('aria-expanded', open);
+        });
+        document.addEventListener('click', function (e) {
+            if (!hamburger.contains(e.target) && !navRight.contains(e.target)) {
+                navRight.classList.remove('is-open');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+        navRight.querySelectorAll('.site-nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                navRight.classList.remove('is-open');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+})();
+
+(function () {
     var btn = document.getElementById('scroll-to-top');
     if (!btn) return;
     window.addEventListener('scroll', function () {
@@ -102,8 +125,13 @@ document.addEventListener('DOMContentLoaded', function () {
     <header class="site-plain-header">
     <nav class="site-nav" role="navigation">
     <div class="site-nav-inner">
-        <a href="/" class="site-nav-brand">Tobias Theel | Senior Software Engineer</a>
-        <div class="site-nav-right">
+        <a href="/" class="site-nav-brand">Tobias Theel<span class="site-nav-brand-sub"> | Senior Software Engineer</span></a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="site-nav-right" id="site-nav-right">
             
 
 <div class="lang-switcher">
@@ -200,14 +228,15 @@ document.addEventListener('DOMContentLoaded', function () {
     <main class="pb7" role="main">
         
 
-<div class="flex-l mt2 mw9 center">
+
+<div class="flex-l mt2 mw9 center page-single-content">
     <article class="center cf pv5 ph3 ph4-ns mw8">
         <header>
             <h1 class="f1 highlight-color">
                 Kontakt
             </h1>
         </header>
-        <div class="nested-copy-line-height lh-copy f4 nested-links forground-dark">
+        <div class="nested-copy-line-height lh-copy f4 nested-links forground-dark page-contact">
             
 
 
@@ -242,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="site-footer-inner">
         <div class="site-footer-col site-footer-brand-col">
             <a href="http://localhost:1313/" class="site-footer-brand">Tobias Theel | Senior Software Engineer</a>
-            <p class="site-footer-tagline">Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and…</p>
         </div>
         <div class="site-footer-col site-footer-nav-col">
             <p class="site-footer-col-heading">Navigation</p>

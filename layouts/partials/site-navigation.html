@@ -4,10 +4,15 @@
             {{- with .Site.Params.site_logo -}}
             <img src="{{ relURL . }}" class="site-nav-logo" alt="{{ $.Site.Title }}">
             {{- else -}}
-            {{- .Site.Title -}}
+            Tobias Theel<span class="site-nav-brand-sub"> | Senior Software Engineer</span>
             {{- end -}}
         </a>
-        <div class="site-nav-right">
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="site-nav-right" id="site-nav-right">
             {{ partial "i18nlist.html" . }}
             {{ if .Site.Menus.main }}
             <ul class="site-nav-menu">
