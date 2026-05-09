@@ -3186,7 +3186,7 @@ body.is-idle {
     height: 380px;
     flex-shrink: 0;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
     display: block;
 }
 .dogs-card-body {
