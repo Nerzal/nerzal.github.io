@@ -2,7 +2,7 @@
 {{ define "main" }}
 {{ $slug := .File.BaseFileName }}
 {{ if .Params.toc }}
-<div class="flex mt2 mw9 center">
+<div class="flex mt2 mw9 center page-single-content">
     <aside class="toc-sidebar dn db-l pr4">
         <nav class="toc-nav">
             <p class="toc-title">Contents</p>
@@ -21,7 +21,7 @@
     </article>
 </div>
 {{ else }}
-<div class="flex-l mt2 mw9 center">
+<div class="flex-l mt2 mw9 center page-single-content">
     <article class="center cf pv5 ph3 ph4-ns mw8">
         <header>
             <h1 class="f1 highlight-color">

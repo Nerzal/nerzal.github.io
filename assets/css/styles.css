@@ -339,14 +339,13 @@ pre:hover .copy-btn {
    ═══════════════════════════════════════════════════════════════ */
 
 @keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUpSm {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
@@ -354,40 +353,33 @@ pre:hover .copy-btn {
     to   { opacity: 1; }
 }
 
-/* Hero elements — staggered fade-up */
-.home-hero-eyebrow {
-    animation: fadeUp 0.6s ease-out 0.1s both;
-}
+/* ── Homepage hero — staggered ── */
+.home-hero-eyebrow   { animation: fadeUp   0.6s ease-out 0.10s both; }
+.home-hero-name      { animation: fadeUp   0.7s ease-out 0.25s both; }
+.home-hero-tagline   { animation: fadeUp   0.6s ease-out 0.42s both; }
+.home-hero-cta       { animation: fadeUp   0.6s ease-out 0.58s both; }
+.home-hero-photo-wrap{ animation: fadeIn   0.9s ease-out 0.20s both; }
 
-.home-hero-name {
-    animation: fadeUp 0.7s ease-out 0.25s both;
-}
+/* ── Blog list ── */
+.blog-list-header { animation: fadeUpSm 0.55s ease-out 0.10s both; }
+.blog-grid        { animation: fadeUpSm 0.60s ease-out 0.26s both; }
 
-.home-hero-tagline {
-    animation: fadeUp 0.6s ease-out 0.42s both;
-}
+/* ── Blog post ── */
+.post-breadcrumb    { animation: fadeUpSm 0.45s ease-out 0.08s both; }
+.post-article-header{ animation: fadeUpSm 0.55s ease-out 0.18s both; }
+.post-article-body  { animation: fadeUpSm 0.60s ease-out 0.32s both; }
 
-.home-hero-cta {
-    animation: fadeUp 0.6s ease-out 0.58s both;
-}
+/* ── Static pages (publications, resume, etc.) ── */
+.page-single-content { animation: fadeUpSm 0.60s ease-out 0.12s both; }
+.resume-page         { animation: fadeUpSm 0.60s ease-out 0.10s both; }
 
-.home-hero-photo-wrap {
-    animation: fadeIn 0.9s ease-out 0.2s both;
-}
-
-/* General page content — gentle fade on load */
-main {
-    animation: fadeIn 0.5s ease-out 0.05s both;
-}
-
-/* Respect reduced-motion preference */
+/* ── Respect reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
-    .home-hero-eyebrow,
-    .home-hero-name,
-    .home-hero-tagline,
-    .home-hero-cta,
-    .home-hero-photo-wrap,
-    main {
+    .home-hero-eyebrow, .home-hero-name, .home-hero-tagline,
+    .home-hero-cta, .home-hero-photo-wrap,
+    .blog-list-header, .blog-grid,
+    .post-breadcrumb, .post-article-header, .post-article-body,
+    .page-single-content, .resume-page {
         animation: none;
     }
 }
@@ -1137,10 +1129,11 @@ body > header:first-of-type {
 }
 
 .home-hero-tagline {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-size: clamp(0.875rem, 1.8vw, 1.05rem);
     color: rgba(228, 241, 254, 0.55);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.015em;
     margin: 0 0 2.25rem;
+    white-space: nowrap;
 }
 
 .home-hero-cta {
@@ -1154,9 +1147,9 @@ body > header:first-of-type {
 .home-hero-split {
     display: flex;
     align-items: center;
-    gap: 5rem;
+    gap: 4rem;
     text-align: left;
-    max-width: 60rem;
+    max-width: 64rem;
 }
 
 .home-hero-split .home-hero-eyebrow,
