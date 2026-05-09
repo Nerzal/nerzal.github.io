@@ -23,6 +23,10 @@
     <link href="{{ .RelPermalink }}" rel="feed" type="application/rss+xml" title="{{ $.Site.Title }}" />
     {{ end }}{{ end }}
     {{- template "_internal/opengraph.html" . -}}
+    {{/* OG image fallback for pages without a featured image */}}
+    {{ if not .Params.images }}
+    <meta property="og:image" content="{{ absURL "img/profile2.jpg" }}">
+    {{ end }}
     {{- template "_internal/schema.html" . -}}
     {{- template "_internal/twitter_cards.html" . -}}
     {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production") }}{{ template "_internal/google_analytics.html" . }}{{ end }}
@@ -30,6 +34,8 @@
 </head>
 
 <body class="ma0 {{ $.Param "body_classes" | default "avenir background-dark" }}{{ with getenv "HUGO_ENV" }} {{ . }}{{ end }}">
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     {{ block "header" . }}
         {{ partial "site-header.html" .}}
@@ -59,7 +65,7 @@
         <div class="mobile-nav-socials">{{ partial "social-follow.html" . }}</div>
     </div>
 
-    <main class="pb7" role="main">
+    <main class="pb7" role="main" id="main-content">
         {{ block "main" . }}{{ end }}
     </main>
 

@@ -1,20 +1,16 @@
-{{ $.Scratch.Add "labelClasses" "f6 b db mb1 mt3 sans-serif mid-gray" }}
-{{ $.Scratch.Add "inputClasses" "w-100 f5 pv3 ph3 bg-light-gray bn" }}
-
-<form class="black-80 sans-serif" accept-charset="UTF-8" action="{{ .Get "action" }}" method="POST" role="form">
-
-    <label class="{{ $.Scratch.Get "labelClasses" }}"  for="name">{{ i18n "yourName" }}</label>
-    <input type="text" id="name" name="name" class="{{ $.Scratch.Get "inputClasses" }}"  required placeholder=" "  aria-labelledby="name"/>
-
-    <label class="{{ $.Scratch.Get "labelClasses" }}" for="email">{{ i18n "emailAddress" }}</label>
-    <input type="email" id="email" name="email" class="{{ $.Scratch.Get "inputClasses" }}"  required placeholder=" "  aria-labelledby="email"/>
-    <div class="requirements f6 gray glow i ph3 overflow-hidden">
-      {{ i18n "emailRequiredNote" }}
+<form class="contact-form" accept-charset="UTF-8" action="{{ .Get "action" }}" method="POST" role="form">
+    <div class="contact-form-field">
+        <label class="contact-form-label" for="name">{{ i18n "yourName" }}</label>
+        <input class="contact-form-input" type="text" id="name" name="name" required placeholder=" " aria-labelledby="name">
     </div>
-
-    <label class="{{ $.Scratch.Get "labelClasses" }}" for="message">{{ i18n "message" }}</label>
-    <textarea id="message" name="message" class="{{ $.Scratch.Get "inputClasses" }} h4" aria-labelledby="message"></textarea>
-
-    <input class="db w-100 mv2 white pa3 bn hover-shadow hover-bg-black bg-animate bg-black" type="submit" value="{{ i18n "send" }}" />
-
+    <div class="contact-form-field">
+        <label class="contact-form-label" for="email">{{ i18n "emailAddress" }}</label>
+        <input class="contact-form-input" type="email" id="email" name="email" required placeholder=" " aria-labelledby="email">
+        <p class="contact-form-hint">{{ i18n "emailRequiredNote" }}</p>
+    </div>
+    <div class="contact-form-field">
+        <label class="contact-form-label" for="message">{{ i18n "message" }}</label>
+        <textarea class="contact-form-input contact-form-textarea" id="message" name="message" aria-labelledby="message"></textarea>
+    </div>
+    <button class="site-btn site-btn--primary contact-form-submit" type="submit">{{ i18n "send" }}</button>
 </form>

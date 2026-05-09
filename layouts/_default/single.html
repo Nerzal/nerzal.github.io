@@ -1,5 +1,6 @@
 {{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
 {{ define "main" }}
+<div id="read-progress" class="read-progress-bar" aria-hidden="true"></div>
 {{ $section := .Site.GetPage "section" .Section }}
 <article class="post-article">
 

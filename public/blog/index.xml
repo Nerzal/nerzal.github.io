@@ -1,29 +1,82 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/blog/</link><description>Recent content in Blog on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.noobygames.de/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>How to add a global .gitignore</title><link>https://blog.noobygames.de/blog/global-gitignore/</link><pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/global-gitignore/</guid><description>&lt;p&gt;Every developer has done it at least once: accidentally committed a &lt;code&gt;.DS_Store&lt;/code&gt; file, a &lt;code&gt;.idea/&lt;/code&gt; folder, or some other machine-specific artifact into a shared repository. A per-project &lt;code&gt;.gitignore&lt;/code&gt; helps, but you have to repeat yourself in every repo. The solution is a &lt;strong&gt;global &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; — a single file that Git applies to every repository on your machine.&lt;/p&gt;
-&lt;h2 id="how-git-decides-what-to-ignore"&gt;How Git decides what to ignore&lt;/h2&gt;
-&lt;p&gt;Git evaluates ignore rules from three sources, in order of specificity:&lt;/p&gt;</description></item><item><title>How to Secure SSH Access on Linux (Ubuntu)</title><link>https://blog.noobygames.de/blog/secure-ssh-server/</link><pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/secure-ssh-server/</guid><description>&lt;p&gt;Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the &lt;code&gt;root&lt;/code&gt; account enabled, it is not a question of &lt;em&gt;if&lt;/em&gt; an attacker gets in — it is a question of &lt;em&gt;when&lt;/em&gt;. This guide walks you through four concrete steps that eliminate the most common attack surface:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Create an SSH key pair&lt;/strong&gt; on your local machine&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Create a dedicated sudo user&lt;/strong&gt; on the server&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Deploy your public key&lt;/strong&gt; to the server&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Harden &lt;code&gt;sshd&lt;/code&gt;&lt;/strong&gt;: disable password login and block root login&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;</description></item><item><title>Beyond the Backend: My React Side Projects</title><link>https://blog.noobygames.de/blog/react-showcase/</link><pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/react-showcase/</guid><description>&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&amp;rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.&lt;/p&gt;
-&lt;p&gt;Today, I want to &amp;ldquo;show off&amp;rdquo; a couple of these projects to give you a glimpse into what I build when I&amp;rsquo;m not writing Go services.&lt;/p&gt;</description></item><item><title>Containerization and Go: A Powerful Combination</title><link>https://blog.noobygames.de/blog/go-docker/</link><pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/go-docker/</guid><description>&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is &lt;a href="https://golang.org/"&gt;Go&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.&lt;/p&gt;
-&lt;h2 id="gos-advantages-for-containerization"&gt;Go&amp;rsquo;s Advantages for Containerization&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Lightweight binaries&lt;/strong&gt;: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.&lt;/p&gt;</description></item><item><title>Conway's Game of Life in Go: A Step-by-Step Guide</title><link>https://blog.noobygames.de/blog/game-of-life/</link><pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/game-of-life/</guid><description>&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"&gt;Conway&amp;rsquo;s Game of Life&lt;/a&gt; is a famous cellular automaton devised by the British mathematician John Horton Conway. It is a zero-player game that evolves over time based on its initial state, requiring no further input from the player. The game takes place on an infinite two-dimensional grid of square cells, with each cell being either alive or dead.&lt;/p&gt;
-&lt;p&gt;In this blog post, we&amp;rsquo;ll explore how to implement Conway&amp;rsquo;s Game of Life in Go. We&amp;rsquo;ll provide step-by-step instructions, complete with functioning example code and detailed explanations.&lt;/p&gt;</description></item><item><title>Bounded Context</title><link>https://blog.noobygames.de/blog/bounded-context/</link><pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate><guid>https://blog.noobygames.de/blog/bounded-context/</guid><description>&lt;h3 id="what-is-a-bounded-context"&gt;What is a bounded context?&lt;/h3&gt;
-&lt;p&gt;Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.&lt;/p&gt;
-&lt;p&gt;Think of a large enterprise. The term &amp;ldquo;Customer&amp;rdquo; might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term &amp;ldquo;Customer&amp;rdquo; has a precise, unambiguous meaning.&lt;/p&gt;</description></item><item><title>Event Storming</title><link>https://blog.noobygames.de/blog/event-storming/</link><pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate><guid>https://blog.noobygames.de/blog/event-storming/</guid><description>&lt;h2 id="what-is-event-storming"&gt;What is Event Storming?&lt;/h2&gt;
-&lt;p&gt;Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.&lt;/p&gt;
-&lt;p&gt;In event storming, the participants work together to &lt;strong&gt;identify events&lt;/strong&gt; that occur within the system or process, and then organize these events into a &lt;strong&gt;timeline&lt;/strong&gt; that represents the &lt;strong&gt;flow of actions&lt;/strong&gt; and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.&lt;/p&gt;</description></item><item><title>How to check if a binary is statically or dynamically linked</title><link>https://blog.noobygames.de/blog/check-static-linking/</link><pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate><guid>https://blog.noobygames.de/blog/check-static-linking/</guid><description>&lt;h2 id="what-is-the-difference-between-statically-and-dynamically-linked-binaries"&gt;What is the difference between statically and dynamically linked binaries?&lt;/h2&gt;
-&lt;p&gt;Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.&lt;/p&gt;
-&lt;p&gt;A statically linked binary &lt;strong&gt;includes all necessary libraries&lt;/strong&gt; within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.&lt;/p&gt;</description></item><item><title>Introduction to Hugo #1</title><link>https://blog.noobygames.de/blog/install-hugo/</link><pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate><guid>https://blog.noobygames.de/blog/install-hugo/</guid><description>&lt;h2 id="what-is-hugo"&gt;What is Hugo?&lt;/h2&gt;
-&lt;p&gt;Hugo is a static site generator that offers several benefits for building fast and secure websites.&lt;/p&gt;
-&lt;p&gt;It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.&lt;/p&gt;
-&lt;p&gt;Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.&lt;/p&gt;</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/blog/</link>
+    <description>Recent content in Blog on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to add a global .gitignore</title>
+      <link>http://localhost:1313/blog/global-gitignore/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/global-gitignore/</guid>
+      <description>&lt;p&gt;Every developer has done it at least once: accidentally committed a &lt;code&gt;.DS_Store&lt;/code&gt; file, a &lt;code&gt;.idea/&lt;/code&gt; folder, or some other machine-specific artifact into a shared repository. A per-project &lt;code&gt;.gitignore&lt;/code&gt; helps, but you have to repeat yourself in every repo. The solution is a &lt;strong&gt;global &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; — a single file that Git applies to every repository on your machine.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-git-decides-what-to-ignore&#34;&gt;How Git decides what to ignore&lt;/h2&gt;&#xA;&lt;p&gt;Git evaluates ignore rules from three sources, in order of specificity:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How to Secure SSH Access on Linux (Ubuntu)</title>
+      <link>http://localhost:1313/blog/secure-ssh-server/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/secure-ssh-server/</guid>
+      <description>&lt;p&gt;Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the &lt;code&gt;root&lt;/code&gt; account enabled, it is not a question of &lt;em&gt;if&lt;/em&gt; an attacker gets in — it is a question of &lt;em&gt;when&lt;/em&gt;. This guide walks you through four concrete steps that eliminate the most common attack surface:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create an SSH key pair&lt;/strong&gt; on your local machine&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create a dedicated sudo user&lt;/strong&gt; on the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deploy your public key&lt;/strong&gt; to the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Harden &lt;code&gt;sshd&lt;/code&gt;&lt;/strong&gt;: disable password login and block root login&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Beyond the Backend: My React Side Projects</title>
+      <link>http://localhost:1313/blog/react-showcase/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/react-showcase/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;While a lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, I&amp;rsquo;ve always had a soft spot for frontend development. In my free time, I enjoy experimenting with React to build tools and interfaces that are both functional and performant.&lt;/p&gt;&#xA;&lt;p&gt;Today, I want to &amp;ldquo;show off&amp;rdquo; a couple of these projects to give you a glimpse into what I build when I&amp;rsquo;m not writing Go services.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Creating your own Unity library package</title>
+      <link>http://localhost:1313/blog/unity-libraries/</link>
+      <pubDate>Mon, 20 Mar 2023 10:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/blog/unity-libraries/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Developing games in Unity often requires leveraging third-party libraries to handle complex tasks like dependency injection, tweening, or networking. In this post, we&amp;rsquo;ll explore the must-have libraries for any serious Unity project.&lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;(Content placeholder for Unity libraries)&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Containerization and Go: A Powerful Combination</title>
+      <link>http://localhost:1313/blog/go-docker/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/go-docker/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Containerization has become an essential part of modern software development, making it easier to deploy and manage applications across multiple environments. One of the programming languages that has proven to be a great fit for containerized applications is &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we will explore why Go is an excellent choice for containerized applications and how it works seamlessly with containerization technologies like Docker and Kubernetes.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-advantages-for-containerization&#34;&gt;Go&amp;rsquo;s Advantages for Containerization&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lightweight binaries&lt;/strong&gt;: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Conway&#39;s Game of Life in Go: A Step-by-Step Guide</title>
+      <link>http://localhost:1313/blog/game-of-life/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/game-of-life/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life&#34;&gt;Conway&amp;rsquo;s Game of Life&lt;/a&gt; is a famous cellular automaton devised by the British mathematician John Horton Conway. It is a zero-player game that evolves over time based on its initial state, requiring no further input from the player. The game takes place on an infinite two-dimensional grid of square cells, with each cell being either alive or dead.&lt;/p&gt;&#xA;&lt;p&gt;In this blog post, we&amp;rsquo;ll explore how to implement Conway&amp;rsquo;s Game of Life in Go. We&amp;rsquo;ll provide step-by-step instructions, complete with functioning example code and detailed explanations.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bounded Context</title>
+      <link>http://localhost:1313/blog/bounded-context/</link>
+      <pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/bounded-context/</guid>
+      <description>&lt;h3 id=&#34;what-is-a-bounded-context&#34;&gt;What is a bounded context?&lt;/h3&gt;&#xA;&lt;p&gt;Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.&lt;/p&gt;&#xA;&lt;p&gt;Think of a large enterprise. The term &amp;ldquo;Customer&amp;rdquo; might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term &amp;ldquo;Customer&amp;rdquo; has a precise, unambiguous meaning.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Event Storming</title>
+      <link>http://localhost:1313/blog/event-storming/</link>
+      <pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/event-storming/</guid>
+      <description>&lt;h2 id=&#34;what-is-event-storming&#34;&gt;What is Event Storming?&lt;/h2&gt;&#xA;&lt;p&gt;Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.&lt;/p&gt;&#xA;&lt;p&gt;In event storming, the participants work together to &lt;strong&gt;identify events&lt;/strong&gt; that occur within the system or process, and then organize these events into a &lt;strong&gt;timeline&lt;/strong&gt; that represents the &lt;strong&gt;flow of actions&lt;/strong&gt; and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How to check if a binary is statically or dynamically linked</title>
+      <link>http://localhost:1313/blog/check-static-linking/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/check-static-linking/</guid>
+      <description>&lt;h2 id=&#34;what-is-the-difference-between-statically-and-dynamically-linked-binaries&#34;&gt;What is the difference between statically and dynamically linked binaries?&lt;/h2&gt;&#xA;&lt;p&gt;Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.&lt;/p&gt;&#xA;&lt;p&gt;A statically linked binary &lt;strong&gt;includes all necessary libraries&lt;/strong&gt; within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Introduction to Hugo #1</title>
+      <link>http://localhost:1313/blog/install-hugo/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/blog/install-hugo/</guid>
+      <description>&lt;h2 id=&#34;what-is-hugo&#34;&gt;What is Hugo?&lt;/h2&gt;&#xA;&lt;p&gt;Hugo is a static site generator that offers several benefits for building fast and secure websites.&lt;/p&gt;&#xA;&lt;p&gt;It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.&lt;/p&gt;&#xA;&lt;p&gt;Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

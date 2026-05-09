@@ -1430,6 +1430,194 @@ main.pb7 {
 
 
 /* ═══════════════════════════════════════════════════════════════
+   SKIP LINK (accessibility)
+   ═══════════════════════════════════════════════════════════════ */
+
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    background: var(--highlight-color);
+    color: var(--background-color);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 0 0 6px 6px;
+    text-decoration: none;
+    transition: top 0.2s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   READING PROGRESS BAR
+   ═══════════════════════════════════════════════════════════════ */
+
+.read-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--highlight-color);
+    z-index: 300;
+    transition: width 0.08s linear;
+    pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   404 PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+.not-found-page {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.not-found-code {
+    font-size: clamp(5rem, 20vw, 10rem);
+    font-weight: 800;
+    color: var(--highlight-color);
+    opacity: 0.15;
+    line-height: 1;
+    margin: 0 0 -1rem;
+    letter-spacing: -0.04em;
+}
+
+.not-found-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.75rem;
+}
+
+.not-found-desc {
+    font-size: 1rem;
+    color: rgba(228, 241, 254, 0.55);
+    margin: 0 0 2rem;
+}
+
+.not-found-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   TAG / TAXONOMY PAGES
+   ═══════════════════════════════════════════════════════════════ */
+
+.terms-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.term-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.9rem;
+    background: var(--background-color-light);
+    border: 1px solid rgba(228, 241, 254, 0.1);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.term-card:hover {
+    border-color: var(--highlight-color);
+    transform: translateY(-2px);
+}
+
+.term-card-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.term-card-count {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--highlight-color);
+    background: rgba(0, 255, 127, 0.1);
+    border-radius: 3px;
+    padding: 0.1rem 0.35rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTACT FORM
+   ═══════════════════════════════════════════════════════════════ */
+
+.contact-form {
+    max-width: 36rem;
+    margin-top: 2rem;
+}
+
+.contact-form-field {
+    margin-bottom: 1.25rem;
+}
+
+.contact-form-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(228, 241, 254, 0.55);
+    margin-bottom: 0.45rem;
+}
+
+.contact-form-input {
+    display: block;
+    width: 100%;
+    background: var(--background-color-light);
+    border: 1px solid rgba(228, 241, 254, 0.12);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    font-family: inherit;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.contact-form-input:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+}
+
+.contact-form-textarea {
+    min-height: 10rem;
+    resize: vertical;
+}
+
+.contact-form-hint {
+    font-size: 0.75rem;
+    color: rgba(228, 241, 254, 0.35);
+    margin: 0.3rem 0 0;
+}
+
+.contact-form-submit {
+    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: center;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
    MOBILE — HAMBURGER NAV
    ═══════════════════════════════════════════════════════════════ */
 

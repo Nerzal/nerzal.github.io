@@ -1,16 +1,16 @@
 {{ define "main" }}
-<article class="cf pa3 pa4-m pa4-l">
-    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links foreground-dark">
-        <p>{{ i18n "taxonomyPageList" . }}</p>
-    </div>
-</article>
-<div class="mw8 center">
-    <section class="flex-ns flex-wrap justify-around mt5">
-        {{ range .Pages }}
-        <div class="relative w-100  mb4 bg-white">
-            {{ .Render "summary" }}
-        </div>
+{{ $term := .Title }}
+{{ $pages := .Pages }}
+<div class="blog-list-page mw9 center ph3 ph4-l pv4 pv5-l">
+    <header class="blog-list-header">
+        <p class="blog-list-eyebrow">{{ .Data.Singular | humanize }}</p>
+        <h1 class="blog-list-title">{{ $term }}</h1>
+        <p class="blog-list-count">{{ len $pages }} {{ i18n "articlesLabel" | default "articles" }}</p>
+    </header>
+    <div class="blog-grid">
+        {{ range $pages }}
+        {{ .Render "summary" }}
         {{ end }}
-    </section>
+    </div>
 </div>
 {{ end }}

@@ -27,6 +27,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Reading progress bar
+    var progressBar = document.getElementById('read-progress');
+    if (progressBar) {
+        window.addEventListener('scroll', function () {
+            var content = document.querySelector('.post-article-content');
+            if (!content) return;
+            var total = content.offsetHeight - window.innerHeight;
+            var scrolled = Math.max(0, -(content.getBoundingClientRect().top));
+            progressBar.style.width = Math.min(100, (scrolled / total) * 100) + '%';
+        }, { passive: true });
+    }
+
     // Scroll-to-top button
     var btn = document.getElementById('scroll-to-top');
     if (btn) {
