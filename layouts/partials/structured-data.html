@@ -1,49 +1,123 @@
-{{/* JSON-LD structured data — Article for blog posts, WebSite for other pages */}}
+{{/* JSON-LD structured data */}}
+
 {{ if and .IsPage (eq .Section "blog") }}
+{{/* ── TechArticle + BreadcrumbList for blog posts ── */}}
 {{ $img := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
+{{ $readingMins := .ReadingTime | default 1 }}
+{{ $sectionPage := site.GetPage "/blog" }}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "TechArticle",
-  "headline": {{ .Title | jsonify }},
-  "description": {{ with .Description }}{{ . | jsonify }}{{ else }}{{ .Summary | jsonify }}{{ end }},
-  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
-  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
-  "url": "{{ .Permalink }}",
-  {{ with $img }}"image": "{{ . | absURL }}",{{ end }}
-  "author": {
-    "@type": "Person",
-    "name": {{ site.Params.author | jsonify }},
-    "url": "{{ site.BaseURL }}"
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": {{ .Title | jsonify }},
+    "description": {{ with .Description }}{{ . | jsonify }}{{ else }}{{ .Summary | jsonify }}{{ end }},
+    "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+    "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+    "url": "{{ .Permalink }}",
+    "inLanguage": "{{ .Language.Lang }}",
+    "wordCount": {{ .WordCount }},
+    "timeRequired": "PT{{ $readingMins }}M",
+    {{ with $img }}"image": "{{ . | absURL }}",{{ end }}
+    {{ with .Params.tags }}"keywords": {{ . | jsonify }},{{ end }}
+    "author": {
+      "@type": "Person",
+      "name": {{ site.Params.author | jsonify }},
+      "url": "{{ site.BaseURL }}"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": {{ site.Params.author | jsonify }},
+      "url": "{{ site.BaseURL }}"
+    },
+    "isPartOf": {
+      "@type": "Blog",
+      "name": {{ with $sectionPage }}{{ .Title | jsonify }}{{ else }}"Blog"{{ end }},
+      "url": "{{ with $sectionPage }}{{ .Permalink }}{{ else }}{{ site.BaseURL }}blog/{{ end }}"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ .Permalink }}"
+    }
   },
-  "publisher": {
-    "@type": "Person",
-    "name": {{ site.Params.author | jsonify }},
-    "url": "{{ site.BaseURL }}"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ .Permalink }}"
-  }
-}
-</script>
-{{ else if .IsHome }}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "url": "{{ .Permalink }}",
-  "name": {{ site.Title | jsonify }},
-  "description": {{ site.Params.description | jsonify }},
-  "mainEntity": {
-    "@type": "Person",
-    "name": {{ site.Params.author | jsonify }},
-    "jobTitle": {{ site.Params.tagline | jsonify }},
-    "url": "{{ site.BaseURL }}",
-    "sameAs": [
-      {{ range $i, $s := site.Params.socials }}{{ if $i }},{{ end }}"{{ $s.url }}"{{ end }}
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ site.BaseURL }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ with $sectionPage }}{{ .Title | jsonify }}{{ else }}"Blog"{{ end }},
+        "item": "{{ with $sectionPage }}{{ .Permalink }}{{ else }}{{ site.BaseURL }}blog/{{ end }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ .Title | jsonify }},
+        "item": "{{ .Permalink }}"
+      }
     ]
   }
+]
+</script>
+
+{{ else if .IsHome }}
+{{/* ── ProfilePage + WebSite for home ── */}}
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "url": "{{ .Permalink }}",
+    "name": {{ site.Title | jsonify }},
+    "description": {{ site.Params.description | jsonify }},
+    "mainEntity": {
+      "@type": "Person",
+      "name": {{ site.Params.author | jsonify }},
+      "jobTitle": {{ site.Params.tagline | jsonify }},
+      "url": "{{ site.BaseURL }}",
+      "sameAs": [
+        {{ range $i, $s := site.Params.socials }}{{ if $i }},{{ end }}"{{ $s.url }}"{{ end }}
+      ]
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "{{ site.BaseURL }}",
+    "name": {{ site.Title | jsonify }},
+    "description": {{ site.Params.description | jsonify }},
+    "inLanguage": "{{ .Language.Lang }}"
+  }
+]
+</script>
+
+{{ else if and .IsPage .CurrentSection }}
+{{/* ── BreadcrumbList for other single pages ── */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ site.BaseURL }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ .Title | jsonify }},
+      "item": "{{ .Permalink }}"
+    }
+  ]
 }
 </script>
 {{ end }}

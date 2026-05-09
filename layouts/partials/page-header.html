@@ -3,8 +3,15 @@
 </header>
 {{ $imgRaw := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 {{ with $imgRaw }}
+{{ $path := strings.TrimPrefix "/" (. | relURL) }}
+{{ $heroRes := resources.Get $path }}
 <div class="post-hero-banner">
-    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager">
+    {{ if $heroRes }}
+    {{ $hasSize := not (in (slice ".svg" ".gif") (path.Ext $path)) }}
+    <img src="{{ $heroRes.RelPermalink }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager" decoding="async"{{ if $hasSize }} width="{{ $heroRes.Width }}" height="{{ $heroRes.Height }}"{{ end }}>
+    {{ else }}
+    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager" decoding="async">
+    {{ end }}
     <div class="post-hero-banner-overlay"></div>
 </div>
 {{ end }}

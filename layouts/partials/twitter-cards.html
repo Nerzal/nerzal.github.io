@@ -1,0 +1,14 @@
+{{/* Custom Twitter Cards — uses summary_large_image when featured image exists */}}
+{{ $hasImage := or .Params.featured_image .Params.images }}
+<meta name="twitter:card" content="{{ if $hasImage }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:title" content="{{ with .Params.Title }}{{ . }}{{ else }}{{ site.Title }}{{ end }}">
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary | truncate 200 | plainify }}{{ else }}{{ site.Params.description }}{{ end }}{{ end }}">
+{{ if .Params.featured_image }}
+    {{ $res := resources.Get (trim .Params.featured_image "/") }}
+    {{ if $res }}
+<meta name="twitter:image" content="{{ $res.Permalink | absURL }}">
+<meta name="twitter:image:alt" content="{{ .Title }}">
+    {{ end }}
+{{ else if .Params.images }}
+<meta name="twitter:image" content="{{ index .Params.images 0 | absURL }}">
+{{ end }}

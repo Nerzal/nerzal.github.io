@@ -1,12 +1,16 @@
 {{ $src := .Get "image" }}
 {{ $alt := .Get "imageAlt" }}
 {{ $assetPath := strings.TrimPrefix "/" $src }}
+{{ $w := 0 }}
+{{ $h := 0 }}
 {{ with resources.Get $assetPath }}
     {{ $src = .RelPermalink }}
+    {{ $w = .Width }}
+    {{ $h = .Height }}
 {{ end }}
 <div class="image-text-container">
     <div class="image-container">
-        <img src="{{ $src }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+        <img src="{{ $src }}" alt="{{ $alt }}" loading="lazy" decoding="async"{{ if $w }} width="{{ $w }}" height="{{ $h }}"{{ end }}>
     </div>
     <div class="text-container">
         <p>{{ .Inner | markdownify }}</p>

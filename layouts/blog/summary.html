@@ -1,11 +1,17 @@
 {{ $img := "" }}
 {{ $imgWebP := "" }}
+{{ $imgW := 0 }}
+{{ $imgH := 0 }}
 {{ with .Params.featured_image }}
     {{ $path := trim . "/" }}
     {{ with resources.Get $path }}
         {{ $img = .RelPermalink }}
         {{ if not (in (slice ".gif" ".svg") (path.Ext $path)) }}
             {{ $imgWebP = (.Process "convert webp").RelPermalink }}
+        {{ end }}
+        {{ if not (in (slice ".gif" ".svg") (path.Ext $path)) }}
+            {{ $imgW = .Width }}
+            {{ $imgH = .Height }}
         {{ end }}
     {{ else }}
         {{ $img = $path | absURL }}
@@ -20,7 +26,7 @@
         {{ if $img }}
         <picture>
             {{ if $imgWebP }}<source srcset="{{ $imgWebP }}" type="image/webp">{{ end }}
-            <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy" decoding="async">
+            <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy" decoding="async"{{ if $imgW }} width="{{ $imgW }}" height="{{ $imgH }}"{{ end }}>
         </picture>
         {{ else }}
         <div class="blog-card-img-placeholder">
