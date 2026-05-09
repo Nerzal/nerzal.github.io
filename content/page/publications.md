@@ -73,6 +73,10 @@ All games below were created as Ludum Dare submissions and are freely available 
 
 In a small cabin in the woods, a young guy tries to escape an ancient evil lurking beneath the cabin floor. A 2D platformer where you must guide the player upward and out — before the relentless pursuer catches them. Features double jumps, riddles, and helpful ghosts along the way.
 
+{{< youtube src=https://www.youtube-nocookie.com/embed/Z3jbeo6E7NM title="Goo'n'Ghosts">}}
+Goo'n'Ghosts — Ludum Dare 42 submission
+{{< /youtube >}}
+
 [Play on itch.io](https://nerzal.itch.io/goonghosts) · *Made with Wr4thon*
 
 ### 2019: Dudes of Wizardry (Ludum Dare 44)

@@ -73,6 +73,10 @@ Alle folgenden Spiele entstanden als Ludum-Dare-Beiträge und sind kostenlos auf
 
 In einer kleinen Hütte im Wald versucht ein junger Mann, einem uralten Bösen zu entkommen, das unter den Dielen lauert. Ein 2D-Platformer, in dem du den Spieler nach oben führen musst — bevor der unerbittliche Verfolger ihn einholt. Mit Doppelsprung, Rätseln und hilfreichen Geistern.
 
+{{< youtube src=https://www.youtube-nocookie.com/embed/Z3jbeo6E7NM title="Goo'n'Ghosts">}}
+Goo'n'Ghosts — Ludum Dare 42 Einreichung
+{{< /youtube >}}
+
 [Spielen auf itch.io](https://nerzal.itch.io/goonghosts) · *Entwickelt mit Wr4thon*
 
 ### 2019: Dudes of Wizardry (Ludum Dare 44)
