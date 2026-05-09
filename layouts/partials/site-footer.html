@@ -1,17 +1,28 @@
-<footer class="{{ .Site.Params.background_color_class | default " bg-black " }} bottom-0 w-100 pa3" role="contentinfo">
-    <div class="flex justify-between">
-        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="{{ .Site.Home.Permalink }}">
-        {{ with .Site.Copyright | default .Site.Title }} 
-            {{ . | safeHTML }} 
-            {{ now.Format "2006"}} 
-        {{ end }}
-      </a>
-        <div>
-            {{ range .Site.Menus.footer}}
-                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="{{ .URL }}">{{ .Name }}</a> 
-            {{ end }}
+<footer class="site-footer" role="contentinfo">
+    <div class="site-footer-inner">
+        <div class="site-footer-col site-footer-brand-col">
+            <a href="{{ .Site.Home.Permalink }}" class="site-footer-brand">{{ .Site.Title }}</a>
+            <p class="site-footer-tagline">{{ .Site.Params.description | truncate 90 "…" }}</p>
         </div>
-
-        <!-- <div>{{ partial "social-follow.html" . }}</div> -->
+        <div class="site-footer-col site-footer-nav-col">
+            <p class="site-footer-col-heading">Navigation</p>
+            <ul class="site-footer-links">
+                {{ range .Site.Menus.main }}
+                <li><a href="{{ .URL }}" class="site-footer-link">{{ .Name }}</a></li>
+                {{ end }}
+                {{ range .Site.Menus.footer }}
+                <li><a href="{{ .URL }}" class="site-footer-link">{{ .Name }}</a></li>
+                {{ end }}
+            </ul>
+        </div>
+        <div class="site-footer-col site-footer-social-col">
+            <p class="site-footer-col-heading">Connect</p>
+            <div class="site-footer-socials">
+                {{ partial "social-follow.html" . }}
+            </div>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <span class="site-footer-copy">© {{ now.Format "2006" }} {{ with .Site.Copyright }}{{ . | safeHTML }}{{ else }}{{ .Site.Title }}{{ end }}</span>
     </div>
 </footer>

@@ -1,19 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Ubuntu on Tobias Theel | Senior Software Engineer</title>
-    <link>http://localhost:1313/tags/ubuntu/</link>
-    <description>Recent content in Ubuntu on Tobias Theel | Senior Software Engineer</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>How to Secure SSH Access on Linux (Ubuntu)</title>
-      <link>http://localhost:1313/blog/secure-ssh-server/</link>
-      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/secure-ssh-server/</guid>
-      <description>&lt;p&gt;Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the &lt;code&gt;root&lt;/code&gt; account enabled, it is not a question of &lt;em&gt;if&lt;/em&gt; an attacker gets in — it is a question of &lt;em&gt;when&lt;/em&gt;. This guide walks you through four concrete steps that eliminate the most common attack surface:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create an SSH key pair&lt;/strong&gt; on your local machine&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create a dedicated sudo user&lt;/strong&gt; on the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deploy your public key&lt;/strong&gt; to the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Harden &lt;code&gt;sshd&lt;/code&gt;&lt;/strong&gt;: disable password login and block root login&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ubuntu on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/tags/ubuntu/</link><description>Recent content in Ubuntu on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.noobygames.de/tags/ubuntu/index.xml" rel="self" type="application/rss+xml"/><item><title>How to Secure SSH Access on Linux (Ubuntu)</title><link>https://blog.noobygames.de/blog/secure-ssh-server/</link><pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/blog/secure-ssh-server/</guid><description>&lt;p&gt;Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the &lt;code&gt;root&lt;/code&gt; account enabled, it is not a question of &lt;em&gt;if&lt;/em&gt; an attacker gets in — it is a question of &lt;em&gt;when&lt;/em&gt;. This guide walks you through four concrete steps that eliminate the most common attack surface:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Create an SSH key pair&lt;/strong&gt; on your local machine&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Create a dedicated sudo user&lt;/strong&gt; on the server&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deploy your public key&lt;/strong&gt; to the server&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Harden &lt;code&gt;sshd&lt;/code&gt;&lt;/strong&gt;: disable password login and block root login&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;</description></item></channel></rss>

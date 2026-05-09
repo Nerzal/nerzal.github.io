@@ -1,482 +1,71 @@
-<!DOCTYPE html>
-<html lang="de"ZgotmplZ>
-
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-    <title>Einführung in Hugo #1 | Tobias Theel | Senior Software Engineer</title>
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."> <meta name="generator" content="Hugo 0.160.1">    
-    <meta name="robots" content="noindex, nofollow"> 
-     
-    
-<link rel="stylesheet" href="/css/main.min.css" >
-
-
-
-  
-
-  
- 
-    
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('pre').forEach(function (pre) {
-        var button = document.createElement('button');
-        button.className = 'copy-btn';
-        button.textContent = 'Copy';
-        button.addEventListener('click', function () {
-            var code = pre.querySelector('code');
-            var text = code ? code.innerText : pre.innerText;
-            navigator.clipboard.writeText(text).then(function () {
-                button.textContent = 'Copied!';
-                button.classList.add('copied');
-                setTimeout(function () {
-                    button.textContent = 'Copy';
-                    button.classList.remove('copied');
-                }, 2000);
-            });
-        });
-        pre.appendChild(button);
-    });
-});
-</script> 
-     
-        
- 
-     
-     <meta property="og:url" content="http://localhost:1313/de/blog/install-hugo/">
-  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
-  <meta property="og:title" content="Einführung in Hugo #1">
-  <meta property="og:description" content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen.">
-  <meta property="og:locale" content="de">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="blog">
-    <meta property="article:published_time" content="2023-01-02T23:46:14+01:00">
-    <meta property="article:modified_time" content="2023-01-02T23:46:14+01:00">
-    <meta property="article:tag" content="Tutorial">
-    <meta property="article:tag" content="Hugo">
-    <meta property="og:image" content="http://localhost:1313/hugo-logo-wide.svg">
-
-  <meta itemprop="name" content="Einführung in Hugo #1">
-  <meta itemprop="description" content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen.">
-  <meta itemprop="datePublished" content="2023-01-02T23:46:14+01:00">
-  <meta itemprop="dateModified" content="2023-01-02T23:46:14+01:00">
-  <meta itemprop="wordCount" content="927">
-  <meta itemprop="image" content="http://localhost:1313/hugo-logo-wide.svg">
-  <meta itemprop="keywords" content="Tutorial,Hugo">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="http://localhost:1313/hugo-logo-wide.svg">
-  <meta name="twitter:title" content="Einführung in Hugo #1">
-  <meta name="twitter:description" content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen.">
- 
-</head>
-
-<body class="ma0 avenir background-dark ">
-
-      <header>
-    <div class="background-dark">
-        <nav class="pv3 ph3 ph4-ns" role="navigation">
-    <div class="flex-l justify-between items-center center">
-        <a href="/de/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
-      
-        Tobias Theel | Senior Software Engineer
-      
-    </a>
-        <div class="flex-l items-center">
-            
-
-<div class="lang-switcher">
-  
-  
-    
-    
-      
-    
-    <a href="/blog/install-hugo/" class="lang-btn" title="English">EN</a>
-  
-  <span class="lang-divider">|</span>
-  
-  
-    <span class="lang-btn lang-btn--current">DE</span>
-  
-</div>
- 
-            <ul class="pl0 mr3 ">
-                
-                <li class="list f5 f4-ns fw4 dib pr3 ">
-                    <a class="no-underline foreground-dark" href="/de/" title="">
-              Startseite
-            </a>
-                </li>
-                
-                <li class="list f5 f4-ns fw4 dib pr3 ">
-                    <a class="no-underline foreground-dark" href="/de/page/resume/" title="">
-              Lebenslauf
-            </a>
-                </li>
-                
-                <li class="list f5 f4-ns fw4 dib pr3 ">
-                    <a class="no-underline foreground-dark" href="/de/blog/" title="">
-              Blog
-            </a>
-                </li>
-                
-                <li class="list f5 f4-ns fw4 dib pr3 ">
-                    <a class="no-underline foreground-dark" href="/de/page/publications/" title="">
-              Publikationen
-            </a>
-                </li>
-                
-            </ul>
-             
-<div class="socials">
-     
-    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
-        aria-label="follow on LinkedIn——Opens in a new window">
-      
-        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
-  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
-</svg></span>
-      
-<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
-<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
-</svg>
-</span></a>  
-    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
-        aria-label="follow on GitHub——Opens in a new window">
-      
-        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
-  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
-</svg></span>
-      
-<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
-<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
-</svg>
-</span></a>  
-    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
-        aria-label="follow on bluesky——Opens in a new window">
-      
-        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
-  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
-</svg></span>
-      
-<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
-<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
-</svg>
-</span></a> 
-</div>
-        </div>
-    </div>
-</nav>        
-    </div>
-</header>
-
- 
- 
-    <img src="http://localhost:1313/hugo-logo-wide.svg" alt="Featured image" class="flex-l flex-wrap justify-between mw8 center">    
- 
-    <main class="pb7" role="main">
-         
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-    <header class="mt4 w-100">
-        <aside class="instapaper_ignoref b helvetica tracked">
-             BLOG
-        </aside>
-        
-
-
-
-
-
-
-
-
-
-  <div id="sharing" class="mt3 socials">
-    
-      
-      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/de/blog/install-hugo/&amp;title=Einf%c3%bchrung%20in%20Hugo%20#1" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
-        
-        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
-  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
-</svg></span>
-        
-      </a>
-    
-      
-      <a href="https://bsky.app/intent/compose?text=Einf%C3%BChrung&#43;in&#43;Hugo&#43;%231%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fde%2Fblog%2Finstall-hugo%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
-        
-        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
-  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
-</svg></span>
-        
-      </a>
-    
-  </div>
-
-
-        <h1 class="f1 athelas mt3 mb1">Einführung in Hugo #1</h1>
-        
-        <p class="tracked">
-            Von <strong>Tobias Theel</strong>
-        </p>
-          
-        <time class="f6 mv4 dib tracked" datetime="2023-01-02T23:46:14+01:00" >Januar 2, 2023</time>   
-    </header>
-    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h2 id="was-ist-hugo">Was ist Hugo?</h2>
-<p>Hugo ist ein Static-Site-Generator, der mehrere Vorteile beim Erstellen schneller und sicherer Websites bietet.</p>
-<p>Er hat eine schnelle Build-Zeit, was ihn ideal für das schnelle Generieren großer Seiten macht. Seine intuitive Oberfläche und unkomplizierte Verzeichnisstruktur erleichtern den Einstieg für neue Benutzer. Darüber hinaus bietet Hugo Flexibilität durch Templates, Shortcodes und benutzerdefinierte Ausgabeformate und kann einfach auf einer Vielzahl von Hosting-Plattformen deployt werden.</p>
-<p>Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Seiten, weil es statische HTML-Dateien generiert. Insgesamt ist Hugo eine beliebte Wahl für Entwickler und Content-Creator, die effiziente und sichere Websites erstellen möchten.</p>
-<h2 id="warum-hugo-verwenden">Warum Hugo verwenden?</h2>
-<ol>
-<li>
-<p><strong>Geschwindigkeit</strong>: Hugo ist für Schnelligkeit ausgelegt, mit einer Build-Zeit von Millisekunden für Seiten mit Tausenden von Seiten. Das macht ihn ideal für das schnelle Generieren großer Seiten. Außerdem führen statische HTML-Dateien oft zu blitzschnellen Ladezeiten, was zu guten <a href="https://pagespeed.web.dev/">PageSpeedInsights</a>-Scores führt.</p>
-</li>
-<li>
-<p><strong>Benutzerfreundlichkeit</strong>: Hugo hat eine einfache und intuitive Oberfläche mit einer unkomplizierten Verzeichnisstruktur und Markdown-basierten Inhaltsdateien. Das macht es einfach für neue Benutzer, mit Hugo anzufangen.</p>
-</li>
-<li>
-<p><strong>Flexibilität</strong>: Hugo erlaubt es, Seiten mit Templates, Shortcodes und benutzerdefinierten Ausgabeformaten anzupassen. Das macht es einfach, eine Seite zu erstellen, die deinen spezifischen Bedürfnissen entspricht.</p>
-</li>
-<li>
-<p><strong>Portabilität</strong>: Hugo-Seiten können einfach auf einer Vielzahl von Hosting-Plattformen deployt werden, einschließlich GitHub Pages, Amazon S3 und Netlify. Das macht es einfach, die Seite dort zu hosten, wo man es bevorzugt.</p>
-</li>
-<li>
-<p><strong>Skalierbarkeit</strong>: Hugo ist dafür ausgelegt, große Seiten problemlos zu verwalten, was es einfach macht, die Seite zu skalieren, wenn sie wächst.</p>
-</li>
-<li>
-<p><strong>Sicherheit</strong>: Hugo generiert statische HTML-Dateien, was bedeutet, dass es keine dynamischen Elemente oder Datenbankabfragen gibt. Das macht Hugo-Seiten sicherer und weniger anfällig für Angriffe.</p>
-</li>
-</ol>
-<h2 id="hugo-installieren">Hugo installieren</h2>
-<p>Um die volle Funktionalität zu gewährleisten – besonders wenn dein Theme Sass/SCSS verwendet – empfiehlt es sich, die <strong>Hugo Extended</strong>-Version zu installieren.</p>
-<h3 id="unter-windows-installieren-empfohlen">Unter Windows installieren (empfohlen)</h3>
-<p>Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist <strong>Winget</strong> (Windows Package Manager), der in modernem Windows 10/11 integriert ist.</p>
-<ol>
-<li>Öffne PowerShell oder Eingabeaufforderung als Administrator.</li>
-<li>Führe den folgenden Befehl aus:
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>winget install Hugo.Hugo.Extended
-</span></span></code></pre></div></li>
-<li>Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.</li>
-</ol>
-<h3 id="unter-linux-installieren">Unter Linux installieren</h3>
-<p>Für Debian-basierte Systeme (wie Ubuntu):</p>
-<ol>
-<li>Lade die neueste Hugo Extended <code>.deb</code>-Datei von der Hugo Releases-Seite herunter. Suche nach <code>hugo_extended_VERSION_linux-amd64.deb</code>.</li>
-<li>Installiere sie mit <code>dpkg</code>:
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
-</span></span></code></pre></div></li>
-</ol>
-<p>Für andere Linux-Distributionen kannst du das Tarball herunterladen:</p>
-<ol>
-<li>Lade <code>hugo_extended_VERSION_linux-amd64.tar.gz</code> von der Hugo Releases-Seite herunter.</li>
-<li>Entpacke es und verschiebe die ausführbare Datei in deinen PATH:
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
-</span></span><span style="display:flex;"><span>sudo mv hugo /usr/local/bin/
-</span></span></code></pre></div></li>
-</ol>
-<h3 id="installation-überprüfen">Installation überprüfen</h3>
-<p>Öffne nach der Installation dein Terminal und führe aus:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hugo version
-</span></span></code></pre></div><p>Du solltest die installierte Hugo-Version sehen, z.B. <code>hugo v0.124.1+extended</code>.</p>
-<h2 id="docker-verwenden">Docker verwenden</h2>
-<p>Anstatt Hugo lokal auf deinem Rechner zu installieren, kannst du einen Docker-Container verwenden.</p>
-<p>Beispiel:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-docker" data-lang="docker"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> <span style="color:#e6db74">alpine:latest</span> <span style="color:#66d9ef">as</span> <span style="color:#e6db74">build</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">ENV</span> HUGO_VERSION 0.124.1<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> wget https://github.com/gohugoio/hugo/releases/download/v<span style="color:#e6db74">${</span>HUGO_VERSION<span style="color:#e6db74">}</span>/hugo_<span style="color:#e6db74">${</span>HUGO_VERSION<span style="color:#e6db74">}</span>_linux-amd64.tar.gz <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    tar -xf hugo_<span style="color:#e6db74">${</span>HUGO_VERSION<span style="color:#e6db74">}</span>_linux-amd64.tar.gz <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    rm hugo_<span style="color:#e6db74">${</span>HUGO_VERSION<span style="color:#e6db74">}</span>_linux-amd64.tar.gz <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span>    mv hugo /usr/local/bin/hugo<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> <span style="color:#e6db74">gcr.io/distroless/static:nonroot</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">USER</span> <span style="color:#e6db74">nonroot</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>build /usr/local/bin/hugo /usr/local/bin/hugo<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> noobygames.de /site<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">WORKDIR</span> <span style="color:#e6db74">/site</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">EXPOSE</span> <span style="color:#e6db74">80</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">ENTRYPOINT</span> [<span style="color:#e6db74">&#34;hugo&#34;</span>, <span style="color:#e6db74">&#34;server&#34;</span>, <span style="color:#e6db74">&#34;-p&#34;</span>, <span style="color:#e6db74">&#34;1313&#34;</span>, <span style="color:#e6db74">&#34;--bind&#34;</span>, <span style="color:#e6db74">&#34;0.0.0.0&#34;</span>]<span style="color:#960050;background-color:#1e0010">
-</span></span></span></code></pre></div><p>Jetzt kannst du das Image mit folgenden Befehlen bauen:</p>
-<blockquote>
-<p>cd dein/pfad/wo/das/docker/file/ist
-docker build -t hugo-server .</p>
-</blockquote>
-<p>Wenn das Image erfolgreich gebaut wurde, kannst du den Container mit folgendem Befehl starten:</p>
-<blockquote>
-<p>docker run hugo-server</p>
-</blockquote>
-<h2 id="eine-neue-website-erstellen">Eine neue Website erstellen</h2>
-<p>Um eine neue Website zu erstellen, führe einfach folgenden Befehl aus:</p>
-<blockquote>
-<p>hugo new site example.com</p>
-</blockquote>
-<p>Der Befehl ist wie folgt aufgebaut:</p>
-<blockquote>
-<p>hugo(cli) new (Befehl) site (Parameter) siteName (Parameter)</p>
-</blockquote>
-<p>Dadurch wird eine neue Ordnerstruktur für deine Seite erstellt.</p>
-<p>Wenn du die Ausgabe des Create-Befehls betrachtest, sagt Hugo dir etwas wie das Folgende:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Just a few more steps and you<span style="color:#960050;background-color:#1e0010">&#39;</span>re ready to go:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>1. Download a theme into the same-named folder.
-</span></span><span style="display:flex;"><span>   Choose a theme from https://themes.gohugo.io/ or
-</span></span><span style="display:flex;"><span>   create your own with the <span style="color:#e6db74">&#34;hugo new theme &lt;THEMENAME&gt;&#34;</span> command.
-</span></span><span style="display:flex;"><span>2. Perhaps you want to add some content. You can add single files
-</span></span><span style="display:flex;"><span>   with <span style="color:#e6db74">&#34;hugo new &lt;SECTIONNAME&gt;/&lt;FILENAME&gt;.&lt;FORMAT&gt;&#34;</span>.
-</span></span><span style="display:flex;"><span>3. Start the built-in live server via <span style="color:#e6db74">&#34;hugo server&#34;</span>.
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Visit https://gohugo.io/ <span style="color:#66d9ef">for</span> quickstart guide and full documentation.
-</span></span></code></pre></div><h3 id="ein-neues-theme-erstellen">Ein neues Theme erstellen</h3>
-<p>Du kannst jetzt entweder ein Hugo-Theme aus dem Internet herunterladen oder dein ganz eigenes Theme erstellen. In dieser Tutorial-Reihe werden wir unser eigenes Theme erstellen.</p>
-<p>Also verwenden wir folgenden Befehl, während wir uns im Site-Verzeichnis befinden:</p>
-<blockquote>
-<p>hugo new theme my-theme</p>
-</blockquote>
-<p>Dadurch wird die vollständige Ordnerstruktur für dein Theme erstellt.</p>
-<h3 id="hello-world">Hello World</h3>
-<p>Bevor wir endlich etwas rendern können, haben wir noch zwei Dinge zu tun.</p>
-<p>Als ersten Schritt fügen wir folgende Zeile zur <strong>index.html</strong>-Datei hinzu, die sich in example.com (Site-Verzeichnis) -&gt; themes -&gt; my-theme -&gt; layouts -&gt; index.html befindet:</p>
-<blockquote>
-<p>{{ .Content }}</p>
-</blockquote>
-<p>Das ist ein Template, das einfach den Markdown-Inhalt einer Datei in HTML rendert. Es gibt noch viel mehr über Templates, Shortcodes usw. zu erklären, aber für jetzt ist es nur wichtig, dass dadurch der Markdown-Inhalt deiner Datei in HTML umgewandelt wird.</p>
-<p>Jetzt brauchen wir eine Inhaltsdatei zum Rendern. Verwende folgenden Befehl:</p>
-<blockquote>
-<p>hugo new _index.md</p>
-</blockquote>
-<p>Dieser Befehl erstellt eine neue Datei mit dem angegebenen Pfad im Content-Verzeichnis.</p>
-<p>Deine Datei sollte jetzt so aussehen:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">title</span>: <span style="color:#e6db74">&#34;&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">date</span>: <span style="color:#e6db74">2023-01-05T23:13:47</span><span style="color:#ae81ff">+01</span>:<span style="color:#ae81ff">00</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">draft</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>---
+<!doctype html><html lang=de zgotmplz><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Einführung in Hugo #1 | Tobias Theel | Senior Software Engineer</title><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."><meta name=generator content="Hugo 0.160.1"><meta name=robots content="noindex, nofollow"><link rel=stylesheet href=/css/main.min.css><script>(function(){var e=document.getElementById("scroll-to-top");if(!e)return;window.addEventListener("scroll",function(){window.scrollY>300?e.classList.add("visible"):e.classList.remove("visible")},{passive:!0}),e.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})})})(),document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("pre").forEach(function(e){var t=document.createElement("button");t.className="copy-btn",t.textContent="Copy",t.addEventListener("click",function(){var n=e.querySelector("code"),s=n?n.innerText:e.innerText;navigator.clipboard.writeText(s).then(function(){t.textContent="Copied!",t.classList.add("copied"),setTimeout(function(){t.textContent="Copy",t.classList.remove("copied")},2e3)})}),e.appendChild(t)})})</script><meta property="og:url" content="https://blog.noobygames.de/de/blog/install-hugo/"><meta property="og:site_name" content="Tobias Theel | Senior Software Engineer"><meta property="og:title" content="Einführung in Hugo #1"><meta property="og:description" content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."><meta property="og:locale" content="de"><meta property="og:type" content="article"><meta property="article:section" content="blog"><meta property="article:published_time" content="2023-01-02T23:46:14+01:00"><meta property="article:modified_time" content="2023-01-02T23:46:14+01:00"><meta property="article:tag" content="Tutorial"><meta property="article:tag" content="Hugo"><meta property="og:image" content="https://blog.noobygames.de/hugo-logo-wide.svg"><meta itemprop=name content="Einführung in Hugo #1"><meta itemprop=description content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."><meta itemprop=datePublished content="2023-01-02T23:46:14+01:00"><meta itemprop=dateModified content="2023-01-02T23:46:14+01:00"><meta itemprop=wordCount content="927"><meta itemprop=image content="https://blog.noobygames.de/hugo-logo-wide.svg"><meta itemprop=keywords content="Tutorial,Hugo"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://blog.noobygames.de/hugo-logo-wide.svg"><meta name=twitter:title content="Einführung in Hugo #1"><meta name=twitter:description content="Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."></head><body class="ma0 avenir background-dark"><header class=site-plain-header><nav class=site-nav role=navigation><div class=site-nav-inner><a href=/de/ class=site-nav-brand>Tobias Theel | Senior Software Engineer</a><div class=site-nav-right><div class=lang-switcher><a href=/blog/install-hugo/ class=lang-btn title=English>EN</a>
+<span class=lang-divider>|</span>
+<span class="lang-btn lang-btn--current">DE</span></div><ul class=site-nav-menu><li class=site-nav-item><a class=site-nav-link href=/de/>Startseite</a></li><li class=site-nav-item><a class=site-nav-link href=/de/page/resume/>Lebenslauf</a></li><li class=site-nav-item><a class=site-nav-link href=/de/blog/>Blog</a></li><li class=site-nav-item><a class=site-nav-link href=/de/page/publications/>Publikationen</a></li></ul><div class=site-nav-socials><div class=socials><a href=https://www.linkedin.com/in/tobias-theel-3353a9181 target=_blank rel=noopener class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" aria-label="follow on LinkedIn——Opens in a new window"><span class=icon><svg viewBox="0 0 448 512" fill="currentColor" width="32" height="32"><path d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg>
+</span></a><a href=https://github.com/Nerzal target=_blank rel=noopener class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="GitHub link" aria-label="follow on GitHub——Opens in a new window"><span class=icon><svg viewBox="0 0 496 512" fill="currentColor" width="32" height="32"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6.0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6.0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3.0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1.0-6.2-.3-40.4-.3-61.4.0.0-70 15-84.7-29.8.0.0-11.4-29.1-27.8-36.6.0.0-22.9-15.7 1.6-15.4.0.0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5.0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9.0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4.0 33.7-.3 75.4-.3 83.6.0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6s4.3 1 4.6-.3-.3-3.3-2.3-4.6c-2-1-4.3-.7-4.6.3z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg>
+</span></a><a href=https://bsky.app/profile/nerzal.bsky.social target=_blank rel=noopener class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="bluesky link" aria-label="follow on bluesky——Opens in a new window"><span class=icon><svg viewBox="0 0 512 512" fill="currentColor" width="32" height="32"><path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8.0 15.5-8.9 130.5-14.1 149.2-18.3 74.8-76 89-123.4 74.9 98.3 18.9 113.9 115.4 64.9 160.8-11.8 10.9-28.5 13.9-43.5 13.9-70 0-126.3-88.8-138.4-110.1-12.1 21.3-68.3 110.1-138.4 110.1-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1 89.6 322.2 31.9 308 13.6 233.3 8.5 214.5.0 100.5.0 85 0 7.2 68.2 31.6 110.3 63.2z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg></span></a></div></div></div></div></nav></header><div class=post-hero-banner><img src=/hugo-logo-wide.svg alt="Einführung in Hugo #1" class=post-hero-banner-img loading=eager><div class=post-hero-banner-overlay></div></div><main class=pb7 role=main><article class=post-article><div class="post-article-header-wrap mw8 center ph3 ph4-l"><nav class=post-breadcrumb aria-label=Breadcrumb><a href=/de/blog/ class=post-breadcrumb-link>← Blog</a></nav><header class=post-article-header><h1 class=post-article-title>Einführung in Hugo #1</h1><div class=post-article-meta><time class=post-article-meta-item datetime=2023-01-02T23:46:14+01:00>Januar 2, 2023
+</time><span class=post-article-meta-sep>·</span>
+<span class=post-article-meta-item>5 Minuten</span>
+<span class=post-article-meta-sep>·</span>
+<span class=post-article-meta-item>Von Tobias Theel</span></div><div class=post-article-share><div id=sharing class="mt3 socials"><a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://blog.noobygames.de/de/blog/install-hugo/&amp;title=Einf%c3%bchrung%20in%20Hugo%20#1" class="social-link linkedin no-underline" aria-label="share on LinkedIn"><span class=icon><svg viewBox="0 0 448 512" fill="currentColor" width="32" height="32"><path d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg></span>
+</a><a href="https://bsky.app/intent/compose?text=Einf%C3%BChrung+in+Hugo+%231%0Ahttps%3A%2F%2Fblog.noobygames.de%2Fde%2Fblog%2Finstall-hugo%2F" class="social-link bluesky no-underline" aria-label="share on bluesky"><span class=icon><svg viewBox="0 0 512 512" fill="currentColor" width="32" height="32"><path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8.0 15.5-8.9 130.5-14.1 149.2-18.3 74.8-76 89-123.4 74.9 98.3 18.9 113.9 115.4 64.9 160.8-11.8 10.9-28.5 13.9-43.5 13.9-70 0-126.3-88.8-138.4-110.1-12.1 21.3-68.3 110.1-138.4 110.1-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1 89.6 322.2 31.9 308 13.6 233.3 8.5 214.5.0 100.5.0 85 0 7.2 68.2 31.6 110.3 63.2z"/></svg></span></a></div></div></header></div><div class="post-article-body mw8 center ph3 ph4-l"><div class="post-article-content nested-copy-line-height lh-copy f4 nested-links foreground-dark"><h2 id=was-ist-hugo>Was ist Hugo?</h2><p>Hugo ist ein Static-Site-Generator, der mehrere Vorteile beim Erstellen schneller und sicherer Websites bietet.</p><p>Er hat eine schnelle Build-Zeit, was ihn ideal für das schnelle Generieren großer Seiten macht. Seine intuitive Oberfläche und unkomplizierte Verzeichnisstruktur erleichtern den Einstieg für neue Benutzer. Darüber hinaus bietet Hugo Flexibilität durch Templates, Shortcodes und benutzerdefinierte Ausgabeformate und kann einfach auf einer Vielzahl von Hosting-Plattformen deployt werden.</p><p>Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Seiten, weil es statische HTML-Dateien generiert. Insgesamt ist Hugo eine beliebte Wahl für Entwickler und Content-Creator, die effiziente und sichere Websites erstellen möchten.</p><h2 id=warum-hugo-verwenden>Warum Hugo verwenden?</h2><ol><li><p><strong>Geschwindigkeit</strong>: Hugo ist für Schnelligkeit ausgelegt, mit einer Build-Zeit von Millisekunden für Seiten mit Tausenden von Seiten. Das macht ihn ideal für das schnelle Generieren großer Seiten. Außerdem führen statische HTML-Dateien oft zu blitzschnellen Ladezeiten, was zu guten <a href=https://pagespeed.web.dev/>PageSpeedInsights</a>-Scores führt.</p></li><li><p><strong>Benutzerfreundlichkeit</strong>: Hugo hat eine einfache und intuitive Oberfläche mit einer unkomplizierten Verzeichnisstruktur und Markdown-basierten Inhaltsdateien. Das macht es einfach für neue Benutzer, mit Hugo anzufangen.</p></li><li><p><strong>Flexibilität</strong>: Hugo erlaubt es, Seiten mit Templates, Shortcodes und benutzerdefinierten Ausgabeformaten anzupassen. Das macht es einfach, eine Seite zu erstellen, die deinen spezifischen Bedürfnissen entspricht.</p></li><li><p><strong>Portabilität</strong>: Hugo-Seiten können einfach auf einer Vielzahl von Hosting-Plattformen deployt werden, einschließlich GitHub Pages, Amazon S3 und Netlify. Das macht es einfach, die Seite dort zu hosten, wo man es bevorzugt.</p></li><li><p><strong>Skalierbarkeit</strong>: Hugo ist dafür ausgelegt, große Seiten problemlos zu verwalten, was es einfach macht, die Seite zu skalieren, wenn sie wächst.</p></li><li><p><strong>Sicherheit</strong>: Hugo generiert statische HTML-Dateien, was bedeutet, dass es keine dynamischen Elemente oder Datenbankabfragen gibt. Das macht Hugo-Seiten sicherer und weniger anfällig für Angriffe.</p></li></ol><h2 id=hugo-installieren>Hugo installieren</h2><p>Um die volle Funktionalität zu gewährleisten – besonders wenn dein Theme Sass/SCSS verwendet – empfiehlt es sich, die <strong>Hugo Extended</strong>-Version zu installieren.</p><h3 id=unter-windows-installieren-empfohlen>Unter Windows installieren (empfohlen)</h3><p>Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist <strong>Winget</strong> (Windows Package Manager), der in modernem Windows 10/11 integriert ist.</p><ol><li>Öffne PowerShell oder Eingabeaufforderung als Administrator.</li><li>Führe den folgenden Befehl aus:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-powershell data-lang=powershell><span style=display:flex><span>winget install Hugo.Hugo.Extended
+</span></span></code></pre></div></li><li>Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.</li></ol><h3 id=unter-linux-installieren>Unter Linux installieren</h3><p>Für Debian-basierte Systeme (wie Ubuntu):</p><ol><li>Lade die neueste Hugo Extended <code>.deb</code>-Datei von der Hugo Releases-Seite herunter. Suche nach <code>hugo_extended_VERSION_linux-amd64.deb</code>.</li><li>Installiere sie mit <code>dpkg</code>:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
+</span></span></code></pre></div></li></ol><p>Für andere Linux-Distributionen kannst du das Tarball herunterladen:</p><ol><li>Lade <code>hugo_extended_VERSION_linux-amd64.tar.gz</code> von der Hugo Releases-Seite herunter.</li><li>Entpacke es und verschiebe die ausführbare Datei in deinen PATH:<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
+</span></span><span style=display:flex><span>sudo mv hugo /usr/local/bin/
+</span></span></code></pre></div></li></ol><h3 id=installation-überprüfen>Installation überprüfen</h3><p>Öffne nach der Installation dein Terminal und führe aus:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>hugo version
+</span></span></code></pre></div><p>Du solltest die installierte Hugo-Version sehen, z.B. <code>hugo v0.124.1+extended</code>.</p><h2 id=docker-verwenden>Docker verwenden</h2><p>Anstatt Hugo lokal auf deinem Rechner zu installieren, kannst du einen Docker-Container verwenden.</p><p>Beispiel:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-docker data-lang=docker><span style=display:flex><span><span style=color:#66d9ef>FROM</span> <span style=color:#e6db74>alpine:latest</span> <span style=color:#66d9ef>as</span> <span style=color:#e6db74>build</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>ENV</span> HUGO_VERSION 0.124.1<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>RUN</span> wget https://github.com/gohugoio/hugo/releases/download/v<span style=color:#e6db74>${</span>HUGO_VERSION<span style=color:#e6db74>}</span>/hugo_<span style=color:#e6db74>${</span>HUGO_VERSION<span style=color:#e6db74>}</span>_linux-amd64.tar.gz <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    tar -xf hugo_<span style=color:#e6db74>${</span>HUGO_VERSION<span style=color:#e6db74>}</span>_linux-amd64.tar.gz <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    rm hugo_<span style=color:#e6db74>${</span>HUGO_VERSION<span style=color:#e6db74>}</span>_linux-amd64.tar.gz <span style=color:#f92672>&amp;&amp;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span>    mv hugo /usr/local/bin/hugo<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>FROM</span> <span style=color:#e6db74>gcr.io/distroless/static:nonroot</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>USER</span> <span style=color:#e6db74>nonroot</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>COPY</span> --from<span style=color:#f92672>=</span>build /usr/local/bin/hugo /usr/local/bin/hugo<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>COPY</span> noobygames.de /site<span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>WORKDIR</span> <span style=color:#e6db74>/site</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>EXPOSE</span> <span style=color:#e6db74>80</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>ENTRYPOINT</span> [<span style=color:#e6db74>&#34;hugo&#34;</span>, <span style=color:#e6db74>&#34;server&#34;</span>, <span style=color:#e6db74>&#34;-p&#34;</span>, <span style=color:#e6db74>&#34;1313&#34;</span>, <span style=color:#e6db74>&#34;--bind&#34;</span>, <span style=color:#e6db74>&#34;0.0.0.0&#34;</span>]<span style=color:#960050;background-color:#1e0010>
+</span></span></span></code></pre></div><p>Jetzt kannst du das Image mit folgenden Befehlen bauen:</p><blockquote><p>cd dein/pfad/wo/das/docker/file/ist
+docker build -t hugo-server .</p></blockquote><p>Wenn das Image erfolgreich gebaut wurde, kannst du den Container mit folgendem Befehl starten:</p><blockquote><p>docker run hugo-server</p></blockquote><h2 id=eine-neue-website-erstellen>Eine neue Website erstellen</h2><p>Um eine neue Website zu erstellen, führe einfach folgenden Befehl aus:</p><blockquote><p>hugo new site example.com</p></blockquote><p>Der Befehl ist wie folgt aufgebaut:</p><blockquote><p>hugo(cli) new (Befehl) site (Parameter) siteName (Parameter)</p></blockquote><p>Dadurch wird eine neue Ordnerstruktur für deine Seite erstellt.</p><p>Wenn du die Ausgabe des Create-Befehls betrachtest, sagt Hugo dir etwas wie das Folgende:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-bash data-lang=bash><span style=display:flex><span>
+</span></span><span style=display:flex><span>Just a few more steps and you<span style=color:#960050;background-color:#1e0010>&#39;</span>re ready to go:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>1. Download a theme into the same-named folder.
+</span></span><span style=display:flex><span>   Choose a theme from https://themes.gohugo.io/ or
+</span></span><span style=display:flex><span>   create your own with the <span style=color:#e6db74>&#34;hugo new theme &lt;THEMENAME&gt;&#34;</span> command.
+</span></span><span style=display:flex><span>2. Perhaps you want to add some content. You can add single files
+</span></span><span style=display:flex><span>   with <span style=color:#e6db74>&#34;hugo new &lt;SECTIONNAME&gt;/&lt;FILENAME&gt;.&lt;FORMAT&gt;&#34;</span>.
+</span></span><span style=display:flex><span>3. Start the built-in live server via <span style=color:#e6db74>&#34;hugo server&#34;</span>.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Visit https://gohugo.io/ <span style=color:#66d9ef>for</span> quickstart guide and full documentation.
+</span></span></code></pre></div><h3 id=ein-neues-theme-erstellen>Ein neues Theme erstellen</h3><p>Du kannst jetzt entweder ein Hugo-Theme aus dem Internet herunterladen oder dein ganz eigenes Theme erstellen. In dieser Tutorial-Reihe werden wir unser eigenes Theme erstellen.</p><p>Also verwenden wir folgenden Befehl, während wir uns im Site-Verzeichnis befinden:</p><blockquote><p>hugo new theme my-theme</p></blockquote><p>Dadurch wird die vollständige Ordnerstruktur für dein Theme erstellt.</p><h3 id=hello-world>Hello World</h3><p>Bevor wir endlich etwas rendern können, haben wir noch zwei Dinge zu tun.</p><p>Als ersten Schritt fügen wir folgende Zeile zur <strong>index.html</strong>-Datei hinzu, die sich in example.com (Site-Verzeichnis) -> themes -> my-theme -> layouts -> index.html befindet:</p><blockquote><p>{{ .Content }}</p></blockquote><p>Das ist ein Template, das einfach den Markdown-Inhalt einer Datei in HTML rendert. Es gibt noch viel mehr über Templates, Shortcodes usw. zu erklären, aber für jetzt ist es nur wichtig, dass dadurch der Markdown-Inhalt deiner Datei in HTML umgewandelt wird.</p><p>Jetzt brauchen wir eine Inhaltsdatei zum Rendern. Verwende folgenden Befehl:</p><blockquote><p>hugo new _index.md</p></blockquote><p>Dieser Befehl erstellt eine neue Datei mit dem angegebenen Pfad im Content-Verzeichnis.</p><p>Deine Datei sollte jetzt so aussehen:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span>---
+</span></span><span style=display:flex><span><span style=color:#f92672>title</span>: <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>date</span>: <span style=color:#e6db74>2023-01-05T23:13:47</span><span style=color:#ae81ff>+01</span>:<span style=color:#ae81ff>00</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>draft</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>---
 </span></span></code></pre></div><p><code>title</code> ist der Titel der Seite.
 <code>date</code> ist das Erstellungsdatum der Seite.
-<code>draft</code> steuert, ob diese Seite veröffentlicht werden soll oder nicht.</p>
-<p>Fügen wir eine schöne Begrüßung zu unserer ersten Seite hinzu. Du kannst eine beliebige Begrüßung wählen, ich nehme den Klassiker.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">title</span>: <span style="color:#e6db74">&#34;Meine erste Seite&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">date</span>: <span style="color:#e6db74">2023-01-05T23:13:47</span><span style="color:#ae81ff">+01</span>:<span style="color:#ae81ff">00</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">draft</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">## Hello World!</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">Es ist **sehr schön**, dich kennenzulernen!</span>
-</span></span></code></pre></div><p>Wir haben den letzten Schritt erreicht. Jetzt können wir einen Hugo-Server starten, um zu sehen, was wir erreicht haben. Verwende folgenden Befehl:</p>
-<blockquote>
-<p>hugo server -D</p>
-</blockquote>
-<p>Dieser Befehl startet einen Server im Entwicklungsmodus, der auch Seiten im Draft-Status enthält. Besuche jetzt <a href="http://localhost:1313/">http://localhost:1313/</a> in deinem Browser.</p>
-<div class="image-container">
-     
-    <img src="/img/hugo-world.png" alt="Bild des Hello-World-Ergebnisses">
-</div>
-
-<ul class="pa0">
-    
-    <li class="list di">
-        <a href="/de/tags/tutorial/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Tutorial</a>
-    </li>
-    
-    <li class="list di">
-        <a href="/de/tags/hugo/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Hugo</a>
-    </li>
-    
-</ul><div class="mt6 instapaper_ignoref">
-             <div id="disqus_thread"></div>
-<script>
-    window.disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
-        </div>
-    </div>
-
-    <aside class="w-30-l mt6-l"><div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
-    <p class="f5 b mb3">Was ist in dieser blog</p>
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#was-ist-hugo">Was ist Hugo?</a></li>
-    <li><a href="#warum-hugo-verwenden">Warum Hugo verwenden?</a></li>
-    <li><a href="#hugo-installieren">Hugo installieren</a>
-      <ul>
-        <li><a href="#unter-windows-installieren-empfohlen">Unter Windows installieren (empfohlen)</a></li>
-        <li><a href="#unter-linux-installieren">Unter Linux installieren</a></li>
-        <li><a href="#installation-überprüfen">Installation überprüfen</a></li>
-      </ul>
-    </li>
-    <li><a href="#docker-verwenden">Docker verwenden</a></li>
-    <li><a href="#eine-neue-website-erstellen">Eine neue Website erstellen</a>
-      <ul>
-        <li><a href="#ein-neues-theme-erstellen">Ein neues Theme erstellen</a></li>
-        <li><a href="#hello-world">Hello World</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-
-
-
-
-  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
-    <p class="f5 b mb3">Ähnliches</p>
-    <ul class="pa0 list">
-	   
-	     <li  class="mb2">
-          <a href="/de/blog/check-static-linking/">Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist</a>
-        </li>
-	    
-    </ul>
-</div>
-
-</aside>
-
-</article>
-
-    </main>
-
-    
-        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
-    <div class="flex justify-between">
-        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/de/">
-         
-            Tobias Theel | Senior Software Engineer 
-            2026 
-        
-      </a>
-        <div>
-            
-        </div>
-
-        
-    </div>
-</footer>
-    
-
-</body>
-
-</html>
+<code>draft</code> steuert, ob diese Seite veröffentlicht werden soll oder nicht.</p><p>Fügen wir eine schöne Begrüßung zu unserer ersten Seite hinzu. Du kannst eine beliebige Begrüßung wählen, ich nehme den Klassiker.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-yaml data-lang=yaml><span style=display:flex><span>---
+</span></span><span style=display:flex><span><span style=color:#f92672>title</span>: <span style=color:#e6db74>&#34;Meine erste Seite&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>date</span>: <span style=color:#e6db74>2023-01-05T23:13:47</span><span style=color:#ae81ff>+01</span>:<span style=color:#ae81ff>00</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>draft</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Hello World!</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ae81ff>Es ist **sehr schön**, dich kennenzulernen!</span>
+</span></span></code></pre></div><p>Wir haben den letzten Schritt erreicht. Jetzt können wir einen Hugo-Server starten, um zu sehen, was wir erreicht haben. Verwende folgenden Befehl:</p><blockquote><p>hugo server -D</p></blockquote><p>Dieser Befehl startet einen Server im Entwicklungsmodus, der auch Seiten im Draft-Status enthält. Besuche jetzt <a href=http://localhost:1313/>http://localhost:1313/</a> in deinem Browser.</p><div class=image-container><img src=/img/hugo-world.png alt="Bild des Hello-World-Ergebnisses"></div><div class=post-tags><a href=/de/tags/tutorial/ class=post-tag>Tutorial</a>
+<a href=/de/tags/hugo/ class=post-tag>Hugo</a></div><div class=mt6><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//nerzal-blog.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div></div><aside class=post-article-sidebar><div class=sidebar-card><p class=sidebar-card-title>Inhalt</p><div class=sidebar-toc><nav id=TableOfContents><ul><li><a href=#was-ist-hugo>Was ist Hugo?</a></li><li><a href=#warum-hugo-verwenden>Warum Hugo verwenden?</a></li><li><a href=#hugo-installieren>Hugo installieren</a><ul><li><a href=#unter-windows-installieren-empfohlen>Unter Windows installieren (empfohlen)</a></li><li><a href=#unter-linux-installieren>Unter Linux installieren</a></li><li><a href=#installation-überprüfen>Installation überprüfen</a></li></ul></li><li><a href=#docker-verwenden>Docker verwenden</a></li><li><a href=#eine-neue-website-erstellen>Eine neue Website erstellen</a><ul><li><a href=#ein-neues-theme-erstellen>Ein neues Theme erstellen</a></li><li><a href=#hello-world>Hello World</a></li></ul></li></ul></nav></div></div><div class=sidebar-card><p class=sidebar-card-title>Ähnliches</p><ul class=sidebar-related-list><li class=sidebar-related-item><a href=/de/blog/check-static-linking/ class=sidebar-related-link>Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist</a></li></ul></div></aside></div></article></main><footer class=site-footer role=contentinfo><div class=site-footer-inner><div class="site-footer-col site-footer-brand-col"><a href=https://blog.noobygames.de/de/ class=site-footer-brand>Tobias Theel | Senior Software Engineer</a><p class=site-footer-tagline>Remote-first Senior Software Engineer specializing in Go, Cloud-Native architecture, and…</p></div><div class="site-footer-col site-footer-nav-col"><p class=site-footer-col-heading>Navigation</p><ul class=site-footer-links><li><a href=/de/ class=site-footer-link>Startseite</a></li><li><a href=/de/page/resume/ class=site-footer-link>Lebenslauf</a></li><li><a href=/de/blog/ class=site-footer-link>Blog</a></li><li><a href=/de/page/publications/ class=site-footer-link>Publikationen</a></li></ul></div><div class="site-footer-col site-footer-social-col"><p class=site-footer-col-heading>Connect</p><div class=site-footer-socials><div class=socials><a href=https://www.linkedin.com/in/tobias-theel-3353a9181 target=_blank rel=noopener class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="LinkedIn link" aria-label="follow on LinkedIn——Opens in a new window"><span class=icon><svg viewBox="0 0 448 512" fill="currentColor" width="32" height="32"><path d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg>
+</span></a><a href=https://github.com/Nerzal target=_blank rel=noopener class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="GitHub link" aria-label="follow on GitHub——Opens in a new window"><span class=icon><svg viewBox="0 0 496 512" fill="currentColor" width="32" height="32"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6.0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6.0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3.0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1.0-6.2-.3-40.4-.3-61.4.0.0-70 15-84.7-29.8.0.0-11.4-29.1-27.8-36.6.0.0-22.9-15.7 1.6-15.4.0.0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5.0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9.0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4.0 33.7-.3 75.4-.3 83.6.0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6s4.3 1 4.6-.3-.3-3.3-2.3-4.6c-2-1-4.3-.7-4.6.3z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg>
+</span></a><a href=https://bsky.app/profile/nerzal.bsky.social target=_blank rel=noopener class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1" title="bluesky link" aria-label="follow on bluesky——Opens in a new window"><span class=icon><svg viewBox="0 0 512 512" fill="currentColor" width="32" height="32"><path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8.0 15.5-8.9 130.5-14.1 149.2-18.3 74.8-76 89-123.4 74.9 98.3 18.9 113.9 115.4 64.9 160.8-11.8 10.9-28.5 13.9-43.5 13.9-70 0-126.3-88.8-138.4-110.1-12.1 21.3-68.3 110.1-138.4 110.1-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1 89.6 322.2 31.9 308 13.6 233.3 8.5 214.5.0 100.5.0 85 0 7.2 68.2 31.6 110.3 63.2z"/></svg></span>
+<span class=new-window><svg height="8" style="enable-background:new 0 0 1e3 1e3" viewBox="0 0 1e3 1e3" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M598 128h298v298h-86V274L392 692l-60-60 418-418H598v-86zM810 810V512h86v298c0 46-40 86-86 86H214c-48 0-86-40-86-86V214c0-46 38-86 86-86h298v86H214v596h596z" style="fill-rule:evenodd;clip-rule:evenodd"/></svg></span></a></div></div></div></div><div class=site-footer-bottom><span class=site-footer-copy>© 2026 Tobias Theel | Senior Software Engineer</span></div></footer><button id=scroll-to-top aria-label="Scroll to top">&#8679;</button></body></html>

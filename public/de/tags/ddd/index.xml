@@ -1,26 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Ddd on Tobias Theel | Senior Software Engineer</title>
-    <link>http://localhost:1313/de/tags/ddd/</link>
-    <description>Recent content in Ddd on Tobias Theel | Senior Software Engineer</description>
-    <generator>Hugo</generator>
-    <language>de</language>
-    <lastBuildDate>Sun, 26 Feb 2023 17:46:14 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/de/tags/ddd/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Bounded Context</title>
-      <link>http://localhost:1313/de/blog/bounded-context/</link>
-      <pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate>
-      <guid>http://localhost:1313/de/blog/bounded-context/</guid>
-      <description>&lt;h3 id=&#34;was-ist-ein-bounded-context&#34;&gt;Was ist ein Bounded Context?&lt;/h3&gt;&#xA;&lt;p&gt;Bounded Contexts sind ein Kernkonzept im Domain-Driven Design (DDD) und dienen als explizite Grenzen innerhalb eines größeren Domänenmodells. Sie definieren einen spezifischen Bereich, in dem ein bestimmtes Modell (und seine zugehörige Ubiquitous Language) konsistent und anwendbar ist. Außerhalb dieser Grenze können Begriffe und Konzepte unterschiedliche Bedeutungen haben oder sogar irrelevant sein.&lt;/p&gt;&#xA;&lt;p&gt;Stell dir ein großes Unternehmen vor. Der Begriff „Kunde&amp;quot; kann für die Vertriebsabteilung etwas anderes bedeuten (ein Lead, ein Interessent), für die Support-Abteilung etwas anderes (jemand mit einem offenen Ticket) und für die Buchhaltung wieder etwas anderes (eine Einheit mit einer offenen Rechnung). Jede dieser Interpretationen existiert innerhalb ihres eigenen Bounded Context, in dem der Begriff „Kunde&amp;quot; eine präzise, eindeutige Bedeutung hat.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Event Storming</title>
-      <link>http://localhost:1313/de/blog/event-storming/</link>
-      <pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate>
-      <guid>http://localhost:1313/de/blog/event-storming/</guid>
-      <description>&lt;h2 id=&#34;was-ist-event-storming&#34;&gt;Was ist Event Storming?&lt;/h2&gt;&#xA;&lt;p&gt;Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine diverse Gruppe von Stakeholdern zusammen – darunter Entwickler, Domänenexperten und Business-Analysten –, um gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems zu erarbeiten.&lt;/p&gt;&#xA;&lt;p&gt;Beim Event Storming arbeiten die Teilnehmer zusammen, um &lt;strong&gt;Ereignisse&lt;/strong&gt; (Events) zu identifizieren, die innerhalb des Systems oder Prozesses auftreten, und ordnen diese dann in einer &lt;strong&gt;Zeitleiste&lt;/strong&gt; an, die den &lt;strong&gt;Ablauf von Aktionen&lt;/strong&gt; und Ergebnissen darstellt. Diese Ereignisse können Benutzeraktionen, Systemreaktionen und alle anderen Aktivitäten oder Prozesse umfassen, die im modellierten Bereich stattfinden.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ddd on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/de/tags/ddd/</link><description>Recent content in Ddd on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>de</language><lastBuildDate>Sun, 26 Feb 2023 17:46:14 +0100</lastBuildDate><atom:link href="https://blog.noobygames.de/de/tags/ddd/index.xml" rel="self" type="application/rss+xml"/><item><title>Bounded Context</title><link>https://blog.noobygames.de/de/blog/bounded-context/</link><pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate><guid>https://blog.noobygames.de/de/blog/bounded-context/</guid><description>&lt;h3 id="was-ist-ein-bounded-context"&gt;Was ist ein Bounded Context?&lt;/h3&gt;
+&lt;p&gt;Bounded Contexts sind ein Kernkonzept im Domain-Driven Design (DDD) und dienen als explizite Grenzen innerhalb eines größeren Domänenmodells. Sie definieren einen spezifischen Bereich, in dem ein bestimmtes Modell (und seine zugehörige Ubiquitous Language) konsistent und anwendbar ist. Außerhalb dieser Grenze können Begriffe und Konzepte unterschiedliche Bedeutungen haben oder sogar irrelevant sein.&lt;/p&gt;
+&lt;p&gt;Stell dir ein großes Unternehmen vor. Der Begriff „Kunde&amp;quot; kann für die Vertriebsabteilung etwas anderes bedeuten (ein Lead, ein Interessent), für die Support-Abteilung etwas anderes (jemand mit einem offenen Ticket) und für die Buchhaltung wieder etwas anderes (eine Einheit mit einer offenen Rechnung). Jede dieser Interpretationen existiert innerhalb ihres eigenen Bounded Context, in dem der Begriff „Kunde&amp;quot; eine präzise, eindeutige Bedeutung hat.&lt;/p&gt;</description></item><item><title>Event Storming</title><link>https://blog.noobygames.de/de/blog/event-storming/</link><pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate><guid>https://blog.noobygames.de/de/blog/event-storming/</guid><description>&lt;h2 id="was-ist-event-storming"&gt;Was ist Event Storming?&lt;/h2&gt;
+&lt;p&gt;Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine diverse Gruppe von Stakeholdern zusammen – darunter Entwickler, Domänenexperten und Business-Analysten –, um gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems zu erarbeiten.&lt;/p&gt;
+&lt;p&gt;Beim Event Storming arbeiten die Teilnehmer zusammen, um &lt;strong&gt;Ereignisse&lt;/strong&gt; (Events) zu identifizieren, die innerhalb des Systems oder Prozesses auftreten, und ordnen diese dann in einer &lt;strong&gt;Zeitleiste&lt;/strong&gt; an, die den &lt;strong&gt;Ablauf von Aktionen&lt;/strong&gt; und Ergebnissen darstellt. Diese Ereignisse können Benutzeraktionen, Systemreaktionen und alle anderen Aktivitäten oder Prozesse umfassen, die im modellierten Bereich stattfinden.&lt;/p&gt;</description></item></channel></rss>

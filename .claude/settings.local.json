@@ -5,7 +5,18 @@
       "WebFetch(domain:nerzal.itch.io)",
       "mcp__MCP_DOCKER__browser_navigate",
       "mcp__MCP_DOCKER__browser_snapshot",
-      "mcp__MCP_DOCKER__browser_wait_for"
+      "mcp__MCP_DOCKER__browser_wait_for",
+      "Bash(hugo server *)",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(Invoke-WebRequest -Uri \"http://localhost:1313/blog/\" -UseBasicParsing)",
+      "Bash(Select-Object -ExpandProperty StatusCode)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:1313/blog/)",
+      "Bash(curl -s http://localhost:1313/blog/)",
+      "Bash(curl -s http://localhost:1313/)",
+      "Bash(curl -s http://localhost:1313/blog/secure-ssh-server/)",
+      "Bash(curl -s http://localhost:1313/page/resume/)",
+      "Bash(curl -s http://localhost:1313/page/publications/)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

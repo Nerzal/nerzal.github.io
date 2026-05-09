@@ -1,5 +1,24 @@
 {{ define "main" }}
-<article class="cf ph3 ph2-l pv3 pv4-l f4 tc-l center measure-wide lh-copy foreground-dark">
-    {{ .Content }}
-</article>
+{{ $blogPage := .Site.GetPage "/blog" }}
+{{ $pubPage  := .Site.GetPage "/page/publications" }}
+<section class="home-hero">
+    <div class="home-hero-inner home-hero-split">
+        <div class="home-hero-text">
+            <p class="home-hero-eyebrow">Senior Software Engineer</p>
+            <h1 class="home-hero-name">Tobias Theel</h1>
+            <p class="home-hero-tagline">Go · Cloud-Native · Open Source · Game Dev · Author · Speaker</p>
+            <div class="home-hero-cta">
+                {{ with $blogPage }}
+                <a href="{{ .RelPermalink }}" class="site-btn site-btn--primary">{{ i18n "readBlog" }}</a>
+                {{ end }}
+                {{ with $pubPage }}
+                <a href="{{ .RelPermalink }}" class="site-btn site-btn--outline">{{ i18n "viewPublications" }}</a>
+                {{ end }}
+            </div>
+        </div>
+        <div class="home-hero-photo-wrap">
+            <img src="{{ relURL "img/profile2.jpg" }}" alt="Tobias Theel" class="home-hero-photo">
+        </div>
+    </div>
+</section>
 {{ end }}

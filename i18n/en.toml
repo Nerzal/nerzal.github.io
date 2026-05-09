@@ -47,3 +47,24 @@ other = "{{ .Count }} words"
 
 [pageTitle]
 other = "{{ .Name }} page"
+
+[onThisPage]
+other = "On this page"
+
+[writingLabel]
+other = "Writing"
+
+[articlesLabel]
+other = "articles"
+
+[newer]
+other = "Newer"
+
+[older]
+other = "Older"
+
+[readBlog]
+other = "Read the Blog"
+
+[viewPublications]
+other = "Publications"

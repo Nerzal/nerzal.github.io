@@ -1,10 +1,10 @@
-<header>
-    <div class="background-dark">
-        {{ partial "site-navigation.html" . }}        
-    </div>
+<header class="site-plain-header">
+    {{ partial "site-navigation.html" . }}
 </header>
-
-{{ $featured_image := partial "func/GetFeaturedImage.html" . }} 
-{{ if $featured_image }} {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
-    <img src="{{ $featured_image }}" alt="Featured image" class="flex-l flex-wrap justify-between mw8 center">    
+{{ $imgRaw := partial "func/GetFeaturedImage.html" . }}
+{{ with $imgRaw }}
+<div class="post-hero-banner">
+    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager">
+    <div class="post-hero-banner-overlay"></div>
+</div>
 {{ end }}

@@ -1,33 +1,28 @@
-{{ $featured_image := partial "func/GetFeaturedImage.html" . }} {{ if $featured_image }} {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
-<header class="cover bg-top" style="background-image: url('{{ $featured_image }}');">
-    <div class="{{ .Site.Params.cover_dimming_class | default " bg-black-60 " }}">
-        {{ partial "site-navigation.html" .}}
-        <div class="tc-l pv4 pv6-l ph3 ph4-ns">
-            <h1 class="f2 f-subheadline-l fw2 highlight-color mb0 lh-title">
-                {{ .Title | default .Site.Title }}
-            </h1>
+{{ $featured_image := partial "func/GetFeaturedImage.html" . }}
+{{ $showHero := and $featured_image (not .Params.omit_header_image) }}
+<header class="site-plain-header">
+    {{ partial "site-navigation.html" . }}
+</header>
+{{ if $showHero }}
+<div class="site-hero-cover" style="background-image: url('{{ $featured_image }}');">
+    <div class="site-hero-cover-overlay">
+        {{ if not .Params.omit_title_text }}
+        <div class="site-hero-text">
+            <h1 class="site-hero-title">{{ .Title | default .Site.Title }}</h1>
             {{ with .Params.description }}
-            <h2 class="fw1 f5 f3-l foreground-dark measure-wide-l center mt3">
-                {{ . }}
-            </h2>
+            <p class="site-hero-desc">{{ . }}</p>
             {{ end }}
         </div>
+        {{ end }}
     </div>
-</header>
-{{ else }}
-<header>
-    <div class="pb3-m pb0-l {{ .Site.Params.background_color_class | default " bg-black " }}">
-        {{ partial "site-navigation.html" . }} {{ if not .Params.omit_title_text }}
-        <div class="tc-l pv3 ph3 ph4-ns">
-            <h1 class="f2 f-subheadline-l fw2 highlight-color mb0 lh-title">
-                {{ .Title | default .Site.Title }}
-            </h1>
-            {{ with .Params.description }}
-            <h2 class="fw1 f5 f3-l foreground-dark measure-wide-l center lh-copy mt3 mb4">
-                {{ . }}
-            </h2>
-            {{ end }} {{ end }}
-        </div>
+</div>
+{{ else if not .Params.omit_title_text }}
+<div class="site-section-title-block">
+    <div class="mw9 center ph3 ph4-l pv4">
+        <h1 class="f2 highlight-color fw7 mb1">{{ .Title | default .Site.Title }}</h1>
+        {{ with .Params.description }}
+        <p class="f5 foreground-dark lh-copy mt2 measure">{{ . }}</p>
+        {{ end }}
     </div>
-</header>
+</div>
 {{ end }}

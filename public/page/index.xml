@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Pages on Tobias Theel | Senior Software Engineer</title>
-    <link>http://localhost:1313/page/</link>
-    <description>Recent content in Pages on Tobias Theel | Senior Software Engineer</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 16 Apr 2026 11:53:00 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/page/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Legal Notice</title>
-      <link>http://localhost:1313/page/impressum/</link>
-      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
-      <guid>http://localhost:1313/page/impressum/</guid>
-      <description>&lt;h2 id=&#34;information-according-to--5-tmg-german-telemedia-act&#34;&gt;Information according to § 5 TMG (German Telemedia Act)&lt;/h2&gt;&#xA;&lt;p&gt;Tobias Theel / Noobygames&#xA;Gregorstr. 2&#xA;34650 Fritzlar&lt;/p&gt;&#xA;&lt;p&gt;Represented by:&#xA;Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Contact: Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Phone: 015222338195&lt;/p&gt;&#xA;&lt;p&gt;E-Mail: &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;info@noobygames.de&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;VAT ID:&#xA;None&lt;/p&gt;&#xA;&lt;p&gt;Responsible for content according to § 18 para. 2 MStV:&#xA;Tobias Theel, Henkelstr. 6, 34127 Kassel&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Note on EU dispute resolution&lt;/strong&gt;&#xA;The European Commission provides a platform for online dispute resolution (ODR): &lt;a href=&#34;https://ec.europa.eu/consumers/odr&#34;&gt;https://ec.europa.eu/consumers/odr&lt;/a&gt;.&#xA;Our e-mail address can be found above in the legal notice.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Privacy Policy</title>
-      <link>http://localhost:1313/page/datenschutz/</link>
-      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
-      <guid>http://localhost:1313/page/datenschutz/</guid>
-      <description>&lt;h1&gt;Privacy Policy&lt;/h1&gt;&#xA;&lt;h2 id=&#34;m14&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;With this privacy policy we would like to inform you about the types of your personal data (hereinafter also referred to as &#34;data&#34;) that we process, for what purposes and to what extent. The privacy policy applies to all processing of personal data carried out by us, both in the context of providing our services and in particular on our websites, in mobile applications and within external online presences, such as our social media profiles (hereinafter collectively referred to as the &#34;online offering&#34;).&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Résumé</title>
-      <link>http://localhost:1313/page/resume/</link>
-      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
-      <guid>http://localhost:1313/page/resume/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/profile2.jpg&#34; alt=&#34;Image of Tobias Theel&#34;&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;mt3 mb4 no-print&#34;&gt;&#xA;  &lt;a href=&#34;javascript:window.print()&#34; class=&#34;f5 link dim br2 ph3 pv2 mb2 dib white bg-blue&#34;&gt;Download as PDF / Print&lt;/a&gt;&#xA;&lt;/div&gt;&#xA;&lt;p&gt;I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. &lt;strong&gt;I am currently seeking new challenges in remote-first or fully remote organizations.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Beyond code, I am a published author and a frequent tech conference speaker, including regular appearances at the &lt;a href=&#34;https://www.meetup.com/de-de/kasselcodemeetup/&#34;&gt;Kassel Code Meetup&lt;/a&gt;. &lt;strong&gt;I am available for speaking engagements focusing on Golang and Software Architecture.&lt;/strong&gt; I have been featured on the &lt;a href=&#34;https://changelog.com/gotime&#34;&gt;GoTimeFM podcast&lt;/a&gt; and love traveling to conferences to stay ahead of industry trends.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Publications</title>
-      <link>http://localhost:1313/page/publications/</link>
-      <pubDate>Tue, 03 Jan 2023 00:36:14 +0100</pubDate>
-      <guid>http://localhost:1313/page/publications/</guid>
-      <description>&lt;h2 id=&#34;speaking--workshops&#34;&gt;Speaking &amp;amp; Workshops&lt;/h2&gt;&#xA;&lt;p&gt;I am available for keynote speaking, technical talks, and workshops at international conferences and internal company events. My areas of expertise include:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Golang&lt;/strong&gt;: Concurrency patterns, TinyGo for IoT, and high-performance backend systems.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Software Architecture&lt;/strong&gt;: Domain-Driven Design (DDD), Monoliths, Microservices, and Event-Driven systems.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Open Source&lt;/strong&gt;: Community building and maintainership (Gocloak).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Interested in having me speak at your event or meetup? &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;Get in touch&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;open-source&#34;&gt;Open Source&lt;/h2&gt;&#xA;&lt;h3 id=&#34;gocloak--keycloak-rest-client-for-go&#34;&gt;Gocloak — Keycloak REST Client for Go&lt;/h3&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/Nerzal/gocloak&#34;&gt;Gocloak&lt;/a&gt; is a full-featured Go client library for the &lt;a href=&#34;https://www.keycloak.org/&#34;&gt;Keycloak&lt;/a&gt; REST API. Keycloak is an open-source Identity and Access Management (IAM) solution widely used to secure applications with features such as Single Sign-On (SSO), OAuth 2.0, and OpenID Connect (OIDC).&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Kontakt</title>
-      <link>http://localhost:1313/page/contact/</link>
-      <pubDate>Tue, 03 Jan 2023 00:16:24 +0100</pubDate>
-      <guid>http://localhost:1313/page/contact/</guid>
-      <description>&lt;form class=&#34;black-80 sans-serif&#34; accept-charset=&#34;UTF-8&#34; action=&#34;https://example.com&#34; method=&#34;POST&#34; role=&#34;form&#34;&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34;  for=&#34;name&#34;&gt;Your Name&lt;/label&gt;&#xA;    &lt;input type=&#34;text&#34; id=&#34;name&#34; name=&#34;name&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn&#34;  required placeholder=&#34; &#34;  aria-labelledby=&#34;name&#34;/&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34; for=&#34;email&#34;&gt;Email Address&lt;/label&gt;&#xA;    &lt;input type=&#34;email&#34; id=&#34;email&#34; name=&#34;email&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn&#34;  required placeholder=&#34; &#34;  aria-labelledby=&#34;email&#34;/&gt;&#xA;    &lt;div class=&#34;requirements f6 gray glow i ph3 overflow-hidden&#34;&gt;&#xA;      An email address is required.&#xA;    &lt;/div&gt;&#xA;&#xA;    &lt;label class=&#34;f6 b db mb1 mt3 sans-serif mid-gray&#34; for=&#34;message&#34;&gt;Message&lt;/label&gt;&#xA;    &lt;textarea id=&#34;message&#34; name=&#34;message&#34; class=&#34;w-100 f5 pv3 ph3 bg-light-gray bn h4&#34; aria-labelledby=&#34;message&#34;&gt;&lt;/textarea&gt;&#xA;&#xA;    &lt;input class=&#34;db w-100 mv2 white pa3 bn hover-shadow hover-bg-black bg-animate bg-black&#34; type=&#34;submit&#34; value=&#34;Send&#34; /&gt;&#xA;&#xA;&lt;/form&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/page/</link><description>Recent content in Pages on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 16 Apr 2026 11:53:00 +0200</lastBuildDate><atom:link href="https://blog.noobygames.de/page/index.xml" rel="self" type="application/rss+xml"/><item><title>Legal Notice</title><link>https://blog.noobygames.de/page/impressum/</link><pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate><guid>https://blog.noobygames.de/page/impressum/</guid><description>&lt;h2 id="information-according-to--5-tmg-german-telemedia-act"&gt;Information according to § 5 TMG (German Telemedia Act)&lt;/h2&gt;
+&lt;p&gt;Tobias Theel / Noobygames
+Gregorstr. 2
+34650 Fritzlar&lt;/p&gt;
+&lt;p&gt;Represented by:
+Tobias Theel&lt;/p&gt;
+&lt;p&gt;Contact: Tobias Theel&lt;/p&gt;
+&lt;p&gt;Phone: 015222338195&lt;/p&gt;
+&lt;p&gt;E-Mail: &lt;a href="mailto:info@noobygames.de"&gt;info@noobygames.de&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;VAT ID:
+None&lt;/p&gt;
+&lt;p&gt;Responsible for content according to § 18 para. 2 MStV:
+Tobias Theel, Henkelstr. 6, 34127 Kassel&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note on EU dispute resolution&lt;/strong&gt;
+The European Commission provides a platform for online dispute resolution (ODR): &lt;a href="https://ec.europa.eu/consumers/odr"&gt;https://ec.europa.eu/consumers/odr&lt;/a&gt;.
+Our e-mail address can be found above in the legal notice.&lt;/p&gt;</description></item><item><title>Privacy Policy</title><link>https://blog.noobygames.de/page/datenschutz/</link><pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate><guid>https://blog.noobygames.de/page/datenschutz/</guid><description>&lt;h1&gt;Privacy Policy&lt;/h1&gt;
+&lt;h2 id="m14"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;With this privacy policy we would like to inform you about the types of your personal data (hereinafter also referred to as "data") that we process, for what purposes and to what extent. The privacy policy applies to all processing of personal data carried out by us, both in the context of providing our services and in particular on our websites, in mobile applications and within external online presences, such as our social media profiles (hereinafter collectively referred to as the "online offering").&lt;/p&gt;</description></item><item><title>Résumé</title><link>https://blog.noobygames.de/page/resume/</link><pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate><guid>https://blog.noobygames.de/page/resume/</guid><description>&lt;div class="resume-profile-card"&gt;
+ &lt;div class="resume-avatar-wrap"&gt;
+ &lt;img src="https://blog.noobygames.de/img/profile2.jpg" alt="Tobias Theel" class="resume-avatar"&gt;
+ &lt;/div&gt;
+ &lt;div class="resume-profile-info"&gt;
+ &lt;div class="resume-profile-meta"&gt;
+ &lt;span class="resume-meta-item"&gt;Kassel, Germany &amp;middot; UTC+1/UTC+2&lt;/span&gt;
+ &lt;span class="resume-meta-item"&gt;100% Remote&lt;/span&gt;
+ &lt;span class="resume-meta-item"&gt;Available for Speaking&lt;/span&gt;
+ &lt;/div&gt;
+ &lt;div class="resume-profile-links"&gt;
+ &lt;a href="https://github.com/Nerzal" class="resume-link" target="_blank" rel="noopener"&gt;GitHub&lt;/a&gt;
+ &lt;a href="https://stackoverflow.com/users/4992212/tobias-theel" class="resume-link" target="_blank" rel="noopener"&gt;StackOverflow&lt;/a&gt;
+ &lt;a href="https://www.linkedin.com/in/tobias-theel-3353a9181" class="resume-link" target="_blank" rel="noopener"&gt;LinkedIn&lt;/a&gt;
+ &lt;/div&gt;
+ &lt;a href="javascript:window.print()" class="site-btn site-btn--outline resume-print-btn no-print"&gt;Print / Save as PDF&lt;/a&gt;
+ &lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;I am a Senior Software Engineer with over 12 years of experience building scalable systems and immersive experiences. My expertise spans backend architecture, cloud-native development, and game engineering. &lt;strong&gt;I am currently seeking new challenges in remote-first or fully remote organizations.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Beyond code, I am a published author and a frequent tech conference speaker, including regular appearances at the &lt;a href="https://www.meetup.com/de-de/kasselcodemeetup/"&gt;Kassel Code Meetup&lt;/a&gt;. I have been featured on the &lt;a href="https://changelog.com/gotime"&gt;GoTimeFM podcast&lt;/a&gt; and love traveling to conferences to stay ahead of industry trends. When not coding or speaking, I&amp;rsquo;m out walking my &lt;strong&gt;two dogs&lt;/strong&gt;.&lt;/p&gt;</description></item><item><title>Publications</title><link>https://blog.noobygames.de/page/publications/</link><pubDate>Tue, 03 Jan 2023 00:36:14 +0100</pubDate><guid>https://blog.noobygames.de/page/publications/</guid><description>&lt;h2 id="speaking--workshops"&gt;Speaking &amp;amp; Workshops&lt;/h2&gt;
+&lt;p&gt;I am available for keynote speaking, technical talks, and workshops at international conferences and internal company events. My areas of expertise include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Golang&lt;/strong&gt;: Concurrency patterns, TinyGo for IoT, and high-performance backend systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Software Architecture&lt;/strong&gt;: Domain-Driven Design (DDD), Monoliths, Microservices, and Event-Driven systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open Source&lt;/strong&gt;: Community building and maintainership (Gocloak).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Interested in having me speak at your event or meetup? &lt;a href="mailto:info@noobygames.de"&gt;Get in touch&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="open-source"&gt;Open Source&lt;/h2&gt;
+&lt;h3 id="gocloak--keycloak-rest-client-for-go"&gt;Gocloak — Keycloak REST Client for Go&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/Nerzal/gocloak"&gt;Gocloak&lt;/a&gt; is a full-featured Go client library for the &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; REST API. Keycloak is an open-source Identity and Access Management (IAM) solution widely used to secure applications with features such as Single Sign-On (SSO), OAuth 2.0, and OpenID Connect (OIDC).&lt;/p&gt;</description></item></channel></rss>

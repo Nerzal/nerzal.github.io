@@ -1,14 +1,15 @@
-<p>
-    {{ .Inner | markdownify }}
-</p>
-{{ $src := .Get "src" }}
-{{ $title := .Get "title" }}
-<iframe 
-    width="560" 
-    height="315" 
-    src="{{ $src }}" 
-    title="{{ $title }}" 
-    frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-    allowfullscreen>
-</iframe>
+<figure class="pub-video-figure">
+    <div class="pub-video-wrap">
+        <iframe
+            src="{{ .Get "src" }}"
+            title="{{ .Get "title" }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy">
+        </iframe>
+    </div>
+    {{ with .Inner | markdownify }}
+    <figcaption class="pub-video-caption">{{ . }}</figcaption>
+    {{ end }}
+</figure>

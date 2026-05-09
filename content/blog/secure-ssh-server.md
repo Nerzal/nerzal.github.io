@@ -216,7 +216,7 @@ sudo nano /etc/ssh/sshd_config
 
 Find the `PasswordAuthentication` line (it may be commented out) and set it to `no`:
 
-```
+```bash
 PasswordAuthentication no
 ```
 
@@ -226,7 +226,7 @@ This forces every client to authenticate with a key. Brute-force attacks against
 
 Find `PermitRootLogin` and set it to `no`:
 
-```
+```bash
 PermitRootLogin no
 ```
 
@@ -236,7 +236,7 @@ Even if an attacker obtains valid credentials, they cannot log in as `root` dire
 
 Add a line at the bottom of the file that whitelists only your new user:
 
-```
+```bash
 AllowUsers deploy
 ```
 

@@ -1,5 +1,20 @@
 {{/* For Users's overwrite */}}
 <script>
+(function () {
+    var btn = document.getElementById('scroll-to-top');
+    if (!btn) return;
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 300) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    }, { passive: true });
+    btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('pre').forEach(function (pre) {
         var button = document.createElement('button');

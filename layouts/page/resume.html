@@ -1,0 +1,9 @@
+{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
+{{ define "main" }}
+<div class="resume-page mw8 center ph3 ph4-l pv4 pv5-l">
+    <h1 class="f1 highlight-color mb4">{{ .Title }}</h1>
+    <div class="lh-copy nested-links foreground-dark">
+        {{ .Content }}
+    </div>
+</div>
+{{ end }}

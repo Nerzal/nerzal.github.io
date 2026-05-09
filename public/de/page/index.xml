@@ -1,26 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Pages on Tobias Theel | Senior Software Engineer</title>
-    <link>http://localhost:1313/de/page/</link>
-    <description>Recent content in Pages on Tobias Theel | Senior Software Engineer</description>
-    <generator>Hugo</generator>
-    <language>de</language>
-    <lastBuildDate>Thu, 16 Apr 2026 11:53:00 +0200</lastBuildDate>
-    <atom:link href="http://localhost:1313/de/page/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Lebenslauf</title>
-      <link>http://localhost:1313/de/page/resume/</link>
-      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
-      <guid>http://localhost:1313/de/page/resume/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/profile2.jpg&#34; alt=&#34;Bild von Tobias Theel&#34;&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;mt3 mb4 no-print&#34;&gt;&#xA;  &lt;a href=&#34;javascript:window.print()&#34; class=&#34;f5 link dim br2 ph3 pv2 mb2 dib white bg-blue&#34;&gt;Als PDF herunterladen / Drucken&lt;/a&gt;&#xA;&lt;/div&gt;&#xA;&lt;p&gt;Ich bin Senior Software Engineer mit über 12 Jahren Erfahrung im Aufbau skalierbarer Systeme und immersiver Erlebnisse. Meine Expertise umfasst Backend-Architektur, Cloud-native Entwicklung und Game Engineering. &lt;strong&gt;Ich suche derzeit neue Herausforderungen in remote-first oder vollständig remote arbeitenden Organisationen.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;Neben dem Programmieren bin ich veröffentlichter Autor und häufiger Tech-Conference-Speaker, unter anderem regelmäßig beim &lt;a href=&#34;https://www.meetup.com/de-de/kasselcodemeetup/&#34;&gt;Kassel Code Meetup&lt;/a&gt;. &lt;strong&gt;Ich bin verfügbar für Vorträge mit Fokus auf Golang und Software-Architektur.&lt;/strong&gt; Ich war im &lt;a href=&#34;https://changelog.com/gotime&#34;&gt;GoTimeFM-Podcast&lt;/a&gt; zu Gast und reise gerne zu Konferenzen, um am Puls der Branche zu bleiben.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Publikationen</title>
-      <link>http://localhost:1313/de/page/publications/</link>
-      <pubDate>Tue, 03 Jan 2023 00:36:14 +0100</pubDate>
-      <guid>http://localhost:1313/de/page/publications/</guid>
-      <description>&lt;h2 id=&#34;vorträge--workshops&#34;&gt;Vorträge &amp;amp; Workshops&lt;/h2&gt;&#xA;&lt;p&gt;Ich bin verfügbar für Keynote-Vorträge, technische Talks und Workshops bei internationalen Konferenzen und internen Firmenveranstaltungen. Meine Fachgebiete umfassen:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Golang&lt;/strong&gt;: Nebenläufigkeitsmuster, TinyGo für IoT und hochperformante Backend-Systeme.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Software-Architektur&lt;/strong&gt;: Domain-Driven Design (DDD), Monolithen, Microservices und Event-Driven Systems.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Open Source&lt;/strong&gt;: Community-Aufbau und Maintainership (Gocloak).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Interesse, mich für deine Veranstaltung oder dein Meetup zu buchen? &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;Schreib mir&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h2 id=&#34;open-source&#34;&gt;Open Source&lt;/h2&gt;&#xA;&lt;h3 id=&#34;gocloak--keycloak-rest-client-für-go&#34;&gt;Gocloak — Keycloak REST-Client für Go&lt;/h3&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/Nerzal/gocloak&#34;&gt;Gocloak&lt;/a&gt; ist eine vollständige Go-Client-Bibliothek für die &lt;a href=&#34;https://www.keycloak.org/&#34;&gt;Keycloak&lt;/a&gt; REST API. Keycloak ist eine Open-Source-Lösung für Identity und Access Management (IAM), die häufig eingesetzt wird, um Anwendungen mit Single Sign-On (SSO), OAuth 2.0 und OpenID Connect (OIDC) abzusichern.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/de/page/</link><description>Recent content in Pages on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>de</language><lastBuildDate>Thu, 16 Apr 2026 11:53:00 +0200</lastBuildDate><atom:link href="https://blog.noobygames.de/de/page/index.xml" rel="self" type="application/rss+xml"/><item><title>Lebenslauf</title><link>https://blog.noobygames.de/de/page/resume/</link><pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate><guid>https://blog.noobygames.de/de/page/resume/</guid><description>&lt;div class="resume-profile-card"&gt;
+ &lt;div class="resume-avatar-wrap"&gt;
+ &lt;img src="https://blog.noobygames.de/img/profile2.jpg" alt="Tobias Theel" class="resume-avatar"&gt;
+ &lt;/div&gt;
+ &lt;div class="resume-profile-info"&gt;
+ &lt;div class="resume-profile-meta"&gt;
+ &lt;span class="resume-meta-item"&gt;Kassel, Deutschland &amp;middot; UTC+1/UTC+2&lt;/span&gt;
+ &lt;span class="resume-meta-item"&gt;100% Remote&lt;/span&gt;
+ &lt;span class="resume-meta-item"&gt;Verfügbar für Vorträge&lt;/span&gt;
+ &lt;/div&gt;
+ &lt;div class="resume-profile-links"&gt;
+ &lt;a href="https://github.com/Nerzal" class="resume-link" target="_blank" rel="noopener"&gt;GitHub&lt;/a&gt;
+ &lt;a href="https://stackoverflow.com/users/4992212/tobias-theel" class="resume-link" target="_blank" rel="noopener"&gt;StackOverflow&lt;/a&gt;
+ &lt;a href="https://www.linkedin.com/in/tobias-theel-3353a9181" class="resume-link" target="_blank" rel="noopener"&gt;LinkedIn&lt;/a&gt;
+ &lt;/div&gt;
+ &lt;a href="javascript:window.print()" class="site-btn site-btn--outline resume-print-btn no-print"&gt;Drucken / Als PDF speichern&lt;/a&gt;
+ &lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Ich bin Senior Software Engineer mit über 12 Jahren Erfahrung im Aufbau skalierbarer Systeme und immersiver Erlebnisse. Meine Expertise umfasst Backend-Architektur, Cloud-native Entwicklung und Game Engineering. &lt;strong&gt;Ich suche derzeit neue Herausforderungen in remote-first oder vollständig remote arbeitenden Organisationen.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Neben dem Programmieren bin ich veröffentlichter Autor und häufiger Tech-Conference-Speaker, unter anderem regelmäßig beim &lt;a href="https://www.meetup.com/de-de/kasselcodemeetup/"&gt;Kassel Code Meetup&lt;/a&gt;. Ich war im &lt;a href="https://changelog.com/gotime"&gt;GoTimeFM-Podcast&lt;/a&gt; zu Gast und reise gerne zu Konferenzen. Wenn ich nicht am Schreibtisch oder auf einer Konferenz bin, bin ich meistens mit meinen &lt;strong&gt;zwei Hunden&lt;/strong&gt; unterwegs.&lt;/p&gt;</description></item><item><title>Publikationen</title><link>https://blog.noobygames.de/de/page/publications/</link><pubDate>Tue, 03 Jan 2023 00:36:14 +0100</pubDate><guid>https://blog.noobygames.de/de/page/publications/</guid><description>&lt;h2 id="vorträge--workshops"&gt;Vorträge &amp;amp; Workshops&lt;/h2&gt;
+&lt;p&gt;Ich bin verfügbar für Keynote-Vorträge, technische Talks und Workshops bei internationalen Konferenzen und internen Firmenveranstaltungen. Meine Fachgebiete umfassen:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Golang&lt;/strong&gt;: Nebenläufigkeitsmuster, TinyGo für IoT und hochperformante Backend-Systeme.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Software-Architektur&lt;/strong&gt;: Domain-Driven Design (DDD), Monolithen, Microservices und Event-Driven Systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open Source&lt;/strong&gt;: Community-Aufbau und Maintainership (Gocloak).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Interesse, mich für deine Veranstaltung oder dein Meetup zu buchen? &lt;a href="mailto:info@noobygames.de"&gt;Schreib mir&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="open-source"&gt;Open Source&lt;/h2&gt;
+&lt;h3 id="gocloak--keycloak-rest-client-für-go"&gt;Gocloak — Keycloak REST-Client für Go&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/Nerzal/gocloak"&gt;Gocloak&lt;/a&gt; ist eine vollständige Go-Client-Bibliothek für die &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; REST API. Keycloak ist eine Open-Source-Lösung für Identity und Access Management (IAM), die häufig eingesetzt wird, um Anwendungen mit Single Sign-On (SSO), OAuth 2.0 und OpenID Connect (OIDC) abzusichern.&lt;/p&gt;</description></item></channel></rss>

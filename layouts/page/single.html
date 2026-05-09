@@ -1,4 +1,26 @@
-{{ define "header" }}{{ partial "page-header.html" . }}{{ end }} {{ define "main" }}
+{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
+{{ define "main" }}
+{{ $slug := .File.BaseFileName }}
+{{ if .Params.toc }}
+<div class="flex mt2 mw9 center">
+    <aside class="toc-sidebar dn db-l pr4">
+        <nav class="toc-nav">
+            <p class="toc-title">Contents</p>
+            {{ .TableOfContents }}
+        </nav>
+    </aside>
+    <article class="cf pv5 ph3 ph4-ns flex-auto mw8">
+        <header>
+            <h1 class="f1 highlight-color">
+                {{ .Title }}
+            </h1>
+        </header>
+        <div class="nested-copy-line-height lh-copy f4 nested-links forground-dark page-{{ $slug }}">
+            {{ .Content }}
+        </div>
+    </article>
+</div>
+{{ else }}
 <div class="flex-l mt2 mw9 center">
     <article class="center cf pv5 ph3 ph4-ns mw8">
         <header>
@@ -6,9 +28,10 @@
                 {{ .Title }}
             </h1>
         </header>
-        <div class="nested-copy-line-height lh-copy f4 nested-links forground-dark">
+        <div class="nested-copy-line-height lh-copy f4 nested-links forground-dark page-{{ $slug }}">
             {{ .Content }}
         </div>
     </article>
 </div>
+{{ end }}
 {{ end }}

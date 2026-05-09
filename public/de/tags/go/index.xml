@@ -1,26 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Go on Tobias Theel | Senior Software Engineer</title>
-    <link>http://localhost:1313/de/tags/go/</link>
-    <description>Recent content in Go on Tobias Theel | Senior Software Engineer</description>
-    <generator>Hugo</generator>
-    <language>de</language>
-    <lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/de/tags/go/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Containerisierung und Go: Eine starke Kombination</title>
-      <link>http://localhost:1313/de/blog/go-docker/</link>
-      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/de/blog/go-docker/</guid>
-      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;Containerisierung ist zu einem wesentlichen Bestandteil moderner Softwareentwicklung geworden und erleichtert das Deployen und Verwalten von Anwendungen in verschiedenen Umgebungen. Eine der Programmiersprachen, die sich als hervorragende Wahl für containerisierte Anwendungen erwiesen hat, ist &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für containerisierte Anwendungen ist und wie es nahtlos mit Containerisierungstechnologien wie Docker und Kubernetes zusammenarbeitet.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-vorteile-für-die-containerisierung&#34;&gt;Gos Vorteile für die Containerisierung&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Leichtgewichtige Binaries&lt;/strong&gt;: Go kompiliert zu kleinen, statisch gelinkten Binaries, die alle Abhängigkeiten enthalten. Das führt zu minimalen Container-Image-Größen, schnelleren Startzeiten und geringerem Ressourcenverbrauch.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung</title>
-      <link>http://localhost:1313/de/blog/game-of-life/</link>
-      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/de/blog/game-of-life/</guid>
-      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens&#34;&gt;Conways Game of Life&lt;/a&gt; ist ein berühmter zellulärer Automat, erdacht vom britischen Mathematiker John Horton Conway. Es ist ein Nullspieler-Spiel, das sich auf Basis seines Ausgangszustands weiterentwickelt und keine weiteren Eingaben des Spielers erfordert. Das Spiel findet auf einem unendlichen zweidimensionalen Gitter quadratischer Zellen statt, wobei jede Zelle entweder lebendig oder tot ist.&lt;/p&gt;&#xA;&lt;p&gt;In diesem Blog-Post erkunden wir, wie man Conways Game of Life in Go implementiert. Wir bieten Schritt-für-Schritt-Anleitungen mit funktionierenden Code-Beispielen und detaillierten Erklärungen.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go on Tobias Theel | Senior Software Engineer</title><link>https://blog.noobygames.de/de/tags/go/</link><description>Recent content in Go on Tobias Theel | Senior Software Engineer</description><generator>Hugo</generator><language>de</language><lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.noobygames.de/de/tags/go/index.xml" rel="self" type="application/rss+xml"/><item><title>Containerisierung und Go: Eine starke Kombination</title><link>https://blog.noobygames.de/de/blog/go-docker/</link><pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/de/blog/go-docker/</guid><description>&lt;h2 id="einführung"&gt;Einführung&lt;/h2&gt;
+&lt;p&gt;Containerisierung ist zu einem wesentlichen Bestandteil moderner Softwareentwicklung geworden und erleichtert das Deployen und Verwalten von Anwendungen in verschiedenen Umgebungen. Eine der Programmiersprachen, die sich als hervorragende Wahl für containerisierte Anwendungen erwiesen hat, ist &lt;a href="https://golang.org/"&gt;Go&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für containerisierte Anwendungen ist und wie es nahtlos mit Containerisierungstechnologien wie Docker und Kubernetes zusammenarbeitet.&lt;/p&gt;
+&lt;h2 id="gos-vorteile-für-die-containerisierung"&gt;Gos Vorteile für die Containerisierung&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Leichtgewichtige Binaries&lt;/strong&gt;: Go kompiliert zu kleinen, statisch gelinkten Binaries, die alle Abhängigkeiten enthalten. Das führt zu minimalen Container-Image-Größen, schnelleren Startzeiten und geringerem Ressourcenverbrauch.&lt;/p&gt;</description></item><item><title>Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung</title><link>https://blog.noobygames.de/de/blog/game-of-life/</link><pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate><guid>https://blog.noobygames.de/de/blog/game-of-life/</guid><description>&lt;h2 id="einführung"&gt;Einführung&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens"&gt;Conways Game of Life&lt;/a&gt; ist ein berühmter zellulärer Automat, erdacht vom britischen Mathematiker John Horton Conway. Es ist ein Nullspieler-Spiel, das sich auf Basis seines Ausgangszustands weiterentwickelt und keine weiteren Eingaben des Spielers erfordert. Das Spiel findet auf einem unendlichen zweidimensionalen Gitter quadratischer Zellen statt, wobei jede Zelle entweder lebendig oder tot ist.&lt;/p&gt;
+&lt;p&gt;In diesem Blog-Post erkunden wir, wie man Conways Game of Life in Go implementiert. Wir bieten Schritt-für-Schritt-Anleitungen mit funktionierenden Code-Beispielen und detaillierten Erklärungen.&lt;/p&gt;</description></item></channel></rss>

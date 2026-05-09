@@ -1,0 +1,33 @@
+{{ $imgRaw := partial "func/GetFeaturedImage" . }}
+{{ $img := "" }}
+{{ with $imgRaw }}{{ $img = . | relURL }}{{ end }}
+<article class="blog-card">
+    <a href="{{ .RelPermalink }}" class="blog-card-img-wrap" tabindex="-1" aria-hidden="true">
+        {{ if $img }}
+        <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy">
+        {{ else }}
+        <div class="blog-card-img-placeholder">
+            <span class="blog-card-placeholder-icon">&#9998;</span>
+        </div>
+        {{ end }}
+    </a>
+    <div class="blog-card-body">
+        <time class="blog-card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date | time.Format (default "January 2, 2006" .Site.Params.date_format) }}
+        </time>
+        <h2 class="blog-card-title">
+            <a href="{{ .RelPermalink }}" class="blog-card-title-link">{{ .Title }}</a>
+        </h2>
+        <p class="blog-card-summary">
+            {{ with .Description }}{{ . }}{{ else }}{{ .Summary | truncate 130 }}{{ end }}
+        </p>
+        {{ with .Params.tags }}
+        <div class="blog-card-tags">
+            {{ range first 4 . }}
+            <span class="blog-tag">{{ . }}</span>
+            {{ end }}
+        </div>
+        {{ end }}
+        <a href="{{ .RelPermalink }}" class="blog-card-read-more">{{ i18n "readMore" }} →</a>
+    </div>
+</article>
