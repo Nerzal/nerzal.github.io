@@ -507,6 +507,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     ['output', '  blog              go to the blog'],
                     ['output', '  dogs              the important stuff'],
                     ['output', '  rickroll          never gonna...'],
+                    ['output', '  skeet             praise be'],
+                    ['output', '  goto <place>      considered harmful'],
+                    ['output', '  obo               off by one'],
                     ['output', '  drop table        you wouldn\'t dare'],
                     ['output', '  sudo make coffee  critical infrastructure'],
                     ['output', '  matrix            you already know'],
@@ -616,6 +619,92 @@ document.addEventListener('DOMContentLoaded', function () {
                     ['dim',    'Little Bobby Tables strikes again.']
                 ];
             },
+            skeet: function () {
+                var rep = 1424753;
+                var facts = [
+                    "Jon Skeet doesn't debug code. Code debugs itself out of respect.",
+                    "His compiler never throws warnings. It throws apologies.",
+                    "He has answered 60,000+ Stack Overflow questions. Correctly.",
+                    "Jon Skeet can divide by zero.",
+                    "NullPointerExceptions handle themselves when he's nearby.",
+                    "He once fixed a race condition by thinking about it.",
+                    "Jon Skeet's code has no edge cases. Only correct cases."
+                ];
+                var fi = 0;
+                var header = [
+                    ['output', ''],
+                    ['output', '  ╔════════════════════════════════╗'],
+                    ['output', '  ║       J O N   S K E E T       ║'],
+                    ['output', '  ║   The Stack Overflow Demigod   ║'],
+                    ['output', '  ╚════════════════════════════════╝'],
+                    ['output', '']
+                ];
+                header.forEach(function(l) { println(l[0], l[1]); });
+
+                var repEl = document.createElement('p');
+                repEl.className = 'ee-terminal-line ee-terminal-line--output';
+                output.appendChild(repEl);
+                var factEl = document.createElement('p');
+                factEl.className = 'ee-terminal-line ee-terminal-line--dim';
+                factEl.style.marginTop = '0.4rem';
+                output.appendChild(factEl);
+                repEl.textContent  = '  reputation: ' + rep.toLocaleString() + ' ▲';
+                factEl.textContent = '  ' + facts[0];
+                output.scrollTop = output.scrollHeight;
+
+                activeAnimation = setInterval(function () {
+                    rep += Math.floor(Math.random() * 8) + 2;
+                    fi = (fi + 1) % facts.length;
+                    repEl.textContent  = '  reputation: ' + rep.toLocaleString() + ' ▲';
+                    factEl.textContent = '  ' + facts[fi];
+                    output.scrollTop = output.scrollHeight;
+                }, 900);
+                return [];
+            },
+            goto: function (args) {
+                var dest = args.join(' ').toLowerCase().replace(/^\/|\/$/g, '') || '??';
+                var isDogs = dest === 'dogs' || dest === '/dogs' || dest === '/dogs/';
+                setTimeout(function () { window.location.href = '/dogs/'; }, isDogs ? 900 : 1600);
+                var lines = [
+                    ['output', '"Go To Statement Considered Harmful"'],
+                    ['dim',    '  — E.W. Dijkstra, 1968'],
+                    ['output', '']
+                ];
+                if (isDogs) {
+                    lines.push(['output', 'goto dogs: at least you chose wisely.']);
+                    lines.push(['dim',    'Navigating… 🐕']);
+                } else {
+                    lines.push(['error',  'goto ' + (dest || '??') + ': destination considered harmful']);
+                    lines.push(['dim',    'Overriding. Routing to the only safe destination.']);
+                    lines.push(['output', '→ /dogs/']);
+                }
+                return lines;
+            },
+            obo: function () {
+                var win = document.querySelector('.ee-terminal-window');
+                if (win) {
+                    win.style.transition = 'transform 0.15s ease';
+                    win.style.transform  = 'translateX(1px)';
+                    setTimeout(function () { win.style.transform = ''; }, 2500);
+                }
+                return [
+                    ['output', '$ for i in $(seq 0 9); do echo "item $i"; done'],
+                    ['output', 'item 0'],
+                    ['output', 'item 1'],
+                    ['output', 'item 2'],
+                    ['output', 'item 3'],
+                    ['output', 'item 4'],
+                    ['output', 'item 5'],
+                    ['output', 'item 6'],
+                    ['output', 'item 7'],
+                    ['output', 'item 8'],
+                    ['output', 'item 9'],
+                    ['output', ''],
+                    ['error',  'AssertionError: expected range 1..10, got 0..9'],
+                    ['dim',    '# the terminal window has also shifted 1px to the right.'],
+                    ['dim',    "# you probably didn't notice. that's the point."]
+                ];
+            },
             clear: function () {
                 output.innerHTML = '';
                 return [];
@@ -669,6 +758,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // aliases
             if (lower === 'never gonna give you up') {
                 lines = COMMANDS.rickroll();
+            } else if (lower === 'jon skeet' || lower === 'jon' || lower === 'praise skeet') {
+                lines = COMMANDS.skeet();
+            } else if (lower === 'off by one' || lower === 'off-by-one' || lower === 'fencepost') {
+                lines = COMMANDS.obo();
             } else if (lower.startsWith('drop table') || lower === 'bobby tables' || lower === 'bobby' || lower === 'little bobby tables') {
                 lines = COMMANDS.drop();
             } else if (cmd === 'sudo') {
