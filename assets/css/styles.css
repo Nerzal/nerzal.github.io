@@ -740,6 +740,10 @@ body > header:first-of-type {
     gap: 0.5rem;
 }
 
+.site-nav-mobile-lang {
+    margin-left: auto;
+}
+
 .site-nav-right {
     display: flex;
     align-items: center;
@@ -805,8 +809,13 @@ body > header:first-of-type {
 }
 
 .site-nav-socials .socials a {
+    display: inline-flex !important;
+    align-items: center;
     opacity: 0.55;
     transition: opacity 0.2s;
+    padding: 0 !important;
+    margin: 0 0.1rem !important;
+    line-height: 0;
 }
 
 .site-nav-socials .socials a:hover {
@@ -814,7 +823,18 @@ body > header:first-of-type {
     color: var(--highlight-color);
 }
 
+/* hide "opens in new window" indicator — doesn't belong in nav */
+.site-nav-socials .new-window {
+    display: none;
+}
+
+.site-nav-socials .socials a .icon {
+    display: flex;
+    align-items: center;
+}
+
 .site-nav-socials .socials a .icon svg {
+    display: block;
     width: 20px;
     height: 20px;
 }

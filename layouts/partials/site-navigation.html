@@ -10,7 +10,6 @@
 
         {{/* Desktop nav — hidden on mobile */}}
         <div class="site-nav-right">
-            {{ partial "i18nlist.html" . }}
             {{ if .Site.Menus.main }}
             <ul class="site-nav-menu">
                 {{ range .Site.Menus.main }}
@@ -34,17 +33,18 @@
             <div class="site-nav-socials">
                 {{ partialCached "social-follow.html" . }}
             </div>
+            {{ partial "i18nlist.html" . }}
         </div>
 
-        {{/* Mobile: lang switcher + socials + hamburger, right-aligned */}}
+        {{/* Mobile: hamburger · socials · lang (right-aligned) */}}
         <div class="site-nav-mobile-end">
-            {{ partial "i18nlist.html" . }}
-            <div class="site-nav-socials">{{ partialCached "social-follow.html" . }}</div>
             <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
             </button>
+            <div class="site-nav-socials">{{ partialCached "social-follow.html" . }}</div>
+            <div class="site-nav-mobile-lang">{{ partial "i18nlist.html" . }}</div>
         </div>
     </div>
 </nav>
