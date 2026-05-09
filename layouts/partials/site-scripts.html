@@ -582,36 +582,35 @@ document.addEventListener('DOMContentLoaded', function () {
                     setTimeout(function () {
                         // dissolve the page
                         document.body.classList.add('is-dissolving');
-                        var overlay = document.createElement('div');
-                        overlay.className = 'ee-drop-overlay';
-                        overlay.innerHTML =
+                        var dropOverlay = document.createElement('div');
+                        dropOverlay.className = 'ee-drop-overlay';
+                        dropOverlay.innerHTML =
                             '<p class="ee-drop-line">DROP TABLE users;</p>' +
                             '<p class="ee-drop-line">DROP TABLE posts;</p>' +
                             '<p class="ee-drop-line">DROP TABLE sessions;</p>' +
                             '<p class="ee-drop-line ee-drop-warn">⚠ Dropping all tables…</p>' +
                             '<p class="ee-drop-line ee-drop-warn">⚠ Database destroyed.</p>';
-                        document.body.appendChild(overlay);
-                        setTimeout(function () { overlay.classList.add('is-visible'); }, 100);
+                        document.body.appendChild(dropOverlay);
+                        setTimeout(function () { dropOverlay.classList.add('is-visible'); }, 100);
 
-                        // restore after 2.5s
+                        // restore after 5s — enough time to read all the lines
                         setTimeout(function () {
                             document.body.classList.remove('is-dissolving');
                             document.body.classList.add('is-restoring');
-                            overlay.classList.remove('is-visible');
+                            dropOverlay.classList.remove('is-visible');
                             setTimeout(function () {
-                                overlay.remove();
+                                dropOverlay.remove();
                                 document.body.classList.remove('is-restoring');
-                                // show toast
                                 var toast = document.querySelector('.ee-toast') || document.createElement('div');
                                 toast.className = 'ee-toast';
                                 if (!toast.parentNode) document.body.appendChild(toast);
                                 toast.innerHTML = '✅ Database restored from backup <span style="opacity:0.5">(it\'s a static site lol)</span>';
                                 toast.classList.add('ee-toast--visible');
                                 setTimeout(function () { toast.classList.remove('ee-toast--visible'); }, 4000);
-                            }, 800);
-                        }, 2500);
-                    }, 300);
-                }, 400);
+                            }, 1000);
+                        }, 5000);
+                    }, 400);
+                }, 900);
                 return [
                     ['error',  "Robert'); DROP TABLE students; --"],
                     ['output', 'Executing query…'],
