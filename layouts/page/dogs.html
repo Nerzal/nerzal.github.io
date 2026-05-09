@@ -1,48 +1,90 @@
 {{ define "main" }}
-<div class="dogs-page mw7 center ph3 ph4-l pv5">
-    <div>
-        <span class="dogs-secret-badge">&#127381; Secret Page</span>
-    </div>
-    <h1 class="highlight-color">{{ .Title }}</h1>
-    <p class="dogs-intro">
-        You found it. The real reason this website exists — or at least, the real reason
-        I get up in the morning. Meet my two dogs. They review every blog post
-        (mostly by sitting on the keyboard at the wrong moment).
-    </p>
+{{ $spec := "resize 600x webp" }}
 
-    <pre class="dogs-ascii">
-   / \__
-  (    @\___
-  /         O
- /   (_____/
-/_____/   U
-    </pre>
+{{ $soloHero := (resources.Get "img/dogs/solo-futter.jpeg").Process $spec }}
+{{ $lucaHero := (resources.Get "img/dogs/luca-hasi.jpeg").Process $spec }}
 
-    <div class="dogs-cards">
-        <div class="dogs-card">
-            <div class="dogs-card-paw">&#128054;</div>
-            <div class="dogs-card-name">Dog #1</div>
-            <p class="dogs-card-desc">
-                Chief of Security. Responsible for alerting the household to
-                squirrels, delivery drivers, and suspicious leaves.
-                Specializes in strategic nap placement on laptops.
-            </p>
-        </div>
-        <div class="dogs-card">
-            <div class="dogs-card-paw">&#128054;</div>
-            <div class="dogs-card-name">Dog #2</div>
-            <p class="dogs-card-desc">
-                Head of Morale. Expert in the ancient art of looking very
-                sad until treats appear. Also a surprisingly good rubber
-                duck for debugging Go code.
-            </p>
-        </div>
+{{ $soloNames := slice "solo-feld.jpeg" "solo-süß.jpeg" "solo-verliebt.jpeg" "solo-wasser.jpeg" }}
+{{ $lucaNames := slice "luca-feld.jpeg" "luca-happy.jpeg" "luca-hunger.jpeg" "luca-loch.jpeg" "luca-wasser.jpeg" }}
+{{ $bothNames := slice "luca-solo.jpeg" "luca-solo-feld.jpeg" "luca-solo-sam.jpeg" }}
+
+<div class="dogs-page center ph3 ph4-l pv5">
+
+    <div class="tc">
+        <span class="dogs-secret-badge">&#127381; {{ i18n "secretPage" | default "Secret Page" }}</span>
+        <h1 class="highlight-color mt2">{{ .Title }}</h1>
+        <p class="dogs-intro">{{ i18n "dogsIntro" }}</p>
     </div>
 
-    <p style="margin-top:2.5rem;font-size:0.9rem;opacity:0.5;font-family:monospace;">
-        &#128073; hint: try the Konami Code on any page (&#8593;&#8593;&#8595;&#8595;&#8592;&#8594;&#8592;&#8594;BA)
+    <div class="dogs-cards mt4">
+
+        <div class="dogs-card">
+            {{ with $soloHero }}
+            <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Solo" class="dogs-card-img" loading="eager">
+            {{ end }}
+            <div class="dogs-card-body">
+                <div class="dogs-card-paw">&#128054;</div>
+                <div class="dogs-card-name">Solo</div>
+                <p class="dogs-card-desc">{{ i18n "dogsSoloDesc" }}</p>
+            </div>
+        </div>
+
+        <div class="dogs-card">
+            {{ with $lucaHero }}
+            <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Luca" class="dogs-card-img" loading="eager">
+            {{ end }}
+            <div class="dogs-card-body">
+                <div class="dogs-card-paw">&#128054;</div>
+                <div class="dogs-card-name">Luca</div>
+                <p class="dogs-card-desc">{{ i18n "dogsLucaDesc" }}</p>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 class="dogs-section-title">{{ i18n "dogsMoreSolo" }}</h2>
+    <div class="dogs-gallery">
+        {{ range $soloNames }}
+        {{ $img := (resources.Get (printf "img/dogs/%s" .)).Process $spec }}
+        {{ with $img }}
+        <a href="{{ .RelPermalink }}" class="dogs-gallery-item" target="_blank" rel="noopener">
+            <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Solo" loading="lazy">
+        </a>
+        {{ end }}
+        {{ end }}
+    </div>
+
+    <h2 class="dogs-section-title">{{ i18n "dogsMoreLuca" }}</h2>
+    <div class="dogs-gallery">
+        {{ range $lucaNames }}
+        {{ $img := (resources.Get (printf "img/dogs/%s" .)).Process $spec }}
+        {{ with $img }}
+        <a href="{{ .RelPermalink }}" class="dogs-gallery-item" target="_blank" rel="noopener">
+            <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Luca" loading="lazy">
+        </a>
+        {{ end }}
+        {{ end }}
+    </div>
+
+    <h2 class="dogs-section-title">{{ i18n "dogsBoth" }}</h2>
+    <div class="dogs-gallery">
+        {{ range $bothNames }}
+        {{ $img := (resources.Get (printf "img/dogs/%s" .)).Process $spec }}
+        {{ with $img }}
+        <a href="{{ .RelPermalink }}" class="dogs-gallery-item" target="_blank" rel="noopener">
+            <img src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="Solo und Luca" loading="lazy">
+        </a>
+        {{ end }}
+        {{ end }}
+    </div>
+
+    <p class="tc mt5" style="font-size:0.82rem;opacity:0.35;font-family:monospace;">
+        {{ i18n "dogsKonamiHint" }}
     </p>
 
-    <a href="{{ "/" | relURL }}" class="dogs-back-link">&#8592; back to the blog</a>
+    <div class="tc mt3">
+        <a href="{{ "/" | relURL }}" class="dogs-back-link">&#8592; {{ i18n "dogsBackLink" }}</a>
+    </div>
+
 </div>
 {{ end }}

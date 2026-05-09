@@ -86,3 +86,27 @@ other = "Read the Blog"
 
 [viewPublications]
 other = "Publications"
+
+[dogsIntro]
+other = "You found it. The real reason this website exists — or at least, the real reason I get up in the morning. Meet Solo and Luca. They review every blog post (mostly by sitting on the keyboard at the wrong moment)."
+
+[dogsSoloDesc]
+other = "Chief of Security. Responsible for alerting the household to squirrels, delivery drivers, and suspicious leaves. Specializes in strategic nap placement on laptops."
+
+[dogsLucaDesc]
+other = "Head of Morale. Expert in the ancient art of looking very sad until treats appear. Also a surprisingly good rubber duck for debugging Go code."
+
+[dogsMoreSolo]
+other = "More Solo"
+
+[dogsMoreLuca]
+other = "More Luca"
+
+[dogsBoth]
+other = "The Dynamic Duo"
+
+[dogsBackLink]
+other = "back to the blog"
+
+[dogsKonamiHint]
+other = "hint: try the Konami Code on any page (up up down down...)"

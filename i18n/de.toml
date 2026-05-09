@@ -86,3 +86,27 @@ other = "Blog lesen"
 
 [viewPublications]
 other = "Publikationen"
+
+[dogsIntro]
+other = "Gefunden. Der eigentliche Grund, warum diese Webseite existiert — oder zumindest, warum ich morgens aufstehe. Das sind Solo und Luca. Sie reviewen jeden Blog-Post (meistens, indem sie sich zum falschen Zeitpunkt auf die Tastatur legen)."
+
+[dogsSoloDesc]
+other = "Chef der Sicherheit. Verantwortlich für Alarmmeldungen bei Eichhörnchen, Paketboten und verdächtigen Blättern. Spezialisiert auf strategisches Nickerchen-Machen auf Laptops."
+
+[dogsLucaDesc]
+other = "Leiter der Moral. Experte in der alten Kunst, sehr traurig auszusehen bis Leckerlis auftauchen. Auch eine überraschend gute Rubber Duck für Go-Debugging."
+
+[dogsMoreSolo]
+other = "Mehr von Solo"
+
+[dogsMoreLuca]
+other = "Mehr von Luca"
+
+[dogsBoth]
+other = "Das Dreamteam"
+
+[dogsBackLink]
+other = "zurück zum Blog"
+
+[dogsKonamiHint]
+other = "Tipp: Konami-Code auf jeder Seite probieren (hoch hoch runter runter...)"
