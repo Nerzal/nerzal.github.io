@@ -80,6 +80,22 @@ document.addEventListener('DOMContentLoaded', function () {
     </a>
         <div class="flex-l items-center">
             
+
+<div class="lang-switcher">
+  
+  
+    <span class="lang-btn lang-btn--current">EN</span>
+  
+  <span class="lang-divider">|</span>
+  
+  
+    
+    
+      
+    
+    <a href="/de/tags/tutorial/" class="lang-btn" title="Deutsch">DE</a>
+  
+</div>
  
             <ul class="pl0 mr3 ">
                 
@@ -197,6 +213,29 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="background-dark-light mb3 pa4 gray overflow-hidden">
         <span class="f6 db foreground-dark">Blog</span>
         <h1 class="f3 near-black">
+            <a href="/blog/secure-ssh-server/" class="link-transition-highlight foreground-dark">
+        How to Secure SSH Access on Linux (Ubuntu)
+      </a>
+        </h1>
+        <div class="nested-links f5 lh-copy nested-copy-line-height foreground-dark">
+            <p>Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the <code>root</code> account enabled, it is not a question of <em>if</em> an attacker gets in — it is a question of <em>when</em>. This guide walks you through four concrete steps that eliminate the most common attack surface:</p>
+<ol>
+<li><strong>Create an SSH key pair</strong> on your local machine</li>
+<li><strong>Create a dedicated sudo user</strong> on the server</li>
+<li><strong>Deploy your public key</strong> to the server</li>
+<li><strong>Harden <code>sshd</code></strong>: disable password login and block root login</li>
+</ol>
+<p>By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with <code>sudo</code>.</p>
+        </div>
+    </div>
+</div>
+        </div>
+        
+        <div class="relative w-100  mb4 bg-white">
+            <div class="relative w-100 mb4 background-dark-light nested-copy-line-height">
+    <div class="background-dark-light mb3 pa4 gray overflow-hidden">
+        <span class="f6 db foreground-dark">Blog</span>
+        <h1 class="f3 near-black">
             <a href="/blog/unity-libraries/" class="link-transition-highlight foreground-dark">
         Creating your own Unity library package
       </a>
@@ -263,9 +302,9 @@ document.addEventListener('DOMContentLoaded', function () {
       </a>
         <div>
             
-                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Datenschutz</a> 
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Legal Notice</a> 
             
-                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/impressum/">Impressum</a> 
+                <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="/page/datenschutz/">Privacy Policy</a> 
             
         </div>
 

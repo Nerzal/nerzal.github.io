@@ -9,18 +9,18 @@
     <lastBuildDate>Thu, 16 Apr 2026 11:53:00 +0200</lastBuildDate>
     <atom:link href="http://localhost:1313/page/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Datenschutz</title>
-      <link>http://localhost:1313/page/datenschutz/</link>
-      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
-      <guid>http://localhost:1313/page/datenschutz/</guid>
-      <description>&lt;h1&gt;Datenschutzerklärung&lt;/h1&gt;&#xA;&lt;h2 id=&#34;m14&#34;&gt;Einleitung&lt;/h2&gt;&#xA;&lt;p&gt;Mit der folgenden Datenschutzerklärung möchten wir Sie darüber aufklären, welche Arten Ihrer personenbezogenen Daten (nachfolgend auch kurz als &#34;Daten“ bezeichnet) wir zu welchen Zwecken und in welchem Umfang verarbeiten. Die Datenschutzerklärung gilt für alle von uns durchgeführten Verarbeitungen personenbezogener Daten, sowohl im Rahmen der Erbringung unserer Leistungen als auch insbesondere auf unseren Webseiten, in mobilen Applikationen sowie innerhalb externer Onlinepräsenzen, wie z.B. unserer Social-Media-Profile (nachfolgend zusammenfassend bezeichnet als &#34;Onlineangebot“).&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Impressum</title>
+      <title>Legal Notice</title>
       <link>http://localhost:1313/page/impressum/</link>
       <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
       <guid>http://localhost:1313/page/impressum/</guid>
-      <description>&lt;h2 id=&#34;angaben-gemäß--5-tmg&#34;&gt;Angaben gemäß § 5 TMG&lt;/h2&gt;&#xA;&lt;p&gt;Tobias Theel / Noobygames&#xA;Gregorstr. 2&#xA;34650 Fritzlar&lt;/p&gt;&#xA;&lt;p&gt;Vertreten durch:&#xA;Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Kontakt: Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Telefon: 015222338195&lt;/p&gt;&#xA;&lt;p&gt;E-Mail: &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;info@noobygames.de&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;Umsatzsteuer-ID:&#xA;Keine (sofern nicht vorhanden, ansonsten hier eintragen)&lt;/p&gt;&#xA;&lt;p&gt;Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:&#xA;Tobias Theel, Henkelstr. 6, 34127 Kassel&lt;/p&gt;&#xA;&lt;p&gt;Hinweis auf EU-Streitschlichtung&#xA;Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: &lt;a href=&#34;https://ec.europa.eu/consumers/odr&#34;&gt;https://ec.europa.eu/consumers/odr&lt;/a&gt;.&#xA;Unsere E-Mail-Adresse finden Sie oben im Impressum.&lt;/p&gt;&#xA;&lt;p&gt;Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.&lt;/p&gt;</description>
+      <description>&lt;h2 id=&#34;information-according-to--5-tmg-german-telemedia-act&#34;&gt;Information according to § 5 TMG (German Telemedia Act)&lt;/h2&gt;&#xA;&lt;p&gt;Tobias Theel / Noobygames&#xA;Gregorstr. 2&#xA;34650 Fritzlar&lt;/p&gt;&#xA;&lt;p&gt;Represented by:&#xA;Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Contact: Tobias Theel&lt;/p&gt;&#xA;&lt;p&gt;Phone: 015222338195&lt;/p&gt;&#xA;&lt;p&gt;E-Mail: &lt;a href=&#34;mailto:info@noobygames.de&#34;&gt;info@noobygames.de&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;VAT ID:&#xA;None&lt;/p&gt;&#xA;&lt;p&gt;Responsible for content according to § 18 para. 2 MStV:&#xA;Tobias Theel, Henkelstr. 6, 34127 Kassel&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Note on EU dispute resolution&lt;/strong&gt;&#xA;The European Commission provides a platform for online dispute resolution (ODR): &lt;a href=&#34;https://ec.europa.eu/consumers/odr&#34;&gt;https://ec.europa.eu/consumers/odr&lt;/a&gt;.&#xA;Our e-mail address can be found above in the legal notice.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Privacy Policy</title>
+      <link>http://localhost:1313/page/datenschutz/</link>
+      <pubDate>Thu, 16 Apr 2026 11:53:00 +0200</pubDate>
+      <guid>http://localhost:1313/page/datenschutz/</guid>
+      <description>&lt;h1&gt;Privacy Policy&lt;/h1&gt;&#xA;&lt;h2 id=&#34;m14&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;With this privacy policy we would like to inform you about the types of your personal data (hereinafter also referred to as &#34;data&#34;) that we process, for what purposes and to what extent. The privacy policy applies to all processing of personal data carried out by us, both in the context of providing our services and in particular on our websites, in mobile applications and within external online presences, such as our social media profiles (hereinafter collectively referred to as the &#34;online offering&#34;).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Résumé</title>

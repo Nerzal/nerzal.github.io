@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Game of Life on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/de/tags/game-of-life/</link>
+    <description>Recent content in Game of Life on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>de</language>
+    <lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/de/tags/game-of-life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung</title>
+      <link>http://localhost:1313/de/blog/game-of-life/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/game-of-life/</guid>
+      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens&#34;&gt;Conways Game of Life&lt;/a&gt; ist ein berühmter zellulärer Automat, erdacht vom britischen Mathematiker John Horton Conway. Es ist ein Nullspieler-Spiel, das sich auf Basis seines Ausgangszustands weiterentwickelt und keine weiteren Eingaben des Spielers erfordert. Das Spiel findet auf einem unendlichen zweidimensionalen Gitter quadratischer Zellen statt, wobei jede Zelle entweder lebendig oder tot ist.&lt;/p&gt;&#xA;&lt;p&gt;In diesem Blog-Post erkunden wir, wie man Conways Game of Life in Go implementiert. Wir bieten Schritt-für-Schritt-Anleitungen mit funktionierenden Code-Beispielen und detaillierten Erklärungen.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

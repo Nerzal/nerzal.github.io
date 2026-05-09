@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Ein umfassendes Tutorial zur Implementierung von Conways Game of Life in Go – mit Grid-Logik, Terminal-Rendering und Nebenläufigkeit."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(function () {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+});
+</script> 
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/de/blog/game-of-life/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung">
+  <meta property="og:description" content="Ein umfassendes Tutorial zur Implementierung von Conways Game of Life in Go – mit Grid-Logik, Terminal-Rendering und Nebenläufigkeit.">
+  <meta property="og:locale" content="de">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2023-03-16T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-03-16T00:00:00+00:00">
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Game of Life">
+    <meta property="og:image" content="http://localhost:1313/img/game-of-live.gif">
+
+  <meta itemprop="name" content="Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung">
+  <meta itemprop="description" content="Ein umfassendes Tutorial zur Implementierung von Conways Game of Life in Go – mit Grid-Logik, Terminal-Rendering und Nebenläufigkeit.">
+  <meta itemprop="datePublished" content="2023-03-16T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2023-03-16T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1046">
+  <meta itemprop="image" content="http://localhost:1313/img/game-of-live.gif">
+  <meta itemprop="keywords" content="Go,Game of Life">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/img/game-of-live.gif">
+  <meta name="twitter:title" content="Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung">
+  <meta name="twitter:description" content="Ein umfassendes Tutorial zur Implementierung von Conways Game of Life in Go – mit Grid-Logik, Terminal-Rendering und Nebenläufigkeit.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/de/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+
+<div class="lang-switcher">
+  
+  
+    
+    
+      
+    
+    <a href="/blog/game-of-life/" class="lang-btn" title="English">EN</a>
+  
+  <span class="lang-divider">|</span>
+  
+  
+    <span class="lang-btn lang-btn--current">DE</span>
+  
+</div>
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/" title="">
+              Startseite
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/page/resume/" title="">
+              Lebenslauf
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/page/publications/" title="">
+              Publikationen
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/de/blog/game-of-life/&amp;title=Conways%20Game%20of%20Life%20in%20Go:%20Eine%20Schritt-f%c3%bcr-Schritt-Anleitung" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=Conways&#43;Game&#43;of&#43;Life&#43;in&#43;Go%3A&#43;Eine&#43;Schritt-f%C3%BCr-Schritt-Anleitung%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fde%2Fblog%2Fgame-of-life%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung</h1>
+        
+        <p class="tracked">
+            Von <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2023-03-16T00:00:00Z" >März 16, 2023</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><h2 id="einführung">Einführung</h2>
+<p><a href="https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens">Conways Game of Life</a> ist ein berühmter zellulärer Automat, erdacht vom britischen Mathematiker John Horton Conway. Es ist ein Nullspieler-Spiel, das sich auf Basis seines Ausgangszustands weiterentwickelt und keine weiteren Eingaben des Spielers erfordert. Das Spiel findet auf einem unendlichen zweidimensionalen Gitter quadratischer Zellen statt, wobei jede Zelle entweder lebendig oder tot ist.</p>
+<p>In diesem Blog-Post erkunden wir, wie man Conways Game of Life in Go implementiert. Wir bieten Schritt-für-Schritt-Anleitungen mit funktionierenden Code-Beispielen und detaillierten Erklärungen.</p>
+<p>Beispiel:</p>
+<p><img src="/img/game-of-live.gif" alt="Alt-Text"></p>
+<h2 id="regeln">Regeln</h2>
+<p>Das Game of Life folgt vier einfachen Regeln:</p>
+<ol>
+<li>Eine lebende Zelle mit weniger als zwei lebenden Nachbarn stirbt (Unterbevölkerung).</li>
+<li>Eine lebende Zelle mit zwei oder drei lebenden Nachbarn überlebt in die nächste Generation.</li>
+<li>Eine lebende Zelle mit mehr als drei lebenden Nachbarn stirbt (Überbevölkerung).</li>
+<li>Eine tote Zelle mit genau drei lebenden Nachbarn wird lebendig (Reproduktion).</li>
+</ol>
+<p>Diese Regeln werden für jede Iteration gleichzeitig auf alle Zellen des Gitters angewendet, wodurch interessante Muster und Verhaltensweisen entstehen.</p>
+<h2 id="implementierung">Implementierung</h2>
+<p>Fangen wir mit der Implementierung des Game of Life in Go an. Wir unterteilen die Implementierung in folgende Schritte:</p>
+<ol>
+<li>Datenstrukturen definieren</li>
+<li>Das Spielgitter initialisieren</li>
+<li>Die Spiellogik implementieren</li>
+<li>Das Gitter rendern</li>
+<li>Die Haupt-Schleife aufsetzen</li>
+</ol>
+<h3 id="1-datenstrukturen-definieren">1. Datenstrukturen definieren</h3>
+<p>Zunächst definieren wir die Datenstrukturen, die wir zur Darstellung des Gitters und der Zellen verwenden. Wir erstellen einen <code>Grid</code>-Typ, der die Dimensionen des Gitters und ein zweidimensionales Slice von <code>Cell</code>-Werten enthält.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Cell</span> <span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Grid</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Width</span>  <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Height</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Cells</span>  [][]<span style="color:#a6e22e">Cell</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2-das-spielgitter-initialisieren">2. Das Spielgitter initialisieren</h3>
+<p>Als Nächstes erstellen wir eine Funktion, um das Spielgitter mit einem Ausgangszustand zu initialisieren. Die Funktion nimmt die Dimensionen des Gitters und ein Slice mit den Anfangskoordinaten der lebenden Zellen entgegen und gibt eine befüllte <code>Grid</code>-Instanz zurück.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewGrid</span>(<span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">height</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">initialLiveCells</span> [][<span style="color:#ae81ff">2</span>]<span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">Grid</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">cells</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">height</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">cells</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cells</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">width</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">coord</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">initialLiveCells</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">coord</span>[<span style="color:#ae81ff">0</span>], <span style="color:#a6e22e">coord</span>[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Grid</span>{<span style="color:#a6e22e">Width</span>: <span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">Height</span>: <span style="color:#a6e22e">height</span>, <span style="color:#a6e22e">Cells</span>: <span style="color:#a6e22e">cells</span>}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="3-die-spiellogik-implementieren">3. Die Spiellogik implementieren</h3>
+<p>Jetzt implementieren wir die Spiellogik, indem wir eine Funktion erstellen, die den nächsten Zustand des Gitters basierend auf dem aktuellen Zustand und den Regeln des Game of Life berechnet.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">NextState</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">newCells</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">newCells</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">countLiveNeighbors</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span> = <span style="color:#a6e22e">newCells</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">countLiveNeighbors</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">count</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">x2</span> <span style="color:#f92672">:=</span> (<span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>) <span style="color:#f92672">%</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">y2</span> <span style="color:#f92672">:=</span> (<span style="color:#a6e22e">y</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>) <span style="color:#f92672">%</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y2</span>][<span style="color:#a6e22e">x2</span>] {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">count</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="4-das-gitter-rendern">4. Das Gitter rendern</h3>
+<p>Wir erstellen eine Funktion, um das Gitter im Terminal darzustellen, wobei lebende Zellen als „X&quot; und tote Zellen als Leerzeichen angezeigt werden.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">Render</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;X&#34;</span>)
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="5-die-haupt-schleife-aufsetzen">5. Die Haupt-Schleife aufsetzen</h3>
+<p>Abschließend richten wir die Haupt-Schleife ein, die das Spiel initialisiert, das Gitter wiederholt aktualisiert und im Terminal rendert.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">initialLiveCells</span> <span style="color:#f92672">:=</span> [][<span style="color:#ae81ff">2</span>]<span style="color:#66d9ef">int</span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Gleiter</span>
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>}, {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>}, {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>},
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Leichtes Raumschiff (LWSS)</span>
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">2</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">3</span>}, {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">3</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">4</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">5</span>}, {<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">5</span>},
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">grid</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewGrid</span>(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">15</span>, <span style="color:#a6e22e">initialLiveCells</span>)
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">grid</span>.<span style="color:#a6e22e">Render</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">grid</span>.<span style="color:#a6e22e">NextState</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">500</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="vollständiger-code">Vollständiger Code</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Cell</span> <span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Grid</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">Width</span>  <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">Height</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">Cells</span>  [][]<span style="color:#a6e22e">Cell</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewGrid</span>(<span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">height</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">initialLiveCells</span> [][<span style="color:#ae81ff">2</span>]<span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">Grid</span> {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">cells</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">height</span>)
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">cells</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cells</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">width</span>)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">coord</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">initialLiveCells</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">coord</span>[<span style="color:#ae81ff">0</span>], <span style="color:#a6e22e">coord</span>[<span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Grid</span>{<span style="color:#a6e22e">Width</span>: <span style="color:#a6e22e">width</span>, <span style="color:#a6e22e">Height</span>: <span style="color:#a6e22e">height</span>, <span style="color:#a6e22e">Cells</span>: <span style="color:#a6e22e">cells</span>}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">NextState</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">newCells</span> <span style="color:#f92672">:=</span> make([][]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>)
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">newCells</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">i</span>] = make([]<span style="color:#a6e22e">Cell</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">countLiveNeighbors</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>   } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">liveNeighbors</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">newCells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span> = <span style="color:#a6e22e">newCells</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">countLiveNeighbors</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">x2</span> <span style="color:#f92672">:=</span> (<span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>) <span style="color:#f92672">%</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">y2</span> <span style="color:#f92672">:=</span> (<span style="color:#a6e22e">y</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>) <span style="color:#f92672">%</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y2</span>][<span style="color:#a6e22e">x2</span>] {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">count</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Grid</span>) <span style="color:#a6e22e">Render</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Height</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> &lt; <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Width</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">Cells</span>[<span style="color:#a6e22e">y</span>][<span style="color:#a6e22e">x</span>] {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;X&#34;</span>)
+</span></span><span style="display:flex;"><span>   } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">initialLiveCells</span> <span style="color:#f92672">:=</span> [][<span style="color:#ae81ff">2</span>]<span style="color:#66d9ef">int</span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Gleiter</span>
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>}, {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>}, {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>},
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// Leichtes Raumschiff (LWSS)</span>
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">2</span>}, {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">2</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">3</span>}, {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">3</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">4</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">5</span>}, {<span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">5</span>},
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">grid</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewGrid</span>(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">15</span>, <span style="color:#a6e22e">initialLiveCells</span>)
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">for</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">grid</span>.<span style="color:#a6e22e">Render</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">grid</span>.<span style="color:#a6e22e">NextState</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">500</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>)
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="yaml-konfiguration-optional">YAML-Konfiguration (Optional)</h2>
+<p>Du kannst auch eine YAML-Konfigurationsdatei verwenden, um den Ausgangszustand des Gitters festzulegen. Hier ist ein Beispiel:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">width</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">height</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">initialLiveCells</span>:
+</span></span><span style="display:flex;"><span>  - [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>  - [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>  - [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>  - [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>  - [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>]
+</span></span></code></pre></div><p>Um die YAML-Konfigurationsdatei zu parsen, musst du ein Go-Paket für YAML-Parsing hinzufügen, wie <a href="https://pkg.go.dev/gopkg.in/yaml.v3">gopkg.in/yaml.v3</a>. Aktualisiere die Main-Funktion, um die Konfigurationsdatei zu lesen und das Gitter basierend auf ihrem Inhalt zu initialisieren.</p>
+<h2 id="json-konfiguration-optional">JSON-Konfiguration (Optional)</h2>
+<p>Alternativ kannst du eine JSON-Konfigurationsdatei verwenden, um den Ausgangszustand des Gitters festzulegen:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;width&#34;</span>: <span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;height&#34;</span>: <span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;initialLiveCells&#34;</span>: [
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>],
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul class="pa0">
+    
+    <li class="list di">
+        <a href="/de/tags/go/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Go</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/de/tags/game-of-life/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Game of Life</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Ähnliches</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/de/blog/go-docker/">Containerisierung und Go: Eine starke Kombination</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/de/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

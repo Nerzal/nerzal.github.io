@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="de"ZgotmplZ>
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Eine globale .gitignore einrichten | Tobias Theel | Senior Software Engineer</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. Lerne, wie du eine globale .gitignore konfigurierst, die für alle deine Repositories gilt."> <meta name="generator" content="Hugo 0.160.1">    
+    <meta name="robots" content="noindex, nofollow"> 
+     
+    
+<link rel="stylesheet" href="/css/main.min.css" >
+
+
+
+  
+
+  
+ 
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(function () {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+});
+</script> 
+     
+        
+ 
+     
+     <meta property="og:url" content="http://localhost:1313/de/blog/global-gitignore/">
+  <meta property="og:site_name" content="Tobias Theel | Senior Software Engineer">
+  <meta property="og:title" content="Eine globale .gitignore einrichten">
+  <meta property="og:description" content="Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. Lerne, wie du eine globale .gitignore konfigurierst, die für alle deine Repositories gilt.">
+  <meta property="og:locale" content="de">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2026-05-09T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-09T00:00:00+00:00">
+    <meta property="article:tag" content="Tutorial">
+    <meta property="article:tag" content="Git">
+    <meta property="article:tag" content="Developer-Tooling">
+    <meta property="og:image" content="http://localhost:1313/img/global_gitignore.png">
+
+  <meta itemprop="name" content="Eine globale .gitignore einrichten">
+  <meta itemprop="description" content="Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. Lerne, wie du eine globale .gitignore konfigurierst, die für alle deine Repositories gilt.">
+  <meta itemprop="datePublished" content="2026-05-09T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-05-09T00:00:00+00:00">
+  <meta itemprop="wordCount" content="603">
+  <meta itemprop="image" content="http://localhost:1313/img/global_gitignore.png">
+  <meta itemprop="keywords" content="Tutorial,Git,Developer-Tooling">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/img/global_gitignore.png">
+  <meta name="twitter:title" content="Eine globale .gitignore einrichten">
+  <meta name="twitter:description" content="Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. Lerne, wie du eine globale .gitignore konfigurierst, die für alle deine Repositories gilt.">
+ 
+</head>
+
+<body class="ma0 avenir background-dark ">
+
+      <header>
+    <div class="background-dark">
+        <nav class="pv3 ph3 ph4-ns" role="navigation">
+    <div class="flex-l justify-between items-center center">
+        <a href="/de/" class="f3 fw2 highlight-color no-underline foreground-dark dib">
+      
+        Tobias Theel | Senior Software Engineer
+      
+    </a>
+        <div class="flex-l items-center">
+            
+
+<div class="lang-switcher">
+  
+  
+    
+    
+      
+    
+    <a href="/blog/global-gitignore/" class="lang-btn" title="English">EN</a>
+  
+  <span class="lang-divider">|</span>
+  
+  
+    <span class="lang-btn lang-btn--current">DE</span>
+  
+</div>
+ 
+            <ul class="pl0 mr3 ">
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/" title="">
+              Startseite
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/page/resume/" title="">
+              Lebenslauf
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/blog/" title="">
+              Blog
+            </a>
+                </li>
+                
+                <li class="list f5 f4-ns fw4 dib pr3 ">
+                    <a class="no-underline foreground-dark" href="/de/page/publications/" title="">
+              Publikationen
+            </a>
+                </li>
+                
+            </ul>
+             
+<div class="socials">
+     
+    <a href="https://www.linkedin.com/in/tobias-theel-3353a9181" target="_blank" rel="noopener" class="linkedin ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="LinkedIn link"
+        aria-label="follow on LinkedIn——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://github.com/Nerzal" target="_blank" rel="noopener" class="github ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="GitHub link"
+        aria-label="follow on GitHub——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" width="32px" height="32px">
+  <path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.5 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5.7 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-.7zm-4.1-10.3c-.6 1.3.3 3.3 2.3 4.6 2 1.3 4.3 1 4.6-.3.3-1.3-.3-3.3-2.3-4.6-2-1-4.3-.7-4.6.3z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a>  
+    <a href="https://bsky.app/profile/nerzal.bsky.social" target="_blank" rel="noopener" class="bluesky ananke-social-link link-transition-highlight stackoverflow link dib z-999 pt3 pt0-l mr1 " title="bluesky link"
+        aria-label="follow on bluesky——Opens in a new window">
+      
+        <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+      
+<span class="new-window"><svg  height="8px"  style="enable-background:new 0 0 1000 1000;" version="1.1" viewBox="0 0 1000 1000"  xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<path d="M598 128h298v298h-86v-152l-418 418-60-60 418-418h-152v-86zM810 810v-298h86v298c0 46-40 86-86 86h-596c-48 0-86-40-86-86v-596c0-46 38-86 86-86h298v86h-298v596h596z" style="fill-rule:evenodd;clip-rule:evenodd;"/>
+</svg>
+</span></a> 
+</div>
+        </div>
+    </div>
+</nav>        
+    </div>
+</header>
+
+ 
+ 
+    <img src="http://localhost:1313/img/global_gitignore.png" alt="Featured image" class="flex-l flex-wrap justify-between mw8 center">    
+ 
+    <main class="pb7" role="main">
+         
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+        <aside class="instapaper_ignoref b helvetica tracked">
+             BLOG
+        </aside>
+        
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 socials">
+    
+      
+      <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/de/blog/global-gitignore/&amp;title=Eine%20globale%20.gitignore%20einrichten" class="social-link linkedin no-underline" aria-label="share on LinkedIn">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="32px" height="32px">
+  <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/>
+</svg></span>
+        
+      </a>
+    
+      
+      <a href="https://bsky.app/intent/compose?text=Eine&#43;globale&#43;.gitignore&#43;einrichten%0Ahttp%3A%2F%2Flocalhost%3A1313%2Fde%2Fblog%2Fglobal-gitignore%2F" class="social-link bluesky no-underline" aria-label="share on bluesky">
+        
+        <span class="icon"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" width="32px" height="32px">
+  <path fill="currentColor" d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.1 308 420.4 322.2 373 308.1c98.3 18.9 113.9 115.4 64.9 160.8c-11.8 10.9-28.5 13.9-43.5 13.9c-70 0-126.3-88.8-138.4-110.1c-12.1 21.3-68.3 110.1-138.4 110.1c-15 0-31.7-3-43.5-13.9C23.1 424.3 38.7 327 137 308.1C89.6 322.2 31.9 308 13.6 233.3C8.5 214.5 0 100.5 0 85c0-77.8 68.2-53.4 110.3-21.8Z"/>
+</svg></span>
+        
+      </a>
+    
+  </div>
+
+
+        <h1 class="f1 athelas mt3 mb1">Eine globale .gitignore einrichten</h1>
+        
+        <p class="tracked">
+            Von <strong>Tobias Theel</strong>
+        </p>
+          
+        <time class="f6 mv4 dib tracked" datetime="2026-05-09T00:00:00Z" >Mai 9, 2026</time>   
+    </header>
+    <div class="nested-copy-line-height lh-copy serif  f4 nested-links foreground-dark w-two-thirds-l"><p>Jeder Entwickler hat es mindestens einmal erlebt: Eine <code>.DS_Store</code>-Datei, ein <code>.idea/</code>-Ordner oder ein anderes maschinenspezifisches Artefakt landet versehentlich in einem gemeinsam genutzten Repository. Eine projektbezogene <code>.gitignore</code> hilft, aber du musst sie in jedem Repo wiederholen. Die Lösung ist eine <strong>globale <code>.gitignore</code></strong> – eine einzige Datei, die Git auf jedes Repository auf deinem Rechner anwendet.</p>
+<h2 id="wie-git-entscheidet-was-ignoriert-wird">Wie Git entscheidet, was ignoriert wird</h2>
+<p>Git wertet Ignore-Regeln aus drei Quellen in der Reihenfolge ihrer Spezifität aus:</p>
+<ol>
+<li><code>.gitignore</code>-Dateien innerhalb des Repositories (eingecheckt, mit dem Team geteilt)</li>
+<li><code>.git/info/exclude</code> innerhalb des Repositories (lokal, nicht eingecheckt)</li>
+<li>Die Datei, auf die <code>core.excludesFile</code> in deiner globalen Git-Konfiguration verweist (gilt für jedes Repo auf dem Rechner)</li>
+</ol>
+<p>Die globale Exclude-Datei ist der richtige Ort für Regeln, die spezifisch für <strong>dein Gerät oder dein Toolchain</strong> sind, nicht für ein Projekt. Die vollständige Auflösungsreihenfolge findest du in der offiziellen <a href="https://git-scm.com/docs/gitignore">gitignore-Dokumentation</a>.</p>
+<h2 id="schritt-1--datei-erstellen">Schritt 1 — Datei erstellen</h2>
+<p>Per Konvention heißt die Datei <code>.gitignore_global</code> und liegt im Home-Verzeichnis, aber du kannst sie überall ablegen und beliebig benennen.</p>
+<p><strong>Linux / macOS:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>touch ~/.gitignore_global
+</span></span></code></pre></div><p><strong>Windows (PowerShell):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>New-Item -ItemType File -Path <span style="color:#e6db74">&#34;</span>$env:USERPROFILE<span style="color:#e6db74">\.gitignore_global&#34;</span>
+</span></span></code></pre></div><figure><img src="/img/global_gitignore_new_item.png"
+    alt="PowerShell-Ausgabe von New-Item beim Erstellen der .gitignore_global">
+</figure>
+
+<h2 id="schritt-2--git-darüber-informieren">Schritt 2 — Git darüber informieren</h2>
+<p>Registriere die Datei bei Git über den Konfigurationsschlüssel <code>core.excludesFile</code>.</p>
+<p><strong>Linux / macOS:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git config --global core.excludesFile ~/.gitignore_global
+</span></span></code></pre></div><p><strong>Windows (PowerShell):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>git config --global core.excludesFile <span style="color:#e6db74">&#34;</span>$env:USERPROFILE<span style="color:#e6db74">\.gitignore_global&#34;</span>
+</span></span></code></pre></div><p>Damit wird eine Zeile in <code>~/.gitconfig</code> (Linux/macOS) bzw. <code>%USERPROFILE%\.gitconfig</code> (Windows) geschrieben:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[core]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">excludesFile</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/home/you/.gitignore_global</span>
+</span></span></code></pre></div><p>Du kannst prüfen, ob der Wert korrekt gesetzt wurde:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git config --global core.excludesFile
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>git config --global core.excludesFile
+</span></span></code></pre></div><p>Beide Befehle sollten den gesetzten Pfad ausgeben.</p>
+<h2 id="schritt-3--datei-befüllen">Schritt 3 — Datei befüllen</h2>
+<p>Hier gehört alles rein, was von deinem <strong>Betriebssystem, Editor oder Toolchain</strong> erzeugt wird – nicht vom Projekt selbst.</p>
+<p>Ein praktischer Ausgangspunkt:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># macOS</span>
+</span></span><span style="display:flex;"><span>.DS_Store
+</span></span><span style="display:flex;"><span>.AppleDouble
+</span></span><span style="display:flex;"><span>.LSOverride
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Windows</span>
+</span></span><span style="display:flex;"><span>Thumbs.db
+</span></span><span style="display:flex;"><span>ehthumbs.db
+</span></span><span style="display:flex;"><span>desktop.ini
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Linux</span>
+</span></span><span style="display:flex;"><span>*~
+</span></span><span style="display:flex;"><span>.nfs*
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Vim / Neovim</span>
+</span></span><span style="display:flex;"><span>*.swp
+</span></span><span style="display:flex;"><span>*.swo
+</span></span><span style="display:flex;"><span>Session.vim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Emacs</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">\#</span>*<span style="color:#ae81ff">\#</span>
+</span></span><span style="display:flex;"><span>.<span style="color:#ae81ff">\#</span>*
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># direnv</span>
+</span></span><span style="display:flex;"><span>.envrc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># mise / asdf Versionsmanager</span>
+</span></span><span style="display:flex;"><span>.tool-versions
+</span></span><span style="display:flex;"><span>.mise.toml
+</span></span></code></pre></div><p>Regeln verwenden dieselbe Glob-Syntax wie eine normale <code>.gitignore</code>. Leerzeilen und Zeilen, die mit <code>#</code> beginnen, werden ignoriert.</p>
+<h2 id="regeln-automatisch-generieren">Regeln automatisch generieren</h2>
+<p>Diese Liste manuell zu pflegen wird mühsam. <a href="https://www.toptal.com/developers/gitignore">gitignore.io</a> (auch per API erreichbar) generiert maßgeschneiderte Ignore-Regeln für beliebige Kombinationen aus Betriebssystemen, Editoren und Sprachen. Um beispielsweise Regeln für macOS + Windows + JetBrains + Go im Terminal zu erhalten:</p>
+<p><strong>Linux / macOS:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -sL <span style="color:#e6db74">&#34;https://www.toptal.com/developers/gitignore/api/macos,windows,jetbrains+all,go&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  &gt;&gt; ~/.gitignore_global
+</span></span></code></pre></div><p><strong>Windows (PowerShell):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Invoke-WebRequest -Uri <span style="color:#e6db74">&#34;https://www.toptal.com/developers/gitignore/api/windows,jetbrains+all,go&#34;</span> `
+</span></span><span style="display:flex;"><span>  -UseBasicParsing | Select-Object -ExpandProperty Content `
+</span></span><span style="display:flex;"><span>  | Add-Content -Path <span style="color:#e6db74">&#34;</span>$env:USERPROFILE<span style="color:#e6db74">\.gitignore_global&#34;</span>
+</span></span></code></pre></div><p>Das GitHub-Team pflegt außerdem eine kuratierte Sammlung von Templates unter <a href="https://github.com/github/gitignore">github/gitignore</a>. Jede Datei dort deckt eine Sprache oder ein Tool ab und ist eine zuverlässige Referenz.</p>
+<h2 id="funktionsweise-prüfen">Funktionsweise prüfen</h2>
+<p>Erstelle eine temporäre Datei, die einer Regel entspricht, und bestätige, dass Git sie ignoriert:</p>
+<p><strong>Linux / macOS:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /tmp <span style="color:#f92672">&amp;&amp;</span> git init test-repo <span style="color:#f92672">&amp;&amp;</span> cd test-repo
+</span></span><span style="display:flex;"><span>touch .DS_Store
+</span></span><span style="display:flex;"><span>git status
+</span></span></code></pre></div><p><strong>Windows (PowerShell):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$null = New-Item -ItemType Directory -Path <span style="color:#e6db74">&#34;</span>$env:TEMP<span style="color:#e6db74">\test-repo&#34;</span>; cd <span style="color:#e6db74">&#34;</span>$env:TEMP<span style="color:#e6db74">\test-repo&#34;</span>
+</span></span><span style="display:flex;"><span>git init
+</span></span><span style="display:flex;"><span>New-Item -ItemType File -Path <span style="color:#e6db74">&#34;Thumbs.db&#34;</span>
+</span></span><span style="display:flex;"><span>git status
+</span></span></code></pre></div><p><code>git status</code> sollte einen sauberen Working Tree melden – die Datei ist für Git unsichtbar.</p>
+<figure><img src="/img/global_gitignore_verify.png"
+    alt="PowerShell-Ausgabe von git status ohne getrackte Dateien">
+</figure>
+
+<h2 id="hinweise">Hinweise</h2>
+<ul>
+<li><strong>Regeln sind additiv, nicht überschreibend.</strong> Ein Muster in <code>.gitignore_global</code> überschreibt keine <code>!Negation</code> in der <code>.gitignore</code> eines Projekts. Die spezifischste passende Regel gewinnt.</li>
+<li><strong>Bereits getrackte Dateien sind nicht betroffen.</strong> Wenn eine Datei bereits in ein Repository eingecheckt ist, bewirkt das Hinzufügen zur <code>.gitignore</code> (auch zur globalen) kein Untracking. Dazu ist zuerst <code>git rm --cached &lt;datei&gt;</code> nötig.</li>
+<li><strong>Teammitglieder benötigen ihre eigene Einrichtung.</strong> Die globale Exclude-Datei ist rein lokal; sie wird nie eingecheckt. Wenn ein Muster für alle im Projekt gelten soll, gehört es in die projektbezogene <code>.gitignore</code>.</li>
+</ul>
+<h2 id="fazit">Fazit</h2>
+<p>Eine globale <code>.gitignore</code> ist eine einmalige Einrichtung, die stillschweigend eine ganze Klasse von versehentlichen Commits in jedem Repository auf deinem Rechner verhindert. Einmal einrichten, fokussiert auf Geräte- und Tool-spezifische Artefakte halten, und projektspezifische Regeln der Repository-eigenen <code>.gitignore</code> überlassen.</p>
+<ul class="pa0">
+    
+    <li class="list di">
+        <a href="/de/tags/tutorial/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Tutorial</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/de/tags/git/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Git</a>
+    </li>
+    
+    <li class="list di">
+        <a href="/de/tags/developer-tooling/" class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif highlight-color">Developer-Tooling</a>
+    </li>
+    
+</ul><div class="mt6 instapaper_ignoref">
+             <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nerzal-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>  
+        </div>
+    </div>
+
+    <aside class="w-30-l mt6-l"><div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Was ist in dieser blog</p>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#wie-git-entscheidet-was-ignoriert-wird">Wie Git entscheidet, was ignoriert wird</a></li>
+    <li><a href="#schritt-1--datei-erstellen">Schritt 1 — Datei erstellen</a></li>
+    <li><a href="#schritt-2--git-darüber-informieren">Schritt 2 — Git darüber informieren</a></li>
+    <li><a href="#schritt-3--datei-befüllen">Schritt 3 — Datei befüllen</a></li>
+    <li><a href="#regeln-automatisch-generieren">Regeln automatisch generieren</a></li>
+    <li><a href="#funktionsweise-prüfen">Funktionsweise prüfen</a></li>
+    <li><a href="#hinweise">Hinweise</a></li>
+    <li><a href="#fazit">Fazit</a></li>
+  </ul>
+</nav>
+  </div>
+
+
+
+
+  <div class="background-dark-light pa3 nested-list-reset nested-copy-line-height nested-links">
+    <p class="f5 b mb3">Ähnliches</p>
+    <ul class="pa0 list">
+	   
+	     <li  class="mb2">
+          <a href="/de/blog/secure-ssh-server/">SSH-Zugang unter Linux (Ubuntu) absichern</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/de/blog/install-hugo/">Einführung in Hugo #1</a>
+        </li>
+	    
+	     <li  class="mb2">
+          <a href="/de/blog/check-static-linking/">Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist</a>
+        </li>
+	    
+    </ul>
+</div>
+
+</aside>
+
+</article>
+
+    </main>
+
+    
+        <footer class="background-dark bottom-0 w-100 pa3" role="contentinfo">
+    <div class="flex justify-between">
+        <a class="f4 fw4 link-transition-highlight no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/de/">
+         
+            Tobias Theel | Senior Software Engineer 
+            2026 
+        
+      </a>
+        <div>
+            
+        </div>
+
+        
+    </div>
+</footer>
+    
+
+</body>
+
+</html>

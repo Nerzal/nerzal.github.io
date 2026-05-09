@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/de/blog/</link>
+    <description>Recent content in Blog on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>de</language>
+    <lastBuildDate>Sat, 09 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/de/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Eine globale .gitignore einrichten</title>
+      <link>http://localhost:1313/de/blog/global-gitignore/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/global-gitignore/</guid>
+      <description>&lt;p&gt;Jeder Entwickler hat es mindestens einmal erlebt: Eine &lt;code&gt;.DS_Store&lt;/code&gt;-Datei, ein &lt;code&gt;.idea/&lt;/code&gt;-Ordner oder ein anderes maschinenspezifisches Artefakt landet versehentlich in einem gemeinsam genutzten Repository. Eine projektbezogene &lt;code&gt;.gitignore&lt;/code&gt; hilft, aber du musst sie in jedem Repo wiederholen. Die Lösung ist eine &lt;strong&gt;globale &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; – eine einzige Datei, die Git auf jedes Repository auf deinem Rechner anwendet.&lt;/p&gt;&#xA;&lt;h2 id=&#34;wie-git-entscheidet-was-ignoriert-wird&#34;&gt;Wie Git entscheidet, was ignoriert wird&lt;/h2&gt;&#xA;&lt;p&gt;Git wertet Ignore-Regeln aus drei Quellen in der Reihenfolge ihrer Spezifität aus:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>SSH-Zugang unter Linux (Ubuntu) absichern</title>
+      <link>http://localhost:1313/de/blog/secure-ssh-server/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/secure-ssh-server/</guid>
+      <description>&lt;p&gt;Jeder öffentlich erreichbare Linux-Server steht unter konstantem Brute-Force-Druck. Wer SSH mit Passwort-Authentifizierung und aktiviertem &lt;code&gt;root&lt;/code&gt;-Konto offen lässt, dem stellt sich nicht die Frage &lt;em&gt;ob&lt;/em&gt; ein Angreifer eindringt – sondern nur &lt;em&gt;wann&lt;/em&gt;. Diese Anleitung führt durch vier konkrete Schritte, die die häufigste Angriffsfläche beseitigen:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;SSH-Schlüsselpaar erstellen&lt;/strong&gt; auf deinem lokalen Rechner&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Dedizierten Sudo-Benutzer erstellen&lt;/strong&gt; auf dem Server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Öffentlichen Schlüssel übertragen&lt;/strong&gt; auf den Server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;&lt;code&gt;sshd&lt;/code&gt; härten&lt;/strong&gt;: Passwort-Login deaktivieren und Root-Login blockieren&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;Am Ende loggst du dich ausschließlich mit deinem privaten Schlüssel über ein Nicht-Root-Konto ein, das Berechtigungen per &lt;code&gt;sudo&lt;/code&gt; eskalieren kann.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Jenseits des Backends: Meine React-Nebenprojekte</title>
+      <link>http://localhost:1313/de/blog/react-showcase/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/react-showcase/</guid>
+      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;Obwohl ein Großteil meiner beruflichen Arbeit und meiner bisherigen Beiträge sich auf Go, Kubernetes und Backend-Architektur konzentriert, habe ich schon immer eine Schwäche für Frontend-Entwicklung gehabt. In meiner Freizeit experimentiere ich gerne mit React, um Tools und Oberflächen zu bauen, die sowohl funktional als auch performant sind.&lt;/p&gt;&#xA;&lt;p&gt;Heute möchte ich einige dieser Projekte vorstellen und dir einen Einblick geben, was ich baue, wenn ich keine Go-Services schreibe.&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-persönliches-portfolio&#34;&gt;1. Persönliches Portfolio&lt;/h2&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/portfolio.png&#34; alt=&#34;Last War Calculators Screenshot&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Containerisierung und Go: Eine starke Kombination</title>
+      <link>http://localhost:1313/de/blog/go-docker/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/go-docker/</guid>
+      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;Containerisierung ist zu einem wesentlichen Bestandteil moderner Softwareentwicklung geworden und erleichtert das Deployen und Verwalten von Anwendungen in verschiedenen Umgebungen. Eine der Programmiersprachen, die sich als hervorragende Wahl für containerisierte Anwendungen erwiesen hat, ist &lt;a href=&#34;https://golang.org/&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für containerisierte Anwendungen ist und wie es nahtlos mit Containerisierungstechnologien wie Docker und Kubernetes zusammenarbeitet.&lt;/p&gt;&#xA;&lt;h2 id=&#34;gos-vorteile-für-die-containerisierung&#34;&gt;Gos Vorteile für die Containerisierung&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;Leichtgewichtige Binaries&lt;/strong&gt;: Go kompiliert zu kleinen, statisch gelinkten Binaries, die alle Abhängigkeiten enthalten. Das führt zu minimalen Container-Image-Größen, schnelleren Startzeiten und geringerem Ressourcenverbrauch.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung</title>
+      <link>http://localhost:1313/de/blog/game-of-life/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/game-of-life/</guid>
+      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens&#34;&gt;Conways Game of Life&lt;/a&gt; ist ein berühmter zellulärer Automat, erdacht vom britischen Mathematiker John Horton Conway. Es ist ein Nullspieler-Spiel, das sich auf Basis seines Ausgangszustands weiterentwickelt und keine weiteren Eingaben des Spielers erfordert. Das Spiel findet auf einem unendlichen zweidimensionalen Gitter quadratischer Zellen statt, wobei jede Zelle entweder lebendig oder tot ist.&lt;/p&gt;&#xA;&lt;p&gt;In diesem Blog-Post erkunden wir, wie man Conways Game of Life in Go implementiert. Wir bieten Schritt-für-Schritt-Anleitungen mit funktionierenden Code-Beispielen und detaillierten Erklärungen.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Bounded Context</title>
+      <link>http://localhost:1313/de/blog/bounded-context/</link>
+      <pubDate>Sun, 26 Feb 2023 17:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/de/blog/bounded-context/</guid>
+      <description>&lt;h3 id=&#34;was-ist-ein-bounded-context&#34;&gt;Was ist ein Bounded Context?&lt;/h3&gt;&#xA;&lt;p&gt;Bounded Contexts sind ein Kernkonzept im Domain-Driven Design (DDD) und dienen als explizite Grenzen innerhalb eines größeren Domänenmodells. Sie definieren einen spezifischen Bereich, in dem ein bestimmtes Modell (und seine zugehörige Ubiquitous Language) konsistent und anwendbar ist. Außerhalb dieser Grenze können Begriffe und Konzepte unterschiedliche Bedeutungen haben oder sogar irrelevant sein.&lt;/p&gt;&#xA;&lt;p&gt;Stell dir ein großes Unternehmen vor. Der Begriff „Kunde&amp;quot; kann für die Vertriebsabteilung etwas anderes bedeuten (ein Lead, ein Interessent), für die Support-Abteilung etwas anderes (jemand mit einem offenen Ticket) und für die Buchhaltung wieder etwas anderes (eine Einheit mit einer offenen Rechnung). Jede dieser Interpretationen existiert innerhalb ihres eigenen Bounded Context, in dem der Begriff „Kunde&amp;quot; eine präzise, eindeutige Bedeutung hat.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Event Storming</title>
+      <link>http://localhost:1313/de/blog/event-storming/</link>
+      <pubDate>Sun, 26 Feb 2023 14:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/de/blog/event-storming/</guid>
+      <description>&lt;h2 id=&#34;was-ist-event-storming&#34;&gt;Was ist Event Storming?&lt;/h2&gt;&#xA;&lt;p&gt;Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine diverse Gruppe von Stakeholdern zusammen – darunter Entwickler, Domänenexperten und Business-Analysten –, um gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems zu erarbeiten.&lt;/p&gt;&#xA;&lt;p&gt;Beim Event Storming arbeiten die Teilnehmer zusammen, um &lt;strong&gt;Ereignisse&lt;/strong&gt; (Events) zu identifizieren, die innerhalb des Systems oder Prozesses auftreten, und ordnen diese dann in einer &lt;strong&gt;Zeitleiste&lt;/strong&gt; an, die den &lt;strong&gt;Ablauf von Aktionen&lt;/strong&gt; und Ergebnissen darstellt. Diese Ereignisse können Benutzeraktionen, Systemreaktionen und alle anderen Aktivitäten oder Prozesse umfassen, die im modellierten Bereich stattfinden.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Einführung in Hugo #1</title>
+      <link>http://localhost:1313/de/blog/install-hugo/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/de/blog/install-hugo/</guid>
+      <description>&lt;h2 id=&#34;was-ist-hugo&#34;&gt;Was ist Hugo?&lt;/h2&gt;&#xA;&lt;p&gt;Hugo ist ein Static-Site-Generator, der mehrere Vorteile beim Erstellen schneller und sicherer Websites bietet.&lt;/p&gt;&#xA;&lt;p&gt;Er hat eine schnelle Build-Zeit, was ihn ideal für das schnelle Generieren großer Seiten macht. Seine intuitive Oberfläche und unkomplizierte Verzeichnisstruktur erleichtern den Einstieg für neue Benutzer. Darüber hinaus bietet Hugo Flexibilität durch Templates, Shortcodes und benutzerdefinierte Ausgabeformate und kann einfach auf einer Vielzahl von Hosting-Plattformen deployt werden.&lt;/p&gt;&#xA;&lt;p&gt;Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Seiten, weil es statische HTML-Dateien generiert. Insgesamt ist Hugo eine beliebte Wahl für Entwickler und Content-Creator, die effiziente und sichere Websites erstellen möchten.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist</title>
+      <link>http://localhost:1313/de/blog/check-static-linking/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/de/blog/check-static-linking/</guid>
+      <description>&lt;h2 id=&#34;was-ist-der-unterschied-zwischen-statisch-und-dynamisch-gelinkten-binaries&#34;&gt;Was ist der Unterschied zwischen statisch und dynamisch gelinkten Binaries?&lt;/h2&gt;&#xA;&lt;p&gt;Statisch gelinkte Binaries und dynamisch gelinkte Binaries bezeichnen zwei unterschiedliche Arten, Software-Bibliotheken mit einem ausführbaren Programm zu verknüpfen.&lt;/p&gt;&#xA;&lt;p&gt;Ein statisch gelinktes Binary &lt;strong&gt;enthält alle notwendigen Bibliotheken&lt;/strong&gt; innerhalb der ausführbaren Datei selbst. Wenn das Programm ausgeführt wird, ist es daher auf keine externen Bibliotheken angewiesen, da alle benötigten Bibliotheken bereits im Binary enthalten sind. Statisches Linking erzeugt größere Binär-Dateien, aber sie sind portabler und in sich abgeschlossen.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

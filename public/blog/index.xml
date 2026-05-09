@@ -16,6 +16,13 @@
       <description>&lt;p&gt;Every developer has done it at least once: accidentally committed a &lt;code&gt;.DS_Store&lt;/code&gt; file, a &lt;code&gt;.idea/&lt;/code&gt; folder, or some other machine-specific artifact into a shared repository. A per-project &lt;code&gt;.gitignore&lt;/code&gt; helps, but you have to repeat yourself in every repo. The solution is a &lt;strong&gt;global &lt;code&gt;.gitignore&lt;/code&gt;&lt;/strong&gt; — a single file that Git applies to every repository on your machine.&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-git-decides-what-to-ignore&#34;&gt;How Git decides what to ignore&lt;/h2&gt;&#xA;&lt;p&gt;Git evaluates ignore rules from three sources, in order of specificity:&lt;/p&gt;</description>
     </item>
     <item>
+      <title>How to Secure SSH Access on Linux (Ubuntu)</title>
+      <link>http://localhost:1313/blog/secure-ssh-server/</link>
+      <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/secure-ssh-server/</guid>
+      <description>&lt;p&gt;Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the &lt;code&gt;root&lt;/code&gt; account enabled, it is not a question of &lt;em&gt;if&lt;/em&gt; an attacker gets in — it is a question of &lt;em&gt;when&lt;/em&gt;. This guide walks you through four concrete steps that eliminate the most common attack surface:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create an SSH key pair&lt;/strong&gt; on your local machine&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Create a dedicated sudo user&lt;/strong&gt; on the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Deploy your public key&lt;/strong&gt; to the server&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Harden &lt;code&gt;sshd&lt;/code&gt;&lt;/strong&gt;: disable password login and block root login&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;By the end you will log in exclusively with your private key, through a non-root account that can escalate privileges with &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Beyond the Backend: My React Side Projects</title>
       <link>http://localhost:1313/blog/react-showcase/</link>
       <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>

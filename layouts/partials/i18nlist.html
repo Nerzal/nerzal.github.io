@@ -1,10 +1,25 @@
-{{ if .IsTranslated }}
-<h4>{{ i18n "translations" }}</h4>
-<ul class="{{ cond (eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
-    {{ range .Translations }}
-    <li class="list f5 f4-ns fw4 dib {{ cond (eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
-        <a class="hover-white no-underline white-90" href="{{ .RelPermalink }}">{{ .Lang }}</a>
-    </li>
-    {{ end}}
-</ul>
-{{ end }}
+{{ $page := . }}
+{{ $currentLang := .Lang }}
+<div class="lang-switcher">
+  {{/* English */}}
+  {{ if eq $currentLang "en" }}
+    <span class="lang-btn lang-btn--current">EN</span>
+  {{ else }}
+    {{ $href := "/" }}
+    {{ range $page.Translations }}
+      {{ if eq .Lang "en" }}{{ $href = .RelPermalink }}{{ end }}
+    {{ end }}
+    <a href="{{ $href }}" class="lang-btn" title="English">EN</a>
+  {{ end }}
+  <span class="lang-divider">|</span>
+  {{/* Deutsch */}}
+  {{ if eq $currentLang "de" }}
+    <span class="lang-btn lang-btn--current">DE</span>
+  {{ else }}
+    {{ $href := "/de/" }}
+    {{ range $page.Translations }}
+      {{ if eq .Lang "de" }}{{ $href = .RelPermalink }}{{ end }}
+    {{ end }}
+    <a href="{{ $href }}" class="lang-btn" title="Deutsch">DE</a>
+  {{ end }}
+</div>

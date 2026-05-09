@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/de/tags/hugo/</link>
+    <description>Recent content in Hugo on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>de</language>
+    <lastBuildDate>Mon, 02 Jan 2023 23:46:14 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/de/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Einführung in Hugo #1</title>
+      <link>http://localhost:1313/de/blog/install-hugo/</link>
+      <pubDate>Mon, 02 Jan 2023 23:46:14 +0100</pubDate>
+      <guid>http://localhost:1313/de/blog/install-hugo/</guid>
+      <description>&lt;h2 id=&#34;was-ist-hugo&#34;&gt;Was ist Hugo?&lt;/h2&gt;&#xA;&lt;p&gt;Hugo ist ein Static-Site-Generator, der mehrere Vorteile beim Erstellen schneller und sicherer Websites bietet.&lt;/p&gt;&#xA;&lt;p&gt;Er hat eine schnelle Build-Zeit, was ihn ideal für das schnelle Generieren großer Seiten macht. Seine intuitive Oberfläche und unkomplizierte Verzeichnisstruktur erleichtern den Einstieg für neue Benutzer. Darüber hinaus bietet Hugo Flexibilität durch Templates, Shortcodes und benutzerdefinierte Ausgabeformate und kann einfach auf einer Vielzahl von Hosting-Plattformen deployt werden.&lt;/p&gt;&#xA;&lt;p&gt;Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Seiten, weil es statische HTML-Dateien generiert. Insgesamt ist Hugo eine beliebte Wahl für Entwickler und Content-Creator, die effiziente und sichere Websites erstellen möchten.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

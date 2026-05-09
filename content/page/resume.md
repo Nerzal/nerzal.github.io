@@ -5,7 +5,7 @@ draft: false
 description: "Professional resume of Tobias Theel, a Senior Software Engineer with 12+ years of experience in Go, C#, Kubernetes, and Game Development."
 menu:
     main:
-        weight: 1
+        weight: 2
 ---
 
 ![Image of Tobias Theel](/img/profile2.jpg)

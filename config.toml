@@ -2,8 +2,17 @@ baseURL = 'https://blog.noobygames.de'
 languageCode = 'en-us'
 title = 'Tobias Theel | Senior Software Engineer'
 DefaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
 Paginate = 10
 enableRobotsTXT = true
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+  [languages.de]
+    languageName = "Deutsch"
+    weight = 2
 
 [services.disqus]
   shortname = "nerzal-blog"

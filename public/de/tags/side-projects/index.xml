@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Side-Projects on Tobias Theel | Senior Software Engineer</title>
+    <link>http://localhost:1313/de/tags/side-projects/</link>
+    <description>Recent content in Side-Projects on Tobias Theel | Senior Software Engineer</description>
+    <generator>Hugo</generator>
+    <language>de</language>
+    <lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/de/tags/side-projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Jenseits des Backends: Meine React-Nebenprojekte</title>
+      <link>http://localhost:1313/de/blog/react-showcase/</link>
+      <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/de/blog/react-showcase/</guid>
+      <description>&lt;h2 id=&#34;einführung&#34;&gt;Einführung&lt;/h2&gt;&#xA;&lt;p&gt;Obwohl ein Großteil meiner beruflichen Arbeit und meiner bisherigen Beiträge sich auf Go, Kubernetes und Backend-Architektur konzentriert, habe ich schon immer eine Schwäche für Frontend-Entwicklung gehabt. In meiner Freizeit experimentiere ich gerne mit React, um Tools und Oberflächen zu bauen, die sowohl funktional als auch performant sind.&lt;/p&gt;&#xA;&lt;p&gt;Heute möchte ich einige dieser Projekte vorstellen und dir einen Einblick geben, was ich baue, wenn ich keine Go-Services schreibe.&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-persönliches-portfolio&#34;&gt;1. Persönliches Portfolio&lt;/h2&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/portfolio.png&#34; alt=&#34;Last War Calculators Screenshot&#34;&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

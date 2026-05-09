@@ -183,3 +183,40 @@ pre:hover .copy-btn {
 .copy-btn.copied {
     color: var(--highlight-color);
 }
+
+
+/* Language switcher */
+
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-right: 0.75rem;
+}
+
+.lang-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--text-color);
+    opacity: 0.45;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.lang-btn:hover {
+    opacity: 1;
+    color: var(--highlight-color);
+}
+
+.lang-btn--current {
+    opacity: 1;
+    color: var(--highlight-color);
+    cursor: default;
+}
+
+.lang-divider {
+    font-size: 0.75rem;
+    opacity: 0.3;
+    color: var(--text-color);
+}
