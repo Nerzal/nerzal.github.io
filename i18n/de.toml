@@ -48,6 +48,9 @@ other = "{{ .Count }} Wörter"
 [pageTitle]
 other = "{{ .Name }} Seite"
 
+[explore]
+other = "Entdecken"
+
 [onThisPage]
 other = "Inhalt"
 

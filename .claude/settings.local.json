@@ -17,7 +17,8 @@
       "Bash(curl -s http://localhost:1313/page/resume/)",
       "Bash(curl -s http://localhost:1313/page/publications/)",
       "Bash(python3 -c ' *)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:1313/)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:1313/)",
+      "Bash(curl -s http://localhost:1313/page/games/)"
     ]
   }
 }

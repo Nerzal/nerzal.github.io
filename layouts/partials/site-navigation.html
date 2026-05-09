@@ -7,19 +7,29 @@
             Tobias Theel<span class="site-nav-brand-sub"> | Senior Software Engineer</span>
             {{- end -}}
         </a>
-        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
         </button>
-        <div class="site-nav-right" id="site-nav-right">
+        <div class="site-nav-right">
             {{ partial "i18nlist.html" . }}
             {{ if .Site.Menus.main }}
             <ul class="site-nav-menu">
                 {{ range .Site.Menus.main }}
-                <li class="site-nav-item">
+                {{ $hasSub := eq .Identifier "publications" }}
+                <li class="site-nav-item{{ if $hasSub }} site-nav-item--has-sub{{ end }}">
                     <a class="site-nav-link{{ if $.IsMenuCurrent "main" . }} site-nav-link--active{{ end }}"
-                       href="{{ .URL }}">{{ .Name }}</a>
+                       href="{{ .URL }}">{{ .Name }}{{ if $hasSub }}<span class="site-nav-caret">▾</span>{{ end }}</a>
+                    {{ if $hasSub }}
+                    <ul class="site-nav-sub">
+                        {{ range (slice "/page/book" "/page/talks" "/page/open-source" "/page/games") }}
+                        {{ with site.GetPage . }}
+                        <li><a href="{{ .RelPermalink }}" class="site-nav-sub-link">{{ .Title }}</a></li>
+                        {{ end }}
+                        {{ end }}
+                    </ul>
+                    {{ end }}
                 </li>
                 {{ end }}
             </ul>

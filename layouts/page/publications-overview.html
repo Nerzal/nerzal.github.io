@@ -1,0 +1,31 @@
+{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
+{{ define "main" }}
+{{ $cats := slice
+    (dict "path" "/page/book"        "icon" "Book")
+    (dict "path" "/page/talks"       "icon" "Talks")
+    (dict "path" "/page/open-source" "icon" "Open Source")
+    (dict "path" "/page/games"       "icon" "Games")
+}}
+<div class="pub-overview mw8 center ph3 ph4-l pv4 pv5-l">
+    <header class="pub-overview-header">
+        <p class="blog-list-eyebrow">Portfolio</p>
+        <h1 class="blog-list-title">{{ .Title }}</h1>
+        {{ with .Content }}<div class="pub-overview-intro lh-copy f5 foreground-dark">{{ . }}</div>{{ end }}
+    </header>
+    <div class="pub-category-grid">
+        {{ range $cats }}
+        {{ $cat := . }}
+        {{ $page := site.GetPage .path }}
+        {{ with $page }}
+        <a href="{{ .RelPermalink }}" class="pub-cat-card">
+            <p class="pub-cat-label">{{ $cat.icon }}</p>
+            <h2 class="pub-cat-title">{{ .Title }}</h2>
+            <p class="pub-cat-desc">{{ .Description }}</p>
+            {{ with .Params.metric }}<p class="pub-cat-metric">{{ . }}</p>{{ end }}
+            <span class="pub-cat-cta">{{ i18n "explore" | default "Explore" }} →</span>
+        </a>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+{{ end }}
