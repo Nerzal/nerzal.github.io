@@ -7,11 +7,8 @@
             Tobias Theel<span class="site-nav-brand-sub"> | Senior Software Engineer</span>
             {{- end -}}
         </a>
-        <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-        </button>
+
+        {{/* Desktop nav — hidden on mobile */}}
         <div class="site-nav-right">
             {{ partial "i18nlist.html" . }}
             {{ if .Site.Menus.main }}
@@ -37,6 +34,17 @@
             <div class="site-nav-socials">
                 {{ partialCached "social-follow.html" . }}
             </div>
+        </div>
+
+        {{/* Mobile: lang switcher + socials + hamburger, right-aligned */}}
+        <div class="site-nav-mobile-end">
+            {{ partial "i18nlist.html" . }}
+            <div class="site-nav-socials">{{ partialCached "social-follow.html" . }}</div>
+            <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
         </div>
     </div>
 </nav>

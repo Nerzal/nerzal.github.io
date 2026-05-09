@@ -37,7 +37,6 @@
 
     {{/* Mobile nav — outside header stacking context so backdrop-filter cannot trap it */}}
     <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
-        {{ partial "i18nlist.html" . }}
         {{ if .Site.Menus.main }}
         <ul class="mobile-nav-menu">
             {{ range .Site.Menus.main }}

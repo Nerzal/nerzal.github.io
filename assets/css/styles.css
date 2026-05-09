@@ -734,6 +734,12 @@ body > header:first-of-type {
     opacity: 0.8;
 }
 
+.site-nav-mobile-end {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .site-nav-right {
     display: flex;
     align-items: center;
@@ -1600,18 +1606,16 @@ main.pb7 {
         display: flex;
     }
 
+    .site-nav-mobile-end {
+        display: flex;
+    }
+
     .site-nav-brand-sub {
         display: none;
     }
 
     .site-nav-right {
         display: none;
-    }
-
-    .lang-switcher {
-        padding-bottom: 0.6rem;
-        border-bottom: 1px solid rgba(228, 241, 254, 0.06);
-        margin-bottom: 0.1rem;
     }
 }
 
