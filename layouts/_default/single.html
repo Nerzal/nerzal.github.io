@@ -40,8 +40,7 @@
             {{- .Content -}}
             {{ partial "tags.html" . }}
             <div class="mt6">
-                {{ if site.Config.Services.Disqus.Shortname }}{{ template "_internal/disqus.html" . }}{{ end }}
-                {{ if .Site.Params.commentoEnable }}{{ partial "commento.html" . }}{{ end }}
+                {{ partial "giscus.html" . }}
             </div>
         </div>
         <aside class="post-article-sidebar">

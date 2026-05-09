@@ -4,8 +4,8 @@ title: "Einführung in Hugo #1"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "hugo"]
 description: "Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."
-images: ["hugo-logo-wide.svg"]
-featured_image: "hugo-logo-wide.svg"
+images: ["img/hugo-logo-wide.svg"]
+featured_image: "img/hugo-logo-wide.svg"
 toc: true
 ---
 

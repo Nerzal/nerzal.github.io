@@ -8,7 +8,7 @@ metric: "1 Publikation · Packt, 2021"
 
 ## Creative DIY Microcontroller Projects With TinyGo and WebAssembly
 
-{{< image-text image="/book-cover.png" imageAlt="Buchcover" >}}
+{{< image-text image="/img/book-cover.png" imageAlt="Buchcover" >}}
 
 Creative DIY Microcontroller Projects With TinyGo and WebAssembly ist ein umfassender Leitfaden zur Mikrocontroller-Programmierung mit TinyGo und WebAssembly. Im Mai 2021 bei Packt erschienen, enthält das Buch 322 Seiten mit fundiertem Wissen und praktischen Projekten. ISBN 9781800560208.
 

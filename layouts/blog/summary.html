@@ -1,10 +1,27 @@
-{{ $imgRaw := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
 {{ $img := "" }}
-{{ with $imgRaw }}{{ $img = . | relURL }}{{ end }}
+{{ $imgWebP := "" }}
+{{ with .Params.featured_image }}
+    {{ $path := trim . "/" }}
+    {{ with resources.Get $path }}
+        {{ $img = .RelPermalink }}
+        {{ if not (in (slice ".gif" ".svg") (path.Ext $path)) }}
+            {{ $imgWebP = (.Process "convert webp").RelPermalink }}
+        {{ end }}
+    {{ else }}
+        {{ $img = $path | absURL }}
+    {{ end }}
+{{ else }}
+    {{ with .Resources.ByType "image" }}
+        {{ with .GetMatch "**{feature,cover}*" }}{{ $img = .RelPermalink }}{{ end }}
+    {{ end }}
+{{ end }}
 <article class="blog-card">
     <a href="{{ .RelPermalink }}" class="blog-card-img-wrap" tabindex="-1" aria-hidden="true">
         {{ if $img }}
-        <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy">
+        <picture>
+            {{ if $imgWebP }}<source srcset="{{ $imgWebP }}" type="image/webp">{{ end }}
+            <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy" decoding="async">
+        </picture>
         {{ else }}
         <div class="blog-card-img-placeholder">
             <span class="blog-card-placeholder-icon">&#9998;</span>

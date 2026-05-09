@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="mw8 center ph3 ph4-l pv4 pv5-l">
     <header class="blog-list-header">
-        <p class="blog-list-eyebrow">Browse</p>
+        <p class="blog-list-eyebrow">{{ i18n "browse" | default "Browse" }}</p>
         <h1 class="blog-list-title">{{ .Data.Plural | humanize }}</h1>
         <p class="blog-list-count">{{ len .Data.Terms }} {{ .Data.Singular | humanize }}s</p>
     </header>

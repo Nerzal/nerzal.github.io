@@ -51,6 +51,9 @@ other = "{{ .Name }} page"
 [explore]
 other = "Explore"
 
+[browse]
+other = "Browse"
+
 [catBook]
 other = "Book"
 

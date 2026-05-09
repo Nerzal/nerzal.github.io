@@ -4,11 +4,12 @@
 {{ $f32  := .Resize "32x32 png"  }}
 {{ $f180 := .Resize "180x180 png" }}
 {{ $f192 := .Resize "192x192 png" }}
-{{ $f512 := .Resize "512x512 png" }}
 <link rel="icon" type="image/png" sizes="16x16"   href="{{ $f16.RelPermalink }}">
 <link rel="icon" type="image/png" sizes="32x32"   href="{{ $f32.RelPermalink }}">
 <link rel="apple-touch-icon"      sizes="180x180" href="{{ $f180.RelPermalink }}">
 <link rel="shortcut icon"                         href="{{ $f32.RelPermalink }}">
-<link rel="manifest" href="{{ relURL "site.webmanifest" }}">
+<link rel="manifest"                              href="{{ relURL "site.webmanifest" }}">
+<meta name="theme-color"          content="#222635">
 <meta name="msapplication-TileImage" content="{{ $f192.Permalink }}">
+<meta name="msapplication-TileColor" content="#222635">
 {{ end }}

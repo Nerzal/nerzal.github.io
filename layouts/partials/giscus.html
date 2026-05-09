@@ -1,0 +1,22 @@
+{{ with site.Params.giscus }}
+{{ if and .repo_id (ne .repo_id "YOUR_REPO_ID") }}
+<div class="giscus-wrap" data-theme-dark="{{ .theme_dark }}" data-theme-light="{{ .theme_light }}">
+    <script src="https://giscus.app/client.js"
+        data-repo="{{ .repo }}"
+        data-repo-id="{{ .repo_id }}"
+        data-category="{{ .category }}"
+        data-category-id="{{ .category_id }}"
+        data-mapping="{{ .mapping }}"
+        data-strict="0"
+        data-reactions-enabled="{{ .reactions_enabled }}"
+        data-emit-metadata="{{ .emit_metadata }}"
+        data-input-position="bottom"
+        data-theme="{{ $.Page.Scratch.Get "giscusTheme" | default .theme_dark }}"
+        data-lang="{{ site.Language.Lang }}"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+{{ end }}
+{{ end }}

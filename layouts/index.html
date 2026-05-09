@@ -16,9 +16,12 @@
                 {{ end }}
             </div>
         </div>
+        {{ $profile := resources.Get "img/profile2.jpg" }}
+        {{ with $profile }}
         <div class="home-hero-photo-wrap">
-            <img src="{{ relURL "img/profile2.jpg" }}" alt="Tobias Theel" class="home-hero-photo">
+            <img src="{{ .RelPermalink }}" alt="{{ site.Params.author }}" class="home-hero-photo" loading="eager" decoding="async">
         </div>
+        {{ end }}
     </div>
 </section>
 {{ end }}

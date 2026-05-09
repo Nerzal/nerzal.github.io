@@ -2,6 +2,90 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Lightbox for blog post images
+    (function () {
+        var content = document.querySelector('.post-article-content');
+        if (!content) return;
+
+        var overlay = document.createElement('div');
+        overlay.className = 'lightbox';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Image viewer');
+        overlay.hidden = true;
+
+        var lbImg = document.createElement('img');
+        lbImg.className = 'lightbox-img';
+
+        var lbCaption = document.createElement('p');
+        lbCaption.className = 'lightbox-caption';
+
+        var lbClose = document.createElement('button');
+        lbClose.className = 'lightbox-close';
+        lbClose.setAttribute('aria-label', 'Close');
+        lbClose.innerHTML = '&times;';
+
+        overlay.appendChild(lbClose);
+        overlay.appendChild(lbImg);
+        overlay.appendChild(lbCaption);
+        document.body.appendChild(overlay);
+
+        var previousFocus;
+
+        function open(src, alt) {
+            previousFocus = document.activeElement;
+            lbImg.src = src;
+            lbImg.alt = alt || '';
+            lbCaption.textContent = alt || '';
+            lbCaption.hidden = !alt;
+            overlay.hidden = false;
+            document.body.style.overflow = 'hidden';
+            lbClose.focus();
+        }
+
+        function close() {
+            overlay.hidden = true;
+            lbImg.src = '';
+            document.body.style.overflow = '';
+            if (previousFocus) previousFocus.focus();
+        }
+
+        content.querySelectorAll('img').forEach(function (img) {
+            img.addEventListener('click', function () { open(img.src, img.alt); });
+        });
+
+        lbClose.addEventListener('click', close);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !overlay.hidden) close();
+        });
+    })();
+
+    // Theme toggle — all buttons share the same handler
+    function applyTheme(next) {
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        var giscus = document.querySelector('.giscus-wrap');
+        if (giscus) {
+            var frame = document.querySelector('iframe.giscus-frame');
+            if (frame) {
+                var gTheme = next === 'light'
+                    ? (giscus.dataset.themeLight || 'light')
+                    : (giscus.dataset.themeDark  || 'dark_dimmed');
+                frame.contentWindow.postMessage(
+                    { giscus: { setConfig: { theme: gTheme } } },
+                    'https://giscus.app'
+                );
+            }
+        }
+    }
+    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var current = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+    });
+
     // Desktop nav dropdown — with hover delay so mouse can travel to dropdown
     document.querySelectorAll('.site-nav-item--has-sub').forEach(function (item) {
         var sub = item.querySelector('.site-nav-sub');
@@ -78,14 +162,28 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             var code = pre.querySelector('code');
             var text = code ? code.innerText : pre.innerText;
-            navigator.clipboard.writeText(text).then(function () {
+            function onSuccess() {
                 button.textContent = 'Copied!';
                 button.classList.add('copied');
                 setTimeout(function () {
                     button.textContent = 'Copy';
                     button.classList.remove('copied');
                 }, 2000);
-            });
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(onSuccess).catch(function () {
+                    button.textContent = 'Error';
+                });
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); onSuccess(); }
+                catch (e) { button.textContent = 'Error'; }
+                document.body.removeChild(ta);
+            }
         });
         pre.appendChild(button);
     });
