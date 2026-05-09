@@ -373,6 +373,18 @@ pre:hover .copy-btn {
 .page-single-content { animation: fadeUpSm 0.60s ease-out 0.12s both; }
 .resume-page         { animation: fadeUpSm 0.60s ease-out 0.10s both; }
 
+/* ── Publications overview ── */
+.pub-overview-header  { animation: fadeUpSm 0.55s ease-out 0.10s both; }
+.pub-category-grid    { animation: fadeUpSm 0.60s ease-out 0.26s both; }
+
+/* ── Contact page ── */
+.contact-badge-wrap   { animation: fadeUpSm 0.45s ease-out 0.08s both; }
+.contact-headline     { animation: fadeUpSm 0.55s ease-out 0.18s both; }
+.contact-subline      { animation: fadeUpSm 0.50s ease-out 0.28s both; }
+.contact-mailto-btn   { animation: fadeUpSm 0.55s ease-out 0.40s both; }
+.contact-response-time{ animation: fadeUpSm 0.45s ease-out 0.50s both; }
+.contact-methods-grid { animation: fadeUpSm 0.60s ease-out 0.55s both; }
+
 /* ── Respect reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {
     .home-hero-eyebrow, .home-hero-name, .home-hero-tagline,
@@ -380,6 +392,9 @@ pre:hover .copy-btn {
     .blog-list-header, .blog-grid,
     .post-breadcrumb, .post-article-header, .post-article-body,
     .page-single-content, .resume-page,
+    .pub-overview-header, .pub-category-grid,
+    .contact-badge-wrap, .contact-headline, .contact-subline,
+    .contact-mailto-btn, .contact-response-time, .contact-methods-grid,
     .contact-badge-dot {
         animation: none;
     }
