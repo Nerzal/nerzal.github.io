@@ -1767,7 +1767,8 @@ main.pb7 {
 
 .contact-method {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
     padding: 0.9rem 1.1rem;
     background: var(--background-color-light);
     border: 1px solid rgba(228, 241, 254, 0.08);
@@ -1775,12 +1776,40 @@ main.pb7 {
     border-radius: 0 8px 8px 0;
     text-decoration: none;
     transition: border-left-color 0.2s, background 0.2s;
-    gap: 0.15rem;
+    text-align: left;
 }
 
 a.contact-method:hover {
     border-left-color: var(--highlight-color);
     background: rgba(0, 255, 127, 0.04);
+}
+
+a.contact-method:hover .contact-method-icon {
+    color: var(--highlight-color);
+}
+
+.contact-method-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(228, 241, 254, 0.45);
+    transition: color 0.2s;
+}
+
+.contact-method-icon svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.contact-method-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
 }
 
 .contact-method-label {
@@ -1792,9 +1821,12 @@ a.contact-method:hover {
 }
 
 .contact-method-value {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .contact-method-value--link {
@@ -1803,9 +1835,8 @@ a.contact-method:hover {
 }
 
 .contact-method-sub {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: rgba(228, 241, 254, 0.4);
-    margin-top: 0.1rem;
 }
 
 .contact-response-time {
