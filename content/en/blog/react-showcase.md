@@ -4,6 +4,8 @@ date: 2026-04-20
 draft: false
 description: "A quick look at some of the React applications I've built in my free time, including my personal portfolio and gaming utility tools."
 tags: ["react", "frontend", "showcase", "side-projects"]
+featured_image: "img/react_site_projects.png"
+images: ["img/react_site_projects.png"]
 toc: true
 ---
 

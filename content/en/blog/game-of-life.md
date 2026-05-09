@@ -2,46 +2,58 @@
 title: "Conway's Game of Life in Go: A Step-by-Step Guide"
 date: 2023-03-16
 draft: false
-description: "A comprehensive tutorial on implementing Conway's Game of Life using Go, covering grid logic, terminal rendering, and concurrency."
-images: ["img/game-of-live.gif"]
-tags: ["go", "game of life"]
+toc: true
+description: "Implement Conway's Game of Life in Go from scratch — grid logic, toroidal wrapping, terminal rendering, and a working main loop with two classic patterns."
+images: ["img/game_of_life.png"]
+featured_image: "img/game_of_life.png"
+tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]
+show_reading_time: true
 ---
 
-## Introduction
+[Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a famous cellular automaton devised by British mathematician John Horton Conway in 1970. It is a zero-player game: you define an initial state and then watch it evolve according to a fixed set of rules — no further input required. Despite its simple rules, it produces surprisingly complex, lifelike patterns.
 
-[Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a famous cellular automaton devised by the British mathematician John Horton Conway. It is a zero-player game that evolves over time based on its initial state, requiring no further input from the player. The game takes place on an infinite two-dimensional grid of square cells, with each cell being either alive or dead.
+In this post we implement Game of Life in Go from scratch, step by step. By the end you will have a working terminal simulation that renders a **Glider** and a **Lightweight Spaceship (LWSS)** in real time.
 
-In this blog post, we'll explore how to implement Conway's Game of Life in Go. We'll provide step-by-step instructions, complete with functioning example code and detailed explanations.
+![Conway's Game of Life simulation in a Go terminal](/img/game-of-live.gif)
 
-Example:
+## Prerequisites
 
-![Alt-Text](/img/game-of-live.gif)
+You need [Go](https://go.dev/dl/) installed on your machine. The standard library is sufficient — no third-party packages are required for this tutorial.
 
+**Linux / macOS:**
+```bash
+# Verify installation
+go version
+```
+
+**Windows (PowerShell):**
+```powershell
+# Verify installation
+go version
+```
+
+If `go version` prints something like `go version go1.22 linux/amd64` you are good to go. If not, follow the [official installation guide](https://go.dev/doc/install).
+
+Create a new file called `main.go` in an empty directory and follow along.
 
 ## Rules
 
-The Game of Life follows four simple rules:
+The Game of Life follows four rules, applied simultaneously to every cell on the grid at each step:
 
-1. A live cell with fewer than two live neighbors dies (underpopulation).
-2. A live cell with two or three live neighbors lives on to the next generation.
-3. A live cell with more than three live neighbors dies (overpopulation).
-4. A dead cell with exactly three live neighbors becomes a live cell (reproduction).
+1. A **live cell** with fewer than two live neighbours dies — _underpopulation_.
+2. A **live cell** with two or three live neighbours survives.
+3. A **live cell** with more than three live neighbours dies — _overpopulation_.
+4. A **dead cell** with exactly three live neighbours becomes alive — _reproduction_.
 
-These rules are applied simultaneously to all cells on the grid for each iteration, creating interesting patterns and behaviors.
+These four rules are all you need. The rest emerges from the initial state.
 
 ## Implementation
 
-Let's start implementing the Game of Life in Go. We'll divide the implementation into the following steps:
-
-1. Define the data structures
-2. Initialize the game grid
-3. Implement the game logic
-4. Render the grid
-5. Set up the main loop
+We break the implementation into five focused steps.
 
 ### 1. Define the Data Structures
 
-First, let's define the data structures we'll use to represent the grid and the cells. We'll create a `Grid` type that will contain the grid's dimensions and a two-dimensional slice of `Cell` values.
+`Cell` is just a boolean — alive or dead. `Grid` holds the dimensions and a two-dimensional slice of cells.
 
 ```go
 type Cell bool
@@ -53,9 +65,9 @@ type Grid struct {
 }
 ```
 
-### 2. Initialize the Game Grid
+### 2. Initialise the Grid
 
-Next, we'll create a function to initialize the game grid with an initial state. The function will take the grid's dimensions and a slice of initial live cell coordinates as input and return a populated `Grid` instance.
+`NewGrid` allocates the two-dimensional slice and places the initial live cells at the given coordinates.
 
 ```go
 func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
@@ -75,7 +87,7 @@ func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
 
 ### 3. Implement the Game Logic
 
-Now, let's implement the game logic by creating a function that computes the next state of the grid based on the current state and the rules of the Game of Life.
+`NextState` computes the next generation. We allocate a fresh slice so we never read and write the same state simultaneously — a classic off-by-one mistake in Game of Life implementations.
 
 ```go
 func (g *Grid) NextState() {
@@ -98,7 +110,11 @@ func (g *Grid) NextState() {
 
     g.Cells = newCells
 }
+```
 
+`countLiveNeighbors` checks the eight surrounding cells. The `%` operator creates a **toroidal grid** — cells that leave one edge reappear on the opposite side, so the simulation never has boundary artifacts.
+
+```go
 func (g *Grid) countLiveNeighbors(x, y int) int {
     count := 0
     for i := -1; i <= 1; i++ {
@@ -107,6 +123,7 @@ func (g *Grid) countLiveNeighbors(x, y int) int {
                 continue
             }
 
+            // Wrap around: (x + offset + Width) % Width keeps the value in [0, Width)
             x2 := (x + i + g.Width) % g.Width
             y2 := (y + j + g.Height) % g.Height
 
@@ -121,14 +138,127 @@ func (g *Grid) countLiveNeighbors(x, y int) int {
 
 ### 4. Render the Grid
 
-We'll create a function to render the grid in the terminal, displaying live cells as "X" characters and dead cells as spaces.
+`Render` prints the grid to the terminal. Live cells appear as `█`, dead cells as a space. The ANSI escape sequence `\033[H` moves the cursor to the top-left corner before each frame, preventing the output from scrolling — giving a smooth animation effect.
 
 ```go
 func (g *Grid) Render() {
+    // Move cursor to top-left without clearing (avoids flicker)
+    fmt.Print("\033[H")
     for y := 0; y < g.Height; y++ {
         for x := 0; x < g.Width; x++ {
             if g.Cells[y][x] {
-                fmt.Print("X")
+                fmt.Print("█")
+            } else {
+                fmt.Print(" ")
+            }
+        }
+        fmt.Println()
+    }
+}
+```
+
+### 5. Set Up the Main Loop
+
+We seed the grid with two well-known patterns — a **Glider** (moves diagonally across the grid) and a **Lightweight Spaceship (LWSS)** (moves horizontally) — then run the simulation indefinitely.
+
+```go
+func main() {
+    initialLiveCells := [][2]int{
+        // Glider — travels diagonally
+        {1, 0}, {2, 1}, {0, 2}, {1, 2}, {2, 2},
+
+        // Lightweight Spaceship (LWSS) — travels horizontally
+        {10, 2}, {11, 2}, {12, 2}, {13, 2},
+        {9, 3}, {13, 3},
+        {13, 4},
+        {9, 5}, {12, 5},
+    }
+
+    // Clear terminal once at the start
+    fmt.Print("\033[2J")
+
+    grid := NewGrid(40, 20, initialLiveCells)
+    for {
+        grid.Render()
+        grid.NextState()
+        time.Sleep(100 * time.Millisecond)
+    }
+}
+```
+
+## Complete Code
+
+Save this as `main.go`:
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+type Cell bool
+
+type Grid struct {
+    Width  int
+    Height int
+    Cells  [][]Cell
+}
+
+func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
+    cells := make([][]Cell, height)
+    for i := range cells {
+        cells[i] = make([]Cell, width)
+    }
+    for _, coord := range initialLiveCells {
+        x, y := coord[0], coord[1]
+        cells[y][x] = true
+    }
+    return Grid{Width: width, Height: height, Cells: cells}
+}
+
+func (g *Grid) NextState() {
+    newCells := make([][]Cell, g.Height)
+    for i := range newCells {
+        newCells[i] = make([]Cell, g.Width)
+    }
+    for y := 0; y < g.Height; y++ {
+        for x := 0; x < g.Width; x++ {
+            liveNeighbors := g.countLiveNeighbors(x, y)
+            if g.Cells[y][x] && (liveNeighbors == 2 || liveNeighbors == 3) {
+                newCells[y][x] = true
+            } else if !g.Cells[y][x] && liveNeighbors == 3 {
+                newCells[y][x] = true
+            }
+        }
+    }
+    g.Cells = newCells
+}
+
+func (g *Grid) countLiveNeighbors(x, y int) int {
+    count := 0
+    for i := -1; i <= 1; i++ {
+        for j := -1; j <= 1; j++ {
+            if i == 0 && j == 0 {
+                continue
+            }
+            x2 := (x + i + g.Width) % g.Width
+            y2 := (y + j + g.Height) % g.Height
+            if g.Cells[y2][x2] {
+                count++
+            }
+        }
+    }
+    return count
+}
+
+func (g *Grid) Render() {
+    fmt.Print("\033[H")
+    for y := 0; y < g.Height; y++ {
+        for x := 0; x < g.Width; x++ {
+            if g.Cells[y][x] {
+                fmt.Print("█")
             } else {
                 fmt.Print(" ")
             }
@@ -137,174 +267,40 @@ func (g *Grid) Render() {
     }
 }
 
-```
-
-### 5. Set Up the Main Loop
-
-Finally, we'll set up the main loop that initializes the game, repeatedly updates the grid, and renders the grid to the terminal.
-
-```go
 func main() {
- initialLiveCells := [][2]int{
-  // Glider
-  {1, 0}, {2, 1}, {0, 2}, {1, 2}, {2, 2},
-
-  // Lightweight spaceship (LWSS)
-  {10, 2}, {11, 2}, {12, 2}, {13, 2},
-  {9, 3}, {13, 3},
-  {13, 4},
-  {9, 5}, {12, 5},
- }
-
- grid := NewGrid(30, 15, initialLiveCells)
- for {
-  grid.Render()
-  grid.NextState()
-  time.Sleep(500 * time.Millisecond)
- }
-}
-
-```
-
-## Complete Code
-
-```go
-package main
-
-import (
- "fmt"
- "time"
-)
-
-type Cell bool
-
-type Grid struct {
- Width  int
- Height int
- Cells  [][]Cell
-}
-
-func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
- cells := make([][]Cell, height)
- for i := range cells {
-  cells[i] = make([]Cell, width)
- }
-
- for _, coord := range initialLiveCells {
-  x, y := coord[0], coord[1]
-  cells[y][x] = true
- }
-
- return Grid{Width: width, Height: height, Cells: cells}
-}
-
-func (g *Grid) NextState() {
- newCells := make([][]Cell, g.Height)
- for i := range newCells {
-  newCells[i] = make([]Cell, g.Width)
- }
-
- for y := 0; y < g.Height; y++ {
-  for x := 0; x < g.Width; x++ {
-   liveNeighbors := g.countLiveNeighbors(x, y)
-
-   if g.Cells[y][x] && (liveNeighbors == 2 || liveNeighbors == 3) {
-    newCells[y][x] = true
-   } else if !g.Cells[y][x] && liveNeighbors == 3 {
-    newCells[y][x] = true
-   }
-  }
- }
-
- g.Cells = newCells
-}
-
-func (g *Grid) countLiveNeighbors(x, y int) int {
- count := 0
- for i := -1; i <= 1; i++ {
-  for j := -1; j <= 1; j++ {
-   if i == 0 && j == 0 {
-    continue
-   }
-
-   x2 := (x + i + g.Width) % g.Width
-   y2 := (y + j + g.Height) % g.Height
-
-   if g.Cells[y2][x2] {
-    count++
-   }
-  }
- }
- return count
-}
-
-func (g *Grid) Render() {
- for y := 0; y < g.Height; y++ {
-  for x := 0; x < g.Width; x++ {
-   if g.Cells[y][x] {
-    fmt.Print("X")
-   } else {
-    fmt.Print(" ")
-   }
-  }
-  fmt.Println()
- }
-}
-
-func main() {
- initialLiveCells := [][2]int{
-  // Glider
-  {1, 0}, {2, 1}, {0, 2}, {1, 2}, {2, 2},
-
-  // Lightweight spaceship (LWSS)
-  {10, 2}, {11, 2}, {12, 2}, {13, 2},
-  {9, 3}, {13, 3},
-  {13, 4},
-  {9, 5}, {12, 5},
- }
-
- grid := NewGrid(30, 15, initialLiveCells)
- for {
-  grid.Render()
-  grid.NextState()
-  time.Sleep(500 * time.Millisecond)
- }
-}
-
-
-```
-
-## YAML Configuration (Optional)
-
-You can also use a YAML configuration file to specify the initial state of the grid. Here's an example of a YAML configuration file:
-
-```yaml
-width: 10
-height: 10
-initialLiveCells:
-  - [1, 0]
-  - [2, 1]
-  - [0, 2]
-  - [1, 2]
-  - [2, 2]
-```
-
-To parse the YAML configuration file, you'll need to add a Go package for YAML parsing, such as [gopkg.in/yaml.v3](https://pkg.go.dev/gopkg.in/yaml.v3). Update the main function to read the configuration file and initialize the grid based on its contents.
-
-## JSON Configuration (Optional)
-
-Alternatively, you can use a JSON configuration file to specify the initial state of the grid. Here's an
-
-```json
-{
-  "width": 10,
-  "height": 10,
-  "initialLiveCells": [
-    [1, 0],
-    [2, 1],
-    [0, 2],
-    [1, 2],
-    [2, 2]
-  ]
+    initialLiveCells := [][2]int{
+        {1, 0}, {2, 1}, {0, 2}, {1, 2}, {2, 2},
+        {10, 2}, {11, 2}, {12, 2}, {13, 2},
+        {9, 3}, {13, 3},
+        {13, 4},
+        {9, 5}, {12, 5},
+    }
+    fmt.Print("\033[2J")
+    grid := NewGrid(40, 20, initialLiveCells)
+    for {
+        grid.Render()
+        grid.NextState()
+        time.Sleep(100 * time.Millisecond)
+    }
 }
 ```
+
+## Running the Program
+
+**Linux / macOS:**
+```bash
+go run main.go
+```
+
+**Windows (PowerShell):**
+```powershell
+go run main.go
+```
+
+Press `Ctrl+C` to stop. You should see the Glider and LWSS patterns moving across the terminal.
+
+## What's Next
+
+- Try different starting patterns — the [LifeWiki](https://conwaylife.com/wiki/) catalogues thousands of them.
+- Replace `fmt.Print` with a proper terminal library like [tcell](https://github.com/gdamore/tcell) or [bubbletea](https://github.com/charmbracelet/bubbletea) for colour and keyboard input.
+- If you are interested in containerising your Go applications, check out my post on [Go and Docker](/blog/go-docker/).
