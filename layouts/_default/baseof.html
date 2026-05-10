@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>{{ block "title" . }}{{ with .Params.Title }}{{ . }} | {{ end }}{{ .Site.Title }}{{ end }}</title>
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
     <meta name="hello" content="👋 Hey curious mind! /humans.txt • /dogs/ • try the Konami Code (↑↑↓↓←→←→BA) • info[at]noobygames[dot]de">
     {{ $production := eq (getenv "HUGO_ENV") "production" | or (eq site.Params.env "production") }}
@@ -15,7 +14,7 @@
     {{ else }}
     <meta name="robots" content="noindex, nofollow">
     {{ end }}
-    {{ partial "site-style.html" . }}
+    {{ partialCached "site-style.html" . "global" }}
     {{ block "favicon" . }}{{ partialCached "site-favicon.html" . }}{{ end }}
     {{/* Canonical URL */}}
     <link rel="canonical" href="{{ .Permalink }}">
@@ -81,7 +80,7 @@
 
     <button id="scroll-to-top" aria-label="Scroll to top">&#8679;</button>
 
-    {{ partial "site-scripts.html" . }}
+    {{ partialCached "site-scripts.html" . "global" }}
 </body>
 
 </html>

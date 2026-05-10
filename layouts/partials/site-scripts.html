@@ -3,4 +3,4 @@
 {{ if $production }}
   {{ $js = $js | minify | fingerprint }}
 {{ end }}
-<script src="{{ $js.RelPermalink }}"></script>
+<script src="{{ $js.RelPermalink }}" defer></script>
