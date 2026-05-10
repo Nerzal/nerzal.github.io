@@ -3026,7 +3026,8 @@ pre {
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
-    white-space: nowrap;
+    white-space: normal;
+    max-width: min(420px, calc(100vw - 2rem));
     box-shadow: 0 4px 24px rgba(0, 255, 127, 0.15);
 }
 .ee-toast.ee-toast--visible {
@@ -3063,6 +3064,9 @@ pre {
 .ee-gol-label {
     position: absolute;
     top: 1.5rem;
+    left: 0;
+    right: 0;
+    text-align: center;
     color: rgba(0, 255, 127, 0.6);
     font-size: 0.8rem;
     font-family: monospace;
@@ -3072,6 +3076,9 @@ pre {
 .ee-gol-hint {
     position: absolute;
     bottom: 1.5rem;
+    left: 0;
+    right: 0;
+    text-align: center;
     color: rgba(0, 255, 127, 0.35);
     font-size: 0.72rem;
     font-family: monospace;
@@ -3354,6 +3361,7 @@ body.is-idle {
 .ee-terminal-output {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem 1.25rem;
     font-family: monospace;
     font-size: 0.85rem;
@@ -3461,6 +3469,58 @@ body.is-restoring {
 .not-found-page {
     position: relative;
     z-index: 1;
+}
+
+/* Easter egg mobile overrides */
+@media (max-width: 600px) {
+    .ee-toast {
+        font-size: 0.82rem;
+        bottom: 1.5rem;
+        padding: 0.65rem 1rem;
+    }
+
+    /* Terminal: bottom-sheet style — anchors to bottom, no side gaps */
+    #ee-terminal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+    .ee-terminal-window {
+        border-radius: 14px 14px 0 0;
+        max-height: 88vh;
+        max-width: 100%;
+    }
+    .ee-terminal-titlebar {
+        padding: 0.5rem 0.85rem;
+    }
+    .ee-terminal-output {
+        font-size: 0.76rem;
+        padding: 0.75rem;
+        min-height: 160px;
+    }
+    .ee-terminal-prompt-label {
+        font-size: 0.7rem;
+    }
+    .ee-terminal-input {
+        font-size: 0.76rem;
+    }
+    .ee-terminal-input-row {
+        padding: 0.4rem 0.75rem 0.6rem;
+        gap: 0.35rem;
+    }
+
+    /* Matrix hint: allow wrapping */
+    .ee-matrix-hint {
+        white-space: normal;
+        text-align: center;
+        left: 1rem;
+        right: 1rem;
+        transform: none;
+        bottom: 2.5rem;
+    }
+
+    /* Dogs page: reduce fixed image heights to fit portrait screens */
+    .dogs-card-img { height: 220px; }
+    .dogs-gallery-item img { height: 190px; }
 }
 
 /* Print styles */

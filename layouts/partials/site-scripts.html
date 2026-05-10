@@ -217,13 +217,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var canvas = document.createElement('canvas');
         canvas.id = 'ee-gol-canvas';
 
+        var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
         var label = document.createElement('p');
         label.className = 'ee-gol-label';
         label.textContent = "Conway's Game of Life";
 
         var hint = document.createElement('p');
         hint.className = 'ee-gol-hint';
-        hint.textContent = 'click anywhere or press Esc to close';
+        hint.textContent = isTouch ? 'tap to close' : 'click anywhere or press Esc to close';
 
         overlay.appendChild(label);
         overlay.appendChild(canvas);
@@ -375,13 +377,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var canvas = document.createElement('canvas');
         canvas.id = 'ee-matrix-canvas';
 
+        var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
         var msg = document.createElement('p');
         msg.className = 'ee-matrix-msg';
         msg.textContent = 'Wake up, Neo…';
 
         var hint = document.createElement('p');
         hint.className = 'ee-matrix-hint';
-        hint.textContent = 'click or press Esc to exit the Matrix';
+        hint.textContent = isTouch ? 'tap to exit the Matrix' : 'click or press Esc to exit the Matrix';
 
         overlay.appendChild(canvas);
         overlay.appendChild(msg);
@@ -478,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '  <div class="ee-terminal-output" id="ee-term-output"></div>',
             '  <div class="ee-terminal-input-row">',
             '    <span class="ee-terminal-prompt-label">tobias@blog:~$</span>',
-            '    <input class="ee-terminal-input" id="ee-term-input" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="terminal input">',
+            '    <input class="ee-terminal-input" id="ee-term-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="terminal input">',
             '  </div>',
             '</div>'
         ].join('');
