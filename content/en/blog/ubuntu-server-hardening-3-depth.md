@@ -1,8 +1,9 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Part 3: Defense in Depth"
-date: 2026-05-24T00:00:00+00:00
-tags: ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
+date: 2026-05-10T00:00:00+00:00
+tags:
+  ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The final hardening layer: mandatory access control with AppArmor, kernel-level audit logging with auditd, and cryptographic filesystem integrity monitoring with AIDE."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
@@ -11,7 +12,7 @@ toc: true
 
 [Part 1](/blog/ubuntu-server-hardening-1-essentials/) covered the essential first measures: UFW, Fail2ban, and automatic updates. [Part 2](/blog/ubuntu-server-hardening-2-system/) tightened the system configuration: sysctl, unused services, sudo, and login policies.
 
-This part is different in character. Where the previous two posts were about *preventing* compromise, the measures here assume that a sufficiently motivated attacker may eventually get in — and focus on **detecting** it, **containing** it, and having **evidence** when it happens.
+This part is different in character. Where the previous two posts were about _preventing_ compromise, the measures here assume that a sufficiently motivated attacker may eventually get in — and focus on **detecting** it, **containing** it, and having **evidence** when it happens.
 
 > **Assumes:** Parts 1 and 2 complete, SSH hardened, non-root sudo user.
 
@@ -32,6 +33,7 @@ sudo apparmor_status
 ```
 
 Profiles appear in two modes:
+
 - **enforce** — violations are blocked and logged
 - **complain** — violations are logged but allowed (used for developing new profiles)
 
@@ -209,19 +211,19 @@ sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 
 Across the three posts, we built a layered defense where each layer operates independently:
 
-| Layer | Post | Protects against |
-|-------|------|-----------------|
-| SSH hardening | [SSH post](/blog/secure-ssh-server/) | Unauthorized remote access |
-| UFW | Part 1 | Unexpectedly exposed services |
-| Fail2ban | Part 1 | Brute-force attacks |
-| Unattended upgrades | Part 1 | Known CVEs in unpatched packages |
-| sysctl | Part 2 | Network and kernel exploits |
-| Disabled services | Part 2 | Attack surface from unused services |
-| Sudo restriction | Part 2 | Privilege escalation blast radius |
-| Login policy | Part 2 | Weak local credentials |
-| AppArmor | Part 3 | Lateral movement after process compromise |
-| auditd | Part 3 | Undetected post-compromise activity |
-| AIDE | Part 3 | Binary and configuration tampering |
+| Layer               | Post                                 | Protects against                          |
+| ------------------- | ------------------------------------ | ----------------------------------------- |
+| SSH hardening       | [SSH post](/blog/secure-ssh-server/) | Unauthorized remote access                |
+| UFW                 | Part 1                               | Unexpectedly exposed services             |
+| Fail2ban            | Part 1                               | Brute-force attacks                       |
+| Unattended upgrades | Part 1                               | Known CVEs in unpatched packages          |
+| sysctl              | Part 2                               | Network and kernel exploits               |
+| Disabled services   | Part 2                               | Attack surface from unused services       |
+| Sudo restriction    | Part 2                               | Privilege escalation blast radius         |
+| Login policy        | Part 2                               | Weak local credentials                    |
+| AppArmor            | Part 3                               | Lateral movement after process compromise |
+| auditd              | Part 3                               | Undetected post-compromise activity       |
+| AIDE                | Part 3                               | Binary and configuration tampering        |
 
 No single layer provides complete security. Together, they force an attacker to bypass each one independently and make sustained access without detection extremely difficult.
 

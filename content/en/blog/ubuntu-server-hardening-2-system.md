@@ -1,8 +1,9 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Part 2: Tightening the System"
-date: 2026-05-17T00:00:00+00:00
-tags: ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
+date: 2026-05-10T00:00:00+00:00
+tags:
+  ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The second hardening pass: tuning kernel parameters with sysctl, disabling attack surface you do not use, and restricting sudo and local login policies."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
@@ -199,12 +200,12 @@ usercheck = 1     # reject passwords containing the username
 
 ## What This Pass Covers
 
-| Measure | Effect |
-|---------|--------|
-| sysctl hardening | Closes network-layer attack vectors at the kernel level |
+| Measure           | Effect                                                     |
+| ----------------- | ---------------------------------------------------------- |
+| sysctl hardening  | Closes network-layer attack vectors at the kernel level    |
 | Disabled services | Reduces the number of entry points that need to be secured |
-| Sudo restrictions | Limits the blast radius of a compromised account |
-| Password policy | Raises the cost of brute-forcing local credentials |
+| Sudo restrictions | Limits the blast radius of a compromised account           |
+| Password policy   | Raises the cost of brute-forcing local credentials         |
 
 These four measures require no external tools and produce no network traffic — they are pure configuration changes to what is already there.
 

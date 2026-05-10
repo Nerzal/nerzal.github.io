@@ -1,8 +1,9 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Teil 3: Defense in Depth"
-date: 2026-05-24T00:00:00+00:00
-tags: ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
+date: 2026-05-10T00:00:00+00:00
+tags:
+  ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Die letzte Hardening-Schicht: Mandatory Access Control mit AppArmor, Kernel-Level-Audit-Logging mit auditd und kryptografische Datei-Integritätsüberwachung mit AIDE."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
@@ -11,7 +12,7 @@ toc: true
 
 [Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/) behandelte die grundlegenden Maßnahmen: UFW, Fail2ban und automatische Updates. [Teil 2](/de/blog/ubuntu-server-hardening-2-system/) verschärfte die Systemkonfiguration: sysctl, unnötige Dienste, sudo und Login-Richtlinien.
 
-Dieser Teil hat einen anderen Charakter. Während die ersten beiden Posts auf das *Verhindern* von Kompromittierungen ausgerichtet waren, gehen die Maßnahmen hier davon aus, dass ein ausreichend motivierter Angreifer irgendwann eindringen könnte — und konzentrieren sich darauf, es zu **erkennen**, zu **begrenzen** und **Beweise** zu haben wenn es passiert.
+Dieser Teil hat einen anderen Charakter. Während die ersten beiden Posts auf das _Verhindern_ von Kompromittierungen ausgerichtet waren, gehen die Maßnahmen hier davon aus, dass ein ausreichend motivierter Angreifer irgendwann eindringen könnte — und konzentrieren sich darauf, es zu **erkennen**, zu **begrenzen** und **Beweise** zu haben wenn es passiert.
 
 > **Voraussetzungen:** Teile 1 und 2 abgeschlossen, SSH abgesichert, Nicht-Root-Sudo-Benutzer.
 
@@ -32,6 +33,7 @@ sudo apparmor_status
 ```
 
 Profile erscheinen in zwei Modi:
+
 - **enforce** — Verstöße werden blockiert und protokolliert
 - **complain** — Verstöße werden protokolliert, aber erlaubt (für die Entwicklung neuer Profile)
 
@@ -209,19 +211,19 @@ sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 
 Über die drei Teile hinweg haben wir eine Verteidigung in Schichten aufgebaut, bei der jede Schicht unabhängig arbeitet:
 
-| Schicht | Teil | Schützt gegen |
-|---------|------|--------------|
-| SSH-Hardening | [SSH-Beitrag](/de/blog/secure-ssh-server/) | Unbefugten Fernzugriff |
-| UFW | Teil 1 | Versehentlich exponierte Dienste |
-| Fail2ban | Teil 1 | Brute-Force-Angriffe |
-| Unattended Upgrades | Teil 1 | Bekannte CVEs in ungepatchten Paketen |
-| sysctl | Teil 2 | Netzwerk- und Kernel-Exploits |
-| Deaktivierte Dienste | Teil 2 | Angriffsfläche ungenutzter Dienste |
-| Sudo-Einschränkung | Teil 2 | Privilege-Escalation-Schaden |
-| Login-Richtlinie | Teil 2 | Schwache lokale Anmeldedaten |
-| AppArmor | Teil 3 | Laterale Bewegung nach Prozess-Kompromittierung |
-| auditd | Teil 3 | Unerkannte Post-Compromise-Aktivität |
-| AIDE | Teil 3 | Binary- und Konfigurations-Manipulation |
+| Schicht              | Teil                                       | Schützt gegen                                   |
+| -------------------- | ------------------------------------------ | ----------------------------------------------- |
+| SSH-Hardening        | [SSH-Beitrag](/de/blog/secure-ssh-server/) | Unbefugten Fernzugriff                          |
+| UFW                  | Teil 1                                     | Versehentlich exponierte Dienste                |
+| Fail2ban             | Teil 1                                     | Brute-Force-Angriffe                            |
+| Unattended Upgrades  | Teil 1                                     | Bekannte CVEs in ungepatchten Paketen           |
+| sysctl               | Teil 2                                     | Netzwerk- und Kernel-Exploits                   |
+| Deaktivierte Dienste | Teil 2                                     | Angriffsfläche ungenutzter Dienste              |
+| Sudo-Einschränkung   | Teil 2                                     | Privilege-Escalation-Schaden                    |
+| Login-Richtlinie     | Teil 2                                     | Schwache lokale Anmeldedaten                    |
+| AppArmor             | Teil 3                                     | Laterale Bewegung nach Prozess-Kompromittierung |
+| auditd               | Teil 3                                     | Unerkannte Post-Compromise-Aktivität            |
+| AIDE                 | Teil 3                                     | Binary- und Konfigurations-Manipulation         |
 
 Keine einzelne Schicht bietet vollständige Sicherheit. Zusammen zwingen sie einen Angreifer dazu, jede unabhängig zu überwinden — und machen dauerhaften Zugang ohne Entdeckung extrem schwierig.
 
