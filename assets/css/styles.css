@@ -3480,6 +3480,38 @@ body.is-restoring {
     z-index: 1;
 }
 
+/* Skip-to shortcode */
+.skip-to-wrap {
+    margin: 1.75rem 0;
+}
+
+.skip-to-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--highlight-color);
+    border: 1px solid rgba(0, 255, 127, 0.35);
+    border-radius: 100px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.skip-to-btn:hover {
+    border-color: var(--highlight-color);
+    background: rgba(0, 255, 127, 0.06);
+    transform: translateY(-1px);
+    color: var(--highlight-color);
+}
+
+.skip-to-arrow {
+    font-size: 0.9em;
+    line-height: 1;
+}
+
 /* Easter egg mobile overrides */
 @media (max-width: 37.5em) {
     .ee-toast {
