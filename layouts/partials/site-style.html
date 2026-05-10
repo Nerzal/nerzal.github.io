@@ -1,12 +1,21 @@
 {{/* Apply saved theme before first paint — prevents flash of wrong theme */}}
 <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')</script>
-{{ with partialCached "func/style/GetMainCSS" "style/GetMainCSS" }}
-<link rel="preload" href="{{ .RelPermalink }}" as="style">
-<link rel="stylesheet" href="{{ .RelPermalink }}">
+
+{{/* CSS pipeline — all files concatenated in dependency order */}}
+{{ $tachyons     := resources.Get "css/_tachyons.css" }}
+{{ $hugoInternal := resources.Get "css/_hugo-internal-templates.css" }}
+{{ $socialIcons  := resources.Get "css/_social-icons.css" }}
+{{ $code         := resources.Get "css/_code.css" }}
+{{ $styles       := resources.Get "css/styles.css" }}
+{{ $timeline     := resources.Get "css/timeline.css" }}
+
+{{ $css := slice $tachyons $hugoInternal $socialIcons $code $styles $timeline
+           | resources.Concat "css/main.css" }}
+
+{{ $production := eq (getenv "HUGO_ENV") "production" | or (eq site.Params.env "production") }}
+{{ if $production }}
+  {{ $css = $css | minify | fingerprint }}
 {{ end }}
 
-{{ range site.Params.custom_css }}
-  {{ with partialCached "func/style/GetResource" . . }}{{ else }}
-    <link rel="stylesheet" href="{{ relURL (.) }}">
-  {{ end }}
-{{ end }}
+<link rel="preload" href="{{ $css.RelPermalink }}" as="style">
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">

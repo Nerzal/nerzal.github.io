@@ -36,7 +36,7 @@ The -o flag just tells the compiler how to name the output file.
 
 And the path is the path to the main.go file.
 
-> go build -o swag cmd/swag/main.go 
+> go build -o swag cmd/swag/main.go
 
 We can now use the **file** command to check the binary.
 

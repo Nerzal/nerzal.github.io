@@ -9,14 +9,14 @@ featured_image: "img/event-storming.png"
 toc: true
 ---
 
-### What is a bounded context?
+## What is a bounded context?
 Bounded Contexts are a core concept in Domain-Driven Design (DDD), serving as explicit boundaries within a larger domain model. They define a specific area where a particular model (and its associated ubiquitous language) is consistent and applicable. Outside this boundary, terms and concepts might have different meanings, or even be irrelevant.
 
 Think of a large enterprise. The term "Customer" might mean one thing to the Sales department (a lead, a prospect), another to the Support department (someone with an open ticket), and yet another to the Billing department (an entity with an outstanding invoice). Each of these interpretations exists within its own Bounded Context, where the term "Customer" has a precise, unambiguous meaning.
 
 Event Storming, as discussed in your previous post, is an incredibly useful technique for collaboratively identifying and defining these Bounded Contexts.
 
-#### Example: An E-commerce Website
+### Example: An E-commerce Website
 
 Let's consider a fictional e-commerce website that sells clothing. The overall business domain is "E-commerce," but within it, we can identify several distinct Bounded Contexts:
 

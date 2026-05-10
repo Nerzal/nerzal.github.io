@@ -13,7 +13,7 @@ toc: true
 
 Hugo is a static site generator that offers several benefits for building fast and secure websites.
 
-It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo. 
+It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.
 
 Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.
 
@@ -42,9 +42,11 @@ The easiest way to install Hugo Extended on Windows is using **Winget** (Windows
 
 1.  Open PowerShell or Command Prompt as an administrator.
 2.  Run the following command:
+
     ```powershell
     winget install Hugo.Hugo.Extended
     ```
+
 3.  Restart your terminal to ensure the new PATH is loaded.
 
 ### Install on Linux
@@ -52,6 +54,7 @@ The easiest way to install Hugo Extended on Windows is using **Winget** (Windows
 For Debian-based systems (like Ubuntu):
 1.  Download the latest Hugo Extended `.deb` file from the Hugo Releases page. Look for `hugo_extended_VERSION_linux-amd64.deb`.
 2.  Install it using `dpkg`:
+
     ```bash
     sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
     ```
@@ -59,6 +62,7 @@ For Debian-based systems (like Ubuntu):
 For other Linux distributions, you can download the tarball:
 1.  Download the `hugo_extended_VERSION_linux-amd64.tar.gz` from the Hugo Releases page.
 2.  Extract it and move the executable to your PATH:
+
     ```bash
     tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
     sudo mv hugo /usr/local/bin/
@@ -70,6 +74,7 @@ After installation, open your terminal and run:
 ```bash
 hugo version
 ```
+
 You should see the installed Hugo version, e.g., `hugo v0.124.1+extended`.
 
 ## Use Docker

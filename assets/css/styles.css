@@ -11,9 +11,9 @@
 }
 
 [data-theme="light"] {
-    --highlight-color: #008844;
+    --highlight-color: #084;
     --background-color: #f5f7fa;
-    --background-color-light: #ffffff;
+    --background-color-light: #fff;
     --text-color: #1e2133;
     --text-rgb: 30, 33, 51;
     --nav-bg: rgba(245, 247, 250, 0.98);
@@ -100,7 +100,7 @@ li a:hover {
     display: inline-block;
     vertical-align: middle;
     color: var(--text-color);
-    fill: currentColor;
+    fill: currentcolor;
     transition: color 0.2s;
 }
 
@@ -179,7 +179,7 @@ li a:hover {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--highlight-color);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.75rem;
 }
 
 #TableOfContents {
@@ -1077,7 +1077,6 @@ pre:hover .copy-btn {
         font-size: 0.65rem;
         padding: 0.15rem 0.4rem;
     }
-}
 }
 
 
@@ -2284,7 +2283,7 @@ a.contact-method:hover .contact-method-icon {
 [data-theme="light"] .lh-copy code {
     background: rgba(0,136,68,0.08);
     border-color: rgba(0,136,68,0.2);
-    color: #006633;
+    color: #063;
 }
 
 /* Hero */
@@ -3371,8 +3370,7 @@ body.is-idle {
 }
 .ee-terminal-output {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     padding: 1rem 1.25rem;
     font-family: monospace;
     font-size: 0.85rem;
@@ -3549,11 +3547,11 @@ body.is-restoring {
     .resume-profile-card { border: 1px solid #ddd; }
     .skill-group { border: 1px solid #ddd; }
     .skill-chip { border: 1px solid #ccc; color: #333; background: #f5f5f5; }
-    .skill-chip--highlight { border-color: #00aa55; color: #00aa55; }
+    .skill-chip--highlight { border-color: #0a5; color: #0a5; }
     .timeline-content { border: 1px solid #ddd; }
-    .timeline-date { color: #00aa55; }
-    .timeline::before { background: #00aa55; }
-    .timeline-item::before { background: #00aa55; }
+    .timeline-date { color: #0a5; }
+    .timeline::before { background: #0a5; }
+    .timeline-item::before { background: #0a5; }
     .site-footer, .site-plain-header { display: none !important; }
     #scroll-to-top { display: none !important; }
 }

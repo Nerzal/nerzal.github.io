@@ -41,9 +41,11 @@ Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist **Winget** 
 
 1.  Öffne PowerShell oder Eingabeaufforderung als Administrator.
 2.  Führe den folgenden Befehl aus:
+
     ```powershell
     winget install Hugo.Hugo.Extended
     ```
+
 3.  Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.
 
 ### Unter Linux installieren
@@ -51,6 +53,7 @@ Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist **Winget** 
 Für Debian-basierte Systeme (wie Ubuntu):
 1.  Lade die neueste Hugo Extended `.deb`-Datei von der Hugo Releases-Seite herunter. Suche nach `hugo_extended_VERSION_linux-amd64.deb`.
 2.  Installiere sie mit `dpkg`:
+
     ```bash
     sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
     ```
@@ -58,6 +61,7 @@ Für Debian-basierte Systeme (wie Ubuntu):
 Für andere Linux-Distributionen kannst du das Tarball herunterladen:
 1.  Lade `hugo_extended_VERSION_linux-amd64.tar.gz` von der Hugo Releases-Seite herunter.
 2.  Entpacke es und verschiebe die ausführbare Datei in deinen PATH:
+
     ```bash
     tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
     sudo mv hugo /usr/local/bin/
@@ -70,6 +74,7 @@ Für andere Linux-Distributionen kannst du das Tarball herunterladen:
 ```bash
 hugo version
 ```
+
 Du solltest die installierte Hugo-Version sehen, z.B. `hugo v0.124.1+extended`.
 
 ## Docker verwenden

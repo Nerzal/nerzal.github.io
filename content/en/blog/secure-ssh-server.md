@@ -246,10 +246,10 @@ Any other account — including any that an attacker might create — is denied 
 
 ### Apply the changes
 
-Save the file, then reload `sshd` without dropping existing connections:
+Save the file, then reload `ssh` without dropping existing connections:
 
 ```bash
-sudo systemctl reload sshd
+sudo systemctl reload ssh
 ```
 
 > `reload` sends `SIGHUP` to the running daemon, which re-reads the config file without terminating active sessions. Use `restart` only if `reload` does not work.
@@ -305,24 +305,27 @@ Expected result: `Permission denied (publickey)` — root login is gone.
 
 ## Troubleshooting
 
-**"Permission denied (publickey)" when I expect to be let in**
+### "Permission denied (publickey)" when I expect to be let in
 
 1. Check that the public key in `~/.ssh/authorized_keys` on the server matches `~/.ssh/id_ed25519.pub` on your machine exactly (one line, no line breaks).
 2. Check permissions:
+
    ```bash
    chmod 700 ~/.ssh
    chmod 600 ~/.ssh/authorized_keys
    ```
+
 3. Run `ssh` with verbose output to see exactly where authentication fails:
+
    ```bash
    ssh -vvv deploy@your-server-ip
    ```
 
-**"Could not load host key" in sshd logs**
+### "Could not load host key" in sshd logs
 
 Run `sudo ssh-keygen -A` on the server to regenerate missing host keys, then `sudo systemctl restart sshd`.
 
-**I locked myself out**
+### I locked myself out
 
 If you are on a cloud provider (AWS, Hetzner, DigitalOcean, etc.), use the provider's web console or recovery/rescue mode to mount the server's disk and edit `/etc/ssh/sshd_config` directly. This is why you must verify key-based login before disabling password auth.
 

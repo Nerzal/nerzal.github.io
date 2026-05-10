@@ -15,7 +15,7 @@ Event storming is a collaborative modeling technique used in domain-driven desig
 
 In event storming, the participants work together to **identify events** that occur within the system or process, and then organize these events into a **timeline** that represents the **flow of actions** and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.
 
-As the events are identified and organized, the participants can begin to identify and define the different components of the system, including aggregates, entities, and value objects. 
+As the events are identified and organized, the participants can begin to identify and define the different components of the system, including aggregates, entities, and value objects.
 
 **Aggregates** are collections of entities that are treated as a single unit within the system, while **entities** are individual objects with a unique identity and state. **Value objects**, on the other hand, are objects that represent a value or concept within the domain, but do not have a unique identity.
 
@@ -56,7 +56,7 @@ The Facilitator has 2 tasks:
     2. Sticks first note to the wall to show the way
 2. Guide the modeling effort
     1. Asks question to better understand the emerging model
-    2. Ensure ideas are represented accurately 
+    2. Ensure ideas are represented accurately
     3. Keep focused and moves ahead
 
 ## Requirements

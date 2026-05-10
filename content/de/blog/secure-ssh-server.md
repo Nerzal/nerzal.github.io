@@ -218,7 +218,7 @@ sudo nano /etc/ssh/sshd_config
 
 Suche die Zeile `PasswordAuthentication` (sie kann auskommentiert sein) und setze sie auf `no`:
 
-```
+```text
 PasswordAuthentication no
 ```
 
@@ -228,7 +228,7 @@ Damit wird jeder Client gezwungen, sich mit einem Schlüssel zu authentifizieren
 
 Suche `PermitRootLogin` und setze es auf `no`:
 
-```
+```text
 PermitRootLogin no
 ```
 
@@ -238,7 +238,7 @@ Selbst wenn ein Angreifer gültige Anmeldedaten erhält, kann er sich nicht dire
 
 Füge am Ende der Datei eine Zeile hinzu, die nur deinen neuen Benutzer auf der Whitelist hat:
 
-```
+```text
 AllowUsers deploy
 ```
 
@@ -246,10 +246,10 @@ Jedes andere Konto — einschließlich solcher, die ein Angreifer möglicherweis
 
 ### Änderungen anwenden
 
-Speichere die Datei und lade `sshd` neu, ohne bestehende Verbindungen zu unterbrechen:
+Speichere die Datei und lade `ssh` neu, ohne bestehende Verbindungen zu unterbrechen:
 
 ```bash
-sudo systemctl reload sshd
+sudo systemctl reload ssh
 ```
 
 > `reload` sendet `SIGHUP` an den laufenden Daemon, der die Konfigurationsdatei neu liest, ohne aktive Sitzungen zu beenden. Verwende `restart` nur, wenn `reload` nicht funktioniert.
@@ -294,35 +294,38 @@ Erwartetes Ergebnis: `Permission denied (publickey)` — Root-Login ist deaktivi
 
 ## Zusammenfassung der Änderungen
 
-| Was                    | Vorher               | Nachher                  |
-| ---------------------- | -------------------- | ------------------------ |
-| Authentifizierungsmethode | Passwort oder Schlüssel | Nur Schlüssel        |
-| Root-Login             | Erlaubt              | Blockiert                |
-| Standard-Arbeitsbenutzer | `root`             | `deploy` (sudo-fähig)    |
-| Privilege Escalation   | Direkte Root-Sitzung | `sudo` mit Audit-Trail   |
+| Was                       | Vorher                  | Nachher                |
+| ------------------------- | ----------------------- | ---------------------- |
+| Authentifizierungsmethode | Passwort oder Schlüssel | Nur Schlüssel          |
+| Root-Login                | Erlaubt                 | Blockiert              |
+| Standard-Arbeitsbenutzer  | `root`                  | `deploy` (sudo-fähig)  |
+| Privilege Escalation      | Direkte Root-Sitzung    | `sudo` mit Audit-Trail |
 
 ---
 
 ## Fehlerbehebung
 
-**„Permission denied (publickey)", obwohl ich erwartet werde**
+### „Permission denied (publickey)", obwohl ich erwartet werde
 
 1. Überprüfe, ob der öffentliche Schlüssel in `~/.ssh/authorized_keys` auf dem Server exakt mit `~/.ssh/id_ed25519.pub` auf deinem Rechner übereinstimmt (eine Zeile, keine Zeilenumbrüche).
 2. Überprüfe die Berechtigungen:
+
    ```bash
    chmod 700 ~/.ssh
    chmod 600 ~/.ssh/authorized_keys
    ```
+
 3. Führe `ssh` mit ausführlicher Ausgabe aus, um zu sehen, wo die Authentifizierung genau fehlschlägt:
+
    ```bash
    ssh -vvv deploy@deine-server-ip
    ```
 
-**„Could not load host key" in sshd-Logs**
+### „Could not load host key" in sshd-Logs
 
 Führe `sudo ssh-keygen -A` auf dem Server aus, um fehlende Host-Schlüssel zu regenerieren, dann `sudo systemctl restart sshd`.
 
-**Ich habe mich ausgesperrt**
+### Ich habe mich ausgesperrt
 
 Falls du bei einem Cloud-Anbieter (AWS, Hetzner, DigitalOcean usw.) bist, nutze die Web-Konsole oder den Recovery-/Rescue-Modus des Anbieters, um die Festplatte des Servers einzubinden und `/etc/ssh/sshd_config` direkt zu bearbeiten. Deshalb musst du den schlüsselbasierten Login verifizieren, bevor du die Passwort-Authentifizierung deaktivierst.
 

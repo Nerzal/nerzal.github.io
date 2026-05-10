@@ -21,12 +21,14 @@ In this post we implement Game of Life in Go from scratch, step by step. By the 
 You need [Go](https://go.dev/dl/) installed on your machine. The standard library is sufficient — no third-party packages are required for this tutorial.
 
 **Linux / macOS:**
+
 ```bash
 # Verify installation
 go version
 ```
 
 **Windows (PowerShell):**
+
 ```powershell
 # Verify installation
 go version
@@ -288,11 +290,13 @@ func main() {
 ## Running the Program
 
 **Linux / macOS:**
+
 ```bash
 go run main.go
 ```
 
 **Windows (PowerShell):**
+
 ```powershell
 go run main.go
 ```

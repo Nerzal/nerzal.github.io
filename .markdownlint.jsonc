@@ -1,0 +1,37 @@
+{
+  // ── Disabled: too opinionated / cosmetic ────────────────────────────────────
+  // Line length — long lines are normal in technical blog posts
+  "MD013": false,
+  // Inline HTML — allowed (markup.goldmark.renderer.unsafe = true)
+  "MD033": false,
+  // First-line heading — posts start with YAML front matter
+  "MD041": false,
+  // Duplicate headings — "Verify" / "Summary" repeat across posts intentionally
+  "MD024": false,
+  // List marker space — 1 vs 2 spaces after -/*/1. doesn't affect Hugo rendering
+  "MD030": false,
+  // Unordered list indent — 2 vs 4 spaces is a style choice, both render correctly
+  "MD007": false,
+  // Multiple blank lines — cosmetic
+  "MD012": false,
+  // Blanks around headings — cosmetic
+  "MD022": false,
+  // Blanks around lists — cosmetic
+  "MD032": false,
+  // Table column style — too strict for existing content
+  "MD060": false,
+
+  // ── Enabled: structural quality rules ───────────────────────────────────────
+  // Heading levels must not skip (h2 → h4 is wrong)
+  "MD001": true,
+  // Fenced code blocks must be surrounded by blank lines
+  "MD031": true,
+  // Bare URLs — disabled: violations are YouTube src= attributes and email in Impressum (raw HTML)
+  "MD034": false,
+  // No bold/italic used as a substitute for headings
+  "MD036": true,
+  // Fenced code blocks MUST have a language specifier (enforces CLAUDE.md rule)
+  "MD040": true,
+  // Code block style: enforce fenced (```) over indented
+  "MD046": { "style": "fenced" }
+}
