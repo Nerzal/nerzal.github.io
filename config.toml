@@ -1,6 +1,7 @@
 baseURL = 'https://blog.noobygames.de'
 languageCode = 'en-us'
 title = 'Tobias Theel | Senior Software Engineer'
+theme = "ananke"
 DefaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 Paginate = 10

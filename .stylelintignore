@@ -1,4 +1,2 @@
 node_modules/
-assets/css/_tachyons.css
-assets/css/_hugo-internal-templates.css
-assets/css/_social-icons.css
+themes/

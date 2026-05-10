@@ -3,10 +3,13 @@
   "private": true,
   "scripts": {
     "lint:css": "stylelint \"assets/css/**/*.css\"",
+    "lint:js": "eslint assets/js/",
     "lint:md": "markdownlint-cli2 \"content/**/*.md\"",
-    "lint": "npm run lint:css && npm run lint:md"
+    "lint": "npm run lint:css && npm run lint:js && npm run lint:md"
   },
   "devDependencies": {
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
     "markdownlint-cli2": "^0.22.1",
     "stylelint": "^16.19.1",
     "stylelint-config-standard": "^36.0.1"

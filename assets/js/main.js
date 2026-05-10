@@ -1,0 +1,974 @@
+// Easter egg #1: console message for curious devs
+(function () {
+  var g = "color:#00ff7f;font-family:monospace;font-size:13px;font-weight:bold";
+  var w = "color:#e4f1fe;font-family:monospace;font-size:12px";
+  var d = "color:#00ff7f;font-family:monospace;font-size:12px";
+  console.log("%c blog.noobygames.de", g);
+  console.log(
+    "%c ─────────────────────────────────",
+    "color:#00ff7f;font-family:monospace;font-size:11px",
+  );
+  console.log("%c 👋 Hey! You found the developer console.", w);
+  console.log(
+    "%c 📝 Tobias Theel — Senior Software Engineer, Author, Speaker.",
+    w,
+  );
+  console.log("%c 📄 /humans.txt   — more about this site", d);
+  console.log("%c 🐕 /dogs/        — the real VIPs around here", d);
+  console.log("%c ✉️  info [at] noobygames [dot] de", w);
+})();
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Lightbox for blog post images
+  (function () {
+    var content = document.querySelector(".post-article-content");
+    if (!content) return;
+
+    var overlay = document.createElement("div");
+    overlay.className = "lightbox";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "Image viewer");
+    overlay.hidden = true;
+
+    var lbImg = document.createElement("img");
+    lbImg.className = "lightbox-img";
+
+    var lbCaption = document.createElement("p");
+    lbCaption.className = "lightbox-caption";
+
+    var lbClose = document.createElement("button");
+    lbClose.className = "lightbox-close";
+    lbClose.setAttribute("aria-label", "Close");
+    lbClose.innerHTML = "&times;";
+
+    overlay.appendChild(lbClose);
+    overlay.appendChild(lbImg);
+    overlay.appendChild(lbCaption);
+    document.body.appendChild(overlay);
+
+    var previousFocus;
+
+    function openLightbox(src, alt) {
+      previousFocus = document.activeElement;
+      lbImg.src = src;
+      lbImg.alt = alt || "";
+      lbCaption.textContent = alt || "";
+      lbCaption.hidden = !alt;
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+      lbClose.focus();
+    }
+
+    function closeLightbox() {
+      overlay.hidden = true;
+      lbImg.src = "";
+      document.body.style.overflow = "";
+      if (previousFocus) previousFocus.focus();
+    }
+
+    content.querySelectorAll("img").forEach(function (img) {
+      img.addEventListener("click", function () {
+        openLightbox(img.src, img.alt);
+      });
+    });
+
+    lbClose.addEventListener("click", closeLightbox);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeLightbox();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !overlay.hidden) closeLightbox();
+    });
+  })();
+
+  // Theme toggle — all buttons share the same handler
+  function applyTheme(next) {
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+    var giscus = document.querySelector(".giscus-wrap");
+    if (giscus) {
+      var frame = document.querySelector("iframe.giscus-frame");
+      if (frame) {
+        var gTheme =
+          next === "light"
+            ? giscus.dataset.themeLight || "light"
+            : giscus.dataset.themeDark || "dark_dimmed";
+        frame.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: gTheme } } },
+          "https://giscus.app",
+        );
+      }
+    }
+  }
+  document.querySelectorAll(".theme-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var current =
+        document.documentElement.getAttribute("data-theme") || "dark";
+      applyTheme(current === "dark" ? "light" : "dark");
+    });
+  });
+
+  // Desktop nav dropdown — with hover delay so mouse can travel to dropdown
+  document.querySelectorAll(".site-nav-item--has-sub").forEach(function (item) {
+    var sub = item.querySelector(".site-nav-sub");
+    if (!sub) return;
+    var timer;
+    function openNav() {
+      clearTimeout(timer);
+      item.classList.add("is-open");
+    }
+    function scheduleClose() {
+      timer = setTimeout(function () {
+        item.classList.remove("is-open");
+      }, 150);
+    }
+    item.addEventListener("mouseenter", openNav);
+    item.addEventListener("mouseleave", scheduleClose);
+    sub.addEventListener("mouseenter", openNav);
+    sub.addEventListener("mouseleave", scheduleClose);
+  });
+
+  // Hamburger menu — overlay lives outside header stacking context
+  var hamburger = document.getElementById("hamburger-btn");
+  var mobileNav = document.getElementById("mobile-nav");
+  if (hamburger && mobileNav) {
+    hamburger.addEventListener("click", function () {
+      var open = mobileNav.classList.toggle("is-open");
+      hamburger.setAttribute("aria-expanded", open);
+      mobileNav.setAttribute("aria-hidden", !open);
+    });
+    document.addEventListener("click", function (e) {
+      if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
+        mobileNav.classList.remove("is-open");
+        hamburger.setAttribute("aria-expanded", "false");
+        mobileNav.setAttribute("aria-hidden", "true");
+      }
+    });
+    mobileNav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        mobileNav.classList.remove("is-open");
+        hamburger.setAttribute("aria-expanded", "false");
+        mobileNav.setAttribute("aria-hidden", "true");
+      });
+    });
+  }
+
+  // Reading progress bar
+  var progressBar = document.getElementById("read-progress");
+  if (progressBar) {
+    window.addEventListener(
+      "scroll",
+      function () {
+        var content = document.querySelector(".post-article-content");
+        if (!content) return;
+        var total = content.offsetHeight - window.innerHeight;
+        var scrolled = Math.max(0, -content.getBoundingClientRect().top);
+        progressBar.style.width =
+          Math.min(100, (scrolled / total) * 100) + "%";
+      },
+      { passive: true },
+    );
+  }
+
+  // Scroll-to-top button
+  var scrollBtn = document.getElementById("scroll-to-top");
+  if (scrollBtn) {
+    window.addEventListener(
+      "scroll",
+      function () {
+        scrollBtn.classList.toggle("visible", window.scrollY > 300);
+      },
+      { passive: true },
+    );
+    scrollBtn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // Copy button on code blocks
+  document.querySelectorAll("pre").forEach(function (pre) {
+    var button = document.createElement("button");
+    button.className = "copy-btn";
+    button.textContent = "Copy";
+    button.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      var text = code ? code.innerText : pre.innerText;
+      function onSuccess() {
+        button.textContent = "Copied!";
+        button.classList.add("copied");
+        setTimeout(function () {
+          button.textContent = "Copy";
+          button.classList.remove("copied");
+        }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(text)
+          .then(onSuccess)
+          .catch(function () {
+            button.textContent = "Error";
+          });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          onSuccess();
+        } catch {
+          button.textContent = "Error";
+        }
+        document.body.removeChild(ta);
+      }
+    });
+    pre.appendChild(button);
+  });
+
+  // ─── Easter Eggs ──────────────────────────────────────────────────────
+
+  // Easter egg #2: Konami Code → Game of Life full-screen overlay
+  (function () {
+    var SEQUENCE = [
+      "ArrowUp",
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowLeft",
+      "ArrowRight",
+      "b",
+      "a",
+    ];
+    var buf = [];
+
+    var overlay = document.createElement("div");
+    overlay.id = "ee-gol-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-label", "Game of Life");
+
+    var canvas = document.createElement("canvas");
+    canvas.id = "ee-gol-canvas";
+
+    var isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    var label = document.createElement("p");
+    label.className = "ee-gol-label";
+    label.textContent = "Conway's Game of Life";
+
+    var hint = document.createElement("p");
+    hint.className = "ee-gol-hint";
+    hint.textContent = isTouch
+      ? "tap to close"
+      : "click anywhere or press Esc to close";
+
+    overlay.appendChild(label);
+    overlay.appendChild(canvas);
+    overlay.appendChild(hint);
+    document.body.appendChild(overlay);
+
+    var cellSize = 8, cols, rows, cells, nextCells, rafId;
+
+    function initGol() {
+      cols = Math.floor(window.innerWidth / cellSize);
+      rows = Math.floor(window.innerHeight / cellSize);
+      canvas.width = cols * cellSize;
+      canvas.height = rows * cellSize;
+      cells = new Uint8Array(cols * rows);
+      nextCells = new Uint8Array(cols * rows);
+      for (var i = 0; i < cells.length; i++) {
+        cells[i] = Math.random() < 0.28 ? 1 : 0;
+      }
+    }
+
+    function stepGol() {
+      for (var y = 0; y < rows; y++) {
+        for (var x = 0; x < cols; x++) {
+          var n = 0;
+          for (var dy = -1; dy <= 1; dy++) {
+            for (var dx = -1; dx <= 1; dx++) {
+              if (dx === 0 && dy === 0) continue;
+              n +=
+                cells[
+                  ((y + dy + rows) % rows) * cols + ((x + dx + cols) % cols)
+                ];
+            }
+          }
+          var alive = cells[y * cols + x];
+          nextCells[y * cols + x] =
+            (alive && (n === 2 || n === 3)) || (!alive && n === 3) ? 1 : 0;
+        }
+      }
+      var tmp = cells;
+      cells = nextCells;
+      nextCells = tmp;
+    }
+
+    function drawGol() {
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff7f";
+      for (var y = 0; y < rows; y++) {
+        for (var x = 0; x < cols; x++) {
+          if (cells[y * cols + x]) {
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize - 1, cellSize - 1);
+          }
+        }
+      }
+    }
+
+    function loopGol() {
+      stepGol();
+      drawGol();
+      rafId = requestAnimationFrame(loopGol);
+    }
+
+    function openGol() {
+      initGol();
+      overlay.classList.add("is-active");
+      document.body.style.overflow = "hidden";
+      rafId = requestAnimationFrame(loopGol);
+    }
+
+    function closeGol() {
+      overlay.classList.remove("is-active");
+      document.body.style.overflow = "";
+      cancelAnimationFrame(rafId);
+    }
+
+    overlay.addEventListener("click", closeGol);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && overlay.classList.contains("is-active")) {
+        closeGol();
+        return;
+      }
+      buf.push(e.key);
+      if (buf.length > SEQUENCE.length) buf.shift();
+      if (buf.join(",") === SEQUENCE.join(",")) {
+        buf = [];
+        openGol();
+      }
+    });
+  })();
+
+  // Easter egg #3: Profile photo 7× click → toast pointing to /dogs/
+  (function () {
+    var photo = document.querySelector(".home-hero-photo");
+    if (!photo) return;
+    var count = 0, clickTimer;
+
+    var toast = document.createElement("div");
+    toast.className = "ee-toast";
+    document.body.appendChild(toast);
+
+    function showToast(html) {
+      toast.innerHTML = html;
+      toast.classList.add("ee-toast--visible");
+      setTimeout(function () {
+        toast.classList.remove("ee-toast--visible");
+      }, 4500);
+    }
+
+    photo.style.cursor = "pointer";
+    photo.addEventListener("click", function () {
+      clearTimeout(clickTimer);
+      count++;
+      clickTimer = setTimeout(function () {
+        count = 0;
+      }, 1800);
+      if (count === 7) {
+        count = 0;
+        showToast(
+          '🐕 You found the secret! <a href="/dogs/">Meet the real bosses →</a>',
+        );
+      }
+    });
+  })();
+
+  // Easter egg #4: Logo 5× rapid click → CRT retro mode for 5 seconds
+  (function () {
+    var brand = document.querySelector(".site-nav-brand");
+    if (!brand) return;
+    var count = 0, clickTimer;
+
+    brand.addEventListener("click", function (e) {
+      clearTimeout(clickTimer);
+      count++;
+      clickTimer = setTimeout(function () {
+        count = 0;
+      }, 1000);
+      if (count >= 5) {
+        count = 0;
+        e.preventDefault();
+        document.body.classList.add("crt-mode");
+        setTimeout(function () {
+          document.body.classList.remove("crt-mode");
+        }, 5000);
+      }
+    });
+  })();
+
+  // Easter egg #5: Idle 3 minutes → subtle body pulse
+  (function () {
+    var idleTimer;
+    function resetIdle() {
+      clearTimeout(idleTimer);
+      document.body.classList.remove("is-idle");
+      idleTimer = setTimeout(
+        function () {
+          document.body.classList.add("is-idle");
+        },
+        3 * 60 * 1000,
+      );
+    }
+    ["mousemove", "keydown", "scroll", "touchstart", "click"].forEach(
+      function (evt) {
+        document.addEventListener(evt, resetIdle, { passive: true });
+      },
+    );
+    resetIdle();
+  })();
+
+  // Easter egg #6: type "matrix" → Matrix Rain overlay
+  (function () {
+    var WORD = "matrix", buf = "";
+    var CHARS =
+      "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF";
+
+    var overlay = document.createElement("div");
+    overlay.id = "ee-matrix-overlay";
+
+    var canvas = document.createElement("canvas");
+    canvas.id = "ee-matrix-canvas";
+
+    var isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+    var msg = document.createElement("p");
+    msg.className = "ee-matrix-msg";
+    msg.textContent = "Wake up, Neo…";
+
+    var hint = document.createElement("p");
+    hint.className = "ee-matrix-hint";
+    hint.textContent = isTouch
+      ? "tap to exit the Matrix"
+      : "click or press Esc to exit the Matrix";
+
+    overlay.appendChild(canvas);
+    overlay.appendChild(msg);
+    overlay.appendChild(hint);
+    document.body.appendChild(overlay);
+
+    var ctx, cols, drops, rafId, msgTimer, closeTimer;
+    var fontSize = 16;
+
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext("2d");
+      cols = Math.floor(canvas.width / fontSize);
+      drops = [];
+      for (var i = 0; i < cols; i++) {
+        drops[i] = ((Math.random() * -canvas.height) / fontSize) | 0;
+      }
+    }
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = fontSize + "px monospace";
+      for (var i = 0; i < drops.length; i++) {
+        var ch = CHARS[(Math.random() * CHARS.length) | 0];
+        var y = drops[i] * fontSize;
+        ctx.fillStyle = "#fff";
+        ctx.fillText(ch, i * fontSize, y);
+        ctx.fillStyle = "#00ff41";
+        if (drops[i] > 1) {
+          ctx.fillText(
+            CHARS[(Math.random() * CHARS.length) | 0],
+            i * fontSize,
+            y - fontSize,
+          );
+        }
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      rafId = requestAnimationFrame(drawMatrix);
+    }
+
+    function openMatrix() {
+      initMatrix();
+      overlay.classList.add("is-active");
+      document.body.style.overflow = "hidden";
+      rafId = requestAnimationFrame(drawMatrix);
+      msgTimer = setTimeout(function () {
+        msg.classList.add("is-visible");
+      }, 2000);
+      closeTimer = setTimeout(closeMatrix, 10000);
+    }
+
+    function closeMatrix() {
+      overlay.classList.remove("is-active");
+      msg.classList.remove("is-visible");
+      document.body.style.overflow = "";
+      cancelAnimationFrame(rafId);
+      clearTimeout(msgTimer);
+      clearTimeout(closeTimer);
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    overlay.addEventListener("click", closeMatrix);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && overlay.classList.contains("is-active")) {
+        closeMatrix();
+        return;
+      }
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+        return;
+      buf += e.key.toLowerCase();
+      if (buf.length > WORD.length) buf = buf.slice(-WORD.length);
+      if (buf === WORD) {
+        buf = "";
+        openMatrix();
+      }
+    });
+  })();
+
+  // Easter egg #7: Footer >_ button → fake terminal
+  (function () {
+    var btn = document.getElementById("ee-terminal-btn");
+    if (!btn) return;
+
+    var overlay = document.createElement("div");
+    overlay.id = "ee-terminal-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-label", "Terminal");
+
+    overlay.innerHTML = [
+      '<div class="ee-terminal-window">',
+      '  <div class="ee-terminal-titlebar">',
+      '    <span class="ee-terminal-dot ee-terminal-dot--close" id="ee-term-close"></span>',
+      '    <span class="ee-terminal-dot ee-terminal-dot--min"></span>',
+      '    <span class="ee-terminal-dot ee-terminal-dot--max"></span>',
+      '    <span class="ee-terminal-title">tobias@blog:~</span>',
+      "  </div>",
+      '  <div class="ee-terminal-output" id="ee-term-output"></div>',
+      '  <div class="ee-terminal-input-row">',
+      '    <span class="ee-terminal-prompt-label">tobias@blog:~$</span>',
+      '    <input class="ee-terminal-input" id="ee-term-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" aria-label="terminal input">',
+      "  </div>",
+      "</div>",
+    ].join("");
+
+    document.body.appendChild(overlay);
+
+    var output = document.getElementById("ee-term-output");
+    var input = document.getElementById("ee-term-input");
+    var history = [], histIdx = -1;
+    var activeAnimation = null;
+
+    var RICK_FRAMES = [
+      "  ╭────────────────────────────────╮\n  │  ♪ Never gonna give you up ♪   │\n  ╰────────────────────────────────╯\n\n        \\o/\n    ♫    |    ♫\n        / \\",
+      "  ╭────────────────────────────────╮\n  │  ♪ Never gonna let you down ♪  │\n  ╰────────────────────────────────╯\n\n         o/\n    ♫   /|    ♫\n        / \\",
+      "  ╭────────────────────────────────╮\n  │  ♪ Never gonna run around  ♪   │\n  ╰────────────────────────────────╯\n\n        \\o\n    ♫    |\\   ♫\n        / \\",
+      "  ╭────────────────────────────────╮\n  │  ♪     and desert you     ♪    │\n  ╰────────────────────────────────╯\n\n        (o)\n    ♫   >|<   ♫\n        > <",
+    ];
+
+    var COMMANDS = {
+      help: function () {
+        return [
+          ["output", "Available commands:"],
+          ["output", ""],
+          ["output", "  whoami            who is this guy?"],
+          ["output", "  ls                list things"],
+          ["output", "  blog              go to the blog"],
+          ["output", "  dogs              the important stuff"],
+          ["output", "  rickroll          never gonna..."],
+          ["output", "  skeet             praise be"],
+          ["output", "  goto <place>      considered harmful"],
+          ["output", "  obo               off by one"],
+          ["output", "  drop table        you wouldn't dare"],
+          ["output", "  sudo make coffee  critical infrastructure"],
+          ["output", "  matrix            you already know"],
+          ["output", "  clear             clear the terminal"],
+          ["output", "  exit              close this window"],
+          ["output", ""],
+          ["dim", "tip: press ↑ / ↓ to navigate history"],
+        ];
+      },
+      whoami: function () {
+        return [
+          ["output", "Tobias Theel"],
+          ["output", "Senior Software Engineer · Author · Speaker"],
+          ["output", "Remote-first. Building things with Go, Cloud,"],
+          ["output", "and a questionable amount of coffee."],
+          ["output", ""],
+          ["output", "Location:  Fritzlar, Germany"],
+          ["output", "Contact:   info [at] noobygames [dot] de"],
+        ];
+      },
+      ls: function () {
+        return [
+          ["output", "drwxr-xr-x  blog/"],
+          ["output", "drwxr-xr-x  page/resume/"],
+          ["output", "drwxr-xr-x  page/publications/"],
+          ["output", "drwxr-xr-x  page/contact/"],
+          ["output", "-rw-r--r--  humans.txt"],
+          ["output", "-rw-r--r--  site.webmanifest"],
+          ["output", "🐕  drwxr-xr-x  dogs/          <- the real VIPs"],
+        ];
+      },
+      blog: function () {
+        setTimeout(function () {
+          window.location.href = "/blog/";
+        }, 800);
+        return [["dim", "Navigating to /blog/ …"]];
+      },
+      dogs: function () {
+        setTimeout(function () {
+          window.location.href = "/dogs/";
+        }, 800);
+        return [["dim", "Navigating to /dogs/ … 🐶"]];
+      },
+      matrix: function () {
+        closeTerminal();
+        setTimeout(function () {
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "m", bubbles: true }),
+          );
+          "atrix".split("").forEach(function (ch, i) {
+            setTimeout(
+              function () {
+                document.dispatchEvent(
+                  new KeyboardEvent("keydown", { key: ch, bubbles: true }),
+                );
+              },
+              (i + 1) * 30,
+            );
+          });
+        }, 300);
+        return [["dim", "Entering the Matrix…"]];
+      },
+      rickroll: function () {
+        var frameEl = document.createElement("pre");
+        frameEl.className = "ee-terminal-line ee-terminal-line--output";
+        frameEl.style.lineHeight = "1.5";
+        output.appendChild(frameEl);
+        output.scrollTop = output.scrollHeight;
+        var fi = 0;
+        frameEl.textContent = RICK_FRAMES[0];
+        activeAnimation = setInterval(function () {
+          fi = (fi + 1) % RICK_FRAMES.length;
+          frameEl.textContent = RICK_FRAMES[fi];
+          output.scrollTop = output.scrollHeight;
+        }, 600);
+        return [["dim", "(type any command to stop)"]];
+      },
+      drop: function () {
+        setTimeout(function () {
+          closeTerminal();
+          setTimeout(function () {
+            document.body.classList.add("is-dissolving");
+            var dropOverlay = document.createElement("div");
+            dropOverlay.className = "ee-drop-overlay";
+            dropOverlay.innerHTML =
+              '<p class="ee-drop-line">DROP TABLE users;</p>' +
+              '<p class="ee-drop-line">DROP TABLE posts;</p>' +
+              '<p class="ee-drop-line">DROP TABLE sessions;</p>' +
+              '<p class="ee-drop-line ee-drop-warn">⚠ Dropping all tables…</p>' +
+              '<p class="ee-drop-line ee-drop-warn">⚠ Database destroyed.</p>';
+            document.body.appendChild(dropOverlay);
+            setTimeout(function () {
+              dropOverlay.classList.add("is-visible");
+            }, 100);
+
+            setTimeout(function () {
+              document.body.classList.remove("is-dissolving");
+              document.body.classList.add("is-restoring");
+              dropOverlay.classList.remove("is-visible");
+              setTimeout(function () {
+                dropOverlay.remove();
+                document.body.classList.remove("is-restoring");
+                var toast =
+                  document.querySelector(".ee-toast") ||
+                  document.createElement("div");
+                toast.className = "ee-toast";
+                if (!toast.parentNode) document.body.appendChild(toast);
+                toast.innerHTML =
+                  '✅ Database restored from backup <span style="opacity:0.5">(it\'s a static site lol)</span>';
+                toast.classList.add("ee-toast--visible");
+                setTimeout(function () {
+                  toast.classList.remove("ee-toast--visible");
+                }, 4000);
+              }, 1000);
+            }, 5000);
+          }, 400);
+        }, 900);
+        return [
+          ["error", "Robert'); DROP TABLE students; --"],
+          ["output", "Executing query…"],
+          ["error", "⚠ OH NO. OH NO NO NO."],
+          ["dim", "Little Bobby Tables strikes again."],
+        ];
+      },
+      skeet: function () {
+        var rep = 1424753;
+        var facts = [
+          "Jon Skeet doesn't debug code. Code debugs itself out of respect.",
+          "His compiler never throws warnings. It throws apologies.",
+          "He has answered 60,000+ Stack Overflow questions. Correctly.",
+          "Jon Skeet can divide by zero.",
+          "NullPointerExceptions handle themselves when he's nearby.",
+          "He once fixed a race condition by thinking about it.",
+          "Jon Skeet's code has no edge cases. Only correct cases.",
+        ];
+        var fi = 0;
+        var header = [
+          ["output", ""],
+          ["output", "  ╔════════════════════════════════╗"],
+          ["output", "  ║       J O N   S K E E T       ║"],
+          ["output", "  ║   The Stack Overflow Demigod   ║"],
+          ["output", "  ╚════════════════════════════════╝"],
+          ["output", ""],
+        ];
+        header.forEach(function (l) {
+          println(l[0], l[1]);
+        });
+
+        var repEl = document.createElement("p");
+        repEl.className = "ee-terminal-line ee-terminal-line--output";
+        output.appendChild(repEl);
+        var factEl = document.createElement("p");
+        factEl.className = "ee-terminal-line ee-terminal-line--dim";
+        factEl.style.marginTop = "0.4rem";
+        output.appendChild(factEl);
+        repEl.textContent = "  reputation: " + rep.toLocaleString() + " ▲";
+        factEl.textContent = "  " + facts[0];
+        output.scrollTop = output.scrollHeight;
+
+        activeAnimation = setInterval(function () {
+          rep += Math.floor(Math.random() * 8) + 2;
+          fi = (fi + 1) % facts.length;
+          repEl.textContent = "  reputation: " + rep.toLocaleString() + " ▲";
+          factEl.textContent = "  " + facts[fi];
+          output.scrollTop = output.scrollHeight;
+        }, 900);
+        return [];
+      },
+      goto: function (args) {
+        var dest =
+          args
+            .join(" ")
+            .toLowerCase()
+            .replace(/^\/|\/$/g, "") || "??";
+        var isDogs = dest === "dogs" || dest === "/dogs" || dest === "/dogs/";
+        setTimeout(
+          function () {
+            window.location.href = "/dogs/";
+          },
+          isDogs ? 900 : 1600,
+        );
+        var lines = [
+          ["output", '"Go To Statement Considered Harmful"'],
+          ["dim", "  — E.W. Dijkstra, 1968"],
+          ["output", ""],
+        ];
+        if (isDogs) {
+          lines.push(["output", "goto dogs: at least you chose wisely."]);
+          lines.push(["dim", "Navigating… 🐕"]);
+        } else {
+          lines.push([
+            "error",
+            "goto " + (dest || "??") + ": destination considered harmful",
+          ]);
+          lines.push([
+            "dim",
+            "Overriding. Routing to the only safe destination.",
+          ]);
+          lines.push(["output", "→ /dogs/"]);
+        }
+        return lines;
+      },
+      obo: function () {
+        var win = document.querySelector(".ee-terminal-window");
+        if (win) {
+          win.style.transition = "transform 0.15s ease";
+          win.style.transform = "translateX(1px)";
+          setTimeout(function () {
+            win.style.transform = "";
+          }, 2500);
+        }
+        return [
+          ["output", '$ for i in $(seq 0 9); do echo "item $i"; done'],
+          ["output", "item 0"],
+          ["output", "item 1"],
+          ["output", "item 2"],
+          ["output", "item 3"],
+          ["output", "item 4"],
+          ["output", "item 5"],
+          ["output", "item 6"],
+          ["output", "item 7"],
+          ["output", "item 8"],
+          ["output", "item 9"],
+          ["output", ""],
+          ["error", "AssertionError: expected range 1..10, got 0..9"],
+          ["dim", "# the terminal window has also shifted 1px to the right."],
+          ["dim", "# you probably didn't notice. that's the point."],
+        ];
+      },
+      clear: function () {
+        output.innerHTML = "";
+        return [];
+      },
+      exit: function () {
+        setTimeout(closeTerminal, 200);
+        return [["dim", "Goodbye."]];
+      },
+    };
+
+    function handleSudo(args) {
+      var joined = args.join(" ");
+      if (joined === "make coffee") {
+        return [
+          ["output", "[sudo] password for tobias:"],
+          ["dim", "••••••••"],
+          [
+            "error",
+            "Sorry, user tobias may not run '/usr/bin/make coffee' on this host.",
+          ],
+          [
+            "output",
+            "… just kidding. ☕ Coffee initiated. Estimated brew time: 3 minutes.",
+          ],
+        ];
+      }
+      return [["error", "sudo: " + args[0] + ": command not found"]];
+    }
+
+    function println(type, text) {
+      var line = document.createElement("p");
+      line.className = "ee-terminal-line ee-terminal-line--" + type;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function runCommand(raw) {
+      var trimmed = raw.trim();
+      if (!trimmed) return;
+
+      if (activeAnimation) {
+        clearInterval(activeAnimation);
+        activeAnimation = null;
+      }
+
+      history.unshift(trimmed);
+      histIdx = -1;
+
+      println("prompt", "tobias@blog:~$ " + trimmed);
+
+      var lower = trimmed.toLowerCase();
+      var parts = trimmed.split(/\s+/);
+      var cmd = parts[0].toLowerCase();
+      var args = parts.slice(1);
+
+      var lines;
+      if (lower === "never gonna give you up") {
+        lines = COMMANDS.rickroll();
+      } else if (
+        lower === "jon skeet" ||
+        lower === "jon" ||
+        lower === "praise skeet"
+      ) {
+        lines = COMMANDS.skeet();
+      } else if (
+        lower === "off by one" ||
+        lower === "off-by-one" ||
+        lower === "fencepost"
+      ) {
+        lines = COMMANDS.obo();
+      } else if (
+        lower.startsWith("drop table") ||
+        lower === "bobby tables" ||
+        lower === "bobby" ||
+        lower === "little bobby tables"
+      ) {
+        lines = COMMANDS.drop();
+      } else if (cmd === "sudo") {
+        lines = handleSudo(args);
+      } else if (COMMANDS[cmd]) {
+        lines = COMMANDS[cmd](args);
+      } else {
+        lines = [
+          ["error", "bash: " + cmd + ": command not found"],
+          ["dim", "type 'help' for available commands"],
+        ];
+      }
+
+      lines.forEach(function (l) {
+        println(l[0], l[1]);
+      });
+    }
+
+    function openTerminal() {
+      overlay.classList.add("is-active");
+      document.body.style.overflow = "hidden";
+      output.innerHTML = "";
+      println("dim", "Welcome to tobias@blog — type 'help' to get started.");
+      println("dim", "");
+      input.value = "";
+      input.focus();
+    }
+
+    function closeTerminal() {
+      if (activeAnimation) {
+        clearInterval(activeAnimation);
+        activeAnimation = null;
+      }
+      overlay.classList.remove("is-active");
+      document.body.style.overflow = "";
+    }
+
+    btn.addEventListener("click", openTerminal);
+    document
+      .getElementById("ee-term-close")
+      .addEventListener("click", closeTerminal);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeTerminal();
+    });
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        runCommand(input.value);
+        input.value = "";
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (histIdx < history.length - 1) {
+          histIdx++;
+          input.value = history[histIdx];
+        }
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (histIdx > 0) {
+          histIdx--;
+          input.value = history[histIdx];
+        } else {
+          histIdx = -1;
+          input.value = "";
+        }
+      } else if (e.key === "Escape") {
+        closeTerminal();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && overlay.classList.contains("is-active"))
+        closeTerminal();
+    });
+  })();
+});

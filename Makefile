@@ -18,10 +18,13 @@ build: ## Build production site (output → ./public)
 
 # ── Linting ──────────────────────────────────────────────────────────────────
 
-lint: lint-css lint-md ## Run all linters (CSS + Markdown)
+lint: lint-css lint-js lint-md ## Run all linters (CSS + JS + Markdown)
 
 lint-css: ## Lint CSS files with stylelint
 	npm run lint:css
+
+lint-js: ## Lint JavaScript files with ESLint
+	npm run lint:js
 
 lint-md: ## Lint Markdown files with markdownlint
 	npm run lint:md

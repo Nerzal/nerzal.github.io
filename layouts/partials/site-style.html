@@ -1,10 +1,10 @@
 {{/* Apply saved theme before first paint — prevents flash of wrong theme */}}
 <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')</script>
 
-{{/* CSS pipeline — all files concatenated in dependency order */}}
-{{ $tachyons     := resources.Get "css/_tachyons.css" }}
-{{ $hugoInternal := resources.Get "css/_hugo-internal-templates.css" }}
-{{ $socialIcons  := resources.Get "css/_social-icons.css" }}
+{{/* CSS pipeline — Ananke base files + project-specific overrides, concatenated in dependency order */}}
+{{ $tachyons     := resources.Get "ananke/css/_tachyons.css" }}
+{{ $hugoInternal := resources.Get "ananke/css/_hugo-internal-templates.css" }}
+{{ $socialIcons  := resources.Get "ananke/css/_social-icons.css" }}
 {{ $code         := resources.Get "css/_code.css" }}
 {{ $styles       := resources.Get "css/styles.css" }}
 {{ $timeline     := resources.Get "css/timeline.css" }}

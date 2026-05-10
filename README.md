@@ -11,10 +11,11 @@ Personal blog and portfolio of **Tobias Theel** — Senior Software Engineer, Au
 | Layer | Technology |
 |-------|-----------|
 | Static site generator | [Hugo Extended](https://gohugo.io/) v0.160.1 |
-| Theme origin | [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) v1 (fully forked, no upstream dependency) |
+| Theme | [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) v2.13.0 (Git submodule, all layouts overridden) |
 | Hosting | GitHub Pages |
 | CI/CD | GitHub Actions — lint → build → deploy |
 | CSS linter | [Stylelint](https://stylelint.io/) + stylelint-config-standard |
+| JS linter | [ESLint](https://eslint.org/) v10 (flat config) |
 | Markdown linter | [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) |
 
 ---
@@ -47,8 +48,9 @@ Run `make` or `make help` to see all available targets.
 make serve          Start local dev server (includes draft posts)
 make build          Build production site → ./public
 
-make lint           Run all linters (CSS + Markdown)
+make lint           Run all linters (CSS + JS + Markdown)
 make lint-css       Run stylelint on assets/css/**/*.css
+make lint-js        Run ESLint on assets/js/
 make lint-md        Run markdownlint on content/**/*.md
 
 make install        Install Node.js dependencies from lockfile (npm ci)
@@ -127,12 +129,14 @@ The site is fully bilingual. English is the default (served from `/`), German fr
 ## Linting
 
 ```bash
-make lint        # CSS + Markdown
+make lint        # CSS + JS + Markdown
 make lint-css    # CSS only
 make lint-md     # Markdown only
 ```
 
-**CSS (Stylelint):** enforces `stylelint-config-standard` with project-specific overrides for legacy color notation, `em`-based breakpoints, BEM class naming, and Tachyons utility classes. Third-party files (`_tachyons.css`, `_hugo-internal-templates.css`, `_social-icons.css`) are excluded.
+**CSS (Stylelint):** enforces `stylelint-config-standard` with project-specific overrides for legacy color notation, `em`-based breakpoints, BEM class naming, and Tachyons utility classes. Theme files in `themes/` are excluded.
+
+**JavaScript (ESLint):** flat config targeting `assets/js/`. Browser globals included (`document`, `window`, `localStorage`, etc.). Rules: `no-undef` (error), `no-unused-vars` (warn), `eqeqeq` (error), plus unreachable-code and duplicate-key checks. `no-console` is disabled — the console Easter egg is intentional.
 
 **Markdown (markdownlint):** enforces structural rules — heading increments (MD001), blanks around fenced blocks (MD031), emphasis used as headings (MD036), and mandatory code fence language specifiers (MD040). Cosmetic rules (line length, list indentation) are disabled.
 
@@ -153,12 +157,12 @@ Every push to `main` runs the GitHub Actions pipeline:
 The CSS pipeline is managed entirely in `layouts/partials/site-style.html` using Hugo Pipes. All files are concatenated into a single bundle, minified and fingerprinted in production.
 
 Load order (matters for cascade):
-1. `_tachyons.css` — Tachyons utility framework (third-party, do not edit)
-2. `_hugo-internal-templates.css` — Hugo pagination styles
-3. `_social-icons.css` — social icon styles (from original Ananke theme)
-4. `_code.css` — syntax highlighting (Chroma)
-5. `styles.css` — all custom site styles
-6. `timeline.css` — resume timeline component
+1. `ananke/css/_tachyons.css` — Tachyons utility framework *(from theme)*
+2. `ananke/css/_hugo-internal-templates.css` — Hugo pagination styles *(from theme)*
+3. `ananke/css/_social-icons.css` — social icon styles *(from theme)*
+4. `css/_code.css` — syntax highlighting (Chroma) *(project)*
+5. `css/styles.css` — all custom site styles *(project)*
+6. `css/timeline.css` — resume timeline component *(project)*
 
 Rules:
 - Use `var(--text-color)`, `var(--highlight-color)`, `var(--background-color)` for all theming.
@@ -168,15 +172,24 @@ Rules:
 
 ## Theme architecture
 
-This is a **standalone Hugo site** — there is no active theme dependency. The site was originally forked from [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) v1 and has since diverged completely:
+Ananke v2.13.0 is embedded as a **Git submodule** at `themes/ananke/`. The project overrides every layout and partial — all files in the project root `layouts/` take precedence over the theme.
 
-- All layouts live in the project root `layouts/` — this is the correct Hugo pattern for a fully forked theme.
-- The social rendering system (`layouts/partials/func/socials/`) is the only remaining Ananke-origin code, kept because it integrates tightly with `config.toml` social params.
-- There is no `themes/` directory and no `theme =` in `config.toml` — this is intentional. Adding a modern Ananke version would not help because Ananke has since moved its partials to `layouts/_partials/` (different path), making the two incompatible.
+What the theme contributes:
+- **Base CSS** — `_tachyons.css`, `_social-icons.css`, `_hugo-internal-templates.css` (loaded from `themes/ananke/assets/ananke/css/` via Hugo Pipes)
+- **Fallback templates** — taxonomy, terms, robots.txt, and other templates not present in the project root
+
+What the project overrides completely:
+- All page layouts (`layouts/_default/`, `layouts/blog/`, `layouts/page/`, etc.)
+- All partials including site-header, site-footer, navigation, scripts
+- The social rendering system (`layouts/partials/func/socials/`) — kept as project code because it uses the old v1 API that the project's templates depend on
+
+**Why paths don't conflict:** Ananke v2 moved its partials to `layouts/_partials/` (with underscore). The project uses `layouts/partials/` (without underscore). Hugo treats these as entirely separate partial namespaces, so there is zero collision.
+
+To update Ananke: `cd themes/ananke && git fetch --tags && git checkout <new-tag> && cd .. && git add themes/ananke`
 
 ---
 
 ## Credits
 
-- Original theme fork: [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) by The New Dynamic (MIT)
+- Theme: [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) by The New Dynamic (MIT)
 - Static site generator: [Hugo](https://gohugo.io/) (Apache 2.0)
