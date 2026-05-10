@@ -1,6 +1,7 @@
 ---
 draft: false
 title: "Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist"
+seo_title: "Go Binary auf statisches Linking prüfen"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "golang", "linking"]
 description: "Lerne den Unterschied zwischen statischem und dynamischem Linking in Go und nutze Terminal-Tools, um die Portabilität deiner Anwendung zu prüfen."

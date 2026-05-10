@@ -3,6 +3,7 @@ draft: false
 title: "Windows 11 nutzt standardmäßig noch PowerShell 5.1 — und warum das ein Problem ist"
 date: 2026-05-10T00:00:00+00:00
 tags: ["tutorial", "windows", "windows11", "powershell", "oh-my-posh", "terminal", "devex"]
+seo_title: "PowerShell 5.1 auf 7 upgraden unter Windows 11"
 description: "Windows 11 setzt standardmäßig PowerShell 5.1 ein — eine Version von 2016, die auf dem alten .NET Framework basiert. Erfahre, warum das relevant ist, wie du auf PowerShell 7 upgraden und es als Standard setzen kannst."
 images: ["img/powershell-51-vs-70.png"]
 featured_image: "img/powershell-51-vs-70.png"

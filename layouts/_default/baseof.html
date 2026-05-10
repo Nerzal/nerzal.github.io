@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ block "title" . }}{{ with .Params.Title }}{{ . }} | {{ end }}{{ .Site.Title }}{{ end }}</title>
+    <title>{{ block "title" . }}{{ $t := .Params.seo_title | default .Params.Title }}{{ if $t }}{{ $t }} | {{ site.Params.author }}{{ else }}{{ site.Title }}{{ end }}{{ end }}</title>
+    <meta name="author" content="{{ site.Params.author }}">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
     <meta name="hello" content="👋 Hey curious mind! /humans.txt • /dogs/ • try the Konami Code (↑↑↓↓←→←→BA) • info[at]noobygames[dot]de">

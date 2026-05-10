@@ -28,7 +28,11 @@
     "publisher": {
       "@type": "Person",
       "name": {{ site.Params.author | jsonify }},
-      "url": "{{ site.BaseURL }}"
+      "url": "{{ site.BaseURL }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ (resources.Get "img/icon.png").Permalink | absURL }}"
+      }
     },
     "isPartOf": {
       "@type": "Blog",

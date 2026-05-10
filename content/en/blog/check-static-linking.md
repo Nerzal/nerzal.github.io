@@ -1,6 +1,7 @@
 ---
 draft: false
 title: "How to check if a binary is statically or dynamically linked"
+seo_title: "Check if a Go Binary is Statically Linked"
 date: 2023-01-02T23:46:14+01:00
 tags: ["tutorial", "golang", "linking"]
 description: "Learn how to differentiate between static and dynamic linking in Go and use terminal tools to verify your application's portability."

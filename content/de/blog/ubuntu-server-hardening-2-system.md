@@ -1,8 +1,9 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Teil 2: Das System verschärfen"
-date: 2026-05-17T00:00:00+00:00
-tags: ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
+date: 2026-05-10T00:00:00+00:00
+tags:
+  ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Der zweite Hardening-Durchgang: Kernel-Parameter mit sysctl anpassen, Angriffsfläche durch Deaktivierung unnötiger Dienste reduzieren und sudo sowie Login-Richtlinien einschränken."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
@@ -199,12 +200,12 @@ usercheck = 1     # Passwörter die den Benutzernamen enthalten ablehnen
 
 ## Was dieser Durchgang abdeckt
 
-| Maßnahme | Wirkung |
-|----------|---------|
-| sysctl-Hardening | Schließt Netzwerk-Angriffsvektoren auf Kernel-Ebene |
-| Deaktivierte Dienste | Reduziert die Anzahl der Eintrittspunkte |
-| Sudo-Einschränkungen | Begrenzt den Schaden bei einem kompromittierten Konto |
-| Passwort-Richtlinie | Erhöht den Aufwand für Brute-Force lokaler Anmeldedaten |
+| Maßnahme             | Wirkung                                                 |
+| -------------------- | ------------------------------------------------------- |
+| sysctl-Hardening     | Schließt Netzwerk-Angriffsvektoren auf Kernel-Ebene     |
+| Deaktivierte Dienste | Reduziert die Anzahl der Eintrittspunkte                |
+| Sudo-Einschränkungen | Begrenzt den Schaden bei einem kompromittierten Konto   |
+| Passwort-Richtlinie  | Erhöht den Aufwand für Brute-Force lokaler Anmeldedaten |
 
 Diese vier Maßnahmen erfordern keine externen Tools und erzeugen keinen Netzwerkverkehr — es sind reine Konfigurationsänderungen am bereits Vorhandenen.
 

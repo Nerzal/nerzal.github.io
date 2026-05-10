@@ -1,5 +1,6 @@
 ---
 title: "Conways Game of Life in Go: Eine Schritt-für-Schritt-Anleitung"
+seo_title: "Conway's Game of Life in Go implementieren"
 date: 2023-03-16
 draft: false
 toc: true
