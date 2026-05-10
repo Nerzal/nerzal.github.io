@@ -16,7 +16,6 @@
     <meta name="robots" content="noindex, nofollow">
     {{ end }}
     {{ partial "site-style.html" . }}
-    {{ partial "site-scripts.html" . }}
     {{ block "favicon" . }}{{ partialCached "site-favicon.html" . }}{{ end }}
     {{/* Canonical URL */}}
     <link rel="canonical" href="{{ .Permalink }}">
@@ -82,6 +81,7 @@
 
     <button id="scroll-to-top" aria-label="Scroll to top">&#8679;</button>
 
+    {{ partial "site-scripts.html" . }}
 </body>
 
 </html>

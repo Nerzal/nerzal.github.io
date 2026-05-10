@@ -47,7 +47,7 @@
 
 .timeline-content {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.07);
+    border: 1px solid rgba(var(--text-rgb), 0.07);
     border-radius: 8px;
     padding: 1.1rem 1.35rem;
     transition: border-color 0.25s, box-shadow 0.25s;
@@ -79,7 +79,7 @@
 
 .timeline-org {
     font-size: 0.83rem;
-    color: rgba(228, 241, 254, 0.5);
+    color: rgba(var(--text-rgb), 0.5);
     margin: 0 0 0.65rem;
     font-style: italic;
 }
@@ -87,7 +87,7 @@
 .timeline-content p {
     font-size: 0.875rem;
     line-height: 1.65;
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     margin: 0.3rem 0 0;
 }
 

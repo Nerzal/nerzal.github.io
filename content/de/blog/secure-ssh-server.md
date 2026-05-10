@@ -107,6 +107,8 @@ ssh-add ~/.ssh/id_ed25519
 
 **Windows (PowerShell) — einmalig ausführen, um den Dienst zu aktivieren:**
 
+> **Administratorrechte erforderlich.** Die ersten beiden Befehle ändern einen Windows-Dienst und müssen in einer **erhöhten (Administrator-)PowerShell-Sitzung** ausgeführt werden. Rechtsklick auf das Startmenü → **Terminal (Administrator)** oder **Windows PowerShell (Administrator)** — oder nach „PowerShell" suchen, Rechtsklick auf das Ergebnis und _Als Administrator ausführen_ wählen. Der dritte Befehl (`ssh-add`) kann danach in einem normalen Terminal ausgeführt werden.
+
 ```powershell
 Set-Service -Name ssh-agent -StartupType Automatic
 Start-Service ssh-agent

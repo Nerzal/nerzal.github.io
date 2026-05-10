@@ -107,6 +107,8 @@ ssh-add ~/.ssh/id_ed25519
 
 **Windows (PowerShell) — run once to enable the service:**
 
+> **Administrator rights required.** The first two commands modify a Windows service and must run in an **elevated PowerShell session**. Right-click the Start menu → **Terminal (Admin)** or **Windows PowerShell (Admin)**, or search for "PowerShell", right-click the result, and select _Run as administrator_. The third command (`ssh-add`) can then be run in any regular terminal.
+
 ```powershell
 Set-Service -Name ssh-agent -StartupType Automatic
 Start-Service ssh-agent

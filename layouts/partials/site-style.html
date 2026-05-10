@@ -1,8 +1,7 @@
 {{/* Apply saved theme before first paint — prevents flash of wrong theme */}}
 <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')</script>
 {{ with partialCached "func/style/GetMainCSS" "style/GetMainCSS" }}
-<link rel="preload" href="{{ .RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{{ .RelPermalink }}"></noscript>
+<link rel="preload" href="{{ .RelPermalink }}" as="style">
 <link rel="stylesheet" href="{{ .RelPermalink }}">
 {{ end }}
 

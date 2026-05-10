@@ -4,8 +4,9 @@
     --background-color: #222635;
     --background-color-light: #262833;
     --text-color: #e4f1fe;
+    --text-rgb: 228, 241, 254;
     --nav-bg: rgba(38, 40, 51, 0.98);
-    --blockquote-border: rgba(228, 241, 254, 0.25);
+    --blockquote-border: rgba(var(--text-rgb), 0.25);
     --code-bg: #14161f;
 }
 
@@ -14,6 +15,7 @@
     --background-color: #f5f7fa;
     --background-color-light: #ffffff;
     --text-color: #1e2133;
+    --text-rgb: 30, 33, 51;
     --nav-bg: rgba(245, 247, 250, 0.98);
     --blockquote-border: rgba(30, 33, 51, 0.25);
     --code-bg: #f0f2f8;
@@ -52,11 +54,9 @@ main {
     color: var(--highlight-color);
 }
 
-.highlight {
-    color: var(--highlight-color);
-}
-
-strong {
+.post-article-content strong,
+.page-single-content strong,
+.lh-copy strong {
     color: var(--highlight-color);
 }
 
@@ -75,19 +75,22 @@ h3 {
 
 /* Links */
 
+li a {
+    transition: color 0.2s;
+}
+
 li a:hover {
     color: var(--highlight-color);
-    transition: color 0.5s;
 }
 
 .link-transition-highlight {
     color: var(--text-color);
+    transition: color 0.2s;
 }
 
 .link-transition-highlight:focus,
 .link-transition-highlight:hover {
     color: var(--highlight-color);
-    transition: color 0.5s;
 }
 
 
@@ -98,6 +101,7 @@ li a:hover {
     vertical-align: middle;
     color: var(--text-color);
     fill: currentColor;
+    transition: color 0.2s;
 }
 
 .socials a .icon svg {
@@ -107,7 +111,6 @@ li a:hover {
 
 .socials a:hover {
     color: var(--highlight-color);
-    transition: color 0.5s;
 }
 
 
@@ -204,7 +207,7 @@ li a:hover {
 
 #TableOfContents ul ul {
     padding-left: 0.9rem;
-    border-left: 1px solid rgba(228, 241, 254, 0.15);
+    border-left: 1px solid rgba(var(--text-rgb), 0.15);
     margin-top: 0.25rem;
     margin-left: 0.1rem;
 }
@@ -255,7 +258,7 @@ li a:hover {
     margin-left: 2rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    border-left: 4px solid rgba(228, 241, 254, 0.25);
+    border-left: 4px solid var(--blockquote-border);
     padding-left: 1rem;
 }
 
@@ -411,7 +414,7 @@ pre:hover .copy-btn {
 }
 
 .blog-list-header {
-    border-bottom: 1px solid rgba(228, 241, 254, 0.08);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.08);
     padding-bottom: 2rem;
     margin-bottom: 2.5rem;
 }
@@ -436,7 +439,7 @@ pre:hover .copy-btn {
 
 .blog-list-count {
     font-size: 0.82rem;
-    color: rgba(228, 241, 254, 0.35);
+    color: rgba(var(--text-rgb), 0.35);
     margin: 0;
     letter-spacing: 0.03em;
 }
@@ -449,7 +452,7 @@ pre:hover .copy-btn {
     gap: 1.5rem;
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(228, 241, 254, 0.08);
+    border-top: 1px solid rgba(var(--text-rgb), 0.08);
 }
 
 .blog-page-btn {
@@ -470,7 +473,7 @@ pre:hover .copy-btn {
 
 .blog-page-info {
     font-size: 0.8rem;
-    color: rgba(228, 241, 254, 0.35);
+    color: rgba(var(--text-rgb), 0.35);
 }
 
 /* Breadcrumb */
@@ -482,7 +485,7 @@ pre:hover .copy-btn {
 .post-breadcrumb-link {
     font-size: 0.8rem;
     font-weight: 600;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
     text-decoration: none;
     letter-spacing: 0.03em;
     transition: color 0.2s;
@@ -495,7 +498,7 @@ pre:hover .copy-btn {
 /* Article header */
 .post-article-header {
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(228, 241, 254, 0.08);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.08);
     margin-bottom: 0;
 }
 
@@ -548,7 +551,7 @@ pre:hover .copy-btn {
 .post-article-content th,
 .post-article-content td {
     padding: 0.5rem 0.75rem;
-    border: 1px solid rgba(228, 241, 254, 0.12);
+    border: 1px solid rgba(var(--text-rgb), 0.12);
     text-align: left;
     white-space: nowrap;
 }
@@ -573,7 +576,7 @@ pre:hover .copy-btn {
 .post-article-content h3 {
     font-size: 1.05rem;
     font-weight: 600;
-    color: rgba(228, 241, 254, 0.85);
+    color: rgba(var(--text-rgb), 0.85);
     margin-top: 1.75rem;
     margin-bottom: 0.6rem;
 }
@@ -581,7 +584,7 @@ pre:hover .copy-btn {
 .post-article-content h4 {
     font-size: 0.95rem;
     font-weight: 600;
-    color: rgba(228, 241, 254, 0.65);
+    color: rgba(var(--text-rgb), 0.65);
     margin-top: 1.25rem;
     margin-bottom: 0.4rem;
 }
@@ -609,7 +612,7 @@ pre:hover .copy-btn {
 
 .blog-card {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 8px;
     overflow: hidden;
     display: flex;
@@ -665,7 +668,7 @@ pre:hover .copy-btn {
 
 .blog-card-date {
     display: block;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     margin-bottom: 0.4rem;
@@ -689,7 +692,7 @@ pre:hover .copy-btn {
 }
 
 .blog-card-summary {
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     font-size: 0.875rem;
     line-height: 1.55;
     margin: 0;
@@ -804,7 +807,7 @@ pre:hover .copy-btn {
 }
 
 .site-nav-link {
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
@@ -921,7 +924,7 @@ pre:hover .copy-btn {
 }
 
 .site-section-title-block {
-    border-bottom: 1px solid rgba(228, 241, 254, 0.07);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.07);
     margin-bottom: 0.5rem;
 }
 
@@ -982,16 +985,16 @@ pre:hover .copy-btn {
     align-items: center;
     gap: 0.35rem;
     font-size: 0.82rem;
-    color: rgba(228, 241, 254, 0.5);
+    color: rgba(var(--text-rgb), 0.5);
     margin-bottom: 1rem;
 }
 
 .post-article-meta-item {
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
 }
 
 .post-article-meta-sep {
-    color: rgba(228, 241, 254, 0.25);
+    color: rgba(var(--text-rgb), 0.25);
 }
 
 .post-article-body {
@@ -1084,7 +1087,7 @@ pre:hover .copy-btn {
 
 .sidebar-card {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 8px;
     padding: 1.1rem 1.25rem;
     margin-bottom: 1.25rem;
@@ -1105,7 +1108,7 @@ pre:hover .copy-btn {
 }
 
 .sidebar-toc #TableOfContents a {
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     text-decoration: none;
     display: block;
     padding: 0.12rem 0;
@@ -1130,7 +1133,7 @@ pre:hover .copy-btn {
 .sidebar-toc #TableOfContents ul ul {
     padding-left: 0.85rem;
     margin-top: 0.2rem;
-    border-left: 1px solid rgba(228, 241, 254, 0.1);
+    border-left: 1px solid rgba(var(--text-rgb), 0.1);
 }
 
 .sidebar-related-list {
@@ -1140,7 +1143,7 @@ pre:hover .copy-btn {
 }
 
 .sidebar-related-item {
-    border-bottom: 1px solid rgba(228, 241, 254, 0.06);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.06);
     padding: 0.4rem 0;
 }
 
@@ -1149,7 +1152,7 @@ pre:hover .copy-btn {
 }
 
 .sidebar-related-link {
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     text-decoration: none;
     font-size: 0.85rem;
     line-height: 1.4;
@@ -1172,7 +1175,7 @@ pre:hover .copy-btn {
     gap: 0.5rem;
     margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(228, 241, 254, 0.1);
+    border-top: 1px solid rgba(var(--text-rgb), 0.1);
 }
 
 .post-tag {
@@ -1246,7 +1249,7 @@ pre:hover .copy-btn {
 
 .home-hero-tagline {
     font-size: clamp(0.875rem, 1.8vw, 1.05rem);
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
     letter-spacing: 0.015em;
     margin: 0 0 2.25rem;
     white-space: nowrap;
@@ -1408,7 +1411,7 @@ pre:hover .copy-btn {
 
 .site-footer-tagline {
     font-size: 0.85rem;
-    color: rgba(228, 241, 254, 0.5);
+    color: rgba(var(--text-rgb), 0.5);
     line-height: 1.6;
     margin: 0;
 }
@@ -1418,7 +1421,7 @@ pre:hover .copy-btn {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.4);
+    color: rgba(var(--text-rgb), 0.4);
     margin: 0 0 0.85rem;
 }
 
@@ -1433,7 +1436,7 @@ pre:hover .copy-btn {
 
 .site-footer-link {
     font-size: 0.875rem;
-    color: rgba(228, 241, 254, 0.6);
+    color: rgba(var(--text-rgb), 0.6);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -1464,7 +1467,7 @@ pre:hover .copy-btn {
 }
 
 .site-footer-bottom {
-    border-top: 1px solid rgba(228, 241, 254, 0.07);
+    border-top: 1px solid rgba(var(--text-rgb), 0.07);
     padding: 1rem 0;
     max-width: 72rem;
     margin: 0 auto;
@@ -1472,7 +1475,7 @@ pre:hover .copy-btn {
 
 .site-footer-copy {
     font-size: 0.78rem;
-    color: rgba(228, 241, 254, 0.3);
+    color: rgba(var(--text-rgb), 0.3);
 }
 
 
@@ -1684,7 +1687,7 @@ main.pb7 {
 
 .not-found-desc {
     font-size: 1rem;
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
     margin: 0 0 2rem;
 }
 
@@ -1713,7 +1716,7 @@ main.pb7 {
     gap: 0.6rem;
     padding: 0.45rem 0.9rem;
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.1);
+    border: 1px solid rgba(var(--text-rgb), 0.1);
     border-radius: 6px;
     text-decoration: none;
     transition: border-color 0.2s, transform 0.2s;
@@ -1751,7 +1754,7 @@ main.pb7 {
 /* Hero */
 .contact-hero {
     padding: 3.5rem 0 2.5rem;
-    border-bottom: 1px solid rgba(228, 241, 254, 0.07);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.07);
 }
 
 .contact-headline {
@@ -1765,7 +1768,7 @@ main.pb7 {
 
 .contact-subline {
     font-size: 1.05rem;
-    color: rgba(228, 241, 254, 0.6);
+    color: rgba(var(--text-rgb), 0.6);
     line-height: 1.65;
     max-width: 36rem;
     margin: 0;
@@ -1859,7 +1862,7 @@ main.pb7 {
     gap: 0.9rem;
     padding: 0.9rem 1.1rem;
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-left: 3px solid rgba(0, 255, 127, 0.25);
     border-radius: 0 8px 8px 0;
     text-decoration: none;
@@ -1883,7 +1886,7 @@ a.contact-method:hover .contact-method-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
     transition: color 0.2s;
 }
 
@@ -1905,7 +1908,7 @@ a.contact-method:hover .contact-method-icon {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.4);
+    color: rgba(var(--text-rgb), 0.4);
 }
 
 .contact-method-value {
@@ -1924,12 +1927,12 @@ a.contact-method:hover .contact-method-icon {
 
 .contact-method-sub {
     font-size: 0.75rem;
-    color: rgba(228, 241, 254, 0.4);
+    color: rgba(var(--text-rgb), 0.4);
 }
 
 .contact-response-time {
     font-size: 0.82rem;
-    color: rgba(228, 241, 254, 0.4);
+    color: rgba(var(--text-rgb), 0.4);
     line-height: 1.5;
     margin: 0;
 }
@@ -1937,7 +1940,7 @@ a.contact-method:hover .contact-method-icon {
 /* Form panel */
 .contact-form-panel {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 12px;
     padding: 2rem 2.25rem;
 }
@@ -1979,12 +1982,12 @@ a.contact-method:hover .contact-method-icon {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
 }
 
 .contact-input {
     background: var(--background-color);
-    border: 1px solid rgba(228, 241, 254, 0.12);
+    border: 1px solid rgba(var(--text-rgb), 0.12);
     border-radius: 7px;
     padding: 0.7rem 0.9rem;
     font-size: 0.925rem;
@@ -2018,7 +2021,7 @@ a.contact-method:hover .contact-method-icon {
 
 .contact-privacy {
     font-size: 0.75rem;
-    color: rgba(228, 241, 254, 0.3);
+    color: rgba(var(--text-rgb), 0.3);
     line-height: 1.5;
     margin: 0;
     flex: 1;
@@ -2063,19 +2066,19 @@ a.contact-method:hover .contact-method-icon {
 .contact-form-label {
     display: block; font-size: 0.8rem; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.55); margin-bottom: 0.45rem;
+    color: rgba(var(--text-rgb), 0.55); margin-bottom: 0.45rem;
 }
 .contact-form-input {
     display: block; width: 100%;
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.12);
+    border: 1px solid rgba(var(--text-rgb), 0.12);
     border-radius: 6px; padding: 0.7rem 0.9rem;
     font-size: 0.95rem; color: var(--text-color);
     font-family: inherit; transition: border-color 0.2s; box-sizing: border-box;
 }
 .contact-form-input:focus { outline: none; border-color: var(--highlight-color); }
 .contact-form-textarea { min-height: 10rem; resize: vertical; }
-.contact-form-hint { font-size: 0.75rem; color: rgba(228, 241, 254, 0.35); margin: 0.3rem 0 0; }
+.contact-form-hint { font-size: 0.75rem; color: rgba(var(--text-rgb), 0.35); margin: 0.3rem 0 0; }
 .contact-form-submit { margin-top: 0.5rem; width: 100%; justify-content: center; }
 
 
@@ -2085,7 +2088,7 @@ a.contact-method:hover .contact-method-icon {
 
 .theme-toggle {
     background: none;
-    border: 1px solid rgba(228, 241, 254, 0.2);
+    border: 1px solid rgba(var(--text-rgb), 0.2);
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -2093,7 +2096,7 @@ a.contact-method:hover .contact-method-icon {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
     flex-shrink: 0;
     transition: color 0.2s, border-color 0.2s, background 0.2s;
     padding: 0;
@@ -2388,7 +2391,7 @@ a.contact-method:hover .contact-method-icon {
     display: block;
     padding: 0.45rem 1rem;
     font-size: 0.82rem;
-    color: rgba(228, 241, 254, 0.7);
+    color: rgba(var(--text-rgb), 0.7);
     text-decoration: none;
     white-space: nowrap;
     transition: color 0.2s, background 0.2s;
@@ -2427,7 +2430,7 @@ a.contact-method:hover .contact-method-icon {
 }
 
 .mobile-nav-item {
-    border-bottom: 1px solid rgba(228, 241, 254, 0.06);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.06);
 }
 
 .mobile-nav-item:last-child {
@@ -2439,7 +2442,7 @@ a.contact-method:hover .contact-method-icon {
     padding: 0.7rem 0;
     font-size: 0.95rem;
     font-weight: 500;
-    color: rgba(228, 241, 254, 0.75);
+    color: rgba(var(--text-rgb), 0.75);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -2462,7 +2465,7 @@ a.contact-method:hover .contact-method-icon {
     display: block;
     padding: 0.3rem 0;
     font-size: 0.85rem;
-    color: rgba(228, 241, 254, 0.5);
+    color: rgba(var(--text-rgb), 0.5);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -2625,7 +2628,7 @@ pre {
    ═══════════════════════════════════════════════════════════════ */
 
 .pub-overview-header {
-    border-bottom: 1px solid rgba(228, 241, 254, 0.08);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.08);
     padding-bottom: 2rem;
     margin-bottom: 3rem;
 }
@@ -2652,7 +2655,7 @@ pre {
     display: flex;
     flex-direction: column;
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 10px;
     padding: 1.75rem 2rem;
     text-decoration: none;
@@ -2685,7 +2688,7 @@ pre {
 
 .pub-cat-desc {
     font-size: 0.9rem;
-    color: rgba(228, 241, 254, 0.6);
+    color: rgba(var(--text-rgb), 0.6);
     line-height: 1.6;
     margin: 0;
     flex: 1;
@@ -2693,7 +2696,7 @@ pre {
 
 .pub-cat-metric {
     font-size: 0.72rem;
-    color: rgba(228, 241, 254, 0.3);
+    color: rgba(var(--text-rgb), 0.3);
     letter-spacing: 0.04em;
     margin: 1rem 0 0;
 }
@@ -2734,7 +2737,7 @@ pre {
 .page-publications\.de h3 {
     font-size: 1rem;
     font-weight: 600;
-    color: rgba(228, 241, 254, 0.8);
+    color: rgba(var(--text-rgb), 0.8);
     margin-top: 1.25rem;
     margin-bottom: 0.6rem;
 }
@@ -2751,7 +2754,7 @@ pre {
     overflow: hidden;
     border-radius: 8px;
     background: #000;
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
 }
 
 .pub-video-wrap iframe {
@@ -2766,7 +2769,7 @@ pre {
 .pub-video-caption {
     display: block;
     font-size: 0.8rem;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
     font-style: italic;
     margin-top: 0.5rem;
     text-align: center;
@@ -2775,7 +2778,7 @@ pre {
 /* Podcast card */
 .pub-podcast-card {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 8px;
     padding: 1.25rem 1.5rem;
     margin: 1.25rem 0 2rem;
@@ -2799,7 +2802,7 @@ pre {
 
 .pub-podcast-link {
     font-size: 0.85rem;
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
     margin: 0;
     line-height: 1.5;
 }
@@ -2814,7 +2817,7 @@ pre {
 .page-publications h3[id*="sir"] {
     margin-top: 2.25rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(228, 241, 254, 0.07);
+    border-top: 1px solid rgba(var(--text-rgb), 0.07);
 }
 
 /* itch.io play links — pill style */
@@ -2869,10 +2872,10 @@ pre {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.45);
+    color: rgba(var(--text-rgb), 0.45);
     margin: 2.5rem 0 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(228, 241, 254, 0.08);
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.08);
 }
 
 /* Profile card */
@@ -2882,7 +2885,7 @@ pre {
     align-items: center;
     gap: 2rem;
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.08);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 12px;
     padding: 1.75rem 2rem;
     margin-bottom: 2rem;
@@ -2927,7 +2930,7 @@ pre {
 
 .resume-meta-item {
     font-size: 0.82rem;
-    color: rgba(228, 241, 254, 0.55);
+    color: rgba(var(--text-rgb), 0.55);
 }
 
 .resume-profile-links {
@@ -2968,7 +2971,7 @@ pre {
 
 .skill-group {
     background: var(--background-color-light);
-    border: 1px solid rgba(228, 241, 254, 0.07);
+    border: 1px solid rgba(var(--text-rgb), 0.07);
     border-radius: 8px;
     padding: 1rem 1.1rem;
 }
@@ -2978,7 +2981,7 @@ pre {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(228, 241, 254, 0.4);
+    color: rgba(var(--text-rgb), 0.4);
     margin: 0 0 0.6rem;
 }
 
@@ -2993,9 +2996,9 @@ pre {
     font-weight: 500;
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    background: rgba(228, 241, 254, 0.06);
-    border: 1px solid rgba(228, 241, 254, 0.12);
-    color: rgba(228, 241, 254, 0.7);
+    background: rgba(var(--text-rgb), 0.06);
+    border: 1px solid rgba(var(--text-rgb), 0.12);
+    color: rgba(var(--text-rgb), 0.7);
     white-space: nowrap;
 }
 
@@ -3160,7 +3163,7 @@ body.is-idle {
     margin-top: 2rem;
     text-align: left;
 }
-@media (max-width: 640px) {
+@media (max-width: 40em) {
     .dogs-cards { grid-template-columns: 1fr; }
 }
 .dogs-card {
@@ -3213,7 +3216,7 @@ body.is-idle {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
-@media (max-width: 640px) {
+@media (max-width: 40em) {
     .dogs-gallery { grid-template-columns: 1fr; }
 }
 .dogs-gallery-item {
@@ -3233,6 +3236,14 @@ body.is-idle {
     object-fit: cover;
     display: block;
 }
+.dogs-konami-hint {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.82rem;
+    opacity: 0.35;
+    font-family: monospace;
+}
+
 .dogs-back-link {
     display: inline-block;
     margin-top: 3rem;
@@ -3472,7 +3483,7 @@ body.is-restoring {
 }
 
 /* Easter egg mobile overrides */
-@media (max-width: 600px) {
+@media (max-width: 37.5em) {
     .ee-toast {
         font-size: 0.82rem;
         bottom: 1.5rem;
