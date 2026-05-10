@@ -152,6 +152,44 @@ Every push to `main` runs the GitHub Actions pipeline:
 
 ---
 
+## Search engine indexing
+
+### Google Search Console
+
+Verified via `<meta name="google-site-verification">` in `baseof.html` (key stored in `site.Params.google_site_verification` in `config.toml`). Sitemap submitted at `https://blog.noobygames.de/sitemap.xml`.
+
+### IndexNow
+
+The IndexNow key file is served at `https://blog.noobygames.de/0fabdfa110e644f881ce849386adabfa.txt` (sourced from `static/0fabdfa110e644f881ce849386adabfa.txt`).
+
+After publishing new content, notify Bing and other IndexNow-compatible engines immediately:
+
+**PowerShell:**
+
+```powershell
+$body = @{
+    host    = "blog.noobygames.de"
+    key     = "0fabdfa110e644f881ce849386adabfa"
+    urlList = @(
+        "https://blog.noobygames.de/blog/my-new-post/"
+    )
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "https://api.indexnow.org/indexnow" -Method Post -ContentType "application/json; charset=utf-8" -Body $body
+```
+
+**bash:**
+
+```bash
+curl -X POST "https://api.indexnow.org/indexnow" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d '{"host":"blog.noobygames.de","key":"0fabdfa110e644f881ce849386adabfa","urlList":["https://blog.noobygames.de/blog/my-new-post/"]}'
+```
+
+A `200` or `202` response means success. IndexNow forwards the submission to Bing, Yandex, and other participating engines automatically. Google does not support IndexNow — use the GSC URL Inspection tool for Google.
+
+---
+
 ## CSS architecture
 
 The CSS pipeline is managed entirely in `layouts/partials/site-style.html` using Hugo Pipes. All files are concatenated into a single bundle, minified and fingerprinted in production.
