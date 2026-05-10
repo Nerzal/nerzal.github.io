@@ -107,7 +107,7 @@ Since PowerShell 7 runs on .NET 8, every .NET 8 API and type is directly accessi
 
 ### SSH-based remoting
 
-PowerShell 5.1 remoting requires WinRM (Windows Remote Management), which needs firewall configuration and does not work cross-platform. PowerShell 7 adds SSH-based remoting that works to Linux and macOS hosts out of the box.
+PowerShell 5.1 remoting requires WinRM (Windows Remote Management), which needs firewall configuration and does not work cross-platform. PowerShell 7 adds SSH-based remoting that works to Linux and macOS hosts out of the box. If you manage Linux servers, [securing the SSH daemon](/blog/secure-ssh-server/) should be your first step before enabling remote access from PowerShell.
 
 ### Built-in ANSI color support and `$PSStyle`
 

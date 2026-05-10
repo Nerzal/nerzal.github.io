@@ -339,6 +339,8 @@ With SSH hardened, consider these complementary measures:
 - **UFW (Uncomplicated Firewall)** — restrict incoming traffic to only the ports you actually need (`sudo ufw allow OpenSSH && sudo ufw enable`)
 - **Two-factor authentication for sudo** — pair `sudo` with a TOTP token via `libpam-google-authenticator` for an additional layer of protection
 - **Regular unattended upgrades** — `sudo apt install unattended-upgrades` keeps security patches applied automatically
+
+All three of the above — UFW, Fail2ban, and unattended upgrades — are covered step by step in [Ubuntu Server Hardening — Part 1: The Essentials](/blog/ubuntu-server-hardening-1-essentials/).
 - **Post-quantum authentication keys** — once IETF [draft-ietf-curdle-ssh-pq-ke](https://datatracker.ietf.org/doc/draft-ietf-curdle-ssh-pq-ke/) matures and OpenSSH ships stable support, generate a second key pair using an ML-DSA or SLH-DSA algorithm ([FIPS 204](https://doi.org/10.6028/NIST.FIPS.204) / [FIPS 205](https://doi.org/10.6028/NIST.FIPS.205)) and add it alongside your Ed25519 key to `authorized_keys` for a hybrid authentication posture
 
 Each of these topics deserves its own post — stay tuned.

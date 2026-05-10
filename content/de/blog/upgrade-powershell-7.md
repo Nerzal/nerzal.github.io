@@ -107,7 +107,7 @@ Da PowerShell 7 auf .NET 8 läuft, sind alle .NET-8-APIs und -Typen direkt zugä
 
 ### SSH-basiertes Remoting
 
-PowerShell 5.1 setzt für Remoting auf WinRM (Windows Remote Management), das Firewall-Konfiguration erfordert und plattformübergreifend nicht funktioniert. PowerShell 7 ergänzt SSH-basiertes Remoting, das direkt zu Linux- und macOS-Hosts funktioniert.
+PowerShell 5.1 setzt für Remoting auf WinRM (Windows Remote Management), das Firewall-Konfiguration erfordert und plattformübergreifend nicht funktioniert. PowerShell 7 ergänzt SSH-basiertes Remoting, das direkt zu Linux- und macOS-Hosts funktioniert. Falls du Linux-Server verwaltest, solltest du den [SSH-Daemon absichern](/de/blog/secure-ssh-server/), bevor du Remote-Zugriff von PowerShell aus einrichtest.
 
 ### Eingebaute ANSI-Farbunterstützung und `$PSStyle`
 

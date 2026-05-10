@@ -66,3 +66,5 @@ Wir sehen, dass wir jetzt ein statisch gelinktes Binary haben.
 ## Fazit
 
 Der **file**-Befehl kann verwendet werden, um herauszufinden, ob ein Binary statisch oder dynamisch gelinkt wurde.
+
+Statisches Linking ist besonders relevant, wenn man Software in Containern ausliefert. Ein statisch gelinktes Go-Binary kann in einem `FROM scratch` Docker-Image ohne jegliche OS-Abhängigkeiten laufen — das kleinste und sicherste Image überhaupt. Wer Go-Anwendungen containerisieren möchte, findet dazu alle Details in [Containerisierung und Go: Eine starke Kombination](/de/blog/go-docker/).

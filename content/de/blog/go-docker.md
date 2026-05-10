@@ -17,7 +17,7 @@ In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für cont
 
 ## Gos Vorteile für die Containerisierung
 
-1. **Leichtgewichtige Binaries**: Go kompiliert zu kleinen, statisch gelinkten Binaries, die alle Abhängigkeiten enthalten. Das führt zu minimalen Container-Image-Größen, schnelleren Startzeiten und geringerem Ressourcenverbrauch.
+1. **Leichtgewichtige Binaries**: Go kompiliert zu kleinen, [statisch gelinkten Binaries](/de/blog/check-static-linking/), die alle Abhängigkeiten enthalten. Das führt zu minimalen Container-Image-Größen, schnelleren Startzeiten und geringerem Ressourcenverbrauch.
 
 2. **Cross-Compilation**: Go ermöglicht einfache Cross-Compilation von Binaries für verschiedene Plattformen und Architekturen, was das Erstellen von Multi-Plattform-Container-Images vereinfacht.
 

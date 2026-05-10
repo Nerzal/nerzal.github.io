@@ -17,7 +17,7 @@ In this blog post, we will explore why Go is an excellent choice for containeriz
 
 ## Go's Advantages for Containerization
 
-1. **Lightweight binaries**: Go compiles to small, statically linked binaries that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.
+1. **Lightweight binaries**: Go compiles to small, [statically linked binaries](/blog/check-static-linking/) that include all dependencies. This results in minimal container image sizes, faster startup times, and lower resource consumption.
 
 2. **Cross-compilation**: Go makes it easy to cross-compile binaries for different platforms and architectures, simplifying the process of building multi-platform container images.
 

@@ -79,7 +79,7 @@ Man benötigt ein Zeichen-Tool, das schnelle Eingabeiterationen ermöglicht. Zum
     3. Ein anderes Event? Notiz hinzufügen.
 3. Die Modellierungsfläche als Zeitleiste betrachten
     1. Notizen hinzufügen
-4. Bounded Contexts und Aggregates in jedem Context identifizieren
+4. [Bounded Contexts](/de/blog/bounded-context/) und Aggregates in jedem Context identifizieren
 
 ### Domänen-Events identifizieren
 
@@ -98,7 +98,7 @@ Fokussiere dich in diesem Stadium nicht auf alle Werte, aus denen ein Termin bes
 Nach der Event-Storming-Sitzung solltest du Folgendes erreicht haben:
 
 1. Umfassende Vision des Geschäftsbereichs
-2. Identifizierte Bounded Contexts und Aggregates in jedem Context
+2. Identifizierte [Bounded Contexts](/de/blog/bounded-context/) und Aggregates in jedem Context
     1. Aggregates verarbeiten Commands und kontrollieren die Persistenz
 3. Identifizierte Benutzertypen im System
     1. Wer führt Commands aus und warum?

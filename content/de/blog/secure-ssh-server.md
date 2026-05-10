@@ -341,4 +341,6 @@ Mit gehärtetem SSH empfehlen sich diese ergänzenden Maßnahmen:
 - **Regelmäßige unbeaufsichtigte Upgrades** — `sudo apt install unattended-upgrades` hält Sicherheits-Patches automatisch aktuell
 - **Post-Quantum-Authentifizierungsschlüssel** — sobald IETF [draft-ietf-curdle-ssh-pq-ke](https://datatracker.ietf.org/doc/draft-ietf-curdle-ssh-pq-ke/) ausgereift ist und OpenSSH stabilen Support liefert, generiere ein zweites Schlüsselpaar mit einem ML-DSA- oder SLH-DSA-Algorithmus und füge es neben deinem Ed25519-Schlüssel zu `authorized_keys` hinzu
 
+Alle drei oben genannten Maßnahmen — UFW, Fail2ban und automatische Updates — werden Schritt für Schritt in [Ubuntu Server Hardening — Teil 1: Die Grundlagen](/de/blog/ubuntu-server-hardening-1-essentials/) erklärt.
+
 Jedes dieser Themen verdient einen eigenen Beitrag — bleib gespannt.

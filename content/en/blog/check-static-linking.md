@@ -66,3 +66,5 @@ And we can see, that we do now have a statically linked binary.
 ## Conclusion
 
 The **file** command can be used to find out if a binary has been statically or dynamically linked.
+
+Static linking matters most when you ship inside a container. A statically linked Go binary can run in a `FROM scratch` Docker image with zero OS dependencies — the smallest and most secure image possible. If you are interested in containerising your Go applications, check out [Containerization and Go: A Powerful Combination](/blog/go-docker/).

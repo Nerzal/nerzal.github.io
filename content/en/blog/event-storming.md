@@ -81,7 +81,7 @@ You could use [excalidraw](https://excalidraw.com/) or [draw.io](https://draw.io
     3. Another event? Add note.
 3. Look at the modeling surface as a timeline
     1. Add notes
-4. Identify bounded contexts and aggregates in each context
+4. Identify [bounded contexts](/blog/bounded-context/) and aggregates in each context
 
 ### Identifying the domain events
 
@@ -100,7 +100,7 @@ At this stage do not focus on all the values an appointment consists of like a d
 After the event storming session you should have achieved the following:
 
 1. Comprehensive vision of the business domain
-2. Identified the bounded contexts and aggregates in each context
+2. Identified the [bounded contexts](/blog/bounded-context/) and aggregates in each context
     1. Aggregates handle commands and control persistence
 3. Identified the types of users in the system
     1. Who runs commands and why?

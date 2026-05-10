@@ -15,7 +15,7 @@ Bounded Contexts sind ein Kernkonzept im Domain-Driven Design (DDD) und dienen a
 
 Stell dir ein großes Unternehmen vor. Der Begriff „Kunde" kann für die Vertriebsabteilung etwas anderes bedeuten (ein Lead, ein Interessent), für die Support-Abteilung etwas anderes (jemand mit einem offenen Ticket) und für die Buchhaltung wieder etwas anderes (eine Einheit mit einer offenen Rechnung). Jede dieser Interpretationen existiert innerhalb ihres eigenen Bounded Context, in dem der Begriff „Kunde" eine präzise, eindeutige Bedeutung hat.
 
-Event Storming – wie im vorherigen Beitrag besprochen – ist eine unglaublich nützliche Technik, um diese Bounded Contexts kollaborativ zu identifizieren und zu definieren.
+[Event Storming](/de/blog/event-storming/) – wie im vorherigen Beitrag besprochen – ist eine unglaublich nützliche Technik, um diese Bounded Contexts kollaborativ zu identifizieren und zu definieren.
 
 ### Beispiel: Eine E-Commerce-Website
 
