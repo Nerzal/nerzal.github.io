@@ -35,6 +35,16 @@
     {{ partial "twitter-cards.html" . }}
     {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production") }}{{ template "_internal/google_analytics.html" . }}{{ end }}
     {{ partial "structured-data.html" . }}
+    {{/* LCP preload: hint browser to fetch featured image as early as possible */}}
+    {{ if and .IsPage .Params.featured_image }}
+      {{ $imgPath := trim .Params.featured_image "/" }}
+      {{ if not (in (slice ".svg" ".gif") (path.Ext $imgPath)) }}
+        {{ with resources.Get $imgPath }}
+          {{ $lcp := .Process "resize 1200x webp" }}
+          <link rel="preload" as="image" href="{{ $lcp.RelPermalink }}" type="image/webp">
+        {{ end }}
+      {{ end }}
+    {{ end }}
     {{ block "head" . }}{{ partial "head-additions.html" . }}{{ end }}
 </head>
 
