@@ -1,6 +1,6 @@
 ---
 draft: true
-title: "Ubuntu Server Hardening — Teil 2: Das System verschärfen"
+title: "Ubuntu Server Hardening — Teil 2: Das System verbessern"
 date: 2026-05-10T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]

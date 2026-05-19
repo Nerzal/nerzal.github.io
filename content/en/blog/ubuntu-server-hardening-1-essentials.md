@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "Ubuntu Server Hardening — Part 1: The Essentials"
-date: 2026-05-11T08:00:00+00:00
+date: 2026-05-11T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The three measures every public Ubuntu server needs within the first hour: a default-deny firewall with UFW, brute-force protection with Fail2ban, and automatic security updates."

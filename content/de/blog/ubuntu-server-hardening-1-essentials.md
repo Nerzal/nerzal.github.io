@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "Ubuntu Server Hardening — Teil 1: Die Grundlagen"
-date: 2026-05-11T08:00:00+00:00
+date: 2026-05-11T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Die drei Maßnahmen, die jeder öffentliche Ubuntu-Server innerhalb der ersten Stunde braucht: eine Default-Deny-Firewall mit UFW, Brute-Force-Schutz mit Fail2ban und automatische Sicherheitsupdates."
