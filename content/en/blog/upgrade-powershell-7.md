@@ -4,7 +4,7 @@ title: "Windows 11 Still Defaults to PowerShell 5.1 — And Why That's a Problem
 date: 2026-05-10T00:00:00+00:00
 tags: ["tutorial", "windows", "windows11", "powershell", "oh-my-posh", "terminal", "devex"]
 seo_title: "Upgrade from PowerShell 5.1 to 7 on Windows 11"
-description: "Windows 11 ships with PowerShell 5.1 as the default shell — a version from 2016 based on .NET Framework. Learn why this matters, how to upgrade to PowerShell 7, and how to make it your permanent default."
+description: "Windows 11 still ships PowerShell 5.1 by default, a 2016-era shell on .NET Framework. Learn why that matters and how to upgrade to PowerShell 7."
 images: ["img/powershell-51-vs-70.png"]
 featured_image: "img/powershell-51-vs-70.png"
 toc: true

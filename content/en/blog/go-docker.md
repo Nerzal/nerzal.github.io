@@ -1,5 +1,6 @@
 ---
 title: "Containerization and Go: A Powerful Combination"
+seo_title: "Go and Docker: Multi-Stage Builds"
 date: 2023-03-16
 draft: false
 description: "Learn why Go is ideal for containerization and how to use multi-stage Docker builds to create minimal, secure production images."

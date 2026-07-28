@@ -1,10 +1,11 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Teil 3: Defense in Depth"
+seo_title: "Ubuntu Hardening Teil 3: Defense in Depth"
 date: 2026-05-10T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
-description: "Die letzte Hardening-Schicht: Mandatory Access Control mit AppArmor, Kernel-Level-Audit-Logging mit auditd und kryptografische Datei-Integritätsüberwachung mit AIDE."
+description: "Die letzte Hardening-Schicht: Mandatory Access Control mit AppArmor, Audit-Logging mit auditd und Datei-Integritätsüberwachung mit AIDE."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true

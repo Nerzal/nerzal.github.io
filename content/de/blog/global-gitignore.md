@@ -3,7 +3,7 @@ draft: false
 title: "Eine globale .gitignore einrichten"
 date: 2026-05-09T00:00:00+00:00
 tags: ["tutorial", "git", "developer-tooling"]
-description: "Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. Lerne, wie du eine globale .gitignore konfigurierst, die für alle deine Repositories gilt."
+description: "Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. So konfigurierst du eine globale .gitignore für alle Repositories."
 images: ["img/global_gitignore.png"]
 featured_image: "img/global_gitignore.png"
 toc: true

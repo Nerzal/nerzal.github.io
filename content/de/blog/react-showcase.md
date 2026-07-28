@@ -1,5 +1,6 @@
 ---
 title: "Jenseits des Backends: Meine React-Nebenprojekte"
+seo_title: "Meine React-Nebenprojekte"
 date: 2026-04-20
 draft: false
 description: "Ein kurzer Blick auf einige der React-Anwendungen, die ich in meiner Freizeit gebaut habe – darunter mein persönliches Portfolio und Gaming-Utility-Tools."

@@ -2,6 +2,7 @@
 title: "Impressum"
 date: 2026-04-16T11:53:00+02:00
 draft: false
+description: "Impressum von Tobias Theel / Noobygames mit den nach § 5 TMG vorgeschriebenen Anbieterkennzeichnungs- und Kontaktangaben."
 menu:
     footer:
         weight: 3

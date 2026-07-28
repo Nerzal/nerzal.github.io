@@ -1,9 +1,10 @@
 ---
 draft: false
 title: "talkfrontend: Present Your Conference Talks as Markdown, Not PowerPoint"
+seo_title: "talkfrontend: Markdown Talk Slides"
 date: 2026-07-28T00:00:00+00:00
 tags: ["react", "typescript", "open-source", "developer-tooling", "showcase"]
-description: "Introducing talkfrontend, an open-source React web app that turns Markdown files into fullscreen conference slide decks — no rebuild needed to publish a new talk."
+description: "An open-source React web app that turns Markdown files into fullscreen conference slide decks — no rebuild needed to publish a new talk."
 images: ["img/talkfrontend.svg"]
 featured_image: "img/talkfrontend.svg"
 toc: true
@@ -28,7 +29,7 @@ A slide deck is developer content. It deserves developer tooling:
 
 talkfrontend separates the app from the data. The app (a static React build) never contains any talk content — talks are fetched over HTTP from a configurable directory at runtime:
 
-```
+```text
 /                 → year overview
 /:year            → month overview for a year
 /:year/:month     → talk list for a month
@@ -110,7 +111,7 @@ A few of these are worth calling out in more detail:
 
 **Animated code walkthroughs.** A `code` slide can hold multiple versions of a snippet that morph into each other step by step, similar to [Slidev's Shiki Magic Move](https://sli.dev/features/shiki-magic-move). This is powered by [Shiki](https://shiki.style/) and [`@shikijs/magic-move`](https://github.com/shikijs/shiki/tree/main/packages/magic-move), lazy-loaded so it never affects the size of the main app bundle for talks that don't use it. Regular code highlighting (no animation) uses [Prism.js](https://prismjs.com/), bundled at build time — no CDN request at runtime.
 
-**Click fragments.** In a `content` or `mixed` slide, prefix a bullet with `-> ` instead of `- ` to reveal it one click/arrow-key at a time, instead of dumping the whole list on screen immediately — useful when you want the audience's attention on one point before moving to the next.
+**Click fragments.** In a `content` or `mixed` slide, prefix a bullet with `->` instead of a plain `-` to reveal it one click/arrow-key at a time, instead of dumping the whole list on screen immediately — useful when you want the audience's attention on one point before moving to the next.
 
 **Speaker slides with self-hosted QR codes.** The `speaker` layout accepts `website`, `linkedin`, `github`, `twitter`, `bluesky`, and `mastodon` fields. Each configured link gets its own generated QR code so the audience can scan it directly off the projector, plus a brand icon where one is available. Icons come from the CC0-licensed [simple-icons](https://simpleicons.org/) package, bundled at build time — nothing is fetched from a third-party CDN at runtime, so there's no GDPR-relevant tracking concern from showing your socials on a slide.
 

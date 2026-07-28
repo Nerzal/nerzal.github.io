@@ -2,6 +2,7 @@
 title: "Legal Notice"
 date: 2026-04-16T11:53:00+02:00
 draft: false
+description: "Legal notice (Impressum) for Tobias Theel / Noobygames, including provider identification and contact details required under German law (§5 TMG)."
 menu:
     footer:
         weight: 3

@@ -1,10 +1,11 @@
 ---
 draft: true
 title: "Ubuntu Server Hardening — Teil 2: Das System verbessern"
+seo_title: "Ubuntu Hardening Teil 2: System härten"
 date: 2026-05-10T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
-description: "Der zweite Hardening-Durchgang: Kernel-Parameter mit sysctl anpassen, Angriffsfläche durch Deaktivierung unnötiger Dienste reduzieren und sudo sowie Login-Richtlinien einschränken."
+description: "Der zweite Hardening-Durchgang: Kernel-Parameter mit sysctl anpassen, unnötige Dienste deaktivieren und sudo sowie Login-Richtlinien einschränken."
 images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true

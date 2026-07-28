@@ -1,9 +1,10 @@
 ---
 draft: false
 title: "talkfrontend: Vortragsfolien als Markdown statt PowerPoint"
+seo_title: "talkfrontend: Vorträge als Markdown"
 date: 2026-07-28T00:00:00+00:00
 tags: ["react", "typescript", "open-source", "developer-tooling", "showcase"]
-description: "talkfrontend ist eine Open-Source React-Web-App, die Markdown-Dateien in Fullscreen-Vortragsfolien verwandelt – ganz ohne Rebuild, um einen neuen Vortrag zu veröffentlichen."
+description: "Eine Open-Source React-Web-App, die Markdown-Dateien in Fullscreen-Vortragsfolien verwandelt – ganz ohne Rebuild für neue Vorträge."
 images: ["img/talkfrontend.svg"]
 featured_image: "img/talkfrontend.svg"
 toc: true
@@ -28,7 +29,7 @@ Ein Foliensatz ist Entwickler-Content. Er verdient Entwickler-Tooling:
 
 talkfrontend trennt App und Daten strikt. Die App (ein statischer React-Build) enthält selbst keinerlei Vortragsinhalte – Vorträge werden zur Laufzeit per HTTP aus einem konfigurierbaren Verzeichnis geladen:
 
-```
+```text
 /                 → Jahresübersicht
 /:year            → Monatsübersicht für ein Jahr
 /:year/:month     → Vortragsliste für einen Monat
@@ -110,7 +111,7 @@ Ein paar davon verdienen einen genaueren Blick:
 
 **Animierte Code-Walkthroughs.** Eine `code`-Folie kann mehrere Versionen eines Snippets enthalten, die sich Schritt für Schritt ineinander verwandeln – ähnlich wie [Slidevs Shiki Magic Move](https://sli.dev/features/shiki-magic-move). Das läuft über [Shiki](https://shiki.style/) und [`@shikijs/magic-move`](https://github.com/shikijs/shiki/tree/main/packages/magic-move), lazy-geladen, damit es die Bundle-Größe der Haupt-App für Vorträge ohne diese Funktion nicht beeinflusst. Normales Code-Highlighting (ohne Animation) läuft über [Prism.js](https://prismjs.com/), zur Build-Zeit gebündelt – kein CDN-Request zur Laufzeit.
 
-**Click-Fragmente.** In einer `content`- oder `mixed`-Folie lässt sich ein Bullet mit `-> ` statt `- ` markieren, um ihn erst per Klick/Pfeiltaste einzublenden, statt die komplette Liste sofort zu zeigen – praktisch, wenn die Aufmerksamkeit des Publikums erst auf einem Punkt liegen soll, bevor der nächste kommt.
+**Click-Fragmente.** In einer `content`- oder `mixed`-Folie lässt sich ein Bullet mit `->` statt einem einfachen `-` markieren, um ihn erst per Klick/Pfeiltaste einzublenden, statt die komplette Liste sofort zu zeigen – praktisch, wenn die Aufmerksamkeit des Publikums erst auf einem Punkt liegen soll, bevor der nächste kommt.
 
 **Speaker-Folien mit selbst gehosteten QR-Codes.** Das `speaker`-Layout akzeptiert die Felder `website`, `linkedin`, `github`, `twitter`, `bluesky` und `mastodon`. Zu jedem konfigurierten Link wird ein eigener QR-Code generiert, damit das Publikum ihn direkt vom Beamer abscannen kann, dazu ein Marken-Icon, sofern eines verfügbar ist. Die Icons stammen aus dem CC0-lizenzierten [simple-icons](https://simpleicons.org/)-Paket und werden zur Build-Zeit gebündelt – zur Laufzeit wird nichts von einem Drittanbieter-CDN nachgeladen, es gibt also kein DSGVO-relevantes Tracking-Problem, nur weil eine Folie deine Social-Links zeigt.
 

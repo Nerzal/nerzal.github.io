@@ -1,5 +1,6 @@
 ---
 title: "Conway's Game of Life in Go: A Step-by-Step Guide"
+seo_title: "Conway's Game of Life in Go"
 date: 2023-03-16
 draft: false
 toc: true

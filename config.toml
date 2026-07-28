@@ -48,6 +48,8 @@ enableRobotsTXT = true
   background_color_class = "background-dark"
   recent_posts_number = 3
   google_site_verification = "8UCdbb2gsDSz40pl3KNnBBuwy4kSU5Jw1xfET009Qjw"
+  # Get this from https://www.bing.com/webmasters — Site verification → BingSiteAuth (meta tag option)
+  # bing_site_verification = ""
 
 [markup]
   [markup.goldmark]

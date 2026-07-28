@@ -2,12 +2,12 @@
 title: "Privacy Policy"
 date: 2026-04-16T11:53:00+02:00
 draft: false
+description: "Privacy policy for this website: what personal data is processed, the GDPR legal bases relied on, and your rights as a data subject."
 menu:
     footer:
         weight: 3
 ---
 
-<h1>Privacy Policy</h1>
 <h2 id="m14">Introduction</h2>
 <p>With this privacy policy we would like to inform you about the types of your personal data (hereinafter also referred to as "data") that we process, for what purposes and to what extent. The privacy policy applies to all processing of personal data carried out by us, both in the context of providing our services and in particular on our websites, in mobile applications and within external online presences, such as our social media profiles (hereinafter collectively referred to as the "online offering").</p>
 <p>The terms used are not gender-specific.</p>

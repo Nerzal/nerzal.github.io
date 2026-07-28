@@ -1,5 +1,6 @@
 ---
 title: "Home"
+seo_title: "Senior Software Engineer — Go & Cloud-Native"
 date: 2023-01-02T23:20:50+01:00
 draft: false
 description: "Tobias Theel's personal website and blog focusing on software architecture, Go development, Unity game engineering, and Open Source."

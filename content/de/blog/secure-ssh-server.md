@@ -3,7 +3,7 @@ draft: false
 title: "SSH-Zugang unter Linux (Ubuntu) absichern"
 date: 2026-05-09T00:00:00+00:00
 tags: ["tutorial", "linux", "ubuntu", "ssh", "security", "devops"]
-description: "Härte den SSH-Zugang deines Ubuntu-Servers Schritt für Schritt ab: Erstelle ein SSH-Schlüsselpaar, lege einen Sudo-Benutzer an, deaktiviere Passwort-Authentifizierung und sperre Root aus."
+description: "Härte den SSH-Zugang deines Ubuntu-Servers ab: SSH-Schlüsselpaar erstellen, Sudo-Nutzer anlegen, Passwort-Login deaktivieren und Root aussperren."
 images: ["img/ssh_certificates.png"]
 featured_image: "img/ssh_certificates.png"
 toc: true

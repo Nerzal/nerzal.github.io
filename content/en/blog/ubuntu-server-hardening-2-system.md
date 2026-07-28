@@ -1,6 +1,7 @@
 ---
 draft: false
 title: "Ubuntu Server Hardening — Part 2: Tightening the System"
+seo_title: "Ubuntu Hardening Part 2: System Tightening"
 date: 2026-05-10T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]

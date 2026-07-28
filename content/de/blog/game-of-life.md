@@ -4,7 +4,7 @@ seo_title: "Conway's Game of Life in Go implementieren"
 date: 2023-03-16
 draft: false
 toc: true
-description: "Conways Game of Life in Go von Grund auf implementieren — Gitter-Logik, toroidales Wrapping, Terminal-Rendering und eine funktionierende Haupt-Schleife mit zwei klassischen Mustern."
+description: "Conways Game of Life in Go von Grund auf implementieren — Gitter-Logik, toroidales Wrapping, Terminal-Rendering und zwei klassische Muster."
 images: ["img/game_of_life.png"]
 featured_image: "img/game_of_life.png"
 tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]

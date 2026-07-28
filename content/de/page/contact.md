@@ -6,7 +6,7 @@ layout: contact
 menu:
     main:
         weight: 5
-description: "Schreib Tobias Theel — für Vorträge, Beratung oder Zusammenarbeit."
+description: "Schreib Tobias Theel für Konferenz-Vorträge, Beratungsprojekte oder Open-Source-Zusammenarbeit — Antwort in der Regel innerhalb von 24–48 Stunden."
 headline: "Lass uns gemeinsam etwas aufbauen."
 subline: "Ob Konferenz-Speaker, Beratungsprojekt oder Open-Source-Kollaboration — ich freue mich von dir zu hören."
 availability: "Aktuell verfügbar für Vorträge und Beratung"
