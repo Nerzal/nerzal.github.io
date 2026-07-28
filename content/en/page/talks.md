@@ -17,6 +17,8 @@ I am available for keynote speaking, technical talks, and workshops at internati
 
 Interested in having me speak at your event or meetup? [Get in touch](mailto:info@noobygames.de).
 
+Browse the full slide decks for these and other talks — presented as a fullscreen web app built with [talkfrontend](/blog/talkfrontend/), my open-source Markdown slide viewer — at **[talks.noobygames.de](https://talks.noobygames.de)**.
+
 ## 2021: GoTime FM
 
 ### Go on hardware: TinyGo in the wild

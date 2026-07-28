@@ -1,7 +1,7 @@
 ---
-draft: true
+draft: false
 title: "Ubuntu Server Hardening — Part 3: Defense in Depth"
-date: 2026-05-10T00:00:00+00:00
+date: 2026-07-30T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The final hardening layer: mandatory access control with AppArmor, kernel-level audit logging with auditd, and cryptographic filesystem integrity monitoring with AIDE."

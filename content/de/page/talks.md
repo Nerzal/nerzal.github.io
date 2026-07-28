@@ -17,6 +17,8 @@ Ich bin verfügbar für Keynote-Vorträge, technische Talks und Workshops bei in
 
 Interesse, mich für deine Veranstaltung oder dein Meetup zu buchen? [Schreib mir](mailto:info@noobygames.de).
 
+Die vollständigen Foliensätze zu diesen und weiteren Vorträgen gibt es als Fullscreen-Web-App, gebaut mit [talkfrontend](/de/blog/talkfrontend/), meinem Open-Source Markdown-Folien-Viewer, unter **[talks.noobygames.de](https://talks.noobygames.de)**.
+
 ## 2021: GoTime FM
 
 ### Go on Hardware: TinyGo in the Wild

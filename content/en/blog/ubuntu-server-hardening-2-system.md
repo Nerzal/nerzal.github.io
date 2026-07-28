@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Ubuntu Server Hardening — Part 2: Tightening the System"
 date: 2026-05-10T00:00:00+00:00
 tags:
