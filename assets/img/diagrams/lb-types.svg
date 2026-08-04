@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="680" height="360">
+  <defs>
+    <marker id="ar-types" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <!-- Row 1: Layer 4 -->
+  <rect x="20" y="16" width="228" height="30" rx="15" class="d-pill d-b"/>
+  <text x="38" y="36" class="d-t d-bold" font-size="14">L4 · Network Load Balancer</text>
+
+  <rect x="20" y="66" width="110" height="56" rx="9" class="d-box d-b"/>
+  <text x="75" y="99" class="d-t" font-size="14" text-anchor="middle">Client</text>
+
+  <line x1="132" y1="94" x2="176" y2="94" class="d-arrow" marker-end="url(#ar-types)"/>
+
+  <rect x="180" y="66" width="240" height="56" rx="9" class="d-box d-b"/>
+  <text x="300" y="90" class="d-t d-bold" font-size="14" text-anchor="middle">Forwarding Rule</text>
+  <text x="300" y="109" class="d-m" font-size="12" text-anchor="middle">+ Target Pool</text>
+
+  <line x1="422" y1="94" x2="466" y2="94" class="d-arrow" marker-end="url(#ar-types)"/>
+
+  <rect x="470" y="66" width="190" height="56" rx="9" class="d-box d-b"/>
+  <text x="565" y="90" class="d-t d-bold" font-size="14" text-anchor="middle">web1 · web2 · web3</text>
+  <text x="565" y="109" class="d-m" font-size="12" text-anchor="middle">Compute Engine VMs</text>
+
+  <text x="20" y="150" class="d-m" font-size="12.5">Packets are forwarded unchanged — the backend sees the client's original IP address.</text>
+
+  <line x1="20" y1="178" x2="660" y2="178" class="d-divider"/>
+
+  <!-- Row 2: Layer 7 -->
+  <rect x="20" y="204" width="252" height="30" rx="15" class="d-pill d-g"/>
+  <text x="38" y="224" class="d-t d-bold" font-size="14">L7 · Application Load Balancer</text>
+
+  <rect x="20" y="254" width="110" height="56" rx="9" class="d-box d-g"/>
+  <text x="75" y="287" class="d-t" font-size="14" text-anchor="middle">Client</text>
+
+  <line x1="132" y1="282" x2="176" y2="282" class="d-arrow" marker-end="url(#ar-types)"/>
+
+  <rect x="180" y="254" width="240" height="56" rx="9" class="d-box d-g"/>
+  <text x="300" y="278" class="d-t d-bold" font-size="14" text-anchor="middle">Target Proxy + URL Map</text>
+  <text x="300" y="297" class="d-m" font-size="12" text-anchor="middle">+ Backend Service</text>
+
+  <line x1="422" y1="282" x2="466" y2="282" class="d-arrow" marker-end="url(#ar-types)"/>
+
+  <rect x="470" y="254" width="190" height="56" rx="9" class="d-box d-g"/>
+  <text x="565" y="278" class="d-t d-bold" font-size="14" text-anchor="middle">Managed Instance Group</text>
+  <text x="565" y="297" class="d-m" font-size="12" text-anchor="middle">Compute Engine VMs</text>
+
+  <text x="20" y="338" class="d-m" font-size="12.5">The connection is terminated at Google's edge; a second connection carries the request to the backend.</text>
+</svg>

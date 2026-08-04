@@ -1,0 +1,30 @@
+{{/*
+    diagram
+
+    Inlines an SVG from assets/img/diagrams/ so it inherits the site's theme
+    variables (light/dark) instead of being an opaque <img>.
+
+    Params:
+      src     — file name inside assets/img/diagrams/ (required)
+      caption — figcaption text, markdownified (optional)
+      alt     — accessible name; falls back to caption (optional)
+
+    Usage: {{< diagram src="network-lb.svg" caption="How the pieces connect." >}}
+*/}}
+
+{{ $src := .Get "src" | default (.Get 0) }}
+{{ $caption := .Get "caption" }}
+{{ $alt := .Get "alt" | default $caption }}
+{{ $path := printf "img/diagrams/%s" $src }}
+{{ $svg := resources.Get $path }}
+
+{{ if not $svg }}
+    {{ errorf "diagram shortcode: asset %q not found (used in %s)" $path .Page.Path }}
+{{ end }}
+
+<figure class="diagram">
+    <div class="diagram-canvas" role="img" aria-label="{{ $alt }}">
+        {{ $svg.Content | safeHTML }}
+    </div>
+    {{ with $caption }}<figcaption class="diagram-caption">{{ . | markdownify }}</figcaption>{{ end }}
+</figure>

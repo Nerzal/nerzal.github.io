@@ -8,6 +8,8 @@
     --nav-bg: rgba(38, 40, 51, 0.98);
     --blockquote-border: rgba(var(--text-rgb), 0.25);
     --code-bg: #14161f;
+    --diagram-surface: #1b2030;
+    --diagram-line: rgba(228, 241, 254, 0.32);
 }
 
 [data-theme="light"] {
@@ -19,6 +21,8 @@
     --nav-bg: rgba(245, 247, 250, 0.98);
     --blockquote-border: rgba(30, 33, 51, 0.25);
     --code-bg: #f0f2f8;
+    --diagram-surface: #fff;
+    --diagram-line: rgba(30, 33, 51, 0.3);
 }
 
 html {
@@ -3564,10 +3568,93 @@ body.is-restoring {
     .dogs-gallery-item img { height: 190px; }
 }
 
+/* Diagrams — inline SVG rendered by the `diagram` shortcode.
+   Colours come from CSS variables so one SVG works in both themes. */
+
+.diagram {
+    margin: 2.5rem 0;
+}
+
+/* Wide diagrams scroll inside their own box; the page never scrolls sideways */
+.diagram-canvas {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.diagram-canvas svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    height: auto;
+    font-family: inherit;
+}
+
+.diagram-caption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: rgba(var(--text-rgb), 0.65);
+    text-align: center;
+}
+
+.diagram-canvas .d-box {
+    fill: var(--diagram-surface);
+    stroke-width: 1.5;
+}
+
+.diagram-canvas .d-pill {
+    stroke-width: 1;
+    fill-opacity: 0.14;
+}
+
+.diagram-canvas .d-t {
+    fill: var(--text-color);
+}
+
+.diagram-canvas .d-bold {
+    font-weight: 600;
+}
+
+.diagram-canvas .d-m {
+    fill: rgba(var(--text-rgb), 0.62);
+}
+
+.diagram-canvas .d-arrow {
+    stroke: var(--diagram-line);
+    stroke-width: 1.6;
+    fill: none;
+}
+
+.diagram-canvas .d-dashed {
+    stroke-dasharray: 5 4;
+}
+
+.diagram-canvas .d-arrowhead {
+    fill: var(--diagram-line);
+}
+
+.diagram-canvas .d-divider {
+    stroke: var(--diagram-line);
+    stroke-width: 1;
+    stroke-dasharray: 3 5;
+}
+
+/* Google Cloud brand accents — readable on both light and dark surfaces */
+.diagram-canvas .d-b { stroke: #4285f4; fill: #4285f4; }
+.diagram-canvas .d-r { stroke: #ea4335; fill: #ea4335; }
+.diagram-canvas .d-y { stroke: #f9ab00; fill: #f9ab00; }
+.diagram-canvas .d-g { stroke: #34a853; fill: #34a853; }
+
+/* Box fill must win over the accent classes that only supply the stroke */
+.diagram-canvas rect.d-box { fill: var(--diagram-surface); }
+
 /* Print styles */
 
 @media print {
     .no-print { display: none !important; }
+
+    .diagram-canvas { overflow: visible; }
+    .diagram-canvas svg { min-width: 0; }
 
     body, html, main {
         background: #fff !important;

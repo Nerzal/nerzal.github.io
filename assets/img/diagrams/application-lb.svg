@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" width="760" height="640">
+  <defs>
+    <marker id="ar-alb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="300" y="16" width="160" height="44" rx="9" class="d-box d-b"/>
+  <text x="380" y="43" class="d-t" font-size="14" text-anchor="middle">Client</text>
+  <line x1="380" y1="62" x2="380" y2="84" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="88" width="260" height="52" rx="9" class="d-box d-b"/>
+  <text x="380" y="111" class="d-t d-bold" font-size="14" text-anchor="middle">lb-ipv4-1</text>
+  <text x="380" y="129" class="d-m" font-size="12" text-anchor="middle">global anycast IP address</text>
+  <line x1="380" y1="142" x2="380" y2="164" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="168" width="260" height="52" rx="9" class="d-box d-b"/>
+  <text x="380" y="191" class="d-t d-bold" font-size="14" text-anchor="middle">http-content-rule</text>
+  <text x="380" y="209" class="d-m" font-size="12" text-anchor="middle">Forwarding Rule · port 80</text>
+  <line x1="380" y1="222" x2="380" y2="244" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="248" width="260" height="52" rx="9" class="d-box d-r"/>
+  <text x="380" y="271" class="d-t d-bold" font-size="14" text-anchor="middle">http-lb-proxy</text>
+  <text x="380" y="289" class="d-m" font-size="12" text-anchor="middle">Target HTTP Proxy · terminates TCP</text>
+  <line x1="380" y1="302" x2="380" y2="324" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="328" width="260" height="52" rx="9" class="d-box d-y"/>
+  <text x="380" y="351" class="d-t d-bold" font-size="14" text-anchor="middle">web-map-http</text>
+  <text x="380" y="369" class="d-m" font-size="12" text-anchor="middle">URL Map · path → service</text>
+  <line x1="380" y1="382" x2="380" y2="404" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="408" width="260" height="52" rx="9" class="d-box d-g"/>
+  <text x="380" y="431" class="d-t d-bold" font-size="14" text-anchor="middle">web-backend-service</text>
+  <text x="380" y="449" class="d-m" font-size="12" text-anchor="middle">Backend Service · policy</text>
+  <line x1="380" y1="462" x2="380" y2="484" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="250" y="488" width="260" height="52" rx="9" class="d-box d-g"/>
+  <text x="380" y="511" class="d-t d-bold" font-size="14" text-anchor="middle">lb-backend-group</text>
+  <text x="380" y="529" class="d-m" font-size="12" text-anchor="middle">Managed Instance Group · size 2</text>
+
+  <line x1="380" y1="542" x2="380" y2="556" class="d-arrow"/>
+  <line x1="298" y1="556" x2="462" y2="556" class="d-arrow"/>
+  <line x1="298" y1="556" x2="298" y2="576" class="d-arrow" marker-end="url(#ar-alb)"/>
+  <line x1="462" y1="556" x2="462" y2="576" class="d-arrow" marker-end="url(#ar-alb)"/>
+
+  <rect x="228" y="580" width="140" height="44" rx="9" class="d-box d-b"/>
+  <text x="298" y="607" class="d-t" font-size="13" text-anchor="middle">VM · e2-medium</text>
+
+  <rect x="392" y="580" width="140" height="44" rx="9" class="d-box d-b"/>
+  <text x="462" y="607" class="d-t" font-size="13" text-anchor="middle">VM · e2-medium</text>
+
+  <!-- Health check (left) -->
+  <rect x="12" y="408" width="212" height="52" rx="9" class="d-box d-y"/>
+  <text x="118" y="431" class="d-t d-bold" font-size="14" text-anchor="middle">http-basic-check</text>
+  <text x="118" y="449" class="d-m" font-size="12" text-anchor="middle">Health Check · port 80</text>
+  <line x1="226" y1="434" x2="246" y2="434" class="d-arrow d-dashed" marker-end="url(#ar-alb)"/>
+
+  <!-- Instance template (right) -->
+  <rect x="536" y="488" width="212" height="52" rx="9" class="d-box d-g"/>
+  <text x="642" y="511" class="d-t d-bold" font-size="13" text-anchor="middle">lb-backend-template</text>
+  <text x="642" y="529" class="d-m" font-size="12" text-anchor="middle">Instance Template</text>
+  <line x1="534" y1="514" x2="514" y2="514" class="d-arrow d-dashed" marker-end="url(#ar-alb)"/>
+
+  <!-- Firewall (right) -->
+  <rect x="536" y="408" width="212" height="52" rx="9" class="d-box d-r"/>
+  <text x="642" y="431" class="d-t d-bold" font-size="13" text-anchor="middle">fw-allow-health-check</text>
+  <text x="642" y="449" class="d-m" font-size="11" text-anchor="middle">130.211.0.0/22 · 35.191.0.0/16</text>
+  <path d="M642 462 L642 602 L536 602" class="d-arrow d-dashed" fill="none" marker-end="url(#ar-alb)"/>
+</svg>

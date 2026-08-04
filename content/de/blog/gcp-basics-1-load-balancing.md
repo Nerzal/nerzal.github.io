@@ -16,6 +16,8 @@ tags:
   ]
 categories: ["Cloud Computing"]
 description: "Target Pools, URL Maps, Forwarding Rules — Google Cloud Load Balancing von Grund auf erklärt. Regionaler Network Load Balancer und globaler Application Load Balancer mit gcloud, Schritt für Schritt."
+images: ["img/gcp-load-balancing.png"]
+featured_image: "img/gcp-load-balancing.png"
 toc: true
 ---
 
@@ -61,19 +63,13 @@ Falls `winget` nicht verfügbar ist: Installer aus der [gcloud-CLI-Installations
 
 ### Authentifizieren und Projekt wählen
 
+Die `gcloud`-Syntax ist auf jeder Plattform identisch. Nur shell-spezifische Dinge — Zeilenumbrüche, Schleifen, Variablen — unterscheiden sich. Ein Befehl steht deshalb nur einmal da, außer die beiden Shells brauchen wirklich unterschiedlichen Code. Dann folgen beide Varianten direkt aufeinander.
+
 ```bash
 gcloud init
 gcloud auth login
 gcloud config set project DEINE_PROJEKT_ID
 ```
-
-```powershell
-gcloud init
-gcloud auth login
-gcloud config set project DEINE_PROJEKT_ID
-```
-
-Die `gcloud`-Syntax ist auf jeder Plattform identisch. Nur shell-spezifische Dinge — Zeilenumbrüche, Schleifen, Variablen — unterscheiden sich, und dafür zeige ich jeweils beide Varianten.
 
 **Keine lokale Installation gewünscht?** Die [Cloud Shell](https://cloud.google.com/shell/docs) gibt dir ein Browser-Terminal mit vorinstalliertem und bereits authentifiziertem `gcloud`. Jeder Befehl aus diesem Artikel läuft dort unverändert.
 
@@ -96,6 +92,8 @@ Layer 4 und Layer 7 beziehen sich auf das [OSI-Referenzmodell](https://www.iso.o
 - Ein **Layer-4**-Balancer leitet Pakete weiter. Er weiß "TCP-Verbindung auf Port 80" und wählt ein Backend. Den HTTP-Request liest er nie. TCP selbst ist in [RFC 9293](https://www.rfc-editor.org/rfc/rfc9293) spezifiziert.
 - Ein **Layer-7**-Balancer terminiert die Client-Verbindung, parst den HTTP-Request gemäß [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110) und kann `/api/*` an ein Backend und `/images/*` an ein anderes schicken.
 
+{{< diagram src="lb-types.svg" caption="Gleiche Aufgabe, unterschiedliche Tiefe: Der Layer-4-Balancer reicht Pakete durch, der Layer-7-Balancer öffnet den Umschlag und liest den Request." >}}
+
 Wir bauen von jedem einen. Googles vollständige [Load-Balancing-Übersicht](https://cloud.google.com/load-balancing/docs/load-balancing-overview) listet die restlichen Varianten auf.
 
 ---
@@ -105,11 +103,6 @@ Wir bauen von jedem einen. Googles vollständige [Load-Balancing-Übersicht](htt
 Bevor wir irgendetwas erstellen, sagen wir `gcloud`, wo gearbeitet wird. Das spart `--region` und `--zone` an jedem Befehl.
 
 ```bash
-gcloud config set compute/region us-east1
-gcloud config set compute/zone us-east1-d
-```
-
-```powershell
 gcloud config set compute/region us-east1
 gcloud config set compute/zone us-east1-d
 ```
@@ -191,11 +184,15 @@ Prüfen, ob die Instanzen laufen, und externe IPs notieren:
 
 ```bash
 gcloud compute instances list
+```
+
+Dann eine davon direkt aufrufen:
+
+```bash
 curl http://EXTERNE_IP_VON_WEB1
 ```
 
 ```powershell
-gcloud compute instances list
 Invoke-RestMethod -Uri "http://EXTERNE_IP_VON_WEB1"
 ```
 
@@ -228,6 +225,8 @@ gcloud compute forwarding-rules create www-rule \
     --address=network-lb-ip-1 \
     --target-pool=www-pool
 ```
+
+{{< diagram src="network-lb.svg" caption="Fünf Ressourcen, eine Kette. Der Health Check entscheidet, welche Instanzen im Pool bleiben; die Firewall-Regel erreicht die Instanzen über ihren Netzwerk-Tag, nicht über ihren Namen." >}}
 
 Der **Health Check** ist der Teil, den man weglässt und danach bereut. Der Balancer prüft jedes Backend in festem Intervall. Ein Backend, das den Check nicht besteht, bekommt keinen Traffic mehr, bis es sich erholt — automatisch, ohne dass nachts um drei ein Alarm losgeht. Details: [Health-Check-Konzepte](https://cloud.google.com/load-balancing/docs/health-check-concepts).
 
@@ -359,24 +358,7 @@ gcloud compute forwarding-rules create http-content-rule \
 
 ### Der Weg einer Anfrage
 
-```text
-Client
-  │
-  ▼
-Forwarding Rule      "IP 34.x.x.x, Port 80 — gehört mir"
-  │
-  ▼
-Target HTTP Proxy    terminiert TCP + TLS, parst den HTTP-Request
-  │
-  ▼
-URL Map              "welcher Backend Service bedient diesen Pfad?"
-  │
-  ▼
-Backend Service      Balancing-Policy, Session-Affinity, Health-Status
-  │
-  ▼
-Instance Group       eine gesunde VM antwortet
-```
+{{< diagram src="application-lb.svg" caption="Die vollständige Layer-7-Kette. Durchgezogene Pfeile sind der Request-Pfad; gestrichelte zeigen, welche Ressource welche konfiguriert — das Template baut die Gruppe, Health Check und Firewall-Regel halten sie im Dienst." >}}
 
 Jede Kiste hat genau eine Aufgabe, und jede ist unabhängig austauschbar. Das ist das ganze Design:
 
@@ -393,13 +375,7 @@ HTTPS statt HTTP gewünscht? Schritt 6 gegen einen `target-https-proxies` mit an
 Die IP zu bekommen geht sofort. Dass der Balancer funktioniert, nicht: Eine globale Forwarding Rule über Googles Edge zu propagieren dauert **mehrere Minuten**, und `404`- oder `502`-Antworten in diesem Zeitfenster sind normal.
 
 ```bash
-gcloud compute forwarding-rules describe http-content-rule \
-    --global --format="value(IPAddress)"
-```
-
-```powershell
-gcloud compute forwarding-rules describe http-content-rule `
-    --global --format="value(IPAddress)"
+gcloud compute forwarding-rules describe http-content-rule --global --format="value(IPAddress)"
 ```
 
 `http://IP_ADRESSE` im Browser öffnen. Du solltest `Page served from: lb-backend-group-xxxx` sehen. Ein paar Mal neu laden, dann wechselt der Hostname.
@@ -434,12 +410,6 @@ gcloud compute instances delete web1 web2 web3 --zone=us-east1-d --quiet
 Danach prüfen, dass nichts übrig ist:
 
 ```bash
-gcloud compute instances list
-gcloud compute forwarding-rules list
-gcloud compute addresses list
-```
-
-```powershell
 gcloud compute instances list
 gcloud compute forwarding-rules list
 gcloud compute addresses list

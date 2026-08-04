@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 450" width="720" height="450">
+  <defs>
+    <marker id="ar-nlb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <!-- Main chain -->
+  <rect x="280" y="16" width="160" height="44" rx="9" class="d-box d-b"/>
+  <text x="360" y="43" class="d-t" font-size="14" text-anchor="middle">Client</text>
+  <line x1="360" y1="62" x2="360" y2="84" class="d-arrow" marker-end="url(#ar-nlb)"/>
+
+  <rect x="240" y="88" width="240" height="52" rx="9" class="d-box d-b"/>
+  <text x="360" y="111" class="d-t d-bold" font-size="14" text-anchor="middle">network-lb-ip-1</text>
+  <text x="360" y="129" class="d-m" font-size="12" text-anchor="middle">static regional IP address</text>
+  <line x1="360" y1="142" x2="360" y2="164" class="d-arrow" marker-end="url(#ar-nlb)"/>
+
+  <rect x="240" y="168" width="240" height="52" rx="9" class="d-box d-b"/>
+  <text x="360" y="191" class="d-t d-bold" font-size="14" text-anchor="middle">www-rule</text>
+  <text x="360" y="209" class="d-m" font-size="12" text-anchor="middle">Forwarding Rule · TCP 80</text>
+  <line x1="360" y1="222" x2="360" y2="244" class="d-arrow" marker-end="url(#ar-nlb)"/>
+
+  <rect x="240" y="248" width="240" height="52" rx="9" class="d-box d-r"/>
+  <text x="360" y="271" class="d-t d-bold" font-size="14" text-anchor="middle">www-pool</text>
+  <text x="360" y="289" class="d-m" font-size="12" text-anchor="middle">Target Pool</text>
+
+  <!-- Fan out to the three VMs -->
+  <line x1="360" y1="302" x2="360" y2="322" class="d-arrow"/>
+  <line x1="200" y1="322" x2="520" y2="322" class="d-arrow"/>
+  <line x1="200" y1="322" x2="200" y2="346" class="d-arrow" marker-end="url(#ar-nlb)"/>
+  <line x1="360" y1="322" x2="360" y2="346" class="d-arrow" marker-end="url(#ar-nlb)"/>
+  <line x1="520" y1="322" x2="520" y2="346" class="d-arrow" marker-end="url(#ar-nlb)"/>
+
+  <rect x="130" y="350" width="140" height="56" rx="9" class="d-box d-b"/>
+  <text x="200" y="374" class="d-t d-bold" font-size="14" text-anchor="middle">web1</text>
+  <text x="200" y="392" class="d-m" font-size="11.5" text-anchor="middle">e2-small · Apache</text>
+
+  <rect x="290" y="350" width="140" height="56" rx="9" class="d-box d-b"/>
+  <text x="360" y="374" class="d-t d-bold" font-size="14" text-anchor="middle">web2</text>
+  <text x="360" y="392" class="d-m" font-size="11.5" text-anchor="middle">e2-small · Apache</text>
+
+  <rect x="450" y="350" width="140" height="56" rx="9" class="d-box d-b"/>
+  <text x="520" y="374" class="d-t d-bold" font-size="14" text-anchor="middle">web3</text>
+  <text x="520" y="392" class="d-m" font-size="11.5" text-anchor="middle">e2-small · Apache</text>
+
+  <text x="360" y="428" class="d-m" font-size="12" text-anchor="middle">network tag: network-lb-tag</text>
+
+  <!-- Health check (left) -->
+  <rect x="12" y="248" width="196" height="52" rx="9" class="d-box d-y"/>
+  <text x="110" y="271" class="d-t d-bold" font-size="14" text-anchor="middle">basic-check</text>
+  <text x="110" y="289" class="d-m" font-size="12" text-anchor="middle">HTTP Health Check</text>
+  <line x1="210" y1="274" x2="236" y2="274" class="d-arrow d-dashed" marker-end="url(#ar-nlb)"/>
+
+  <!-- Firewall (right) -->
+  <rect x="512" y="248" width="196" height="52" rx="9" class="d-box d-g"/>
+  <text x="610" y="271" class="d-t d-bold" font-size="13" text-anchor="middle">www-firewall-network-lb</text>
+  <text x="610" y="289" class="d-m" font-size="12" text-anchor="middle">allow tcp:80 → tag</text>
+  <path d="M610 302 L610 378 L594 378" class="d-arrow d-dashed" fill="none" marker-end="url(#ar-nlb)"/>
+</svg>
