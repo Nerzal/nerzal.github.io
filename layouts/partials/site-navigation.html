@@ -19,8 +19,8 @@
                        href="{{ .URL }}">{{ .Name }}{{ if $hasSub }}<span class="site-nav-caret">▾</span>{{ end }}</a>
                     {{ if $hasSub }}
                     <ul class="site-nav-sub">
-                        {{ range (slice "/page/book" "/page/talks" "/page/open-source" "/page/games") }}
-                        {{ with site.GetPage . }}
+                        {{ range site.Params.publications }}
+                        {{ with site.GetPage .path }}
                         <li><a href="{{ .RelPermalink }}" class="site-nav-sub-link">{{ .Title }}</a></li>
                         {{ end }}
                         {{ end }}

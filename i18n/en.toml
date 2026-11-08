@@ -66,6 +66,9 @@ other = "Open Source"
 [catGames]
 other = "Games"
 
+[catProduct]
+other = "Product"
+
 [onThisPage]
 other = "On this page"
 

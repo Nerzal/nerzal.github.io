@@ -3674,3 +3674,16 @@ body.is-restoring {
     .site-footer, .site-plain-header { display: none !important; }
     #scroll-to-top { display: none !important; }
 }
+
+/* Product pages — call-to-action box (download / waitlist links) */
+.product-cta {
+    background: var(--background-color-light);
+    border: 1px solid rgba(var(--text-rgb), 0.08);
+    border-left: 4px solid var(--highlight-color);
+    border-radius: 10px;
+    margin: 2rem 0;
+    padding: 1.25rem 1.5rem;
+}
+
+.product-cta > :first-child { margin-top: 0; }
+.product-cta > :last-child { margin-bottom: 0; }

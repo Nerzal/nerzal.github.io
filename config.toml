@@ -51,6 +51,27 @@ enableRobotsTXT = true
   # Get this from https://www.bing.com/webmasters — Site verification → BingSiteAuth (meta tag option)
   # bing_site_verification = ""
 
+# Pages listed under the "publications" menu (desktop + mobile submenu and the overview grid).
+# label_key is an i18n key for the category eyebrow on the overview cards.
+[[params.publications]]
+  path = "/page/book"
+  label_key = "catBook"
+[[params.publications]]
+  path = "/page/talks"
+  label_key = "catTalks"
+[[params.publications]]
+  path = "/page/open-source"
+  label_key = "catOpenSource"
+[[params.publications]]
+  path = "/page/games"
+  label_key = "catGames"
+[[params.publications]]
+  path = "/page/neuroclip"
+  label_key = "catProduct"
+[[params.publications]]
+  path = "/page/level-time"
+  label_key = "catProduct"
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]

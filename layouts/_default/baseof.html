@@ -67,8 +67,8 @@
                 <a class="mobile-nav-link{{ if $active }} mobile-nav-link--active{{ end }}" href="{{ .URL }}">{{ .Name }}</a>
                 {{ if eq .Identifier "publications" }}
                 <ul class="mobile-nav-sub">
-                    {{ range (slice "/page/book" "/page/talks" "/page/open-source" "/page/games") }}
-                    {{ with site.GetPage . }}
+                    {{ range site.Params.publications }}
+                    {{ with site.GetPage .path }}
                     <li><a href="{{ .RelPermalink }}" class="mobile-nav-sub-link">{{ .Title }}</a></li>
                     {{ end }}
                     {{ end }}
