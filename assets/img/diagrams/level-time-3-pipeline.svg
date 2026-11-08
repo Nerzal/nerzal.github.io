@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420">
+  <defs>
+    <marker id="ar-lt3-pipeline" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="260" y="14" width="200" height="44" rx="9" class="d-box d-b"/>
+  <text x="360" y="34" class="d-t d-bold" font-size="14" text-anchor="middle">git tag v2.26.0</text>
+  <text x="360" y="50" class="d-m" font-size="11.5" text-anchor="middle">git push origin v2.26.0</text>
+  <line x1="360" y1="60" x2="360" y2="80" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+
+  <rect x="220" y="84" width="280" height="44" rx="9" class="d-box"/>
+  <text x="360" y="104" class="d-t d-bold" font-size="14" text-anchor="middle">Job "test"</text>
+  <text x="360" y="120" class="d-m" font-size="11.5" text-anchor="middle">make test (Lua scenarios, installer, tools)</text>
+  <line x1="360" y1="130" x2="360" y2="150" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+  <text x="372" y="144" class="d-m" font-size="11" text-anchor="start">needs: test</text>
+
+  <rect x="220" y="154" width="280" height="44" rx="9" class="d-box"/>
+  <text x="360" y="174" class="d-t d-bold" font-size="14" text-anchor="middle">Job "release"</text>
+  <text x="360" y="190" class="d-m" font-size="11.5" text-anchor="middle">full git history (fetch-depth: 0)</text>
+
+  <line x1="360" y1="200" x2="360" y2="214" class="d-arrow"/>
+  <line x1="190" y1="214" x2="530" y2="214" class="d-arrow"/>
+  <line x1="190" y1="214" x2="190" y2="238" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+  <line x1="530" y1="214" x2="530" y2="238" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+
+  <rect x="60" y="242" width="260" height="62" rx="9" class="d-box d-y"/>
+  <text x="190" y="264" class="d-t d-bold" font-size="14" text-anchor="middle">Packager run 1</text>
+  <text x="190" y="282" class="d-m" font-size="11.5" text-anchor="middle">repo root: LevelTimer + LevelTimer_Archive</text>
+  <text x="190" y="297" class="d-m" font-size="11.5" text-anchor="middle">.pkgmeta move-folders</text>
+
+  <rect x="400" y="242" width="260" height="62" rx="9" class="d-box d-y"/>
+  <text x="530" y="264" class="d-t d-bold" font-size="14" text-anchor="middle">Packager run 2</text>
+  <text x="530" y="282" class="d-m" font-size="11.5" text-anchor="middle">split clone: StreamGoal/ as root</text>
+  <text x="530" y="297" class="d-m" font-size="11.5" text-anchor="middle">GITHUB_OAUTH empty (no 2nd release)</text>
+
+  <line x1="190" y1="306" x2="190" y2="336" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+  <line x1="530" y1="306" x2="530" y2="336" class="d-arrow" marker-end="url(#ar-lt3-pipeline)"/>
+
+  <rect x="40" y="340" width="300" height="58" rx="9" class="d-box d-g"/>
+  <text x="190" y="362" class="d-t d-bold" font-size="13" text-anchor="middle">GitHub release + CurseForge 1721235</text>
+  <text x="190" y="380" class="d-m" font-size="11.5" text-anchor="middle">Wago / WoWInterface only if ID + secret exist</text>
+
+  <rect x="400" y="340" width="260" height="58" rx="9" class="d-box d-g"/>
+  <text x="530" y="362" class="d-t d-bold" font-size="13" text-anchor="middle">CurseForge 1744370</text>
+  <text x="530" y="380" class="d-m" font-size="11.5" text-anchor="middle">Level Time Goals</text>
+</svg>

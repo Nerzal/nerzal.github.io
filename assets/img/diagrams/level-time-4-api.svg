@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360">
+  <defs>
+    <marker id="ar-lt4api" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <!-- Level Time core -->
+  <rect x="12" y="24" width="250" height="312" rx="9" class="d-box d-b"/>
+  <text x="137" y="50" class="d-t d-bold" font-size="14" text-anchor="middle">Level Time (core)</text>
+  <text x="137" y="68" class="d-m" font-size="11.5" text-anchor="middle">LevelTimer.toc</text>
+  <text x="137" y="108" class="d-t" font-size="12" text-anchor="middle">Events, login, level-up</text>
+  <text x="137" y="140" class="d-t" font-size="12" text-anchor="middle">Journal, Alerts, Format</text>
+  <text x="137" y="172" class="d-t" font-size="12" text-anchor="middle">Card, Widgets, TableView</text>
+  <text x="137" y="204" class="d-t" font-size="12" text-anchor="middle">Theme, Frames, Locales</text>
+  <text x="137" y="236" class="d-t" font-size="12" text-anchor="middle">SafeCall, Debug, profiler</text>
+  <text x="137" y="300" class="d-m" font-size="11.5" text-anchor="middle">LevelTimerAPI = ns</text>
+  <text x="137" y="318" class="d-m" font-size="11.5" text-anchor="middle">(Core/LevelTimer.lua)</text>
+
+  <!-- Public surface -->
+  <rect x="300" y="110" width="120" height="140" rx="9" class="d-box d-y"/>
+  <text x="360" y="148" class="d-t d-bold" font-size="14" text-anchor="middle">Global</text>
+  <text x="360" y="170" class="d-t d-bold" font-size="13" text-anchor="middle">LevelTimerAPI</text>
+  <text x="360" y="200" class="d-m" font-size="11.5" text-anchor="middle">one table,</text>
+  <text x="360" y="216" class="d-m" font-size="11.5" text-anchor="middle">filled by modules</text>
+
+  <line x1="264" y1="180" x2="298" y2="180" class="d-arrow" marker-end="url(#ar-lt4api)"/>
+
+  <!-- Goals -->
+  <rect x="458" y="24" width="250" height="150" rx="9" class="d-box d-g"/>
+  <text x="583" y="50" class="d-t d-bold" font-size="14" text-anchor="middle">Level Time Goals</text>
+  <text x="583" y="68" class="d-m" font-size="11.5" text-anchor="middle">StreamGoal.toc · Dependencies: LevelTimer</text>
+  <text x="583" y="102" class="d-t" font-size="12" text-anchor="middle">local LT = LevelTimerAPI</text>
+  <text x="583" y="124" class="d-t" font-size="12" text-anchor="middle">goals, bingo, wheel</text>
+  <text x="583" y="146" class="d-m" font-size="11.5" text-anchor="middle">own namespace, own SavedVariables</text>
+  <line x1="456" y1="99" x2="422" y2="150" class="d-arrow" marker-end="url(#ar-lt4api)"/>
+
+  <!-- Other consumers -->
+  <rect x="458" y="206" width="250" height="130" rx="9" class="d-box d-dashed"/>
+  <text x="583" y="236" class="d-t d-bold" font-size="14" text-anchor="middle">Other consumers</text>
+  <text x="583" y="258" class="d-m" font-size="11.5" text-anchor="middle">(hypothetical, none shipped)</text>
+  <text x="583" y="288" class="d-t" font-size="12" text-anchor="middle">same pattern: Dependencies +</text>
+  <text x="583" y="306" class="d-t" font-size="12" text-anchor="middle">local LT = LevelTimerAPI</text>
+  <line x1="456" y1="272" x2="422" y2="214" class="d-arrow d-dashed" marker-end="url(#ar-lt4api)"/>
+</svg>

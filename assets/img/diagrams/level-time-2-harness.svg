@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" width="720" height="380">
+  <defs>
+    <marker id="ar-lt2-harness" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="16" y="50" width="150" height="64" rx="9" class="d-box d-b"/>
+  <text x="91" y="76" class="d-t d-bold" font-size="14" text-anchor="middle">go test</text>
+  <text x="91" y="96" class="d-m" font-size="11.5" text-anchor="middle">TestScenarios</text>
+  <line x1="168" y1="82" x2="196" y2="82" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+
+  <rect x="200" y="16" width="504" height="262" rx="12" class="d-box d-y d-dashed"/>
+  <text x="216" y="38" class="d-t d-bold" font-size="13">gopher-lua VM (Lua 5.1, fresh per scenario)</text>
+
+  <rect x="222" y="56" width="210" height="72" rx="9" class="d-box d-y"/>
+  <text x="327" y="84" class="d-t d-bold" font-size="14" text-anchor="middle">WoW API stub</text>
+  <text x="327" y="104" class="d-m" font-size="11.5" text-anchor="middle">frames, events, C_Timer, C_*</text>
+
+  <rect x="474" y="56" width="210" height="72" rx="9" class="d-box d-g"/>
+  <text x="579" y="84" class="d-t d-bold" font-size="14" text-anchor="middle">Addon Lua</text>
+  <text x="579" y="104" class="d-m" font-size="11.5" text-anchor="middle">loaded in .toc order</text>
+  <line x1="434" y1="86" x2="472" y2="86" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+  <line x1="472" y1="104" x2="434" y2="104" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+  <text x="453" y="76" class="d-m" font-size="11" text-anchor="middle">events</text>
+  <text x="453" y="120" class="d-m" font-size="11" text-anchor="middle">API</text>
+
+  <rect x="222" y="190" width="210" height="72" rx="9" class="d-box d-b"/>
+  <text x="327" y="218" class="d-t d-bold" font-size="14" text-anchor="middle">Scenario</text>
+  <text x="327" y="238" class="d-m" font-size="11.5" text-anchor="middle">tests/*_test.lua</text>
+  <line x1="327" y1="188" x2="327" y2="130" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+  <text x="335" y="164" class="d-m" font-size="11">wow.login / wow.fire</text>
+
+  <rect x="474" y="190" width="210" height="72" rx="9" class="d-box d-r"/>
+  <text x="579" y="218" class="d-t d-bold" font-size="14" text-anchor="middle">Assertions</text>
+  <text x="579" y="238" class="d-m" font-size="11.5" text-anchor="middle">expect() fills TEST_FAILURES</text>
+  <line x1="434" y1="226" x2="472" y2="226" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+  <line x1="579" y1="188" x2="579" y2="130" class="d-arrow d-dashed" marker-end="url(#ar-lt2-harness)"/>
+  <text x="587" y="164" class="d-m" font-size="11">reads addon state</text>
+
+  <line x1="579" y1="280" x2="579" y2="314" class="d-arrow" marker-end="url(#ar-lt2-harness)"/>
+  <rect x="330" y="318" width="374" height="46" rx="9" class="d-box d-b"/>
+  <text x="517" y="338" class="d-t d-bold" font-size="13" text-anchor="middle">Go reads TEST_FAILURES + wow.errors</text>
+  <text x="517" y="355" class="d-m" font-size="11.5" text-anchor="middle">every entry becomes a t.Error</text>
+</svg>
