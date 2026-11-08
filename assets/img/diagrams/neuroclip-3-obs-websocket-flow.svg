@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" width="720" height="500">
+  <defs>
+    <marker id="ar-nc3-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="40" y="12" width="200" height="44" rx="9" class="d-box d-b"/>
+  <text x="140" y="39" class="d-t d-bold" font-size="14" text-anchor="middle">Server (Go)</text>
+  <rect x="480" y="12" width="200" height="44" rx="9" class="d-box d-r"/>
+  <text x="580" y="39" class="d-t d-bold" font-size="14" text-anchor="middle">OBS (obs-websocket 5)</text>
+  <line x1="140" y1="58" x2="140" y2="488" class="d-divider"/>
+  <line x1="580" y1="58" x2="580" y2="488" class="d-divider"/>
+
+  <text x="360" y="82" class="d-m" font-size="12" text-anchor="middle">1 · Handshake</text>
+  <line x1="578" y1="106" x2="142" y2="106" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="98" class="d-t" font-size="12" text-anchor="middle">Hello (op 0) · challenge + salt</text>
+  <line x1="142" y1="162" x2="578" y2="162" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="130" class="d-t" font-size="12" text-anchor="middle">Identify (op 1) · rpcVersion, authentication,</text>
+  <text x="360" y="146" class="d-m" font-size="11" text-anchor="middle">eventSubscriptions</text>
+  <line x1="578" y1="196" x2="142" y2="196" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="188" class="d-t" font-size="12" text-anchor="middle">Identified (op 2)</text>
+
+  <line x1="40" y1="212" x2="680" y2="212" class="d-divider"/>
+  <text x="360" y="234" class="d-m" font-size="12" text-anchor="middle">2 · Request / response (status poll, button click)</text>
+  <line x1="142" y1="262" x2="578" y2="262" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="254" class="d-t" font-size="12" text-anchor="middle">Request (op 6) · GetStats, requestId "7"</text>
+  <line x1="578" y1="296" x2="142" y2="296" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="288" class="d-t" font-size="12" text-anchor="middle">RequestResponse (op 7) · requestId "7", result</text>
+
+  <line x1="40" y1="318" x2="680" y2="318" class="d-divider"/>
+  <text x="360" y="340" class="d-m" font-size="12" text-anchor="middle">3 · Meter connection (own socket, only while someone listens)</text>
+  <line x1="142" y1="368" x2="578" y2="368" class="d-arrow" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="360" class="d-t" font-size="12" text-anchor="middle">Identify · subscribe to InputVolumeMeters</text>
+  <line x1="578" y1="400" x2="142" y2="400" class="d-arrow d-dashed" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="392" class="d-t" font-size="12" text-anchor="middle">Event (op 5) · InputVolumeMeters (high volume)</text>
+  <line x1="578" y1="426" x2="142" y2="426" class="d-arrow d-dashed" marker-end="url(#ar-nc3-flow)"/>
+  <text x="360" y="418" class="d-t" font-size="12" text-anchor="middle">Event (op 5) · InputVolumeMeters …</text>
+
+  <rect x="150" y="446" width="420" height="38" rx="9" class="d-box d-y"/>
+  <text x="360" y="462" class="d-t" font-size="12" text-anchor="middle">Server keeps the loudest value per interval</text>
+  <text x="360" y="477" class="d-t" font-size="12" text-anchor="middle">and publishes fewer frames to the browser</text>
+</svg>

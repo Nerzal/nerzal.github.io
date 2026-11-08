@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420">
+  <defs>
+    <marker id="ar-nc3-mute" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="40" width="150" height="64" rx="9" class="d-box d-g"/>
+  <text x="95" y="68" class="d-t d-bold" font-size="14" text-anchor="middle">Live</text>
+  <text x="95" y="88" class="d-m" font-size="12" text-anchor="middle">mic not muted</text>
+
+  <rect x="230" y="40" width="150" height="64" rx="9" class="d-box d-b"/>
+  <text x="305" y="68" class="d-t d-bold" font-size="14" text-anchor="middle">Muted, quiet</text>
+  <text x="305" y="88" class="d-m" font-size="12" text-anchor="middle">mute timer running</text>
+
+  <rect x="460" y="40" width="240" height="64" rx="9" class="d-box d-y"/>
+  <text x="580" y="66" class="d-t d-bold" font-size="14" text-anchor="middle">Muted, hears speech</text>
+  <text x="580" y="85" class="d-m" font-size="12" text-anchor="middle">raw peak clearly above noise floor</text>
+  <text x="580" y="99" class="d-m" font-size="11" text-anchor="middle">(measured before the mute)</text>
+
+  <rect x="460" y="220" width="240" height="64" rx="9" class="d-box d-r"/>
+  <text x="580" y="248" class="d-t d-bold" font-size="14" text-anchor="middle">ALARM</text>
+  <text x="580" y="268" class="d-m" font-size="12" text-anchor="middle">muted-mic warning</text>
+
+  <line x1="170" y1="62" x2="228" y2="62" class="d-arrow" marker-end="url(#ar-nc3-mute)"/>
+  <text x="199" y="54" class="d-m" font-size="11" text-anchor="middle">mute</text>
+  <line x1="228" y1="86" x2="172" y2="86" class="d-arrow" marker-end="url(#ar-nc3-mute)"/>
+  <text x="199" y="100" class="d-m" font-size="11" text-anchor="middle">unmute</text>
+
+  <line x1="382" y1="62" x2="458" y2="62" class="d-arrow" marker-end="url(#ar-nc3-mute)"/>
+  <text x="420" y="54" class="d-m" font-size="11" text-anchor="middle">loud frame</text>
+  <line x1="458" y1="86" x2="382" y2="86" class="d-arrow d-dashed" marker-end="url(#ar-nc3-mute)"/>
+  <text x="420" y="100" class="d-m" font-size="11" text-anchor="middle">window expires</text>
+
+  <line x1="580" y1="106" x2="580" y2="218" class="d-arrow" marker-end="url(#ar-nc3-mute)"/>
+  <text x="590" y="150" class="d-t" font-size="12">muted for a while</text>
+  <text x="590" y="166" class="d-t" font-size="12">and recent speech</text>
+  <text x="590" y="182" class="d-m" font-size="11">within a rolling window</text>
+
+  <path d="M700 252 C 716 252 716 300 700 300 L 660 300 L 660 286" class="d-arrow d-dashed" fill="none" marker-end="url(#ar-nc3-mute)"/>
+  <text x="580" y="316" class="d-m" font-size="12" text-anchor="middle">repeats at an interval while it lasts</text>
+
+  <path d="M460 252 C 300 252 95 252 95 108" class="d-arrow" fill="none" marker-end="url(#ar-nc3-mute)"/>
+  <text x="270" y="236" class="d-t" font-size="12" text-anchor="middle">unmute: timers and samples reset</text>
+
+  <rect x="20" y="336" width="680" height="64" rx="9" class="d-box"/>
+  <text x="360" y="360" class="d-t d-bold" font-size="13" text-anchor="middle">Silenced by design</text>
+  <text x="360" y="380" class="d-m" font-size="12" text-anchor="middle">quiet scenes (AFK, starting) · kill switch · only microphone inputs</text>
+</svg>

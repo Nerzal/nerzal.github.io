@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 330" width="720" height="330">
+  <defs>
+    <marker id="ar-nc4flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="30" width="150" height="66" rx="9" class="d-box d-b"/>
+  <text x="95" y="52" class="d-t d-bold" font-size="13" text-anchor="middle">Stream clip</text>
+  <text x="95" y="69" class="d-m" font-size="11.5" text-anchor="middle">full frame,</text>
+  <text x="95" y="83" class="d-m" font-size="11.5" text-anchor="middle">small cam corner</text>
+  <line x1="172" y1="63" x2="208" y2="63" class="d-arrow" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="210" y="30" width="160" height="66" rx="9" class="d-box d-b"/>
+  <text x="290" y="52" class="d-t d-bold" font-size="13" text-anchor="middle">ffmpeg crop</text>
+  <text x="290" y="69" class="d-m" font-size="11.5" text-anchor="middle">image frames,</text>
+  <text x="290" y="83" class="d-m" font-size="11.5" text-anchor="middle">shown pieces only</text>
+  <line x1="372" y1="63" x2="408" y2="63" class="d-arrow" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="410" y="30" width="290" height="66" rx="9" class="d-box d-y"/>
+  <text x="555" y="52" class="d-t d-bold" font-size="13" text-anchor="middle">External upscaler</text>
+  <text x="555" y="70" class="d-m" font-size="11.5" text-anchor="middle">separate process, on the GPU</text>
+
+  <line x1="555" y1="98" x2="555" y2="126" class="d-arrow" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="410" y="130" width="290" height="66" rx="9" class="d-box d-b"/>
+  <text x="555" y="152" class="d-t d-bold" font-size="13" text-anchor="middle">ffmpeg re-time + encode</text>
+  <text x="555" y="169" class="d-m" font-size="11.5" text-anchor="middle">fit to the strip,</text>
+  <text x="555" y="183" class="d-m" font-size="11.5" text-anchor="middle">optional blend</text>
+
+  <line x1="408" y1="163" x2="372" y2="163" class="d-arrow" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="210" y="130" width="160" height="66" rx="9" class="d-box d-g"/>
+  <text x="290" y="152" class="d-t d-bold" font-size="13" text-anchor="middle">Cache file</text>
+  <text x="290" y="169" class="d-m" font-size="11.5" text-anchor="middle">keyed by</text>
+  <text x="290" y="183" class="d-m" font-size="11.5" text-anchor="middle">all inputs</text>
+
+  <line x1="290" y1="198" x2="290" y2="236" class="d-arrow" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="20" y="130" width="150" height="66" rx="9" class="d-box"/>
+  <text x="95" y="152" class="d-t d-bold" font-size="13" text-anchor="middle">Cache key</text>
+  <text x="95" y="169" class="d-m" font-size="11.5" text-anchor="middle">source, crop,</text>
+  <text x="95" y="183" class="d-m" font-size="11.5" text-anchor="middle">parts, settings</text>
+  <line x1="172" y1="163" x2="208" y2="163" class="d-arrow d-dashed" marker-end="url(#ar-nc4flow)"/>
+
+  <rect x="150" y="240" width="420" height="60" rx="9" class="d-box d-r"/>
+  <text x="360" y="265" class="d-t d-bold" font-size="13" text-anchor="middle">Short render: second ffmpeg input</text>
+  <text x="360" y="284" class="d-m" font-size="11.5" text-anchor="middle">attached to the source frame, layout takes the cam from it</text>
+</svg>
