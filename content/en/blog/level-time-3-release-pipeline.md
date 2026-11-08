@@ -2,7 +2,7 @@
 draft: false
 title: "Building Level Time — Part 3: Release Pipeline with a Go Installer, BigWigs Packager and CurseForge"
 seo_title: "WoW Addon Release Pipeline: BigWigs Packager + CurseForge"
-date: 2026-11-08T07:20:00+01:00
+date: 2026-11-25T08:00:00+01:00
 tags:
   [
     "wow-addon",

@@ -2,7 +2,7 @@
 draft: false
 title: "Level Time bauen — Teil 1: Anatomie eines WoW-Addons — Events, Tracking, Historie, UI"
 seo_title: "WoW-Addon-Architektur: Events, SavedVariables, Multi-Client"
-date: 2026-11-08T07:00:00+01:00
+date: 2026-11-11T08:00:00+01:00
 tags:
   [
     "lua",

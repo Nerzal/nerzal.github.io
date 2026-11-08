@@ -1,0 +1,29 @@
+{{- /*
+    render-link
+
+    Markdown link render hook. Internal links to blog posts or pages that are
+    not built yet (future-dated, scheduled releases) render as plain text, so a
+    series box can list upcoming parts without producing 404 links. Once the
+    target is published, the next scheduled build turns the text into a link.
+
+    Everything else (external links, anchors, assets) renders unchanged.
+*/ -}}
+{{- $destination := .Destination -}}
+{{- $isInternalContent := false -}}
+{{- $target := "" -}}
+{{- if and (hasPrefix $destination "/") (not (hasPrefix $destination "//")) -}}
+    {{- $path := index (split $destination "#") 0 -}}
+    {{- $languagePrefix := printf "/%s/" .Page.Language.Lang -}}
+    {{- if hasPrefix $path $languagePrefix -}}
+        {{- $path = strings.TrimPrefix (printf "/%s" .Page.Language.Lang) $path -}}
+    {{- end -}}
+    {{- if or (hasPrefix $path "/blog/") (hasPrefix $path "/page/") -}}
+        {{- $isInternalContent = true -}}
+        {{- $target = site.GetPage (strings.TrimSuffix "/" $path) -}}
+    {{- end -}}
+{{- end -}}
+{{- if and $isInternalContent (not $target) -}}
+    <span class="link-upcoming">{{ .Text | safeHTML }}</span>
+{{- else -}}
+    <a href="{{ $destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix $destination "http" }} rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}

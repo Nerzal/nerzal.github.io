@@ -2,7 +2,7 @@
 draft: false
 title: "Level Time bauen — Teil 4: Ein Schwester-Addon über eine öffentliche API — Level Time Goals und das Glücksrad"
 seo_title: "WoW-Addon-API in Lua: Level Time Goals als Fallstudie"
-date: 2026-11-08T07:30:00+01:00
+date: 2026-12-02T08:00:00+01:00
 tags:
   [
     "lua",

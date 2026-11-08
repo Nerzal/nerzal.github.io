@@ -2,7 +2,7 @@
 draft: false
 title: "Building Level Time — Part 2: Testing a Lua WoW Addon from Go with gopher-lua"
 seo_title: "Testing a Lua WoW Addon from Go with gopher-lua"
-date: 2026-11-08T07:10:00+01:00
+date: 2026-11-18T08:00:00+01:00
 tags:
   [
     "go",

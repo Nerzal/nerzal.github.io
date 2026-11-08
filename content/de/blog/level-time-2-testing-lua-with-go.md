@@ -2,7 +2,7 @@
 draft: false
 title: "Level Time bauen — Teil 2: Ein Lua-WoW-Addon mit Go und gopher-lua testen"
 seo_title: "WoW-Addon (Lua) mit Go und gopher-lua testen"
-date: 2026-11-08T07:10:00+01:00
+date: 2026-11-18T08:00:00+01:00
 tags:
   [
     "go",

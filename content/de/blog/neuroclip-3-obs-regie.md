@@ -2,7 +2,7 @@
 draft: false
 title: "Neuroclip bauen — Teil 3: OBS-Regie — WebSocket, Audiopegel und der Stumm-Alarm"
 seo_title: "OBS WebSocket v5 in Go: Audiopegel und Stumm-Alarm"
-date: 2026-11-08T06:20:00+01:00
+date: 2026-11-22T08:00:00+01:00
 tags:
   [
     "go",

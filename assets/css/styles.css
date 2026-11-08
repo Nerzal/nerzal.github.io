@@ -3687,3 +3687,8 @@ body.is-restoring {
 
 .product-cta > :first-child { margin-top: 0; }
 .product-cta > :last-child { margin-bottom: 0; }
+
+/* Internal link to a scheduled, not yet published post (render-link hook) */
+.link-upcoming {
+    color: rgba(var(--text-rgb), 0.7);
+}

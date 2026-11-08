@@ -9,6 +9,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  # Daily rebuild so future-dated (scheduled) posts go live on their date.
+  # Hugo skips future content at build time; without a rebuild nothing changes.
+  # 07:30 UTC = 08:30 CET, shortly after the 08:00 publish time of scheduled posts.
+  schedule:
+    - cron: "30 7 * * *"
+
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read

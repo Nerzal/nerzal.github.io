@@ -2,7 +2,7 @@
 draft: false
 title: "Building Neuroclip — Part 2: From VOD to Short — the ffmpeg, Whisper and subtitle pipeline"
 seo_title: "VOD to Short: ffmpeg, Whisper and Subtitles from Go"
-date: 2026-11-08T06:10:00+01:00
+date: 2026-11-15T08:00:00+01:00
 tags:
   [
     "go",

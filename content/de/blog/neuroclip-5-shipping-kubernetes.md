@@ -2,7 +2,7 @@
 draft: false
 title: "Neuroclip bauen — Teil 5: Ausliefern — CI, signierte Images und Kubernetes hinter Keycloak"
 seo_title: "Signierte Docker-Images mit cosign, GitOps und Keycloak"
-date: 2026-11-08T06:40:00+01:00
+date: 2026-12-06T08:00:00+01:00
 tags:
   [
     "go",
