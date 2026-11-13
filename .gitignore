@@ -3,3 +3,11 @@ resources/
 node_modules/
 # Added by code-review-graph
 .code-review-graph/
+
+# Machine-specific agent configs (absolute local paths)
+.mcp.json
+.qoder/mcp.json
+.gemini/settings.json
+.gemini/settings.json.bak
+.gemini/hooks/
+opencode.jsonc
