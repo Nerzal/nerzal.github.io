@@ -37,7 +37,8 @@ You need the **gcloud CLI** and a GCP project with billing enabled.
 
 ### Install the gcloud CLI
 
-**Linux:**
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
 
 ```bash
 # Debian / Ubuntu — add Google's package repository
@@ -52,12 +53,24 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 sudo apt-get update && sudo apt-get install -y google-cloud-cli
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "macOS" >}}
+
+```bash
+# Homebrew (https://brew.sh/)
+brew install --cask gcloud-cli
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 # Requires PowerShell 5.1+; PowerShell 7 recommended
 winget install --id Google.CloudSDK -e
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 If `winget` is unavailable, download the installer from the [gcloud CLI install docs](https://cloud.google.com/sdk/docs/install). PowerShell 7 setup is covered in [Upgrade to PowerShell 7](/blog/upgrade-powershell-7/).
 
@@ -188,13 +201,22 @@ gcloud compute instances list
 
 Then request one of them directly:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 curl http://EXTERNAL_IP_OF_WEB1
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 Invoke-RestMethod -Uri "http://EXTERNAL_IP_OF_WEB1"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ### Step 3 — Build the load balancer
 
@@ -234,12 +256,18 @@ A **target pool** is the legacy backend type for this balancer. It still works a
 
 ### Step 4 — Watch it distribute
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 IP=$(gcloud compute forwarding-rules describe www-rule \
     --region=us-east1 --format="value(IPAddress)")
 
 while true; do curl -s -m 2 "http://$IP"; sleep 1; done
 ```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 $ip = gcloud compute forwarding-rules describe www-rule `
@@ -250,6 +278,9 @@ while ($true) {
     Start-Sleep -Seconds 1
 }
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 The output cycles between `web1`, `web2` and `web3`. Stop it with `Ctrl+C`.
 

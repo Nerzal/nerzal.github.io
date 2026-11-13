@@ -25,17 +25,22 @@ The global exclude file is the right place for rules that are specific to **your
 
 By convention the file is named `.gitignore_global` and lives in your home directory, but you can place it anywhere and call it anything.
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 touch ~/.gitignore_global
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 New-Item -ItemType File -Path "$env:USERPROFILE\.gitignore_global"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 {{< figure src="/img/global_gitignore_new_item.png" alt="PowerShell output of New-Item creating .gitignore_global" >}}
 
@@ -43,17 +48,22 @@ New-Item -ItemType File -Path "$env:USERPROFILE\.gitignore_global"
 
 Register the file with Git via the `core.excludesFile` config key.
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 git config --global core.excludesFile ~/.gitignore_global
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 git config --global core.excludesFile "$env:USERPROFILE\.gitignore_global"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 This writes one line into `~/.gitconfig` (Linux/macOS) or `%USERPROFILE%\.gitconfig` (Windows):
 
@@ -64,13 +74,22 @@ This writes one line into `~/.gitconfig` (Linux/macOS) or `%USERPROFILE%\.gitcon
 
 You can verify it was written correctly:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 git config --global core.excludesFile
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 git config --global core.excludesFile
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Both should print the path you set.
 
@@ -119,14 +138,16 @@ Rules use the same glob syntax as a regular `.gitignore`. Blank lines and lines 
 
 Maintaining this list by hand gets tedious. [gitignore.io](https://www.toptal.com/developers/gitignore) (also accessible via API) generates tailored ignore rules for any combination of operating systems, editors, and languages. For example, to get rules for macOS + Windows + JetBrains + Go in the terminal:
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 curl -sL "https://www.toptal.com/developers/gitignore/api/macos,windows,jetbrains+all,go" \
   >> ~/.gitignore_global
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/windows,jetbrains+all,go" `
@@ -134,13 +155,17 @@ Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/windows,
   | Add-Content -Path "$env:USERPROFILE\.gitignore_global"
 ```
 
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
 The GitHub team also maintains a curated collection of templates at [github/gitignore](https://github.com/github/gitignore). Each file there covers one language or tool and is a reliable reference.
 
 ## Verify it works
 
 Create a throwaway file that matches a rule and confirm Git ignores it:
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 cd /tmp && git init test-repo && cd test-repo
@@ -148,7 +173,8 @@ touch .DS_Store
 git status
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 $null = New-Item -ItemType Directory -Path "$env:TEMP\test-repo"; cd "$env:TEMP\test-repo"
@@ -156,6 +182,9 @@ git init
 New-Item -ItemType File -Path "Thumbs.db"
 git status
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 `git status` should report a clean working tree — the file is invisible to Git.
 

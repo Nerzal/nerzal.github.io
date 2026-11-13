@@ -19,6 +19,124 @@
 })();
 
 document.addEventListener("DOMContentLoaded", function () {
+  // OS tabs: show one platform variant of a code example at a time
+  (function () {
+    var groups = Array.prototype.slice.call(
+      document.querySelectorAll(".os-tabs"),
+    );
+    if (!groups.length) return;
+
+    var storageKey = "os-tab";
+    var platformPattern = /windows|macos|linux/i;
+
+    function readPreference() {
+      try {
+        return localStorage.getItem(storageKey);
+      } catch {
+        return null;
+      }
+    }
+
+    function writePreference(label) {
+      try {
+        localStorage.setItem(storageKey, label);
+      } catch {
+        // Storage blocked: the choice still applies to this page.
+      }
+    }
+
+    function platformOf(text) {
+      var match = text && text.match(platformPattern);
+      return match ? match[0].toLowerCase() : null;
+    }
+
+    function detectPlatform() {
+      var platform =
+        (navigator.userAgentData && navigator.userAgentData.platform) ||
+        navigator.userAgent;
+      if (/win/i.test(platform)) return "windows";
+      if (/mac/i.test(platform)) return "macos";
+      if (/linux|x11/i.test(platform)) return "linux";
+      return null;
+    }
+
+    function pickIndex(labels, preferred) {
+      var exact = labels.indexOf(preferred);
+      if (exact !== -1) return exact;
+      // "Linux / macOS" in one post should still match "Linux" in another.
+      var platform = platformOf(preferred) || detectPlatform();
+      for (var i = 0; i < labels.length; i++) {
+        if (platform && labels[i].toLowerCase().indexOf(platform) !== -1)
+          return i;
+      }
+      return 0;
+    }
+
+    function select(group, index) {
+      group.buttons.forEach(function (button, i) {
+        var active = i === index;
+        button.setAttribute("aria-selected", active ? "true" : "false");
+        button.tabIndex = active ? 0 : -1;
+        group.panels[i].hidden = !active;
+      });
+    }
+
+    function selectEverywhere(label) {
+      writePreference(label);
+      groups.forEach(function (group) {
+        select(group, pickIndex(group.labels, label));
+      });
+    }
+
+    groups = groups.map(function (element, groupIndex) {
+      var panels = Array.prototype.slice.call(
+        element.querySelectorAll(":scope > .os-tab"),
+      );
+      var tablist = document.createElement("div");
+      tablist.className = "os-tablist";
+      tablist.setAttribute("role", "tablist");
+      var group = { panels: panels, labels: [], buttons: [] };
+
+      panels.forEach(function (panel, i) {
+        var id = "os-tab-" + groupIndex + "-" + i;
+        var label = panel.getAttribute("data-label");
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "os-tab-button";
+        button.id = id;
+        button.textContent = label;
+        button.setAttribute("role", "tab");
+        button.setAttribute("aria-controls", id + "-panel");
+        panel.id = id + "-panel";
+        panel.setAttribute("role", "tabpanel");
+        panel.setAttribute("aria-labelledby", id);
+        button.addEventListener("click", function () {
+          selectEverywhere(label);
+        });
+        button.addEventListener("keydown", function (event) {
+          var step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+          if (!step) return;
+          event.preventDefault();
+          var next = (i + step + panels.length) % panels.length;
+          selectEverywhere(group.labels[next]);
+          group.buttons[next].focus();
+        });
+        group.labels.push(label);
+        group.buttons.push(button);
+        tablist.appendChild(button);
+      });
+
+      element.insertBefore(tablist, element.firstChild);
+      element.classList.add("is-enhanced");
+      return group;
+    });
+
+    var preferred = readPreference();
+    groups.forEach(function (group) {
+      select(group, pickIndex(group.labels, preferred));
+    });
+  })();
+
   // Lightbox for blog post images
   (function () {
     var content = document.querySelector(".post-article-content");

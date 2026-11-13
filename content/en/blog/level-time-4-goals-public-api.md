@@ -275,6 +275,9 @@ expect("pointer on the result",
 
 `wow.update(seconds)` advances the fake clock and calls the `OnUpdate` scripts with that elapsed time, so a four-second spin takes a few dozen synchronous calls and no real waiting. The same scenario covers rerolls counting down, the spin on level-up and the "animation off" path. To run all addon tests:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 # Linux / macOS (needs Go and make)
 git clone https://github.com/Noobygames/wow-statistics.git
@@ -282,12 +285,18 @@ cd wow-statistics
 make test-addon
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Windows (PowerShell, needs Go; make is optional)
 git clone https://github.com/Noobygames/wow-statistics.git
 cd wow-statistics
 go -C tools/addontest test -count=1 ./...
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Install Go from [go.dev/doc/install](https://go.dev/doc/install). The PowerShell variant is exactly what the Makefile target runs.
 

@@ -234,7 +234,10 @@ Nach einer Installation sagt die Ausgabe, ob `/reload` im Spiel reicht oder ob d
 
 ### Benutzung
 
-Das `Makefile` verpackt die gängigen Fälle. Unter Linux oder macOS:
+Das `Makefile` verpackt die gängigen Fälle.
+
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # Interactive wizard: choose flavors, review the plan, confirm
@@ -250,7 +253,10 @@ make dry-run
 make install ARGS="-flavors retail -wow '$HOME/Games/World of Warcraft'"
 ```
 
-Unter Windows kannst du `make` nutzen, falls vorhanden, das Go-Tool selbst braucht aber nur Go. In PowerShell:
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+Du kannst `make` nutzen, falls vorhanden, das Go-Tool selbst braucht aber nur Go:
 
 ```powershell
 # Interactive wizard from the repository root
@@ -260,6 +266,9 @@ go -C tools/installer run . -src "$PWD" -version dev
 go -C tools/installer run . -src "$PWD" -version dev -dry-run -yes `
   -flavors retail -wow "D:\Games\World of Warcraft"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Go installierst du nach [go.dev/doc/install](https://go.dev/doc/install). Das Flag `-C` des `go`-Befehls braucht Go 1.20 oder neuer, die CI nutzt Go 1.23.
 
@@ -284,7 +293,8 @@ Im Ordner `tools/` liegen weitere Programme. Je eine Zeile, denn sie gehören ni
 
 Die Checkliste, der ich folge. Ersetze die Version durch deine nächste.
 
-Unter Linux oder macOS:
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # 1. Be on a clean, up-to-date main
@@ -301,7 +311,8 @@ git push origin v2.27.0
 gh run watch
 ```
 
-In PowerShell:
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 git switch main; git pull --ff-only
@@ -314,6 +325,9 @@ git push origin v2.27.0
 
 gh run watch
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Die [GitHub CLI](https://cli.github.com/) (`gh`) ist optional; der Actions-Tab zeigt denselben Lauf. Sind die Tests grün, packt der Release-Job, legt das GitHub-Release an und lädt zu CurseForge hoch. CurseForge prüft eine neue Datei unter Umständen kurz, bevor sie öffentlich erscheint; das liegt nicht in meiner Hand.
 

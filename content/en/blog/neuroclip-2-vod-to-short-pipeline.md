@@ -54,17 +54,26 @@ The most valuable decision for transcription quality happens in OBS, before Neur
 
 Why does this matter? A speech model that hears game explosions, alert sounds and a friend in a call at the same time makes worse guesses. Feeding it the microphone alone is the cheapest accuracy gain available. If a source has more than one audio track, the mic track is extracted into a temporary 16 kHz mono WAV; otherwise the mix is used. This is plain ffmpeg, and you can try it on your own recording:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 # Extract the 2nd audio track (index counted from 0) as 16 kHz mono WAV
 ffmpeg -hide_banner -loglevel error -y -i stream.mkv \
   -map 0:a:1 -ac 1 -ar 16000 -c:a pcm_s16le mic.wav
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Same command in PowerShell; the backtick continues the line
 ffmpeg -hide_banner -loglevel error -y -i stream.mkv `
   -map 0:a:1 -ac 1 -ar 16000 -c:a pcm_s16le mic.wav
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 To see what your own recording contains, use ffprobe, which ships with ffmpeg. The command is the same on both platforms:
 
@@ -76,15 +85,32 @@ ffprobe -v error -select_streams a -show_entries stream=index:stream_tags=title 
 
 To follow along with the filter graph below you need ffmpeg on your `PATH`. The [download page](https://ffmpeg.org/download.html) lists all options.
 
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
+
 ```bash
 # Debian / Ubuntu
 sudo apt-get update && sudo apt-get install -y ffmpeg
 ```
 
+{{< /os-tab >}}
+{{< os-tab "macOS" >}}
+
+```bash
+# Homebrew (https://brew.sh/)
+brew install ffmpeg
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Windows 10/11 with winget (Gyan.FFmpeg is the full build)
 winget install --id Gyan.FFmpeg -e
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ## Stage 3: Speech recognition with faster-whisper
 
@@ -130,17 +156,26 @@ Two rectangles describe the layout, and where they come from has an order of pre
 
 The renderer assembles an ffmpeg [`-filter_complex`](https://ffmpeg.org/ffmpeg-filters.html) string from numbers and fixed fragments. Read the following as a pipeline: `split` duplicates the video, each copy is cropped to its box and scaled to full width, and `vstack` stacks the two strips. Both strips need even dimensions, because H.264 with 4:2:0 chroma subsampling requires it. This generic example uses illustrative numbers for a 480 x 270 webcam box in the top right and a roughly portrait game box:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex \
   "[0:v]split=2[a][b];[a]crop=480:270:1440:0,scale=1080:608[c];[b]crop=880:1070:100:5,scale=1080:1312[g];[c][g]vstack" \
   -c:v libx264 -crf 20 -preset veryfast -pix_fmt yuv420p -c:a aac short.mp4
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
   "[0:v]split=2[a][b];[a]crop=480:270:1440:0,scale=1080:608[c];[b]crop=880:1070:100:5,scale=1080:1312[g];[c][g]vstack" `
   -c:v libx264 -crf 20 -preset veryfast -pix_fmt yuv420p -c:a aac short.mp4
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 (608 + 1312 = 1920. Replace `libx264` with `h264_nvenc` if you have an NVIDIA GPU.)
 

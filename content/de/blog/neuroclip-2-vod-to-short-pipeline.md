@@ -54,17 +54,26 @@ Die wertvollste Entscheidung für die Qualität der Transkription fällt in OBS,
 
 Warum ist das wichtig? Ein Spracherkennungsmodell, das Spielexplosionen, Alert-Sounds und einen Freund im Call gleichzeitig hört, rät schlechter. Ihm nur das Mikrofon zu geben, ist der billigste Genauigkeitsgewinn, den es gibt. Hat die Quelle mehr als eine Audiospur, wird die Mikrospur in eine temporäre WAV-Datei (16 kHz, mono) extrahiert; sonst bleibt es bei der Mischung. Das ist schlichtes ffmpeg, und du kannst es an deiner eigenen Aufnahme ausprobieren:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 # Die 2. Audiospur (Index ab 0 gezählt) als 16-kHz-Mono-WAV extrahieren
 ffmpeg -hide_banner -loglevel error -y -i stream.mkv \
   -map 0:a:1 -ac 1 -ar 16000 -c:a pcm_s16le mic.wav
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Derselbe Befehl in PowerShell; der Backtick setzt die Zeile fort
 ffmpeg -hide_banner -loglevel error -y -i stream.mkv `
   -map 0:a:1 -ac 1 -ar 16000 -c:a pcm_s16le mic.wav
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Was deine eigene Aufnahme enthält, prüfst du mit ffprobe, das mit ffmpeg mitkommt. Der Befehl ist auf beiden Plattformen derselbe:
 
@@ -76,15 +85,32 @@ ffprobe -v error -select_streams a -show_entries stream=index:stream_tags=title 
 
 Wenn du den Filtergraphen unten nachvollziehen willst, brauchst du ffmpeg im `PATH`. Die [Download-Seite](https://ffmpeg.org/download.html) listet alle Möglichkeiten.
 
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
+
 ```bash
 # Debian / Ubuntu
 sudo apt-get update && sudo apt-get install -y ffmpeg
 ```
 
+{{< /os-tab >}}
+{{< os-tab "macOS" >}}
+
+```bash
+# Homebrew (https://brew.sh/)
+brew install ffmpeg
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Windows 10/11 mit winget (Gyan.FFmpeg ist der volle Build)
 winget install --id Gyan.FFmpeg -e
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ## Stufe 3: Spracherkennung mit faster-whisper
 
@@ -130,17 +156,26 @@ Zwei Rechtecke beschreiben das Layout, und woher sie kommen, folgt einer Rangfol
 
 Der Renderer baut einen ffmpeg-[`-filter_complex`](https://ffmpeg.org/ffmpeg-filters.html)-String aus Zahlen und festen Bausteinen zusammen. Lies das Folgende als Pipeline: `split` dupliziert das Video, jede Kopie wird auf ihren Rahmen zugeschnitten und auf volle Breite skaliert, und `vstack` stapelt die beiden Streifen. Beide Streifen brauchen gerade Abmessungen, weil H.264 mit 4:2:0-Chroma-Subsampling das verlangt. Dieses generische Beispiel nutzt Zahlen zur Illustration für einen 480 x 270 großen Webcam-Rahmen oben rechts und einen annähernd hochformatigen Spielrahmen:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex \
   "[0:v]split=2[a][b];[a]crop=480:270:1440:0,scale=1080:608[c];[b]crop=880:1070:100:5,scale=1080:1312[g];[c][g]vstack" \
   -c:v libx264 -crf 20 -preset veryfast -pix_fmt yuv420p -c:a aac short.mp4
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
   "[0:v]split=2[a][b];[a]crop=480:270:1440:0,scale=1080:608[c];[b]crop=880:1070:100:5,scale=1080:1312[g];[c][g]vstack" `
   -c:v libx264 -crf 20 -preset veryfast -pix_fmt yuv420p -c:a aac short.mp4
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 (608 + 1312 = 1920. Ersetze `libx264` durch `h264_nvenc`, wenn du eine NVIDIA-GPU hast.)
 

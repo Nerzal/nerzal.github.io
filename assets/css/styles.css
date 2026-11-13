@@ -3692,3 +3692,51 @@ body.is-restoring {
 .link-upcoming {
     color: rgba(var(--text-rgb), 0.7);
 }
+
+/* OS tabs shortcode — platform-specific code blocks, one visible at a time */
+.os-tabs {
+    margin: 1.5rem 0;
+}
+
+.os-tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-bottom: 1px solid rgba(var(--text-rgb), 0.15);
+}
+
+.os-tab-button {
+    padding: 0.45rem 0.9rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(var(--text-rgb), 0.65);
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.os-tab-button:hover,
+.os-tab-button[aria-selected="true"] {
+    color: var(--highlight-color);
+}
+
+.os-tab-button[aria-selected="true"] {
+    border-bottom-color: var(--highlight-color);
+}
+
+.os-tab-button:focus-visible {
+    outline: 2px solid var(--highlight-color);
+    outline-offset: 2px;
+}
+
+.os-tab-label {
+    font-weight: 700;
+}
+
+.os-tabs.is-enhanced .os-tab-label {
+    display: none;
+}

@@ -35,7 +35,10 @@ Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Sei
 
 Um die volle Funktionalität zu gewährleisten – besonders wenn dein Theme Sass/SCSS verwendet – empfiehlt es sich, die **Hugo Extended**-Version zu installieren.
 
-### Unter Windows installieren (empfohlen)
+### Hugo Extended installieren
+
+{{< os-tabs >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist **Winget** (Windows Package Manager), der in modernem Windows 10/11 integriert ist.
 
@@ -48,7 +51,17 @@ Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist **Winget** 
 
 3.  Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.
 
-### Unter Linux installieren
+{{< /os-tab >}}
+{{< os-tab "macOS" >}}
+
+Unter macOS geht es am einfachsten mit [Homebrew](https://brew.sh/). Die `hugo`-Formel installiert die Extended-Edition:
+
+```bash
+brew install hugo
+```
+
+{{< /os-tab >}}
+{{< os-tab "Linux" >}}
 
 Für Debian-basierte Systeme (wie Ubuntu):
 1.  Lade die neueste Hugo Extended `.deb`-Datei von der Hugo Releases-Seite herunter. Suche nach `hugo_extended_VERSION_linux-amd64.deb`.
@@ -66,6 +79,9 @@ Für andere Linux-Distributionen kannst du das Tarball herunterladen:
     tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
     sudo mv hugo /usr/local/bin/
     ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ### Installation überprüfen
 

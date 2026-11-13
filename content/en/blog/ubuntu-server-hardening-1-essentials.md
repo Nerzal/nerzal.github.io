@@ -67,13 +67,22 @@ sudo ufw limit OpenSSH
 
 Before closing your session, open a second terminal and confirm SSH still works:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ssh deploy@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh deploy@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ---
 

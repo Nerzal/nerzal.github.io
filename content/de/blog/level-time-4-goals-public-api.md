@@ -275,6 +275,9 @@ expect("pointer on the result",
 
 `wow.update(seconds)` schiebt die Fake-Uhr vor und ruft die `OnUpdate`-Skripte mit dieser vergangenen Zeit auf, eine Drehung von vier Sekunden braucht also ein paar Dutzend synchrone Aufrufe und keine echte Wartezeit. Dasselbe Szenario deckt auch das Herunterzählen der Neuwürfe, die Drehung beim Level-Up und den Pfad „Animation aus“ ab. So lässt du alle Addon-Tests laufen:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 # Linux / macOS (needs Go and make)
 git clone https://github.com/Noobygames/wow-statistics.git
@@ -282,12 +285,18 @@ cd wow-statistics
 make test-addon
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 # Windows (PowerShell, needs Go; make is optional)
 git clone https://github.com/Noobygames/wow-statistics.git
 cd wow-statistics
 go -C tools/addontest test -count=1 ./...
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Go installierst du über [go.dev/doc/install](https://go.dev/doc/install). Die PowerShell-Variante ist genau das, was das Makefile-Ziel ausführt.
 

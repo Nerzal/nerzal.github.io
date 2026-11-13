@@ -142,7 +142,8 @@ Der Fullscreen-Modus reagiert sowohl auf Tastatur als auch auf Presenter-Fernbed
 
 Ein vorgebautes Image wird auf GHCR veröffentlicht: `ghcr.io/nerzal/talkfrontend`. Es kommt **ohne meine eigenen Vortragsdaten** – der Publish-Workflow baut das Image und tauscht `dist/talks` anschließend gegen ein generisches Platzhalter-Verzeichnis, bevor es gepusht wird. Es lässt sich also gefahrlos von jedem so verwenden. Vorträge werden vom Browser zur Laufzeit geladen, du kannst also eigene Daten liefern, ohne das Image überhaupt neu zu bauen – einfach ein Verzeichnis über `/app/dist/talks` bind-mounten:
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 docker run -p 8080:8080 \
@@ -150,13 +151,17 @@ docker run -p 8080:8080 \
   ghcr.io/nerzal/talkfrontend:edge
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 docker run -p 8080:8080 `
   -v "${PWD}/my-talks:/app/dist/talks:ro" `
   ghcr.io/nerzal/talkfrontend:edge
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Dein `my-talks`-Verzeichnis braucht dieselbe Struktur aus `index.json`, `default-slides.md` und `<id>/talk.md`, wie oben beschrieben.
 
@@ -170,7 +175,8 @@ Verfügbare Image-Tags: `edge` (aktuellster `main`-Stand) sowie `1.2.3` / `1.2` 
 
 ## Lokal ausführen
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 git clone git@github.com:Nerzal/talkfrontend.git
@@ -179,7 +185,8 @@ npm install
 npm run dev
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 git clone git@github.com:Nerzal/talkfrontend.git
@@ -187,6 +194,9 @@ Set-Location talkfrontend
 npm install
 npm run dev
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Der Dev-Server startet unter `http://localhost:5173`. Der eingebaute Vortrag `feature-tour-2026-07` demonstriert und erklärt jedes Layout direkt in der App – öffne ihn als lebende Referenz, während du deinen eigenen Vortrag schreibst.
 

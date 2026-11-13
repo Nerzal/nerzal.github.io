@@ -21,19 +21,24 @@ In this post we implement Game of Life in Go from scratch, step by step. By the 
 
 You need [Go](https://go.dev/dl/) installed on your machine. The standard library is sufficient — no third-party packages are required for this tutorial.
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # Verify installation
 go version
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 # Verify installation
 go version
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 If `go version` prints something like `go version go1.22 linux/amd64` you are good to go. If not, follow the [official installation guide](https://go.dev/doc/install).
 
@@ -290,17 +295,22 @@ func main() {
 
 ## Running the Program
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 go run main.go
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 go run main.go
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Press `Ctrl+C` to stop. You should see the Glider and LWSS patterns moving across the terminal.
 

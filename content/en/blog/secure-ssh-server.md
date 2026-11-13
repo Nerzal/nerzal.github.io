@@ -41,17 +41,22 @@ An SSH key pair consists of two mathematically linked files:
 
 The current recommendation is **Ed25519**, an elliptic-curve algorithm defined in [RFC 8032](https://datatracker.ietf.org/doc/html/rfc8032). It produces shorter keys than RSA while offering equivalent or better security, and it is supported by all modern OpenSSH versions (≥ 6.5).
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 `ssh-keygen` is part of the OpenSSH client that ships with Windows 10 (version 1809) and later. If you are on an older version, install it via _Optional Features_ or use [PuTTYgen](https://www.chiark.greenend.org.uk/~sgtatham/putty/).
 
@@ -98,14 +103,18 @@ ssh -vvv deploy@your-server-ip 2>&1 | grep "kex:"
 
 `ssh-agent` holds your decrypted key in memory for the duration of your session.
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
-**Windows (PowerShell) — run once to enable the service:**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+Run once to enable the service:
 
 > **Administrator rights required.** The first two commands modify a Windows service and must run in an **elevated PowerShell session**. Right-click the Start menu → **Terminal (Admin)** or **Windows PowerShell (Admin)**, or search for "PowerShell", right-click the result, and select _Run as administrator_. The third command (`ssh-add`) can then be run in any regular terminal.
 
@@ -115,6 +124,9 @@ Start-Service ssh-agent
 ssh-add "$env:USERPROFILE\.ssh\id_ed25519"
 ```
 
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
 ---
 
 ## Step 2 — Create a Dedicated Sudo User on the Server
@@ -123,13 +135,22 @@ Never work as `root` day-to-day. Create a regular user and grant it `sudo` acces
 
 Connect to your server as root (your last root login for a while):
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ssh root@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh root@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 ### Create the user
 
@@ -174,31 +195,45 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub deploy@your-server-ip
 
 ### Option B — Manual copy (works everywhere, including Windows)
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 cat ~/.ssh/id_ed25519.pub | ssh deploy@your-server-ip \
   "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 $pubKey = Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub"
 ssh deploy@your-server-ip "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '$pubKey' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
 
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
 ### Verify key-based login before proceeding
 
 Open a **new terminal** (keep the old session open) and test:
+
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 ssh -i ~/.ssh/id_ed25519 deploy@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh -i "$env:USERPROFILE\.ssh\id_ed25519" deploy@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 You should be logged in. If you set a passphrase, you will be prompted for it. If the login fails, **do not proceed to Step 4** — troubleshoot first (check file permissions, key placement, and `~/.ssh/authorized_keys` content on the server).
 
@@ -258,35 +293,62 @@ sudo systemctl reload ssh
 
 From a **new terminal** on your local machine, confirm that key-based login still works:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ssh deploy@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh deploy@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Then confirm that password authentication is rejected:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ssh -o PasswordAuthentication=yes -o PubkeyAuthentication=no deploy@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh -o PasswordAuthentication=yes -o PubkeyAuthentication=no deploy@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 You should see `Permission denied (publickey)` — that is the correct response.
 
 Also confirm that root login is blocked:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 ssh root@your-server-ip
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 ssh root@your-server-ip
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Expected result: `Permission denied (publickey)` — root login is gone.
 

@@ -1,0 +1,5 @@
+{{- $label := .Get 0 -}}
+<div class="os-tab" data-label="{{ $label }}">
+<p class="os-tab-label">{{ $label }}</p>
+{{ .Inner | .Page.RenderString (dict "display" "block") }}
+</div>

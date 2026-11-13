@@ -215,13 +215,22 @@ func findFFmpeg(environmentValue string, lookPath func(string) (string, error)) 
 
 Die entscheidende Funktion nimmt ihre Lookups als Parameter, sodass ein Unit-Test jeden Zweig abdeckt, ohne etwas zu installieren, während ein dünner Aufrufer `os.Getenv` und `exec.LookPath` einsteckt. So zeigst du einem Tool ein bestimmtes ffmpeg:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 export FFMPEG=/usr/local/bin/ffmpeg
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 $env:FFMPEG = "C:\tools\ffmpeg\bin\ffmpeg.exe"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Wenn du ffmpeg selbst brauchst, listet die offizielle [Download-Seite](https://ffmpeg.org/download.html) Builds für beide Plattformen. Ein fehlendes optionales Programm ist eine *Fähigkeit*, die das Dashboard mit Begründung als nicht verfügbar anzeigt, kein Absturz.
 
@@ -231,13 +240,22 @@ Das Cockpit wird unter Windows entwickelt und als Linux-Container ausgeliefert, 
 
 Plattformunterschiede sind über Dateisuffixe und Build-Constraints (`_windows.go`, `_other.go`) isoliert statt über `if runtime.GOOS == ...` im ganzen Code. Die üblichen Prüfungen für jedes Go-Projekt:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 go vet ./... && go test -race ./...
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 go vet ./...; if ($?) { go test -race ./... }
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Go installierst du über [go.dev/doc/install](https://go.dev/doc/install); der Race-Detector ist unter [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector) beschrieben.
 

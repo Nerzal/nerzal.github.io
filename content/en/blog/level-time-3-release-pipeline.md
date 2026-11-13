@@ -234,7 +234,10 @@ After an install the output tells you whether `/reload` in game is enough, or wh
 
 ### Using it
 
-The `Makefile` wraps the common cases. On Linux or macOS:
+The `Makefile` wraps the common cases.
+
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # Interactive wizard: choose flavors, review the plan, confirm
@@ -250,7 +253,10 @@ make dry-run
 make install ARGS="-flavors retail -wow '$HOME/Games/World of Warcraft'"
 ```
 
-On Windows you can use `make` if you have it, but the Go tool itself only needs Go. In PowerShell:
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+You can use `make` if you have it, but the Go tool itself only needs Go:
 
 ```powershell
 # Interactive wizard from the repository root
@@ -260,6 +266,9 @@ go -C tools/installer run . -src "$PWD" -version dev
 go -C tools/installer run . -src "$PWD" -version dev -dry-run -yes `
   -flavors retail -wow "D:\Games\World of Warcraft"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 To install Go see [go.dev/doc/install](https://go.dev/doc/install). The `-C` flag of the `go` command needs Go 1.20 or newer, and CI uses Go 1.23.
 
@@ -284,7 +293,8 @@ The `tools/` folder holds more programs. A line each, because they are not part 
 
 The checklist I follow. Replace the version with your next one.
 
-On Linux or macOS:
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # 1. Be on a clean, up-to-date main
@@ -301,7 +311,8 @@ git push origin v2.27.0
 gh run watch
 ```
 
-In PowerShell:
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 git switch main; git pull --ff-only
@@ -314,6 +325,9 @@ git push origin v2.27.0
 
 gh run watch
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 The [GitHub CLI](https://cli.github.com/) (`gh`) is optional; the Actions tab shows the same run. If the tests are green, the release job packages, creates the GitHub release and uploads to CurseForge. CurseForge may review a new file for a short while before it appears publicly; that part is out of my hands.
 

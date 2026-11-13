@@ -215,13 +215,22 @@ func findFFmpeg(environmentValue string, lookPath func(string) (string, error)) 
 
 The deciding function takes its lookups as parameters, so a unit test covers every branch without installing anything, while a thin caller wires in `os.Getenv` and `exec.LookPath`. To point a tool at a specific ffmpeg:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 export FFMPEG=/usr/local/bin/ffmpeg
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 $env:FFMPEG = "C:\tools\ffmpeg\bin\ffmpeg.exe"
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 If you need ffmpeg itself, the official [download page](https://ffmpeg.org/download.html) lists builds for both platforms. A missing optional program is a *capability* the dashboard shows as unavailable with a reason, not a crash.
 
@@ -231,13 +240,22 @@ The cockpit is developed on Windows and ships as a Linux container, so both plat
 
 Platform differences are isolated by file suffix and build constraints (`_windows.go`, `_other.go`) rather than `if runtime.GOOS == ...` scattered through the code. To run the usual checks on any Go project:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
 go vet ./... && go test -race ./...
 ```
 
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
 ```powershell
 go vet ./...; if ($?) { go test -race ./... }
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Install Go from [go.dev/doc/install](https://go.dev/doc/install); the race detector is described in [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector).
 

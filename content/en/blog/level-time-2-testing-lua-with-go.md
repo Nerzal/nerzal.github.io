@@ -391,7 +391,8 @@ It runs on every pull request and every push to `main`. `make vet` runs `go vet`
 
 You need Go 1.23 or newer. Installation instructions are on [go.dev/doc/install](https://go.dev/doc/install). Then clone the repository and run the tests.
 
-**Linux:**
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
 
 ```bash
 git clone https://github.com/Noobygames/wow-statistics.git
@@ -407,7 +408,8 @@ go -C tools/addontest test -count=1 -run 'TestScenarios/session' ./...
 make vet && make test
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 git clone https://github.com/Noobygames/wow-statistics.git
@@ -419,6 +421,9 @@ go -C tools/addontest test -count=1 ./...
 # only one scenario
 go -C tools/addontest test -count=1 -run 'TestScenarios/session' ./...
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 `make` is usually not installed on Windows. The `go -C` commands above are what the Makefile target `test-addon` calls. The `-C` flag (change directory before running) needs Go 1.20 or later.
 

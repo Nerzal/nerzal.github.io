@@ -21,19 +21,24 @@ In diesem Post implementieren wir Game of Life in Go von Grund auf, Schritt für
 
 Du brauchst [Go](https://go.dev/dl/) auf deinem Rechner. Die Standardbibliothek reicht vollständig aus — keine Drittanbieter-Pakete benötigt.
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 # Installation prüfen
 go version
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 # Installation prüfen
 go version
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Wenn `go version` etwas wie `go version go1.22 linux/amd64` ausgibt, bist du startklar. Falls nicht, folge der [offiziellen Installationsanleitung](https://go.dev/doc/install).
 
@@ -290,17 +295,22 @@ func main() {
 
 ## Das Programm starten
 
-**Linux / macOS:**
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
 ```bash
 go run main.go
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 go run main.go
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Mit `Ctrl+C` beendest du die Simulation. Du solltest den Gleiter und das LWSS-Muster quer durch das Terminal wandern sehen.
 

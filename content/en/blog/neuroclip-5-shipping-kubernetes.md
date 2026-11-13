@@ -79,7 +79,8 @@ Verification then does not ask "do you have my public key?" but "was this signed
 
 ### Install cosign and verify an image
 
-**Linux:**
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
 
 ```bash
 # needs Go; alternatives are your package manager or the release binary
@@ -87,16 +88,30 @@ go install github.com/sigstore/cosign/v2/cmd/cosign@latest
 cosign version
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "macOS" >}}
+
+```bash
+# Homebrew (https://brew.sh/)
+brew install cosign
+cosign version
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 winget install sigstore.cosign
 cosign version
 ```
 
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
 Other install options are listed in the [cosign installation guide](https://docs.sigstore.dev/cosign/system_config/installation/). Then verify any keyless-signed image from GitHub Actions against its workflow identity. Replace the placeholders with your own values:
 
-**Linux:**
+{{< os-tabs >}}
+{{< os-tab "Linux" >}}
 
 ```bash
 cosign verify ghcr.io/OWNER/IMAGE:TAG \
@@ -104,13 +119,17 @@ cosign verify ghcr.io/OWNER/IMAGE:TAG \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
-**Windows (PowerShell):**
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
 cosign verify ghcr.io/OWNER/IMAGE:TAG `
   --certificate-identity-regexp '^https://github.com/OWNER/REPOSITORY/' `
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 The identity regexp above is intentionally loose (any workflow of that repository). Tighten it to the exact workflow path and branch if only that combination should count. On success you get JSON with the certificate details; on any mismatch cosign exits non-zero, which makes it usable as a gate in scripts. My own images live in a private registry, so you cannot run this against them.
 
