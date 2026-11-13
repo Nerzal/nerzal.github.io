@@ -2,7 +2,7 @@
 draft: false
 title: "Building Neuroclip — Teil 4: KI-Facecam mit Real-ESRGAN (und warum nicht CodeFormer)"
 seo_title: "Facecam hochskalieren mit Real-ESRGAN in Go"
-date: 2026-11-29T08:00:00+01:00
+date: 2026-12-06T08:00:00+01:00
 tags:
   [
     "go",

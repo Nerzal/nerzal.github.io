@@ -2,7 +2,7 @@
 draft: false
 title: "Building Level Time — Part 4: A Sister Addon Over a Public API — Level Time Goals and the Prize Wheel"
 seo_title: "WoW Addon Public API in Lua: Level Time Goals Case Study"
-date: 2026-12-02T08:00:00+01:00
+date: 2026-12-09T08:00:00+01:00
 tags:
   [
     "lua",

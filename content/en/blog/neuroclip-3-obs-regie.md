@@ -2,7 +2,7 @@
 draft: false
 title: "Building Neuroclip — Part 3: OBS Regie — WebSocket, audio meters and the mute alarm"
 seo_title: "OBS WebSocket v5 in Go: Audio Meters and a Mute Alarm"
-date: 2026-11-22T08:00:00+01:00
+date: 2026-11-25T08:00:00+01:00
 tags:
   [
     "go",

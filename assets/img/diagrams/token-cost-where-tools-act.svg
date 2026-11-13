@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" width="720" height="430">
+  <defs>
+    <marker id="ar-tcwhere" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="d-arrowhead"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="26" class="d-t d-bold" font-size="15">One agent turn: what is billed, and which tool shrinks it</text>
+
+  <!-- Input column -->
+  <text x="150" y="56" class="d-m" font-size="11.5" text-anchor="middle">INPUT (sent every turn)</text>
+
+  <rect x="20" y="66" width="260" height="58" rx="9" class="d-box d-b"/>
+  <text x="150" y="88" class="d-t d-bold" font-size="12.5" text-anchor="middle">System prompt, tools, rules</text>
+  <text x="150" y="106" class="d-m" font-size="11" text-anchor="middle">CLAUDE.md · skills · MCP tool schemas</text>
+
+  <rect x="20" y="136" width="260" height="58" rx="9" class="d-box d-b"/>
+  <text x="150" y="158" class="d-t d-bold" font-size="12.5" text-anchor="middle">Conversation history</text>
+  <text x="150" y="176" class="d-m" font-size="11" text-anchor="middle">re-read each turn, mostly as cache reads</text>
+
+  <rect x="20" y="206" width="260" height="58" rx="9" class="d-box d-b"/>
+  <text x="150" y="228" class="d-t d-bold" font-size="12.5" text-anchor="middle">Fresh tool results</text>
+  <text x="150" y="246" class="d-m" font-size="11" text-anchor="middle">file reads · grep · logs · test output · JSON</text>
+
+  <!-- Model -->
+  <rect x="320" y="136" width="100" height="58" rx="9" class="d-box d-g"/>
+  <text x="370" y="162" class="d-t d-bold" font-size="13" text-anchor="middle">Model</text>
+  <text x="370" y="179" class="d-m" font-size="11" text-anchor="middle">one request</text>
+  <line x1="282" y1="95" x2="318" y2="150" class="d-arrow" marker-end="url(#ar-tcwhere)"/>
+  <line x1="282" y1="165" x2="318" y2="165" class="d-arrow" marker-end="url(#ar-tcwhere)"/>
+  <line x1="282" y1="235" x2="318" y2="180" class="d-arrow" marker-end="url(#ar-tcwhere)"/>
+
+  <!-- Output -->
+  <text x="380" y="292" class="d-m" font-size="11.5">OUTPUT (priced ~5× input)</text>
+  <rect x="290" y="302" width="160" height="58" rx="9" class="d-box d-y"/>
+  <text x="370" y="324" class="d-t d-bold" font-size="12.5" text-anchor="middle">Reply + code</text>
+  <text x="370" y="342" class="d-m" font-size="11" text-anchor="middle">prose · diffs · tool calls</text>
+  <line x1="370" y1="196" x2="370" y2="300" class="d-arrow" marker-end="url(#ar-tcwhere)"/>
+  <polyline points="288,350 10,350 10,165 18,165" class="d-arrow d-dashed" marker-end="url(#ar-tcwhere)"/>
+  <text x="24" y="342" class="d-m" font-size="11">becomes next turn's history</text>
+
+  <!-- Tool column -->
+  <text x="590" y="56" class="d-m" font-size="11.5" text-anchor="middle">WHO SHRINKS IT</text>
+
+  <rect x="470" y="66" width="240" height="58" rx="9" class="d-box d-r"/>
+  <text x="590" y="88" class="d-t d-bold" font-size="12.5" text-anchor="middle">caveman-compress</text>
+  <text x="590" y="106" class="d-m" font-size="11" text-anchor="middle">shorter memory files (skills add a little)</text>
+  <line x1="468" y1="95" x2="284" y2="95" class="d-arrow d-dashed" marker-end="url(#ar-tcwhere)"/>
+
+  <rect x="470" y="136" width="240" height="58" rx="9" class="d-box d-r"/>
+  <text x="590" y="158" class="d-t d-bold" font-size="12.5" text-anchor="middle">Headroom proxy</text>
+  <text x="590" y="176" class="d-m" font-size="11" text-anchor="middle">compresses new tool output</text>
+  <polyline points="468,165 452,165 452,225 284,225" class="d-arrow d-dashed" marker-end="url(#ar-tcwhere)"/>
+
+  <rect x="470" y="206" width="240" height="58" rx="9" class="d-box d-r"/>
+  <text x="590" y="228" class="d-t d-bold" font-size="12.5" text-anchor="middle">code-review-graph</text>
+  <text x="590" y="246" class="d-m" font-size="11" text-anchor="middle">fewer, targeted file reads via MCP</text>
+  <line x1="468" y1="245" x2="284" y2="245" class="d-arrow d-dashed" marker-end="url(#ar-tcwhere)"/>
+
+  <rect x="490" y="302" width="220" height="58" rx="9" class="d-box d-r"/>
+  <text x="600" y="324" class="d-t d-bold" font-size="12.5" text-anchor="middle">Caveman voice · Ponytail</text>
+  <text x="600" y="342" class="d-m" font-size="11" text-anchor="middle">shorter replies · less code written</text>
+  <line x1="488" y1="331" x2="452" y2="331" class="d-arrow d-dashed" marker-end="url(#ar-tcwhere)"/>
+
+  <text x="20" y="400" class="d-m" font-size="11">Shorter output also shrinks every later turn, because it is re-read as history.</text>
+  <text x="20" y="418" class="d-m" font-size="11">Rules files and MCP schemas are the price: they add input on every request.</text>
+</svg>

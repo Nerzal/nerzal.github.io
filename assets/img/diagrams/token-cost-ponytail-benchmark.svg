@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 346" width="720" height="346">
+  <text x="20" y="28" class="d-t d-bold" font-size="15">Ponytail: reduction vs. the same agent without the skill</text>
+  <text x="20" y="48" class="d-m" font-size="11.5">Higher bar = bigger saving. Vendor and independent runs used different versions, models and tasks.</text>
+  <rect x="20" y="62" width="12" height="12" rx="3" fill="#4285f4"/>
+  <text x="38" y="72" class="d-t" font-size="11.5">Ponytail 5 author benchmark (Opus 5.5, 39 tasks × 5, Oct 2026)</text>
+  <rect x="442.8" y="62" width="12" height="12" rx="3" fill="#d97706"/>
+  <text x="460.8" y="72" class="d-t" font-size="11.5">JetBrains (v4.8.4, Sonnet 5, 80 tasks, Jul 2026)</text>
+  <line x1="190.0" y1="84" x2="190.0" y2="286" class="d-divider"/>
+  <text x="190.0" y="302" class="d-m" font-size="11" text-anchor="middle">0%</text>
+  <line x1="343.33333333333337" y1="84" x2="343.33333333333337" y2="286" class="d-divider"/>
+  <text x="343.33333333333337" y="302" class="d-m" font-size="11" text-anchor="middle">20%</text>
+  <line x1="496.6666666666667" y1="84" x2="496.6666666666667" y2="286" class="d-divider"/>
+  <text x="496.6666666666667" y="302" class="d-m" font-size="11" text-anchor="middle">40%</text>
+  <line x1="650.0" y1="84" x2="650.0" y2="286" class="d-divider"/>
+  <text x="650.0" y="302" class="d-m" font-size="11" text-anchor="middle">60%</text>
+  <text x="180" y="111.0" class="d-t" font-size="12" text-anchor="end">Lines of code</text>
+  <path d="M190 90 H592.3333333333334 Q596.3333333333334 90 596.3333333333334 94 V102 Q596.3333333333334 106 592.3333333333334 106 H190 Z" fill="#4285f4"/>
+  <text x="602.3333333333334" y="102" class="d-t" font-size="11">−53%</text>
+  <path d="M190 108 H304.06666666666666 Q308.06666666666666 108 308.06666666666666 112 V120 Q308.06666666666666 124 304.06666666666666 124 H190 Z" fill="#d97706"/>
+  <text x="314.06666666666666" y="120" class="d-t" font-size="11">−15.4%</text>
+  <text x="180" y="163.0" class="d-t" font-size="12" text-anchor="end">Cost</text>
+  <path d="M190 142 H385.33333333333337 Q389.33333333333337 142 389.33333333333337 146 V154 Q389.33333333333337 158 385.33333333333337 158 H190 Z" fill="#4285f4"/>
+  <text x="395.33333333333337" y="154" class="d-t" font-size="11">−26%</text>
+  <path d="M190 160 H264.9666666666667 Q268.9666666666667 160 268.9666666666667 164 V172 Q268.9666666666667 176 264.9666666666667 176 H190 Z" fill="#d97706"/>
+  <text x="274.9666666666667" y="172" class="d-t" font-size="11">−10.3%</text>
+  <text x="180" y="215.0" class="d-t" font-size="12" text-anchor="end">Output tokens</text>
+  <path d="M190 194 H531.0 Q535.0 194 535.0 198 V206 Q535.0 210 531.0 210 H190 Z" fill="#4285f4"/>
+  <text x="541.0" y="206" class="d-t" font-size="11">−45%</text>
+  <text x="196" y="224" class="d-m" font-size="11" font-style="italic">not reported</text>
+  <text x="180" y="267.0" class="d-t" font-size="12" text-anchor="end">Time</text>
+  <path d="M190 246 H500.33333333333337 Q504.33333333333337 246 504.33333333333337 250 V258 Q504.33333333333337 262 500.33333333333337 262 H190 Z" fill="#4285f4"/>
+  <text x="510.33333333333337" y="258" class="d-t" font-size="11">−41%</text>
+  <text x="196" y="276" class="d-m" font-size="11" font-style="italic">not reported</text>
+  <line x1="190" y1="84" x2="190" y2="286" class="d-arrow"/>
+  <text x="20" y="334" class="d-m" font-size="10.5">Sources: DietrichGebert/ponytail benchmarks/results/2026-10-07-agentic.md; JetBrains AI blog via secondary coverage.</text>
+</svg>

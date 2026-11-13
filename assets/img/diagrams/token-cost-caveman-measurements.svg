@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 308" width="720" height="308">
+  <text x="20" y="28" class="d-t d-bold" font-size="15">Caveman: measured output-token reduction</text>
+  <text x="20" y="48" class="d-m" font-size="11.5">Output tokens only. An agent bill is mostly input and cache reads, so cost moves far less.</text>
+  <rect x="20" y="62" width="12" height="12" rx="3" fill="#4285f4"/>
+  <text x="38" y="72" class="d-t" font-size="11.5">Caveman repo eval (Opus 5.5, n=10, v3.1.0 rules)</text>
+  <rect x="353.20000000000005" y="62" width="12" height="12" rx="3" fill="#d97706"/>
+  <text x="371.20000000000005" y="72" class="d-t" font-size="11.5">Outside A/B tests</text>
+  <line x1="210.0" y1="84" x2="210.0" y2="248" class="d-divider"/>
+  <text x="210.0" y="264" class="d-m" font-size="11" text-anchor="middle">0%</text>
+  <line x1="298.0" y1="84" x2="298.0" y2="248" class="d-divider"/>
+  <text x="298.0" y="264" class="d-m" font-size="11" text-anchor="middle">10%</text>
+  <line x1="386.0" y1="84" x2="386.0" y2="248" class="d-divider"/>
+  <text x="386.0" y="264" class="d-m" font-size="11" text-anchor="middle">20%</text>
+  <line x1="474.0" y1="84" x2="474.0" y2="248" class="d-divider"/>
+  <text x="474.0" y="264" class="d-m" font-size="11" text-anchor="middle">30%</text>
+  <line x1="562.0" y1="84" x2="562.0" y2="248" class="d-divider"/>
+  <text x="562.0" y="264" class="d-m" font-size="11" text-anchor="middle">40%</text>
+  <line x1="650.0" y1="84" x2="650.0" y2="248" class="d-divider"/>
+  <text x="650.0" y="264" class="d-m" font-size="11" text-anchor="middle">50%</text>
+  <text x="200" y="102.0" class="d-t" font-size="12" text-anchor="end">/caveman vs “be concise”</text>
+  <path d="M210 90 H232.4 Q236.4 90 236.4 94 V102 Q236.4 106 232.4 106 H210 Z" fill="#4285f4"/>
+  <text x="242.4" y="102" class="d-t" font-size="11">−3%</text>
+  <text x="200" y="136.0" class="d-t" font-size="12" text-anchor="end">/ultracave vs “be concise”</text>
+  <path d="M210 124 H514.0 Q518.0 124 518.0 128 V136 Q518.0 140 514.0 140 H210 Z" fill="#4285f4"/>
+  <text x="524.0" y="136" class="d-t" font-size="11">−35%</text>
+  <text x="200" y="170.0" class="d-t" font-size="12" text-anchor="end">JetBrains, 86 tasks</text>
+  <path d="M210 158 H280.8 Q284.8 158 284.8 162 V170 Q284.8 174 280.8 174 H210 Z" fill="#d97706"/>
+  <text x="290.8" y="170" class="d-t" font-size="11">−8.5%</text>
+  <text x="200" y="204.0" class="d-t" font-size="12" text-anchor="end">LemonCrow, 300 runs/arm</text>
+  <path d="M210 192 H594.08 Q598.08 192 598.08 196 V204 Q598.08 208 594.08 208 H210 Z" fill="#d97706"/>
+  <text x="604.08" y="204" class="d-t" font-size="11">−44.1%</text>
+  <text x="200" y="238.0" class="d-t" font-size="12" text-anchor="end">edubraqd, pt-BR, Haiku</text>
+  <path d="M210 226 H276.4 Q280.4 226 280.4 230 V238 Q280.4 242 276.4 242 H210 Z" fill="#d97706"/>
+  <text x="286.4" y="238" class="d-t" font-size="11">−8%</text>
+  <line x1="210" y1="84" x2="210" y2="248" class="d-arrow"/>
+  <text x="20" y="296" class="d-m" font-size="10.5">LemonCrow: output −44.1 %, total cost +0.06 %. Sources: caveman README and docs/HONEST-NUMBERS.md (Nov 2026).</text>
+</svg>
