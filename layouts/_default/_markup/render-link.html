@@ -23,6 +23,7 @@
     {{- end -}}
 {{- end -}}
 {{- if and $isInternalContent (not $target) -}}
+    {{- warnf "render-link: %q not found on %s (scheduled or typo?)" $destination .Page.Path -}}
     <span class="link-upcoming">{{ .Text | safeHTML }}</span>
 {{- else -}}
     <a href="{{ $destination | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if strings.HasPrefix $destination "http" }} rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

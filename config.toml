@@ -1,5 +1,5 @@
 baseURL = 'https://blog.noobygames.de'
-languageCode = 'en-us'
+locale = 'en-US'
 title = 'Tobias Theel | Senior Software Engineer'
 theme = "ananke"
 DefaultContentLanguage = "en"
@@ -9,28 +9,13 @@ enableRobotsTXT = true
 
 [languages]
   [languages.en]
-    languageName = "English"
+    label = "English"
     weight = 1
     contentDir = "content/en"
   [languages.de]
-    languageName = "Deutsch"
+    label = "Deutsch"
     weight = 2
     contentDir = "content/de"
-
-[services.disqus]
-  shortname = ""
-
-[params.giscus]
-  repo            = "Nerzal/nerzal.github.io"
-  repo_id         = "YOUR_REPO_ID"
-  category        = "Announcements"
-  category_id     = "YOUR_CATEGORY_ID"
-  mapping         = "pathname"
-  reactions_enabled = "1"
-  emit_metadata   = "0"
-  theme_dark      = "dark_dimmed"
-  theme_light     = "light"
-
 
 [sitemap]
   changefreq = "monthly"
@@ -114,10 +99,6 @@ enableRobotsTXT = true
 
 
 [privacy]
-  [privacy.disqus]
-    disable = false
-  [privacy.googleAnalytics]
-    disable = true
   [privacy.instagram]
     disable = true
   [privacy.vimeo]

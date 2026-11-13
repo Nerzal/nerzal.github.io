@@ -22,7 +22,7 @@ Personal blog and portfolio of **Tobias Theel** — Senior Software Engineer, Au
 
 ## Prerequisites
 
-- [Hugo Extended](https://github.com/gohugoio/hugo/releases) v0.124.1 or later
+- [Hugo Extended](https://github.com/gohugoio/hugo/releases) v0.160.1 (same as CI)
 - [Node.js](https://nodejs.org/) v18 or later (for linters)
 - [Git](https://git-scm.com/)
 - `make` (GnuWin32 on Windows, built-in on macOS/Linux)
@@ -75,9 +75,7 @@ make ci             Simulate full CI pipeline locally: install → lint → buil
 │   ├── css/
 │   │   ├── styles.css          # main stylesheet (all custom styles)
 │   │   ├── timeline.css        # resume timeline component
-│   │   ├── _code.css           # syntax highlighting (Chroma)
-│   │   ├── _tachyons.css       # Tachyons utility framework (third-party)
-│   │   └── _social-icons.css   # social icon styles (from Ananke theme)
+│   │   └── _code.css           # syntax highlighting (Chroma)
 │   └── img/                    # processed images (Hugo Pipes)
 ├── content/
 │   ├── en/                     # English content (default language)

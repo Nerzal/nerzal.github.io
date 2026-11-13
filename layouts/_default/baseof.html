@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ site.Language.Lang | default "en" }}" {{- with partialCached "func/GetLanguageDirection" "GetLanguageDirection" }} dir="{{ . }}" {{- end }}>
+<html lang="{{ site.Language.Lang | default "en" }}" dir="{{ site.Language.Direction | default "ltr" }}">
 
 <head>
     <meta charset="utf-8">
@@ -21,10 +21,6 @@
     <link rel="canonical" href="{{ .Permalink }}">
     {{/* Hreflang for EN/DE */}}
     {{ partial "hreflang.html" . }}
-    {{/* Preconnect for third-party origins */}}
-    {{ with site.Params.giscus }}{{ if and .repo_id (ne .repo_id "YOUR_REPO_ID") }}
-    <link rel="preconnect" href="https://giscus.app">
-    {{ end }}{{ end }}
     {{ if .OutputFormats.Get "RSS" }}{{ with .OutputFormats.Get "RSS" }}
     <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" />
     <link href="{{ .RelPermalink }}" rel="feed"      type="application/rss+xml" title="{{ $.Site.Title }}" />
@@ -34,7 +30,6 @@
     {{- template "_internal/schema.html" . -}}
     {{/* Custom Twitter cards (replaces _internal/twitter_cards.html — uses summary_large_image) */}}
     {{ partial "twitter-cards.html" . }}
-    {{ if eq (getenv "HUGO_ENV") "production" | or (eq .Site.Params.env "production") }}{{ template "_internal/google_analytics.html" . }}{{ end }}
     {{ partial "structured-data.html" . }}
     {{/* LCP preload: hint browser to fetch featured image as early as possible */}}
     {{ if and .IsPage .Params.featured_image }}

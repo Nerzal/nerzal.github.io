@@ -1,9 +1,9 @@
 {{ $title := .Title }}
 {{ $url := printf "%s" .Permalink | absLangURL }}
 
-{{ $facebook_href := printf "https://www.facebook.com/sharer.php?u=%s" $url }}
+{{ $facebook_href := printf "https://www.facebook.com/sharer.php?u=%s" (urlquery $url) }}
 {{ $bluesky_href := printf "https://bsky.app/intent/compose?text=%s%%0A%s" (urlquery $title) (urlquery $url) }}
-{{ $linkedin_href := printf "https://www.linkedin.com/shareArticle?mini=true&url=%s&title=%s" $url $title }}
+{{ $linkedin_href := printf "https://www.linkedin.com/shareArticle?mini=true&url=%s&title=%s" (urlquery $url) (urlquery $title) }}
 {{ $hrefs := dict "facebook" $facebook_href "bluesky" $bluesky_href "linkedin" $linkedin_href }}
 
 {{ $services := where (partialCached "func/socials/Get" "socials/Get") "share" true }}

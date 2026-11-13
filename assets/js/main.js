@@ -204,20 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function applyTheme(next) {
     document.documentElement.setAttribute("data-theme", next);
     localStorage.setItem("theme", next);
-    var giscus = document.querySelector(".giscus-wrap");
-    if (giscus) {
-      var frame = document.querySelector("iframe.giscus-frame");
-      if (frame) {
-        var gTheme =
-          next === "light"
-            ? giscus.dataset.themeLight || "light"
-            : giscus.dataset.themeDark || "dark_dimmed";
-        frame.contentWindow.postMessage(
-          { giscus: { setConfig: { theme: gTheme } } },
-          "https://giscus.app",
-        );
-      }
-    }
   }
   document.querySelectorAll(".theme-toggle").forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -1019,7 +1005,7 @@ document.addEventListener("DOMContentLoaded", function () {
         lines = COMMANDS.drop();
       } else if (cmd === "sudo") {
         lines = handleSudo(args);
-      } else if (COMMANDS[cmd]) {
+      } else if (Object.hasOwn(COMMANDS, cmd)) {
         lines = COMMANDS[cmd](args);
       } else {
         lines = [
