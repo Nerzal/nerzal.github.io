@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Token Cost Minimization in Agentic AI — Part 3: Headroom, Auto-Updates and the Combined Setup"
 seo_title: "Headroom Setup for Claude Code, Codex and Cursor"
 date: 2026-12-02T08:00:00+01:00

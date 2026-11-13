@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Token-Kosten in agentischer KI senken — Teil 3: Headroom, Auto-Updates und das kombinierte Setup"
 seo_title: "Headroom einrichten für Claude Code, Codex und Cursor"
 date: 2026-12-02T08:00:00+01:00
