@@ -1,10 +1,11 @@
 HUGO_VERSION := 0.160.1
 
-.PHONY: serve build lint lint-css lint-md \
+.PHONY: serve build lint lint-css lint-js lint-md \
         install update \
         hugo-install hugo-update \
         new-post new-page \
-        ci help
+        ci help \
+        code-graph-build code-graph-install code-graph-changes code-graph-update
 
 .DEFAULT_GOAL := help
 
@@ -68,3 +69,20 @@ help: ## Show this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} \
 	/^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-14s\033[0m  %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 	@printf "\nHugo version (local): %s\n" "$(HUGO_VERSION)"
+
+# code-review-graph (optional dev tool, MIT): local code graph in .code-review-graph/. build = full parse (first time or
+# broken graph); the git hooks and Claude hooks keep it current with update.
+code-graph-build:
+	code-review-graph build
+
+# set up the AI coding tools found on this machine
+code-graph-install:
+	code-review-graph install
+
+# what the last change touches
+code-graph-changes:
+	code-review-graph detect-changes --brief
+
+# incremental update with the latest changes
+code-graph-update:
+	code-review-graph update
