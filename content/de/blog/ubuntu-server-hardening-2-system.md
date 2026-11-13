@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Ubuntu Server Hardening — Teil 2: Das System verbessern"
 seo_title: "Ubuntu Hardening Teil 2: System härten"
 date: 2026-05-12T00:00:00+00:00

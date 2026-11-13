@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Ubuntu Server Hardening — Teil 3: Defense in Depth"
 seo_title: "Ubuntu Hardening Teil 3: Defense in Depth"
 date: 2026-07-30T00:00:00+00:00

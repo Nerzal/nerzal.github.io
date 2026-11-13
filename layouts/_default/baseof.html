@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ block "title" . }}{{ $t := .Params.seo_title | default .Params.Title }}{{ if $t }}{{ $t }} | {{ site.Params.author }}{{ else }}{{ site.Title }}{{ end }}{{ end }}</title>
+    <title>{{ block "title" . }}{{ $t := .Params.seo_title | default .Title }}{{ if $t }}{{ $t }} | {{ site.Params.author }}{{ else }}{{ site.Title }}{{ end }}{{ end }}</title>
     <meta name="author" content="{{ site.Params.author }}">
     {{ with site.Params.google_site_verification }}<meta name="google-site-verification" content="{{ . }}">{{ end }}
     {{ with site.Params.bing_site_verification }}<meta name="msvalidate.1" content="{{ . }}">{{ end }}

@@ -10,7 +10,7 @@ Personal blog and portfolio of **Tobias Theel** — Senior Software Engineer, Au
 
 | Layer | Technology |
 |-------|-----------|
-| Static site generator | [Hugo Extended](https://gohugo.io/) v0.160.1 |
+| Static site generator | [Hugo](https://gohugo.io/) v0.170.0 |
 | Theme | [gohugo-theme-ananke](https://github.com/theNewDynamic/gohugo-theme-ananke) v2.13.0 (Git submodule, all layouts overridden) |
 | Hosting | GitHub Pages |
 | CI/CD | GitHub Actions — lint → build → deploy |
@@ -22,7 +22,7 @@ Personal blog and portfolio of **Tobias Theel** — Senior Software Engineer, Au
 
 ## Prerequisites
 
-- [Hugo Extended](https://github.com/gohugoio/hugo/releases) v0.160.1 (same as CI)
+- [Hugo](https://github.com/gohugoio/hugo/releases) v0.170.0 (same as CI)
 - [Node.js](https://nodejs.org/) v18 or later (for linters)
 - [Git](https://git-scm.com/)
 - `make` (GnuWin32 on Windows, built-in on macOS/Linux)
