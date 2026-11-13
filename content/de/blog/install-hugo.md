@@ -33,28 +33,30 @@ Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Sei
 
 ## Hugo installieren
 
-Um die volle Funktionalität zu gewährleisten – besonders wenn dein Theme Sass/SCSS verwendet – empfiehlt es sich, die **Hugo Extended**-Version zu installieren.
+Seit [v0.170.0](https://github.com/gohugoio/hugo/releases/tag/v0.170.0) gibt es nur noch eine Hugo-Edition. Die frühere **Extended**-Edition ist weg: Alles, was sie konnte (etwa WebP-Encoding), steckt jetzt im Standard-Binary, bis auf das veraltete LibSass. Nutzt dein Theme Sass/SCSS, installiere zusätzlich [Dart Sass](https://gohugo.io/functions/css/sass/).
 
-### Hugo Extended installieren
+### Hugo installieren
 
 {{< os-tabs >}}
 {{< os-tab "Windows (PowerShell)" >}}
 
-Der einfachste Weg, Hugo Extended unter Windows zu installieren, ist **Winget** (Windows Package Manager), der in modernem Windows 10/11 integriert ist.
+Der einfachste Weg, Hugo unter Windows zu installieren, ist **Winget** (Windows Package Manager), der in modernem Windows 10/11 integriert ist.
 
 1.  Öffne PowerShell oder Eingabeaufforderung als Administrator.
 2.  Führe den folgenden Befehl aus:
 
     ```powershell
-    winget install Hugo.Hugo.Extended
+    winget install Hugo.Hugo
     ```
 
 3.  Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.
 
+Hast du früher `Hugo.Hugo.Extended` installiert, wechsle das Paket mit `winget uninstall Hugo.Hugo.Extended` und führe dann den Installationsbefehl oben aus. Spätere Updates: `winget upgrade Hugo.Hugo`.
+
 {{< /os-tab >}}
 {{< os-tab "macOS" >}}
 
-Unter macOS geht es am einfachsten mit [Homebrew](https://brew.sh/). Die `hugo`-Formel installiert die Extended-Edition:
+Unter macOS geht es am einfachsten mit [Homebrew](https://brew.sh/). Die `hugo`-Formel installiert das aktuelle Release:
 
 ```bash
 brew install hugo
@@ -64,19 +66,19 @@ brew install hugo
 {{< os-tab "Linux" >}}
 
 Für Debian-basierte Systeme (wie Ubuntu):
-1.  Lade die neueste Hugo Extended `.deb`-Datei von der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases) herunter. Suche nach `hugo_extended_VERSION_linux-amd64.deb`.
+1.  Lade die neueste Hugo-`.deb`-Datei von der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases) herunter. Suche nach `hugo_VERSION_linux-amd64.deb`.
 2.  Installiere sie mit `dpkg`:
 
     ```bash
-    sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
+    sudo dpkg -i /path/to/hugo_VERSION_linux-amd64.deb
     ```
 
 Für andere Linux-Distributionen kannst du das Tarball herunterladen:
-1.  Lade `hugo_extended_VERSION_linux-amd64.tar.gz` von der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases) herunter.
+1.  Lade `hugo_VERSION_linux-amd64.tar.gz` von der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases) herunter.
 2.  Entpacke es und verschiebe die ausführbare Datei in deinen PATH:
 
     ```bash
-    tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
+    tar -xf hugo_VERSION_linux-amd64.tar.gz
     sudo mv hugo /usr/local/bin/
     ```
 
@@ -91,11 +93,11 @@ Für andere Linux-Distributionen kannst du das Tarball herunterladen:
 hugo version
 ```
 
-Du solltest die installierte Hugo-Version sehen, z.B. `hugo v0.170.0-...+extended`. Das neueste Release samt Changelog findest du jederzeit auf der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases).
+Du solltest die installierte Hugo-Version sehen, z.B. `hugo v0.170.0-... windows/amd64`. Seit v0.170.0 endet der Versionsstring nicht mehr auf `+extended`. Das neueste Release samt Changelog findest du jederzeit auf der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases).
 
 ## Docker verwenden
 
-Anstatt Hugo lokal auf deinem Rechner zu installieren, kannst du das offizielle Hugo-Container-Image [`ghcr.io/gohugoio/hugo`](https://github.com/gohugoio/hugo/pkgs/container/hugo) verwenden. Es enthält bereits die Extended-Edition, Dart Sass, Git und Node.js. Dafür muss [Docker](https://docs.docker.com/get-started/get-docker/) installiert sein.
+Anstatt Hugo lokal auf deinem Rechner zu installieren, kannst du das offizielle Hugo-Container-Image [`ghcr.io/gohugoio/hugo`](https://github.com/gohugoio/hugo/pkgs/container/hugo) verwenden. Es enthält bereits Hugo, Dart Sass, Git und Node.js. Dafür muss [Docker](https://docs.docker.com/get-started/get-docker/) installiert sein.
 
 ### Entwicklungsserver im Container
 

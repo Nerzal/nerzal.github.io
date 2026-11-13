@@ -35,28 +35,30 @@ It is also well-suited for handling large sites and is more secure than dynamic 
 
 ## Install Hugo
 
-To ensure you have the full functionality, especially if your theme uses Sass/SCSS, it's recommended to install the **Hugo Extended** version.
+Since [v0.170.0](https://github.com/gohugoio/hugo/releases/tag/v0.170.0) there is only one Hugo edition. The former **extended** edition is gone: everything it offered (such as WebP encoding) is now in the standard binary, except the deprecated LibSass. If your theme uses Sass/SCSS, install [Dart Sass](https://gohugo.io/functions/css/sass/) next to Hugo.
 
-### Install Hugo Extended
+### Install Hugo
 
 {{< os-tabs >}}
 {{< os-tab "Windows (PowerShell)" >}}
 
-The easiest way to install Hugo Extended on Windows is using **Winget** (Windows Package Manager), which is built into modern Windows 10/11.
+The easiest way to install Hugo on Windows is using **Winget** (Windows Package Manager), which is built into modern Windows 10/11.
 
 1.  Open PowerShell or Command Prompt as an administrator.
 2.  Run the following command:
 
     ```powershell
-    winget install Hugo.Hugo.Extended
+    winget install Hugo.Hugo
     ```
 
 3.  Restart your terminal to ensure the new PATH is loaded.
 
+If you installed `Hugo.Hugo.Extended` earlier, switch packages with `winget uninstall Hugo.Hugo.Extended`, then run the install command above. Later updates: `winget upgrade Hugo.Hugo`.
+
 {{< /os-tab >}}
 {{< os-tab "macOS" >}}
 
-The easiest way on macOS is [Homebrew](https://brew.sh/). The `hugo` formula installs the extended edition:
+The easiest way on macOS is [Homebrew](https://brew.sh/). The `hugo` formula installs the current release:
 
 ```bash
 brew install hugo
@@ -66,19 +68,19 @@ brew install hugo
 {{< os-tab "Linux" >}}
 
 For Debian-based systems (like Ubuntu):
-1.  Download the latest Hugo Extended `.deb` file from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases). Look for `hugo_extended_VERSION_linux-amd64.deb`.
+1.  Download the latest Hugo `.deb` file from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases). Look for `hugo_VERSION_linux-amd64.deb`.
 2.  Install it using `dpkg`:
 
     ```bash
-    sudo dpkg -i /path/to/hugo_extended_VERSION_linux-amd64.deb
+    sudo dpkg -i /path/to/hugo_VERSION_linux-amd64.deb
     ```
 
 For other Linux distributions, you can download the tarball:
-1.  Download the `hugo_extended_VERSION_linux-amd64.tar.gz` from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases).
+1.  Download the `hugo_VERSION_linux-amd64.tar.gz` from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases).
 2.  Extract it and move the executable to your PATH:
 
     ```bash
-    tar -xf hugo_extended_VERSION_linux-amd64.tar.gz
+    tar -xf hugo_VERSION_linux-amd64.tar.gz
     sudo mv hugo /usr/local/bin/
     ```
 
@@ -92,11 +94,11 @@ After installation, open your terminal and run:
 hugo version
 ```
 
-You should see the installed Hugo version, e.g. `hugo v0.170.0-...+extended`. You can always find the latest release and its changelog on the [Hugo releases page](https://github.com/gohugoio/hugo/releases).
+You should see the installed Hugo version, e.g. `hugo v0.170.0-... windows/amd64`. Since v0.170.0 the version string no longer ends in `+extended`. You can always find the latest release and its changelog on the [Hugo releases page](https://github.com/gohugoio/hugo/releases).
 
 ## Use Docker
 
-Instead of installing Hugo locally on your machine, you can use the official Hugo container image [`ghcr.io/gohugoio/hugo`](https://github.com/gohugoio/hugo/pkgs/container/hugo). It already contains the extended edition, Dart Sass, Git and Node.js. You need [Docker](https://docs.docker.com/get-started/get-docker/) installed for this.
+Instead of installing Hugo locally on your machine, you can use the official Hugo container image [`ghcr.io/gohugoio/hugo`](https://github.com/gohugoio/hugo/pkgs/container/hugo). It already contains Hugo, Dart Sass, Git and Node.js. You need [Docker](https://docs.docker.com/get-started/get-docker/) installed for this.
 
 ### Development server in a container
 
