@@ -66,7 +66,7 @@ brew install hugo
 {{< os-tab "Linux" >}}
 
 For Debian-based systems (like Ubuntu):
-1.  Download the latest Hugo Extended `.deb` file from the Hugo Releases page. Look for `hugo_extended_VERSION_linux-amd64.deb`.
+1.  Download the latest Hugo Extended `.deb` file from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases). Look for `hugo_extended_VERSION_linux-amd64.deb`.
 2.  Install it using `dpkg`:
 
     ```bash
@@ -74,7 +74,7 @@ For Debian-based systems (like Ubuntu):
     ```
 
 For other Linux distributions, you can download the tarball:
-1.  Download the `hugo_extended_VERSION_linux-amd64.tar.gz` from the Hugo Releases page.
+1.  Download the `hugo_extended_VERSION_linux-amd64.tar.gz` from the [Hugo Releases page](https://github.com/gohugoio/hugo/releases).
 2.  Extract it and move the executable to your PATH:
 
     ```bash
@@ -92,131 +92,208 @@ After installation, open your terminal and run:
 hugo version
 ```
 
-You should see the installed Hugo version, e.g., `hugo v0.124.1+extended`.
+You should see the installed Hugo version, e.g. `hugo v0.170.0-...+extended`. You can always find the latest release and its changelog on the [Hugo releases page](https://github.com/gohugoio/hugo/releases).
 
 ## Use Docker
 
-Instead of installing Hugo locally on your machine, you can use a Docker container.
+Instead of installing Hugo locally on your machine, you can use the official Hugo container image [`ghcr.io/gohugoio/hugo`](https://github.com/gohugoio/hugo/pkgs/container/hugo). It already contains the extended edition, Dart Sass, Git and Node.js. You need [Docker](https://docs.docker.com/get-started/get-docker/) installed for this.
 
-Example:
+### Development server in a container
 
-```docker
-FROM alpine:latest as build
+For local development, mount your site directory into the container and run `hugo server`. The container listens on port `1313`, so you have to publish that port with `-p 1313:1313`, and `--bind 0.0.0.0` makes the server reachable from outside the container:
 
-ENV HUGO_VERSION 0.124.1
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
 
-RUN wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
-    tar -xf hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
-    rm hugo_${HUGO_VERSION}_linux-amd64.tar.gz && \
-    mv hugo /usr/local/bin/hugo
-
-FROM gcr.io/distroless/static:nonroot
-USER nonroot
-
-COPY --from=build /usr/local/bin/hugo /usr/local/bin/hugo
-COPY noobygames.de /site
-WORKDIR /site
-
-EXPOSE 80
-
-ENTRYPOINT ["hugo", "server", "-p", "1313", "--bind", "0.0.0.0"]
+```bash
+docker run --rm -it \
+  -v "$(pwd)":/project \
+  -u "$(id -u):$(id -g)" \
+  -p 1313:1313 \
+  ghcr.io/gohugoio/hugo:v0.170.0 \
+  server --bind 0.0.0.0
 ```
 
-Now you can build the image using the following commands:
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
 
-> cd your/path/where/the/docker/file/is
-> docker build -t hugo-server .
+```powershell
+docker run --rm -it `
+  -v "${PWD}:/project" `
+  -p 1313:1313 `
+  ghcr.io/gohugoio/hugo:v0.170.0 `
+  server --bind 0.0.0.0
+```
 
-When the image has successfully been built, you can start the container using the following command:
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
-> docker run hugo-server
+`hugo server` is a development server with live reload. It is not meant to serve a production website.
+
+### Production image
+
+For production, Hugo should only **build** the site. The generated static files in `public/` are then served by a regular web server such as [nginx](https://hub.docker.com/_/nginx). A [multi-stage build](https://docs.docker.com/build/building/multi-stage/) keeps Hugo out of the final image:
+
+```dockerfile
+# Stage 1: build the static site with the official Hugo image
+FROM ghcr.io/gohugoio/hugo:v0.170.0 AS build
+
+# The image runs as the unprivileged user "hugo" by default. This stage is
+# thrown away after the build, so we switch to root to be able to write to /src.
+USER root
+WORKDIR /src
+COPY . .
+RUN hugo build --minify
+
+# Stage 2: serve the generated files with nginx
+FROM nginx:stable-alpine
+
+COPY --from=build /src/public /usr/share/nginx/html
+
+EXPOSE 80
+```
+
+Place the `Dockerfile` in the root directory of your Hugo site and build the image:
+
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
+```bash
+cd path/to/your/site
+docker build -t my-hugo-site .
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+```powershell
+cd path\to\your\site
+docker build -t my-hugo-site .
+```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
+When the image has been built successfully, start the container and map port `8080` on your machine to port `80` of nginx:
+
+```bash
+docker run --rm -p 8080:80 my-hugo-site
+```
+
+The command is identical in Bash and PowerShell. Your site is now available at [http://localhost:8080/](http://localhost:8080/).
 
 ## Create a new website
 
 To create a new website, you simply need to run the following command:
 
-> hugo new site example.com
+```bash
+hugo new site example.com
+```
 
-The command is build as follows:
-
-> hugo(cli) new (command) site (parameter) siteName (parameter)
-
-This is going to create a new folder structure for your site.
-
-When examining the output of the create command hugo is going to tell you something like the following:
+The command is built as follows:
 
 ```bash
+hugo(cli) new (command) site (parameter) siteName (parameter)
+```
 
-Just a few more steps and you're ready to go:
+This is going to create a new folder structure for your site. Change into it, all following commands are run inside the site directory:
 
-1. Download a theme into the same-named folder.
-   Choose a theme from https://themes.gohugo.io/ or
-   create your own with the "hugo new theme <THEMENAME>" command.
-2. Perhaps you want to add some content. You can add single files
-   with "hugo new <SECTIONNAME>/<FILENAME>.<FORMAT>".
-3. Start the built-in live server via "hugo server".
+```bash
+cd example.com
+```
 
-Visit https://gohugo.io/ for quickstart guide and full documentation.
+When examining the output of the create command, Hugo is going to tell you something like the following:
+
+```text
+Just a few more steps...
+
+1. Change the current directory to example.com.
+2. Create or install a theme:
+   - Create a new theme with the command "hugo new theme <THEMENAME>"
+   - Or, install a theme from https://themes.gohugo.io/
+3. Edit hugo.toml, setting the "theme" property to the theme name.
+4. Create new content with the command "hugo new content <SECTIONNAME>/<FILENAME>.<FORMAT>".
+5. Start the embedded web server with the command "hugo server --buildDrafts".
+
+See documentation at https://gohugo.io/.
 ```
 
 ### Create a new theme
 
-You can now either download any hugo theme from the world wide web, or create your very own theme. In this tutorial series, we are going create our own theme.
+You can now either download any Hugo theme from the [Hugo themes directory](https://themes.gohugo.io/), or create your very own theme. In this tutorial series, we are going to create our own theme.
 
 So we use the following command while being inside the site directory:
 
-> hugo new theme my-theme
+```bash
+hugo new theme my-theme
+```
 
-This is going create the complete folder structure for your theme.
+This is going to create the complete folder structure for your theme in `themes/my-theme`.
+
+Hugo does not use a theme just because it exists in the `themes` folder. You have to activate it by adding the following line to the `hugo.toml` file in your site directory:
+
+```toml
+theme = 'my-theme'
+```
 
 ### Hello World
 
 Before we can finally render something, we have two more things to do.
 
-As a first step, we add the following line to the **index.html** file that is located in example.com (site directory) -> themes -> my-theme -> layouts -> index.html
+Since [Hugo v0.146.0](https://github.com/gohugoio/hugo/releases/tag/v0.146.0) a theme uses the new template system (see [template lookup order](https://gohugo.io/templates/lookup-order/)). The skeleton consists of `layouts/baseof.html`, the HTML shell every page inherits from, and specialized templates like `layouts/home.html` for the home page. `baseof.html` defines a `main` block, which the other templates fill.
 
-> {{ .Content }}
+As a first step, we replace the content of the **home.html** file that is located in example.com (site directory) -> themes -> my-theme -> layouts -> home.html with the following:
 
-This is a template that simply renders the markdown content of a file into html. There is much more to explain about templates, short-codes etc, but for now it is only important, that this is going to put your markdown file content into HTML.
+```go-html-template
+{{ define "main" }}
+  {{ .Content }}
+{{ end }}
+```
+
+`{{ .Content }}` is a template action that simply renders the Markdown content of a file into HTML. There is much more to explain about templates, shortcodes etc., but for now it is only important that this is going to put your Markdown file content into HTML.
 
 Now we need a content file to render. Use the following command:
 
-> hugo new _index.md
-
-That command creates a new file with the given path inside the content directory.
-
-Your file should now look like this:
-
-```yaml
----
-title: ""
-date: 2023-01-05T23:13:47+01:00
-draft: true
----
+```bash
+hugo new content _index.md
 ```
 
-title is the title of the page.
-date is the creation date of the page.
-draft controls wether this page should be published or not.
+That command creates a new file with the given path inside the `content` directory. `_index.md` is the content file of the home page.
 
-Lets add a nice greeting to our first page. You can freely chose any greeting, i go with the classic.
+Your file should now look like this. The default archetype uses [TOML front matter](https://gohugo.io/content-management/front-matter/), enclosed by `+++`:
 
-```yaml
----
-title: "My first page"
-date: 2023-01-05T23:13:47+01:00
-draft: true
----
+```toml
++++
+date = '2026-11-13T17:29:35+01:00'
+draft = true
+title = ''
++++
+```
+
+`title` is the title of the page.
+`date` is the creation date of the page.
+`draft` controls whether this page should be published or not.
+
+Let's add a nice greeting to our first page. You can freely choose any greeting, I go with the classic.
+
+```markdown
++++
+date = '2026-11-13T17:29:35+01:00'
+draft = true
+title = 'My first page'
++++
 
 ## Hello World!
 
 It's **very nice** to meet you!
 ```
 
-We finally have reached the last step. Now we can start a hugo server to see, what we have achieved. Use the following command:
+We have finally reached the last step. Now we can start a Hugo server to see what we have achieved. Use the following command:
 
-> hugo server -D
+```bash
+hugo server -D
+```
 
-That command starts a server in development mode, which includes pages that are in draft status. Now visit [http://localhost:1313/](http://localhost:1313/) in your browser.
+That command starts a server in development mode, which includes pages that are in draft status (`-D` is short for `--buildDrafts`). Now visit [http://localhost:1313/](http://localhost:1313/) in your browser.
 
 {{< image image="/img/hugo-world.png" imageAlt="Image of hello world result" >}}

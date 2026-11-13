@@ -17,7 +17,7 @@ Today, I want to "show off" a couple of these projects to give you a glimpse int
 
 ## 1. Personal Portfolio
 
-![Last War Calculators Screenshot](/img/portfolio.png)
+![Portfolio website screenshot](/img/portfolio.png)
 
 
 Every developer needs a home on the web, and mine is a testament to clean, modern frontend development. Built with React, this portfolio serves as a central hub for my professional identity, showcasing my skills, experience, and projects in an engaging way.

@@ -89,7 +89,7 @@ Beispiele:
 
 1. **Termin vereinbart**
 2. **Zahlung erhalten**
-3. **Auf einen Patienten wartend**
+3. **Patient eingecheckt**
 
 Fokussiere dich in diesem Stadium nicht auf alle Werte, aus denen ein Termin besteht, wie Datum, Patientenname usw., sondern konzentriere dich auf das Verhalten.
 

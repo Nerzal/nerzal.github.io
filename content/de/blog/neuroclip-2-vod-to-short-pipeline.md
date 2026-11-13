@@ -182,7 +182,7 @@ ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
 Zwei Verfeinerungen sind wissenswert:
 
 - **Toleranz beim Seitenverhältnis.** Hat der Spielrahmen ungefähr die Form seines Streifens, wird er einfach zugeschnitten und skaliert. Hat er eine ganz andere Form, wird er **verzerrungsfrei eingepasst** in die Mitte des Streifens, und der Rest des Streifens zeigt dasselbe Bild vergrößert, weichgezeichnet (`boxblur`) und abgedunkelt. Das ist der bekannte Look mit unscharfem Hintergrund, gebaut aus demselben Filter-Vokabular.
-- **Lange Graphen landen in einer Datei.** Mit Effekten und Overlays kann der String lang werden. Dann ist es besser, ihn in eine Datei zu legen und die an ffmpeg zu übergeben (`-filter_complex_script`), als an Kommandozeilen-Grenzen zu stoßen.
+- **Lange Graphen landen in einer Datei.** Mit Effekten und Overlays kann der String lang werden. Dann ist es besser, ihn in eine Datei zu legen und die an ffmpeg zu übergeben, als an Kommandozeilen-Grenzen zu stoßen. Seit ffmpeg 7.0 geht das über die allgemeine Syntax `-/option datei`, hier also `-/filter_complex graph.txt`; das ältere `-filter_complex_script` funktioniert noch, ist aber [veraltet](https://ffmpeg.org/ffmpeg.html#Main-options).
 
 Weil der Prozess mit einer Argumentliste statt über eine Shell startet und der Graph aus Zahlen und festen Bausteinen entsteht, gibt es nichts, wo eine bösartige Eingabe etwas einschleusen könnte. Benutzertext, der in der Untertiteldatei landet, wird mit derselben Sorgfalt behandelt, womit wir bei den Untertiteln sind.
 

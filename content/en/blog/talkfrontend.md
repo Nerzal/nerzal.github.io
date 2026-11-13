@@ -81,7 +81,7 @@ func main() {
 
 That's the entire format. `title`, `content`, `code`, `image`, and `blank` slides are plain Markdown — a heading, a bullet list, a fenced code block, an image, or free-form prose. `table` and `speaker` carry structured data that doesn't map cleanly onto prose (table rows, social links with QR codes), so those two slides are written as plain YAML instead, no wrapper syntax:
 
-```yaml
+```text
 --- table
 title: CREATE
 statement: "INSERT INTO people VALUES (1, 'Alice', 'active')"
@@ -147,7 +147,7 @@ A pre-built image is published to GHCR: `ghcr.io/nerzal/talkfrontend`. It ships 
 
 ```bash
 docker run -p 8080:8080 \
-  -v $(pwd)/my-talks:/app/dist/talks:ro \
+  -v "$(pwd)/my-talks:/app/dist/talks:ro" \
   ghcr.io/nerzal/talkfrontend:edge
 ```
 
@@ -179,7 +179,7 @@ Available image tags: `edge` (latest `main`), and `1.2.3` / `1.2` / `1` / `lates
 {{< os-tab "Linux / macOS" >}}
 
 ```bash
-git clone git@github.com:Nerzal/talkfrontend.git
+git clone https://github.com/Nerzal/talkfrontend.git
 cd talkfrontend
 npm install
 npm run dev
@@ -189,7 +189,7 @@ npm run dev
 {{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
-git clone git@github.com:Nerzal/talkfrontend.git
+git clone https://github.com/Nerzal/talkfrontend.git
 Set-Location talkfrontend
 npm install
 npm run dev

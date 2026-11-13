@@ -38,17 +38,26 @@ Profiles appear in two modes:
 - **enforce** — violations are blocked and logged
 - **complain** — violations are logged but allowed (used for developing new profiles)
 
-Install the community-maintained profile set and enforce everything:
+Install the community-maintained profile set and the management tools:
 
 ```bash
 sudo apt install apparmor-profiles apparmor-profiles-extra apparmor-utils -y
-
-# Move any complain-mode profiles to enforce
-sudo aa-enforce /etc/apparmor.d/*
-
-# Verify
-sudo apparmor_status | grep "enforce mode"
 ```
+
+Do **not** run `aa-enforce /etc/apparmor.d/*`. Since Ubuntu 24.04, `/etc/apparmor.d/` also contains dozens of profiles flagged `unconfined` that only exist to grant unprivileged user namespaces to specific applications, plus experimental profiles that ship in complain mode on purpose. Forcing all of them into enforce mode can break services in ways that are hard to trace. Instead, list the profiles in complain mode and enforce only those for software you actually run:
+
+```bash
+# Lists the loaded profiles, grouped into enforce and complain mode
+sudo aa-status
+
+# Enforce a specific profile, e.g. for dnsmasq
+sudo aa-enforce /etc/apparmor.d/usr.sbin.dnsmasq
+
+# Verify: the profile now appears under "profiles are in enforce mode"
+sudo aa-status
+```
+
+Watch the denial log (next section) for a while after each switch. If something breaks, `sudo aa-complain <profile>` reverts it.
 
 ### Writing a profile for your own application
 
@@ -67,19 +76,32 @@ The generated profile is saved to `/etc/apparmor.d/` and loaded immediately. It 
 
 ### Inspecting denials
 
-```bash
-# Real-time AppArmor denial log
-sudo journalctl -f | grep apparmor
+Where denials end up depends on whether `auditd` (next section) is installed. Without it, they go to the kernel log; with it, auditd takes them over and writes them to `/var/log/audit/audit.log` instead:
 
-# Summarize recent denials
-sudo aa-logprof
+```bash
+# Without auditd: real-time denials from the kernel log
+sudo journalctl -k -f | grep 'apparmor="DENIED"'
+
+# With auditd: denials from the last ten minutes
+sudo ausearch -m AVC --start recent -i
 ```
+
+For a summary, `aa-notify` (package `apparmor-notify`) reads whichever log is in use:
+
+```bash
+sudo apt install apparmor-notify -y
+
+# Summary of denials from the last day, verbose
+sudo aa-notify -s 1 -v
+```
+
+`aa-logprof` is the tool for the next step: it walks through the logged denials interactively and offers to **update the profiles** to allow them. Only accept rules you understand — every "allow" widens the confinement.
 
 ---
 
 ## 2 — auditd: Kernel-Level Audit Logging
 
-The Linux Audit System ([auditd](https://linux.die.net/man/8/auditd)) records security-relevant events at the syscall level. Unlike application logs, it cannot be silenced by a compromised process — it runs in the kernel and writes directly to a dedicated log file. It is the primary source of evidence in post-incident forensics.
+The Linux Audit System records security-relevant events at the syscall level. It has two parts: the **audit subsystem in the kernel** generates the events according to the loaded rules, and the userspace daemon [auditd](https://man7.org/linux/man-pages/man8/auditd.8.html) receives them and writes them to `/var/log/audit/audit.log`. Unlike application logs, an unprivileged compromised process cannot silence it — the events are produced by the kernel, not by the process. An attacker with root can stop the daemon, but that itself is logged (`DAEMON_END`), and with locked rules (`-e 2`, below) the rules cannot be changed without a reboot. That makes it the primary source of evidence in post-incident forensics.
 
 ```bash
 sudo apt install auditd audispd-plugins -y
@@ -113,15 +135,18 @@ sudo nano /etc/audit/rules.d/99-hardening.rules
 -w /etc/sudoers    -p wa -k sudoers
 -w /etc/sudoers.d/ -p wa -k sudoers
 -w /usr/bin/sudo   -p x  -k sudo_exec
--w /bin/su         -p x  -k su_exec
+-w /usr/bin/su     -p x  -k su_exec
 
 # ── SSH configuration ───────────────────────────────────────────────────
--w /etc/ssh/sshd_config -p wa -k sshd_config
+-w /etc/ssh/sshd_config   -p wa -k sshd_config
+-w /etc/ssh/sshd_config.d/ -p wa -k sshd_config
 
-# ── Login activity ──────────────────────────────────────────────────────
--w /var/log/faillog  -p wa -k login
--w /var/log/lastlog  -p wa -k login
+# ── Authentication configuration ────────────────────────────────────────
+-w /etc/pam.d/                  -p wa -k pam
+-w /etc/security/faillock.conf  -p wa -k pam
 ```
+
+Older guides also watch `/var/log/faillog` and `/var/log/lastlog`. Skip those: `faillog` was written by the retired `pam_tally`/`pam_tally2` modules and is typically absent on current Ubuntu (`pam_faillock` keeps its counters in `/var/run/faillock/`), and from Ubuntu 25.04 on, `lastlog` is replaced by `lastlog2` with an SQLite database — those watches would simply never fire. You do not need them anyway — PAM already reports every login to the audit subsystem as `USER_AUTH`, `USER_LOGIN`, and `USER_START` events (see the queries below).
 
 Load the rules:
 
@@ -144,10 +169,16 @@ sudo ausearch --start recent
 # All failed login attempts
 sudo ausearch --message USER_AUTH --success no
 
+# Report of all logins
+sudo aureport --login --start today
+
 # Human-readable summary report
 sudo aureport --summary
 
-# Report of all commands run via sudo in the last 24 hours
+# Every execution of sudo today (from the sudo_exec watch)
+sudo ausearch -k sudo_exec --start today -i
+
+# Report of all commands that appear in today's audit events (not only sudo)
 sudo aureport --comm --start today
 ```
 
@@ -177,9 +208,9 @@ This takes a few minutes on the first run — AIDE hashes every monitored file:
 
 ```bash
 sudo aideinit
-# Output: The new database will be written to /var/lib/aide/aide.db.new
-sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 ```
+
+On Debian and Ubuntu, `aideinit` writes `/var/lib/aide/aide.db.new` and then copies it to `/var/lib/aide/aide.db` itself — a manual `mv` is not needed.
 
 Run a check to confirm there are no unexpected differences:
 
@@ -190,20 +221,19 @@ sudo aide --check
 
 ### Automating daily checks
 
-```bash
-sudo crontab -e
-```
-
-```text
-# Daily AIDE integrity check at 03:00, send results by email
-0 3 * * * /usr/bin/aide --check 2>&1 | mail -s "AIDE report $(hostname)" root
-```
-
-After system updates, reinitialize the database to accept the new state as the baseline:
+There is nothing to add to cron: Ubuntu's `aide-common` package already ships a systemd timer, `dailyaidecheck.timer`, which runs the check once a day between 02:00 and 04:00. Make sure it is enabled:
 
 ```bash
-sudo aideinit
-sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+sudo systemctl enable --now dailyaidecheck.timer
+systemctl list-timers dailyaidecheck.timer
+```
+
+The report is mailed to the address in `MAILTO` in `/etc/default/aide` (default: `root`). Mail only leaves the machine if a mail transfer agent is installed and configured — for example `postfix` as a satellite system relaying through your mail provider. Without an MTA, read the result with `sudo journalctl -u dailyaidecheck.service`.
+
+After system updates, reinitialize the database to accept the new state as the baseline. `-y` and `-f` answer the overwrite prompts for an existing database:
+
+```bash
+sudo aideinit -y -f
 ```
 
 ---
@@ -240,7 +270,7 @@ No single layer provides complete security. Together, they force an attacker to 
 
 ## Further Reading
 
-- [Ubuntu Security Guide](https://ubuntu.com/security/certifications/docs/usg)
+- [Ubuntu Security Guide](https://documentation.ubuntu.com/security/docs/compliance/usg/)
 - [AppArmor GitLab Wiki](https://gitlab.com/apparmor/apparmor/-/wikis/home)
-- [Linux Audit Documentation](https://linux.die.net/man/8/auditd)
+- [auditd(8) man page](https://man7.org/linux/man-pages/man8/auditd.8.html)
 - [AIDE manual](https://aide.github.io/)

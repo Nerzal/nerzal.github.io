@@ -81,7 +81,7 @@ func main() {
 
 Das ist bereits das gesamte Format. `title`, `content`, `code`, `image` und `blank`-Folien sind reines Markdown – eine Überschrift, eine Bullet-Liste, ein eingezäunter Codeblock, ein Bild oder freier Fließtext. `table` und `speaker` tragen strukturierte Daten, die sich nicht sauber auf Fließtext abbilden lassen (Tabellenzeilen, Social-Links mit QR-Codes) – diese beiden Folientypen werden deshalb als reines YAML geschrieben, ganz ohne Wrapper-Syntax:
 
-```yaml
+```text
 --- table
 title: CREATE
 statement: "INSERT INTO people VALUES (1, 'Alice', 'active')"
@@ -147,7 +147,7 @@ Ein vorgebautes Image wird auf GHCR veröffentlicht: `ghcr.io/nerzal/talkfronten
 
 ```bash
 docker run -p 8080:8080 \
-  -v $(pwd)/my-talks:/app/dist/talks:ro \
+  -v "$(pwd)/my-talks:/app/dist/talks:ro" \
   ghcr.io/nerzal/talkfrontend:edge
 ```
 
@@ -179,7 +179,7 @@ Verfügbare Image-Tags: `edge` (aktuellster `main`-Stand) sowie `1.2.3` / `1.2` 
 {{< os-tab "Linux / macOS" >}}
 
 ```bash
-git clone git@github.com:Nerzal/talkfrontend.git
+git clone https://github.com/Nerzal/talkfrontend.git
 cd talkfrontend
 npm install
 npm run dev
@@ -189,7 +189,7 @@ npm run dev
 {{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
-git clone git@github.com:Nerzal/talkfrontend.git
+git clone https://github.com/Nerzal/talkfrontend.git
 Set-Location talkfrontend
 npm install
 npm run dev

@@ -182,6 +182,8 @@ Die zweite Korrektur ist ein **Live-Sparmodus**. Solange OBS streamt und der Str
 
 Alle werden gebraucht, weil [`runtime.GOMAXPROCS`](https://pkg.go.dev/runtime#GOMAXPROCS) nur die Threads begrenzt, die Go-Code ausführen. Kindprozesse begrenzt es nicht. Zwei Details, die ich mag: Ein OBS, das nicht antwortet, zählt als "streamt nicht", weil es nichts zu schützen gibt, und `GOMAXPROCS` kehrt am Ende des Streams auf den Wert vom Start zurück, nicht auf einen angenommenen Standard.
 
+Ein Haken: Seit [Go 1.25](https://go.dev/doc/go1.25#runtime) passt die Runtime `GOMAXPROCS` selbst an, wenn sich das CPU-Limit der cgroup oder die CPU-Affinität ändert — aber nur, bis jemand `runtime.GOMAXPROCS(n)` aufruft. Jeder explizite Aufruf schaltet das dauerhaft ab, und den Startwert zurückzuschreiben nagelt ihn nur fest. Der richtige Weg zurück ist [`runtime.SetDefaultGOMAXPROCS()`](https://pkg.go.dev/runtime#SetDefaultGOMAXPROCS): Es stellt den Runtime-Standard wieder her und aktiviert die automatischen Anpassungen erneut.
+
 Unter Windows ist die Priorität ein Creation-Flag für neue Prozesse (`BELOW_NORMAL_PRIORITY_CLASS`) und `SetPriorityClass` für laufende; Kinder erben die Klasse, sodass auch eine Kette Python-zu-ffmpeg zurücktritt. Eine verwandte Idee, vor einem schweren Job während des Streams nachzufragen und ihn bis zum Stream-Ende zu queuen, steht auf der Roadmap, nicht im Produkt.
 
 ![OBS-Regie-Seite mit Stumm-Alarm](/img/neuroclip/regie-1440.jpg)
@@ -257,7 +259,7 @@ go vet ./...; if ($?) { go test -race ./... }
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Go installierst du über [go.dev/doc/install](https://go.dev/doc/install); der Race-Detector ist unter [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector) beschrieben.
+Go installierst du über [go.dev/doc/install](https://go.dev/doc/install); der Race-Detector ist unter [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector) beschrieben. Unter Windows braucht `-race` cgo, also muss ein C-Compiler wie `gcc` aus [MinGW-w64](https://www.mingw-w64.org/) im `PATH` liegen (und `CGO_ENABLED` darf nicht `0` sein); ohne ihn scheitert die PowerShell-Variante, bevor auch nur ein Test läuft.
 
 ## Was ich anders machen würde
 

@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version: "1.23"
+          go-version: "1.27"
       - run: make test
 
   release:
@@ -76,7 +76,7 @@ Drei Details sind wichtig.
 
 **`fetch-depth: 0`.** `actions/checkout` holt standardmäßig nur einen Commit. Der Packager leitet die Version aus der Git-Historie ab und baut das Changelog aus den Commit-Nachrichten, braucht also die komplette Historie und die Tags.
 
-**`contents: write`.** Zum Anlegen eines Releases braucht der Job Schreibrechte auf den Repository-Inhalt. Ich gebe sie nur dem Release-Job, nicht dem Test-Job. Siehe [Automatic token authentication](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication).
+**`contents: write`.** Zum Anlegen eines Releases braucht der Job Schreibrechte auf den Repository-Inhalt. Ich gebe sie nur dem Release-Job, nicht dem Test-Job. Siehe [Automatic token authentication](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token).
 
 ---
 
@@ -270,7 +270,7 @@ go -C tools/installer run . -src "$PWD" -version dev -dry-run -yes `
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Go installierst du nach [go.dev/doc/install](https://go.dev/doc/install). Das Flag `-C` des `go`-Befehls braucht Go 1.20 oder neuer, die CI nutzt Go 1.23.
+Go installierst du nach [go.dev/doc/install](https://go.dev/doc/install). Das Flag `-C` des `go`-Befehls braucht Go 1.20 oder neuer, die CI nutzt Go 1.27.
 
 Dasselbe Programm baut auch den manuellen Download. `make package` startet es im `-package`-Modus und schreibt `dist/LevelTimer-<version>.zip` (mit dem Archiv-Addon darin) und `dist/StreamGoal-<version>.zip`. Das ist eine praktische lokale Generalprobe für das, was der Packager erzeugt, aber das offizielle Release-Zip kommt vom Packager, nicht von diesem Weg.
 

@@ -42,9 +42,9 @@ Du brauchst die **gcloud CLI** und ein GCP-Projekt mit aktivierter Abrechnung.
 
 ```bash
 # Debian / Ubuntu — Googles Paketquelle hinzufügen
-sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg curl
+sudo apt-get update && sudo apt-get install -y ca-certificates gnupg curl
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
   | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
@@ -140,7 +140,7 @@ gcloud compute instances create web1 \
     --zone=us-east1-d \
     --tags=network-lb-tag \
     --machine-type=e2-small \
-    --image-family=debian-12 \
+    --image-family=debian-13 \
     --image-project=debian-cloud \
     --metadata=startup-script='#!/bin/bash
       apt-get update
@@ -154,7 +154,7 @@ Für `web2` und `web3` wiederholen — Instanzname im Befehl **und** in der `ech
 **Was die Flags bedeuten:**
 
 - `--machine-type=e2-small` — ein kleiner, günstiger [Maschinentyp](https://cloud.google.com/compute/docs/machine-resource). Zwei (geteilte) vCPUs, 2 GB RAM. Reichlich für einen Apache mit einer HTML-Datei.
-- `--image-family=debian-12` — das Betriebssystem. Eine *Family* statt eines konkreten Image-Namens liefert immer den aktuellsten gepatchten Debian-12-Build. Siehe [Public Images](https://cloud.google.com/compute/docs/images/os-details).
+- `--image-family=debian-13` — das Betriebssystem. Eine *Family* statt eines konkreten Image-Namens liefert immer den aktuellsten gepatchten Debian-13-Build. Siehe [Public Images](https://cloud.google.com/compute/docs/images/os-details).
 - `--tags=network-lb-tag` — ein [Netzwerk-Tag](https://cloud.google.com/vpc/docs/add-remove-network-tags). Stell es dir als Post-it auf der VM vor. Firewall-Regeln zielen auf Tags statt auf einzelne Maschinen — "Port 80 für alles mit diesem Post-it erlauben" funktioniert damit auch noch, wenn Instanzen dazukommen oder verschwinden.
 - `--metadata=startup-script=...` — das Skript, das Compute Engine beim ersten Boot als Root ausführt. So musst du dich nie per SSH auf die Maschine verbinden, um sie zu konfigurieren. Siehe [Startup-Skripte](https://cloud.google.com/compute/docs/instances/startup-scripts/linux).
 
@@ -174,7 +174,7 @@ gcloud compute instances create web1 `
     --zone=us-east1-d `
     --tags=network-lb-tag `
     --machine-type=e2-small `
-    --image-family=debian-12 `
+    --image-family=debian-13 `
     --image-project=debian-cloud `
     --metadata-from-file=startup-script=startup.sh
 ```
@@ -183,7 +183,7 @@ Das Backtick `` ` `` ist PowerShells Zeilenfortsetzungszeichen, das Äquivalent 
 
 ### Schritt 2 — HTTP-Traffic erlauben
 
-Die VMs existieren, aber niemand kommt an sie ran. Die Standard-VPC-Firewall von GCP blockiert eingehenden Traffic komplett. Port 80 für die getaggten Instanzen öffnen:
+Die VMs existieren, aber niemand kommt an sie ran. Das `default`-VPC bringt nur eine Handvoll Ingress-Regeln mit — SSH (22), RDP (3389), ICMP und Traffic zwischen Instanzen innerhalb des Netzwerks. Alles andere, HTTP eingeschlossen, landet bei der impliziten Deny-Ingress-Regel. Port 80 für die getaggten Instanzen öffnen:
 
 ```bash
 gcloud compute firewall-rules create www-firewall-network-lb \
@@ -220,7 +220,7 @@ Invoke-RestMethod -Uri "http://EXTERNE_IP_VON_WEB1"
 
 ### Schritt 3 — Den Load Balancer bauen
 
-Vier Ressourcen, in Abhängigkeitsreihenfolge erstellt:
+Fünf Ressourcen, in Abhängigkeitsreihenfolge erstellt:
 
 ```bash
 # 1. Statische regionale IP-Adresse reservieren
@@ -299,7 +299,7 @@ Statt VMs einzeln zu bauen, definieren wir eine Blaupause.
 ```bash
 gcloud compute instance-templates create lb-backend-template \
     --machine-type=e2-medium \
-    --image-family=debian-12 \
+    --image-family=debian-13 \
     --image-project=debian-cloud \
     --tags=allow-health-check \
     --metadata=startup-script='#!/bin/bash
@@ -313,7 +313,7 @@ gcloud compute instance-templates create lb-backend-template \
       systemctl restart apache2'
 ```
 
-Beachte, wie der Hostname geholt wird: `169.254.169.254` ist der [Metadata-Server](https://cloud.google.com/compute/docs/metadata/overview), eine Link-Local-Adresse ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)), erreichbar aus jeder GCE-Instanz heraus. Er beantwortet Fragen über die VM, auf der er läuft — Name, Zone, Projekt, Service-Account-Tokens. Der Header `Metadata-Flavor: Google` ist Pflicht; er existiert, um den Endpunkt gegen naive Cross-Site-Request-Forgery zu immunisieren.
+Beachte, wie der Hostname geholt wird: `169.254.169.254` ist der [Metadata-Server](https://cloud.google.com/compute/docs/metadata/overview), eine Link-Local-Adresse ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)), erreichbar aus jeder GCE-Instanz heraus. Er beantwortet Fragen über die VM, auf der er läuft — Name, Zone, Projekt, Service-Account-Tokens. Der Header `Metadata-Flavor: Google` ist Pflicht; er existiert, um den Endpunkt gegen Server-Side Request Forgery (SSRF) zu schützen: Eine Anwendung, die man dazu bringt, eine vom Angreifer gelieferte URL abzurufen, schickt einen schlichten `GET` ohne diesen Header — und der Metadata-Server verweigert die Antwort.
 
 Ein [Instance Template](https://cloud.google.com/compute/docs/instance-templates) ist unveränderlich. Zum Ändern erstellst du ein neues — was für reproduzierbare Infrastruktur genau das gewünschte Verhalten ist.
 
@@ -324,9 +324,15 @@ gcloud compute instance-groups managed create lb-backend-group \
     --template=lb-backend-template \
     --size=2 \
     --zone=us-east1-d
+
+gcloud compute instance-groups set-named-ports lb-backend-group \
+    --named-ports=http:80 \
+    --zone=us-east1-d
 ```
 
 Eine [MIG](https://cloud.google.com/compute/docs/instance-groups) hält die gewünschte Instanzanzahl aufrecht. Löschst du eine VM von Hand, erstellt die Gruppe sie neu. Setzt du `--size=50`, baut sie 48 weitere. Mit angehängtem Autoscaler passt sie die Anzahl selbstständig an die Last an.
+
+Der zweite Befehl gibt Port 80 den Namen `http`. Der Backend Service in Schritt 3 referenziert seinen Port über diesen Namen (`--port-name=http`), nicht über die Nummer — ohne `set-named-ports` weiß der Balancer nicht, wohin er den Traffic schicken soll.
 
 ### Schritt 2 — Firewall für Googles Health Checker
 
@@ -346,7 +352,7 @@ Diese Regel zu vergessen ist der mit Abstand häufigste Grund, warum ein frisch 
 
 ### Schritt 3 — Den Balancer zusammensetzen
 
-Sechs Ressourcen, jede zeigt auf die vorherige:
+Sieben Ressourcen, jede zeigt auf die vorherige:
 
 ```bash
 # 1. Globale IP-Adresse reservieren
@@ -360,6 +366,7 @@ gcloud compute health-checks create http http-basic-check \
 
 # 3. Backend Service — das Routing-Ziel
 gcloud compute backend-services create web-backend-service \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
     --protocol=HTTP \
     --port-name=http \
     --health-checks=http-basic-check \
@@ -381,11 +388,14 @@ gcloud compute target-http-proxies create http-lb-proxy \
 
 # 7. Forwarding Rule — bindet die globale IP an den Proxy
 gcloud compute forwarding-rules create http-content-rule \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
     --address=lb-ipv4-1 \
     --global \
     --target-http-proxy=http-lb-proxy \
     --ports=80
 ```
+
+`--load-balancing-scheme=EXTERNAL_MANAGED` auf Backend Service und Forwarding Rule macht daraus den *globalen externen* Application Load Balancer. Fehlt das Flag, fällt `gcloud` stillschweigend auf `EXTERNAL` zurück — den [klassischen Application Load Balancer](https://cloud.google.com/load-balancing/docs/https), dem die neueren Traffic-Management-Features fehlen. Beide Ressourcen müssen dasselbe Schema verwenden.
 
 ### Der Weg einer Anfrage
 

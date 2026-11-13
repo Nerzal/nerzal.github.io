@@ -2,7 +2,7 @@
 draft: true
 title: "Ubuntu Server Hardening — Teil 2: Das System verbessern"
 seo_title: "Ubuntu Hardening Teil 2: System härten"
-date: 2026-05-10T00:00:00+00:00
+date: 2026-05-12T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Der zweite Hardening-Durchgang: Kernel-Parameter mit sysctl anpassen, unnötige Dienste deaktivieren und sudo sowie Login-Richtlinien einschränken."
@@ -58,9 +58,6 @@ net.ipv4.conf.all.log_martians = 1
 
 # ── Kernel ────────────────────────────────────────────────────────────────
 
-# Sichtbarkeit von /proc/[pid] auf den besitzenden Benutzer beschränken
-kernel.hidepid = 2
-
 # Kernel-Pointer-Exposition in /proc einschränken (reduziert Informationslecks)
 kernel.kptr_restrict = 2
 
@@ -90,7 +87,31 @@ sysctl net.ipv4.tcp_syncookies
 # net.ipv4.tcp_syncookies = 1
 ```
 
-> **Hinweis zu `kernel.hidepid = 2`:** Nicht-Root-Benutzer können die Prozesse anderer Benutzer in `/proc` nicht mehr sehen. Falls ein Monitoring-Tool wie `htop` alle Prozesse sehen muss, den entsprechenden Benutzer zur `proc`-Gruppe hinzufügen und `hidepid=2,gid=proc` verwenden.
+### Prozesse anderer Benutzer verbergen
+
+In vielen Hardening-Anleitungen taucht `kernel.hidepid` auf. **Das ist kein sysctl** — `sysctl --system` würde den Schlüssel als unbekannt melden. `hidepid` ist eine Mount-Option des `proc`-Dateisystems ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). Mit `hidepid=invisible` (ältere numerische Schreibweise: `hidepid=2`) können Nicht-Root-Benutzer die `/proc/[pid]`-Verzeichnisse anderer Benutzer weder lesen noch auflisten — `ps` und `htop` zeigen nur noch die eigenen Prozesse.
+
+Diese Zeile in `/etc/fstab` eintragen:
+
+```text
+proc  /proc  proc  defaults,hidepid=invisible  0  0
+```
+
+Ohne Neustart anwenden:
+
+```bash
+sudo mount -o remount,hidepid=invisible /proc
+```
+
+Muss ein Monitoring-Agent alle Prozesse sehen, eine eigene Gruppe anlegen (Ubuntu hat standardmäßig keine `proc`-Gruppe), den Benutzer des Agents hinzufügen und die Gruppe per `gid=` ausnehmen:
+
+```bash
+sudo groupadd --system procview
+sudo usermod -aG procview monitoring
+# Die fstab-Optionen lauten dann: defaults,hidepid=invisible,gid=procview
+```
+
+> **Vorsicht:** systemd-Komponenten wie `systemd-logind` und polkit inspizieren andere Prozesse über `/proc`. Auf manchen Systemen bricht `hidepid` die polkit-Autorisierung oder Benutzersitzungen. Zuerst auf einer Staging-Maschine testen und beim Anwenden eine Konsolensitzung offen halten. Für einen einzelnen Dienst bietet systemds [`ProtectProc=invisible`](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#ProtectProc=) dieselbe Isolation, ohne den globalen Mount anzufassen.
 
 ---
 
@@ -104,7 +125,7 @@ Was aktiv ist auflisten:
 sudo systemctl list-units --type=service --state=running
 ```
 
-Häufige Kandidaten zum Deaktivieren auf einem headless Server:
+Häufige Kandidaten zum Deaktivieren auf einem headless Server — sofern vorhanden. Eine minimale Ubuntu-Server-Installation bringt Avahi, CUPS und BlueZ gar nicht erst mit; sie tauchen meist auf, wenn ein Desktop-Image verwendet wurde oder ein Paket sie nachgezogen hat. `Unit … not found` heißt schlicht: nichts zu tun.
 
 ```bash
 # mDNS — Geräteerkennung, auf einem Server nicht relevant
@@ -145,15 +166,29 @@ Defaults timestamp_timeout=5
 
 # Jeden sudo-Befehl mit Zeitstempel protokollieren
 Defaults logfile=/var/log/sudo.log
-Defaults log_input, log_output
 ```
 
-Falls ein Benutzer nur einen bestimmten Dienst verwalten muss, ihn auf genau das beschränken:
+> **Zu `log_input` / `log_output`:** Viele Anleitungen ergänzen `Defaults log_input, log_output` für eine vollständige Sitzungsaufzeichnung nach `/var/log/sudo-io`. Vorsicht: `log_input` zeichnet **jeden Tastendruck** in einer sudo-Sitzung auf — auch Passwörter, die in Programme wie `sudo passwd` oder `sudo mysql -p` eingegeben werden — und `log_output` speichert alles Ausgegebene inklusive Secrets. Nur aktivieren, wenn `/var/log/sudo-io` entsprechend geschützt und rotiert wird ([sudoers(5)](https://www.sudo.ws/docs/man/sudoers.man/)).
+
+Falls ein Benutzer nur einen bestimmten Dienst verwalten muss, ihn auf genau das beschränken. Die Regel kommt in eine eigene Drop-in-Datei:
+
+```bash
+sudo visudo -f /etc/sudoers.d/deploy
+```
 
 ```text
 # 'deploy' darf nur nginx neu starten und neu laden — nichts sonst
-deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
-deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
+deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart nginx
+deploy ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
+```
+
+Diese Regel schränkt nur dann etwas ein, wenn `deploy` **nicht** zusätzlich Mitglied der `sudo`-Gruppe ist — sonst gewährt die Zeile `%sudo ALL=(ALL:ALL) ALL` weiterhin vollen Root-Zugriff. Bevor die Mitgliedschaft entfernt wird, sicherstellen, dass ein anderes Konto noch funktionierenden Admin-Zugriff hat (zweite SSH-Sitzung als dieser Benutzer öffnen und `sudo -v` ausführen), dann:
+
+```bash
+sudo gpasswd -d deploy sudo
+
+# Prüfen: sollte nur die zwei nginx-Befehle auflisten
+sudo -l -U deploy
 ```
 
 Auf bestehende zu weitreichende Wildcard-Berechtigungen in `/etc/sudoers.d/` prüfen:
@@ -169,19 +204,44 @@ sudo cat /etc/sudoers.d/*
 
 Auch mit schlüsselbasiertem SSH können lokale Konten über die physische Konsole oder Out-of-Band-Management-Schnittstellen authentifiziert werden. Eine Passwort-Richtlinie begrenzt die Auswirkungen schwacher lokaler Anmeldedaten.
 
-`/etc/login.defs` bearbeiten:
+Was eine _gute_ Richtlinie ausmacht, hat sich geändert. [NIST SP 800-63B (Revision 4)](https://pages.nist.gov/800-63-4/sp800-63b.html), die Referenz, an der sich die meisten Compliance-Frameworks orientieren, schreibt vor:
+
+- **Mindestlänge verlangen** — 15 Zeichen für Passwörter, die der einzige Faktor sind,
+- **neue Passwörter gegen eine Blockliste prüfen** — häufig verwendete, erwartbare oder kompromittierte Werte,
+- **keine Zusammensetzungsregeln** ("mindestens eine Ziffer, ein Großbuchstabe, ein Sonderzeichen"),
+- **keine erzwungenen periodischen Wechsel** — nur bei Hinweisen auf eine Kompromittierung.
+
+Erzwungene Rotation und Zusammensetzungsregeln treiben Benutzer zu vorhersehbaren Mustern wie `Sommer2026!` → `Herbst2026!`. Länge plus Blockliste ist sowohl stärker als auch alltagstauglicher.
+
+### Passwort-Alterung in `/etc/login.defs`
+
+Ubuntus Standard `PASS_MAX_DAYS 99999` (kein Ablauf) entspricht bereits NIST — also so lassen. Wichtig: `login.defs` unterstützt keine Kommentare am Ende einer Wertzeile — ein angehängtes `# …` wird Teil des Werts und die Einstellung wird verworfen. Kommentare gehören immer in eine eigene Zeile:
 
 ```bash
 sudo nano /etc/login.defs
 ```
 
 ```text
-PASS_MAX_DAYS   90      # Rotation alle 90 Tage erzwingen
-PASS_MIN_DAYS   1       # Sofortiges Wiederverwenden nach Änderung verhindern
-PASS_WARN_AGE   7       # 7 Tage vor Ablauf warnen
+# Keine erzwungene Rotation (NIST SP 800-63B)
+PASS_MAX_DAYS   99999
+# Verhindert, durch schnelle Wechsel zum alten Passwort zurückzukehren
+PASS_MIN_DAYS   1
+PASS_WARN_AGE   7
 ```
 
-Für Passwortkomplexität `libpam-pwquality` installieren:
+`login.defs` wird nur beim **Anlegen** eines Kontos gelesen. Bestehende Konten behalten ihre Werte; diese mit `chage` prüfen und ändern:
+
+```bash
+# Alterungseinstellungen eines bestehenden Benutzers anzeigen
+sudo chage -l alice
+
+# Erzwungenen Ablauf entfernen und Mindestalter von 1 Tag setzen
+sudo chage --maxdays 99999 --mindays 1 alice
+```
+
+### Länge und Blockliste mit pwquality
+
+`libpam-pwquality` installieren — es klinkt sich über PAM ein, sobald ein Passwort mit `passwd` geändert wird:
 
 ```bash
 sudo apt install libpam-pwquality -y
@@ -189,13 +249,22 @@ sudo nano /etc/security/pwquality.conf
 ```
 
 ```text
-minlen   = 14     # Mindestlänge
-dcredit  = -1     # Mindestens 1 Ziffer erforderlich
-ucredit  = -1     # Mindestens 1 Großbuchstabe erforderlich
-ocredit  = -1     # Mindestens 1 Sonderzeichen erforderlich
-difok    = 8      # Muss sich von vorigem Passwort in mindestens 8 Zeichen unterscheiden
-usercheck = 1     # Passwörter die den Benutzernamen enthalten ablehnen
+# Mindestlänge (NIST: 15 für Passwörter als einziger Faktor)
+minlen = 15
+# Keine Zusammensetzungsregeln: die Credit-Optionen bleiben auf dem Standard 0
+dcredit = 0
+ucredit = 0
+lcredit = 0
+ocredit = 0
+# Wörter aus dem cracklib-Wörterbuch ablehnen
+dictcheck = 1
+# Passwörter ablehnen, die den Benutzernamen enthalten
+usercheck = 1
+# Richtlinie auch für root anwenden
+enforce_for_root
 ```
+
+`dictcheck` nutzt die lokale cracklib-Wortliste. Sie fängt gängige und wörterbuchbasierte Passwörter ab, ist aber keine Liste _geleakter_ Passwörter. Wer das braucht, prüft Kandidaten gegen einen Breach-Datenbestand wie [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords) — dessen Range-API nutzt k-Anonymität, sodass nur die ersten fünf Zeichen des SHA-1-Hashs die Maschine verlassen.
 
 ---
 

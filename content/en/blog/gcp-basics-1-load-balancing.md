@@ -42,9 +42,9 @@ You need the **gcloud CLI** and a GCP project with billing enabled.
 
 ```bash
 # Debian / Ubuntu — add Google's package repository
-sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg curl
+sudo apt-get update && sudo apt-get install -y ca-certificates gnupg curl
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
   | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
@@ -140,7 +140,7 @@ gcloud compute instances create web1 \
     --zone=us-east1-d \
     --tags=network-lb-tag \
     --machine-type=e2-small \
-    --image-family=debian-12 \
+    --image-family=debian-13 \
     --image-project=debian-cloud \
     --metadata=startup-script='#!/bin/bash
       apt-get update
@@ -154,7 +154,7 @@ Repeat for `web2` and `web3`, changing the instance name in both the command and
 **What each flag does:**
 
 - `--machine-type=e2-small` — a small, cheap [machine type](https://cloud.google.com/compute/docs/machine-resource). Two vCPUs (shared), 2 GB RAM. Plenty for an Apache serving one HTML file.
-- `--image-family=debian-12` — the OS. Using a *family* instead of a specific image name always gives you the newest patched build of Debian 12. See [public images](https://cloud.google.com/compute/docs/images/os-details).
+- `--image-family=debian-13` — the OS. Using a *family* instead of a specific image name always gives you the newest patched build of Debian 13. See [public images](https://cloud.google.com/compute/docs/images/os-details).
 - `--tags=network-lb-tag` — a [network tag](https://cloud.google.com/vpc/docs/add-remove-network-tags). Think of it as a sticky note on the VM. Firewall rules target tags, not individual machines, so "allow port 80 to everything wearing this tag" keeps working as you add and remove instances.
 - `--metadata=startup-script=...` — the script Compute Engine runs on first boot, as root. This is how you avoid ever SSH-ing into the machine to configure it. See [startup scripts](https://cloud.google.com/compute/docs/instances/startup-scripts/linux).
 
@@ -174,7 +174,7 @@ gcloud compute instances create web1 `
     --zone=us-east1-d `
     --tags=network-lb-tag `
     --machine-type=e2-small `
-    --image-family=debian-12 `
+    --image-family=debian-13 `
     --image-project=debian-cloud `
     --metadata-from-file=startup-script=startup.sh
 ```
@@ -183,7 +183,7 @@ The backtick `` ` `` is PowerShell's line continuation character, equivalent to 
 
 ### Step 2 — Allow HTTP traffic
 
-The VMs exist but nothing can reach them. GCP's default VPC firewall denies all inbound traffic. Open port 80 for the tagged instances:
+The VMs exist but nothing can reach them. The `default` VPC ships with only a handful of ingress rules — SSH (22), RDP (3389), ICMP and traffic between instances inside the network. Everything else, HTTP included, hits the implied deny-ingress rule. Open port 80 for the tagged instances:
 
 ```bash
 gcloud compute firewall-rules create www-firewall-network-lb \
@@ -220,7 +220,7 @@ Invoke-RestMethod -Uri "http://EXTERNAL_IP_OF_WEB1"
 
 ### Step 3 — Build the load balancer
 
-Four resources, created in dependency order:
+Five resources, created in dependency order:
 
 ```bash
 # 1. Reserve a static regional IP address
@@ -299,7 +299,7 @@ Instead of creating VMs one by one, define a blueprint.
 ```bash
 gcloud compute instance-templates create lb-backend-template \
     --machine-type=e2-medium \
-    --image-family=debian-12 \
+    --image-family=debian-13 \
     --image-project=debian-cloud \
     --tags=allow-health-check \
     --metadata=startup-script='#!/bin/bash
@@ -313,7 +313,7 @@ gcloud compute instance-templates create lb-backend-template \
       systemctl restart apache2'
 ```
 
-Note how the hostname is obtained: `169.254.169.254` is the [metadata server](https://cloud.google.com/compute/docs/metadata/overview), a link-local address ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)) reachable from inside every GCE instance. It answers questions about the VM it is running on — name, zone, project, service account tokens. The `Metadata-Flavor: Google` header is mandatory; it exists to make the endpoint immune to naive cross-site request forgery.
+Note how the hostname is obtained: `169.254.169.254` is the [metadata server](https://cloud.google.com/compute/docs/metadata/overview), a link-local address ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)) reachable from inside every GCE instance. It answers questions about the VM it is running on — name, zone, project, service account tokens. The `Metadata-Flavor: Google` header is mandatory; it exists to protect the endpoint against server-side request forgery (SSRF): an application tricked into fetching an attacker-supplied URL sends a plain `GET` without that header, and the metadata server refuses to answer.
 
 An [instance template](https://cloud.google.com/compute/docs/instance-templates) is immutable. To change it, you create a new one — which is exactly what you want for reproducible infrastructure.
 
@@ -324,9 +324,15 @@ gcloud compute instance-groups managed create lb-backend-group \
     --template=lb-backend-template \
     --size=2 \
     --zone=us-east1-d
+
+gcloud compute instance-groups set-named-ports lb-backend-group \
+    --named-ports=http:80 \
+    --zone=us-east1-d
 ```
 
 A [MIG](https://cloud.google.com/compute/docs/instance-groups) maintains the requested instance count. Delete a VM by hand and the group recreates it. Set `--size=50` and it builds 48 more. Attach an autoscaler and it adjusts the count to load on its own.
+
+The second command gives port 80 the name `http`. The backend service in step 3 refers to its port by that name (`--port-name=http`), not by number — skip `set-named-ports` and the balancer has no idea where to send traffic.
 
 ### Step 2 — Firewall for Google's health checkers
 
@@ -346,7 +352,7 @@ Forgetting this rule is the single most common reason a freshly built Applicatio
 
 ### Step 3 — Assemble the balancer
 
-Six resources, each pointing at the previous one:
+Seven resources, each pointing at the previous one:
 
 ```bash
 # 1. Reserve a global IP address
@@ -360,6 +366,7 @@ gcloud compute health-checks create http http-basic-check \
 
 # 3. Backend service — the routing target
 gcloud compute backend-services create web-backend-service \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
     --protocol=HTTP \
     --port-name=http \
     --health-checks=http-basic-check \
@@ -381,11 +388,14 @@ gcloud compute target-http-proxies create http-lb-proxy \
 
 # 7. Forwarding rule — binds the global IP to the proxy
 gcloud compute forwarding-rules create http-content-rule \
+    --load-balancing-scheme=EXTERNAL_MANAGED \
     --address=lb-ipv4-1 \
     --global \
     --target-http-proxy=http-lb-proxy \
     --ports=80
 ```
+
+`--load-balancing-scheme=EXTERNAL_MANAGED` on the backend service and the forwarding rule is what makes this the *global external* Application Load Balancer. Leave it out and `gcloud` silently falls back to `EXTERNAL` — the [classic Application Load Balancer](https://cloud.google.com/load-balancing/docs/https), which lacks the newer traffic-management features. Both resources must use the same scheme.
 
 ### How a request travels
 

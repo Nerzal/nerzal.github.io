@@ -25,7 +25,7 @@ In summary, statically linked binaries are larger and self-contained, while dyna
 1. Command-line tools: Many command-line tools, such as file compression utilities or network monitoring tools, can be distributed as statically linked binaries. This allows users to quickly and easily download and run the tool without having to install additional dependencies.
 2. Embedded systems: When developing software for embedded systems, statically linking the necessary libraries can be important to ensure that the program will run correctly on the device, as the target environment may have limited resources or lack the required libraries.
 3. Cross-platform software: Programs that need to run on multiple platforms, such as games or productivity software, may be distributed as statically linked binaries to ensure compatibility across different operating systems and architectures.
-4. Security-focused software: Security-focused software, such as encryption tools or password managers, may be distributed as statically linked binaries to reduce the attack surface and minimize the risk of vulnerabilities.
+4. Security-focused software: Security-focused software, such as encryption tools or password managers, is sometimes distributed as statically linked binaries, because it cannot be tricked into loading a manipulated shared library at runtime (for example via `LD_PRELOAD`). This comes with a trade-off though: a statically linked library does **not** receive the security patches your Linux distribution ships. If a vulnerability is found in an embedded library, the binary has to be rebuilt and redeployed. Security scanners also have a harder time finding vulnerable library versions inside a static binary. Static linking moves the responsibility for patching from the operating system to you.
 
 ## Check if a binary has been statically or dynamically linked
 
@@ -37,34 +37,115 @@ The -o flag just tells the compiler how to name the output file.
 
 And the path is the path to the main.go file.
 
-> go build -o swag cmd/swag/main.go
+```bash
+go build -o swag cmd/swag/main.go
+```
 
-We can now use the **file** command to check the binary.
+We can now use the [**file**](https://man7.org/linux/man-pages/man1/file.1.html) command to check the binary.
 
-> file swag
+```bash
+file swag
+```
 
 The command outputs:
 
-> swag: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, Go BuildID=gfj1RxRs_HuaewolHit9/HmUS_HdD_89W_XqAu3ee/wf7S14q1IwrJ5uuIdWJA/pmDUv61yXYXhrSKw7FtO, with debug_info, not stripped
+```text
+swag: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, Go BuildID=gfj1RxRs_HuaewolHit9/HmUS_HdD_89W_XqAu3ee/wf7S14q1IwrJ5uuIdWJA/pmDUv61yXYXhrSKw7FtO, with debug_info, not stripped
+```
 
-And we can see, that the binary has been dynamically linked.
+And we can see that the binary has been dynamically linked. The reason is [cgo](https://pkg.go.dev/cmd/cgo): packages like `net` or `os/user` use the C library of the system when cgo is enabled, which is the default on Linux if a C compiler is installed.
 
-Now we build the same go programm without cgo, which should result in statically linked binaries.
+Now we build the same Go program without cgo, which should result in a statically linked binary.
 
-> CGO_ENABLED=0 go build -o swag-static cmd/swag/main.go
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
+```bash
+CGO_ENABLED=0 go build -o swag-static cmd/swag/main.go
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+```powershell
+# Cross-compile a Linux binary; file and ldd only work on Linux ELF binaries
+$env:CGO_ENABLED = "0"
+$env:GOOS = "linux"
+go build -o swag-static cmd/swag/main.go
+```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
 
 Let us now check if we have a statically linked binary.
 
-> file swag-static
+```bash
+file swag-static
+```
 
 That command produces this output:
 
-> swag-static: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=7mPpucO9Ncafg5_JKWjE/DZbvRKfuHP9vWS79aEaM/3KcHlAJg9L4fvQnb8AL9/FxPS7iMjUAmw_Pc4KTaM, with debug_info, not stripped
+```text
+swag-static: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=7mPpucO9Ncafg5_JKWjE/DZbvRKfuHP9vWS79aEaM/3KcHlAJg9L4fvQnb8AL9/FxPS7iMjUAmw_Pc4KTaM, with debug_info, not stripped
+```
 
-And we can see, that we do now have a statically linked binary.
+And we can see that we do now have a statically linked binary.
+
+## Alternatives to the file command
+
+### ldd
+
+[`ldd`](https://man7.org/linux/man-pages/man1/ldd.1.html) prints the shared libraries a binary needs at runtime:
+
+```bash
+ldd swag
+```
+
+For the dynamically linked binary, it lists the libraries, e.g. `libc.so.6` and the dynamic loader `/lib64/ld-linux-x86-64.so.2`. For the statically linked binary, it reports that there is nothing to load:
+
+```bash
+ldd swag-static
+```
+
+```text
+        not a dynamic executable
+```
+
+Never run `ldd` on binaries you do not trust: depending on the implementation, it may execute the binary. `file` only reads it.
+
+### go version -m
+
+If you only have the binary, but want to know how it has been built, Go itself can tell you. [`go version -m`](https://pkg.go.dev/cmd/go#hdr-Print_Go_version) prints the build information embedded in every Go binary, including the `CGO_ENABLED` setting. This works on every operating system, also for binaries built for another platform:
+
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
+```bash
+go version -m swag-static | grep CGO_ENABLED
+```
+
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+```powershell
+go version -m swag-static | Select-String CGO_ENABLED
+```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
+```text
+        build   CGO_ENABLED=0
+```
+
+`CGO_ENABLED=0` means the binary does not link against the C library and is statically linked (unless special linker flags were used).
+
+### A note on Windows
+
+On Windows, the question is less relevant: Go binaries never depend on a C runtime there, they only load system DLLs like `kernel32.dll`, which are part of every Windows installation. If you want to inspect the DLLs a Windows executable imports, use `dumpbin /dependents myapp.exe` from the [Visual Studio developer tools](https://learn.microsoft.com/en-us/cpp/build/reference/dependents).
 
 ## Conclusion
 
-The **file** command can be used to find out if a binary has been statically or dynamically linked.
+The **file** command can be used to find out if a binary has been statically or dynamically linked. `ldd` and `go version -m` are useful alternatives.
 
-Static linking matters most when you ship inside a container. A statically linked Go binary can run in a `FROM scratch` Docker image with zero OS dependencies — the smallest and most secure image possible. If you are interested in containerising your Go applications, check out [Containerization and Go: A Powerful Combination](/blog/go-docker/).
+Static linking matters most when you ship inside a container. A statically linked Go binary can run in a `FROM scratch` or distroless Docker image with zero OS dependencies, which gives you a very small image with almost nothing an attacker could use. Just remember to rebuild it regularly, so it picks up fixes in Go and your dependencies. If you are interested in containerising your Go applications, check out [Containerization and Go: A Powerful Combination](/blog/go-docker/).

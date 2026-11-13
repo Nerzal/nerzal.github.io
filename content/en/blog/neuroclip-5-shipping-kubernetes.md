@@ -84,7 +84,7 @@ Verification then does not ask "do you have my public key?" but "was this signed
 
 ```bash
 # needs Go; alternatives are your package manager or the release binary
-go install github.com/sigstore/cosign/v2/cmd/cosign@latest
+go install github.com/sigstore/cosign/v3/cmd/cosign@latest
 cosign version
 ```
 

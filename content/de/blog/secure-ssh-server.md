@@ -24,7 +24,7 @@ Am Ende loggst du dich ausschließlich mit deinem privaten Schlüssel über ein 
 
 ## Voraussetzungen
 
-- Ein Linux-Server (in unserem Fall Ubuntu 20.04 / 22.04 / 24.04 — die Schritte sind für alle drei identisch), der per SSH erreichbar ist
+- Ein per SSH erreichbarer Linux-Server — in unserem Fall Ubuntu 22.04, 24.04 oder 26.04. Die Schritte sind auf allen dreien gleich; der eine Unterschied (seit 24.04 wird `ssh` per systemd-Socket-Aktivierung über `ssh.socket` gestartet) wird an der passenden Stelle erwähnt. Ubuntu 20.04 hat den Standard-Support verlassen, also vorher upgraden.
 - Die aktuelle Möglichkeit, dich als `root` oder als Benutzer mit `sudo`-Rechten einzuloggen (du brauchst dies für die Konfigurationsänderungen)
 - OpenSSH-Client auf deinem lokalen Rechner — er ist in jeder modernen Linux-, macOS- und Windows-10+-Installation enthalten
 
@@ -62,7 +62,7 @@ ssh-keygen -t ed25519 -C "deine-email@example.com"
 
 Das Tool stellt zwei Fragen:
 
-```bash
+```text
 Enter file in which to save the key (/home/you/.ssh/id_ed25519):
 Enter passphrase (empty for no passphrase):
 ```
@@ -72,7 +72,7 @@ Enter passphrase (empty for no passphrase):
 
 Nach dem Abschluss sind zwei Dateien vorhanden:
 
-```bash
+```text
 ~/.ssh/id_ed25519      # privater Schlüssel — Berechtigungen müssen 600 sein
 ~/.ssh/id_ed25519.pub  # öffentlicher Schlüssel — sicher zum Teilen
 ```
@@ -87,15 +87,33 @@ Sowohl RSA als auch Elliptische-Kurven-Algorithmen (einschließlich Ed25519) bas
 - **[FIPS 204](https://doi.org/10.6028/NIST.FIPS.204)** — ML-DSA (früher CRYSTALS-Dilithium): ein gitterbaisertes digitales Signaturverfahren
 - **[FIPS 205](https://doi.org/10.6028/NIST.FIPS.205)** — SLH-DSA (früher SPHINCS+): ein hashbasiertes digitales Signaturverfahren
 
-**Was OpenSSH bereits tut.** Seit OpenSSH 9.0 (April 2022) ist der Standard-Schlüsselaustausch-Algorithmus `sntrup761x25519-sha512@openssh.com` — ein _Hybrid_, der [NTRU Prime 761](https://ntruprime.cr.yp.to/) (post-quantum) mit X25519 (klassisch) kombiniert. Das schützt die _Sitzungsverschlüsselung_ gegen den sogenannten „Jetzt ernten, später entschlüsseln"-Angriff.
+**Was OpenSSH bereits tut.** OpenSSH schützt den _Schlüsselaustausch_ (KEX) mit hybriden Verfahren, die ein Post-Quantum-KEM mit klassischem X25519 kombinieren — die Sitzung bleibt sicher, solange eine der beiden Hälften hält:
+
+- **OpenSSH 9.0** (April 2022) machte `sntrup761x25519-sha512@openssh.com` zum Standard: [Streamlined NTRU Prime 761](https://ntruprime.cr.yp.to/) + X25519. Inzwischen ist es als `sntrup761x25519-sha512` in [RFC 9941](https://www.rfc-editor.org/rfc/rfc9941) standardisiert.
+- **OpenSSH 9.9** (September 2024) führte `mlkem768x25519-sha256` ein: ML-KEM-768 aus [FIPS 203](https://doi.org/10.6028/NIST.FIPS.203) + X25519. **OpenSSH 10.0** (April 2025) machte es zum Standard. Spezifiziert ist es in [RFC 10042](https://www.rfc-editor.org/info/rfc10042/) (vormals draft-ietf-sshm-mlkem-hybrid-kex).
+
+Welches Verfahren du bekommst, hängt von den OpenSSH-Versionen auf _beiden_ Seiten ab: Client und Server wählen den ersten Algorithmus, den beide unterstützen. In beiden Fällen ist die _Sitzungsverschlüsselung_ gegen den sogenannten „Jetzt ernten, später entschlüsseln"-Angriff geschützt: Wer deinen verschlüsselten Traffic heute aufzeichnet, kann ihn nicht nachträglich entschlüsseln, sobald ein Quantencomputer verfügbar ist.
 
 Du kannst prüfen, welchen KEX dein Server aushandelt:
 
+{{< os-tabs >}}
+{{< os-tab "Linux / macOS" >}}
+
 ```bash
-ssh -vvv deploy@deine-server-ip 2>&1 | grep "kex:"
+ssh -v deploy@deine-server-ip exit 2>&1 | grep "kex: algorithm"
 ```
 
-**Was noch in Arbeit ist.** Der hybride KEX schützt die Sitzungsvertraulichkeit, aber _Authentifizierungsschlüssel_ (dein `id_ed25519`) sind in OpenSSH-Mainline noch nicht post-quantum. Die IETF CURDLE Working Group arbeitet daran in [draft-ietf-curdle-ssh-pq-ke](https://datatracker.ietf.org/doc/draft-ietf-curdle-ssh-pq-ke/). Bis diese Arbeit in einer stabilen OpenSSH-Version landet, bleibt Ed25519 die richtige Wahl.
+{{< /os-tab >}}
+{{< os-tab "Windows (PowerShell)" >}}
+
+```powershell
+ssh -v deploy@deine-server-ip exit 2>&1 | Select-String "kex: algorithm"
+```
+
+{{< /os-tab >}}
+{{< /os-tabs >}}
+
+**Was noch in Arbeit ist.** Der hybride KEX schützt die Sitzungsvertraulichkeit, aber _Authentifizierungsschlüssel_ (dein `id_ed25519`) sind in OpenSSH noch nicht post-quantum, und es gibt noch keinen standardisierten ML-DSA- oder SLH-DSA-Schlüsseltyp für SSH. Die Arbeit an SSH-Protokollerweiterungen findet in der IETF [SSHM Working Group](https://datatracker.ietf.org/wg/sshm/about/) statt. Das ist weniger dringend als der KEX: Ein aufgezeichneter Login lässt sich nicht nachträglich fälschen, die Authentifizierung ist also erst gefährdet, wenn ein Quantencomputer tatsächlich existiert. Bis Post-Quantum-Schlüsseltypen in einer stabilen OpenSSH-Version und in den Distributionspaketen landen, bleibt Ed25519 die richtige Wahl.
 
 ---
 
@@ -168,7 +186,7 @@ adduser deploy
 usermod -aG sudo deploy
 ```
 
-Damit wird `deploy` der `sudo`-Gruppe hinzugefügt. Ubuntus Standard-`sudoers`-Konfiguration gewährt allen Mitgliedern dieser Gruppe die Möglichkeit, jeden Befehl als Root mit dem Präfix `sudo` auszuführen.
+Damit wird `deploy` der `sudo`-Gruppe hinzugefügt. Ubuntus Standard-`/etc/sudoers` enthält die Regel `%sudo ALL=(ALL:ALL) ALL`, die allen Mitgliedern dieser Gruppe die Möglichkeit, jeden Befehl als Root mit dem Präfix `sudo` auszuführen, gewährt.
 
 ### Überprüfen
 
@@ -241,17 +259,26 @@ Du solltest eingeloggt sein. Wenn du eine Passphrase gesetzt hast, wirst du dana
 
 ## Schritt 4 — sshd-Konfiguration härten
 
-Alle SSH-Daemon-Einstellungen befinden sich in `/etc/ssh/sshd_config`. Die Datei ist gut kommentiert; wir ändern drei spezifische Direktiven. Sieh die [sshd_config-Manpage](https://man.openbsd.org/sshd_config) für die vollständige Referenz.
+Die Hauptkonfiguration des SSH-Daemons ist `/etc/ssh/sshd_config`, aber auf aktuellen Ubuntu-Versionen solltest du deine Änderungen **nicht** dort eintragen. Zwei Regeln aus der [sshd_config-Manpage](https://man.openbsd.org/sshd_config) erklären, warum:
 
-Verbinde dich als `deploy` mit dem Server und öffne die Konfigurationsdatei mit erhöhten Rechten:
+1. Die allererste Zeile von Ubuntus `sshd_config` lautet `Include /etc/ssh/sshd_config.d/*.conf`. Jede Drop-in-Datei in diesem Verzeichnis wird also _vor_ dem Rest der Hauptdatei gelesen — in lexikalischer Reihenfolge der Dateinamen.
+2. Für die meisten Schlüsselwörter gilt: „the first obtained value will be used". Spätere Zeilen für dasselbe Schlüsselwort werden stillschweigend ignoriert.
+
+Auf vielen Cloud-Images (AWS, Azure, Hetzner, DigitalOcean …) schreibt cloud-init die Datei `/etc/ssh/sshd_config.d/50-cloud-init.conf` mit `PasswordAuthentication yes`. Trägst du `PasswordAuthentication no` nur in die Hauptdatei ein, gewinnt dieses Drop-in, und der Passwort-Login bleibt **aktiv** — obwohl die Konfigurationsdatei korrekt aussieht. Prüfe, ob dein Server eine solche Datei hat:
 
 ```bash
-sudo nano /etc/ssh/sshd_config
+sudo grep -ri passwordauthentication /etc/ssh/sshd_config.d/
 ```
 
-### 4.1 — Passwort-Authentifizierung deaktivieren
+Die robuste Lösung ist ein eigenes Drop-in, dessen Name zuerst einsortiert wird, sodass seine Werte vor allen anderen gelesen werden. Verbinde dich als `deploy` mit dem Server und lege es an:
 
-Suche die Zeile `PasswordAuthentication` (sie kann auskommentiert sein) und setze sie auf `no`:
+```bash
+sudo nano /etc/ssh/sshd_config.d/00-hardening.conf
+```
+
+In diese Datei schreiben wir drei Direktiven.
+
+### 4.1 — Passwort-Authentifizierung deaktivieren
 
 ```text
 PasswordAuthentication no
@@ -261,8 +288,6 @@ Damit wird jeder Client gezwungen, sich mit einem Schlüssel zu authentifizieren
 
 ### 4.2 — Root-Login deaktivieren
 
-Suche `PermitRootLogin` und setze es auf `no`:
-
 ```text
 PermitRootLogin no
 ```
@@ -271,7 +296,7 @@ Selbst wenn ein Angreifer gültige Anmeldedaten erhält, kann er sich nicht dire
 
 ### 4.3 — (Optional, aber empfohlen) Einschränken, welche Benutzer sich einloggen dürfen
 
-Füge am Ende der Datei eine Zeile hinzu, die nur deinen neuen Benutzer auf der Whitelist hat:
+Füge eine Zeile hinzu, die nur deinen neuen Benutzer auf der Whitelist hat:
 
 ```text
 AllowUsers deploy
@@ -279,15 +304,45 @@ AllowUsers deploy
 
 Jedes andere Konto — einschließlich solcher, die ein Angreifer möglicherweise erstellt — wird vom SSH-Zugang ausgesperrt, unabhängig davon, ob es einen gültigen Schlüssel besitzt.
 
+Die vollständige `00-hardening.conf` lautet jetzt:
+
+```text
+PasswordAuthentication no
+PermitRootLogin no
+AllowUsers deploy
+```
+
 ### Änderungen anwenden
 
-Speichere die Datei und lade `ssh` neu, ohne bestehende Verbindungen zu unterbrechen:
+Speichere die Datei und lass `sshd` die gesamte Konfiguration auf Syntaxfehler prüfen, **bevor** du neu lädst — eine kaputte Konfiguration ist der klassische Weg, sich auszusperren:
+
+```bash
+sudo sshd -t
+```
+
+Keine Ausgabe bedeutet: Die Konfiguration ist gültig. Lade `ssh` dann neu, ohne bestehende Verbindungen zu unterbrechen:
 
 ```bash
 sudo systemctl reload ssh
 ```
 
-> `reload` sendet `SIGHUP` an den laufenden Daemon, der die Konfigurationsdatei neu liest, ohne aktive Sitzungen zu beenden. Verwende `restart` nur, wenn `reload` nicht funktioniert.
+> `reload` sendet `SIGHUP` an den laufenden Daemon, der die Konfigurationsdatei neu liest, ohne aktive Sitzungen zu beenden. Verwende `sudo systemctl restart ssh` nur, wenn `reload` nicht funktioniert. Unter Ubuntu heißt die Unit `ssh`, nicht `sshd`.
+>
+> **Ubuntu 24.04 und neuer:** SSH ist socket-aktiviert — `ssh.socket` lauscht auf Port 22 und startet `ssh.service` bei Bedarf. Für die Direktiven in diesem Beitrag reicht `reload ssh`. Nur wenn du `Port` oder `ListenAddress` änderst, musst du zusätzlich `sudo systemctl daemon-reload && sudo systemctl restart ssh.socket` ausführen, weil die Socket-Unit aus diesen Werten generiert wird. Siehe Ubuntus [Ankündigung der Socket-Aktivierung](https://discourse.ubuntu.com/t/sshd-now-uses-socket-based-activation-ubuntu-22-10-and-later/30189).
+
+Frag `sshd` jetzt, welche Werte es _tatsächlich_ verwendet. `sshd -T` gibt die effektive Konfiguration aus, nachdem alle `Include`-Dateien zusammengeführt wurden — der einzig verlässliche Weg, ein überschreibendes Drop-in auszuschließen:
+
+```bash
+sudo sshd -T | grep -Ei 'passwordauthentication|permitrootlogin|allowusers'
+```
+
+Erwartete Ausgabe:
+
+```text
+permitrootlogin no
+passwordauthentication no
+allowusers deploy
+```
 
 ### Verifizieren
 
@@ -385,11 +440,11 @@ Erwartetes Ergebnis: `Permission denied (publickey)` — Root-Login ist deaktivi
 
 ### „Could not load host key" in sshd-Logs
 
-Führe `sudo ssh-keygen -A` auf dem Server aus, um fehlende Host-Schlüssel zu regenerieren, dann `sudo systemctl restart sshd`.
+Führe `sudo ssh-keygen -A` auf dem Server aus, um fehlende Host-Schlüssel zu regenerieren, dann `sudo systemctl restart ssh`.
 
 ### Ich habe mich ausgesperrt
 
-Falls du bei einem Cloud-Anbieter (AWS, Hetzner, DigitalOcean usw.) bist, nutze die Web-Konsole oder den Recovery-/Rescue-Modus des Anbieters, um die Festplatte des Servers einzubinden und `/etc/ssh/sshd_config` direkt zu bearbeiten. Deshalb musst du den schlüsselbasierten Login verifizieren, bevor du die Passwort-Authentifizierung deaktivierst.
+Falls du bei einem Cloud-Anbieter (AWS, Hetzner, DigitalOcean usw.) bist, nutze die Web-Konsole oder den Recovery-/Rescue-Modus des Anbieters, um die Festplatte des Servers einzubinden und `/etc/ssh/sshd_config.d/00-hardening.conf` direkt zu korrigieren oder zu entfernen. Deshalb musst du den schlüsselbasierten Login verifizieren, bevor du die Passwort-Authentifizierung deaktivierst.
 
 ---
 
@@ -401,8 +456,6 @@ Mit gehärtetem SSH empfehlen sich diese ergänzenden Maßnahmen:
 - **UFW (Uncomplicated Firewall)** — schränkt eingehenden Traffic auf nur die Ports ein, die du tatsächlich benötigst (`sudo ufw allow OpenSSH && sudo ufw enable`)
 - **Zwei-Faktor-Authentifizierung für sudo** — kombiniere `sudo` mit einem TOTP-Token über `libpam-google-authenticator` für eine zusätzliche Schutzschicht
 - **Regelmäßige unbeaufsichtigte Upgrades** — `sudo apt install unattended-upgrades` hält Sicherheits-Patches automatisch aktuell
-- **Post-Quantum-Authentifizierungsschlüssel** — sobald IETF [draft-ietf-curdle-ssh-pq-ke](https://datatracker.ietf.org/doc/draft-ietf-curdle-ssh-pq-ke/) ausgereift ist und OpenSSH stabilen Support liefert, generiere ein zweites Schlüsselpaar mit einem ML-DSA- oder SLH-DSA-Algorithmus und füge es neben deinem Ed25519-Schlüssel zu `authorized_keys` hinzu
+- **Post-Quantum-Authentifizierungsschlüssel** — sobald ein Post-Quantum-Schlüsseltyp für SSH standardisiert ist (die IETF [SSHM Working Group](https://datatracker.ietf.org/wg/sshm/about/) im Auge behalten) und OpenSSH stabilen Support liefert, generiere ein zweites Schlüsselpaar mit einem ML-DSA- oder SLH-DSA-Algorithmus ([FIPS 204](https://doi.org/10.6028/NIST.FIPS.204) / [FIPS 205](https://doi.org/10.6028/NIST.FIPS.205)) und füge es neben deinem Ed25519-Schlüssel zu `authorized_keys` hinzu
 
-Alle drei oben genannten Maßnahmen — UFW, Fail2ban und automatische Updates — werden Schritt für Schritt in [Ubuntu Server Hardening — Teil 1: Die Grundlagen](/de/blog/ubuntu-server-hardening-1-essentials/) erklärt.
-
-Jedes dieser Themen verdient einen eigenen Beitrag — bleib gespannt.
+UFW, Fail2ban und automatische Updates werden Schritt für Schritt in [Ubuntu Server Hardening — Teil 1: Die Grundlagen](/de/blog/ubuntu-server-hardening-1-essentials/) erklärt. Jedes dieser Themen verdient einen eigenen Beitrag — bleib gespannt.

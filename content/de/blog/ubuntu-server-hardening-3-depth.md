@@ -2,7 +2,7 @@
 draft: true
 title: "Ubuntu Server Hardening — Teil 3: Defense in Depth"
 seo_title: "Ubuntu Hardening Teil 3: Defense in Depth"
-date: 2026-05-10T00:00:00+00:00
+date: 2026-07-30T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Die letzte Hardening-Schicht: Mandatory Access Control mit AppArmor, Audit-Logging mit auditd und Datei-Integritätsüberwachung mit AIDE."
@@ -38,17 +38,26 @@ Profile erscheinen in zwei Modi:
 - **enforce** — Verstöße werden blockiert und protokolliert
 - **complain** — Verstöße werden protokolliert, aber erlaubt (für die Entwicklung neuer Profile)
 
-Das community-gepflegte Profil-Set installieren und alles erzwingen:
+Das community-gepflegte Profil-Set und die Verwaltungswerkzeuge installieren:
 
 ```bash
 sudo apt install apparmor-profiles apparmor-profiles-extra apparmor-utils -y
-
-# Profile im Complain-Modus in den Enforce-Modus versetzen
-sudo aa-enforce /etc/apparmor.d/*
-
-# Prüfen
-sudo apparmor_status | grep "enforce mode"
 ```
+
+**Nicht** `aa-enforce /etc/apparmor.d/*` ausführen. Seit Ubuntu 24.04 liegen in `/etc/apparmor.d/` auch Dutzende Profile mit dem Flag `unconfined`, die nur dazu da sind, bestimmten Anwendungen unprivilegierte User-Namespaces zu erlauben, dazu experimentelle Profile, die absichtlich im Complain-Modus ausgeliefert werden. Alle in den Enforce-Modus zu zwingen, kann Dienste auf schwer nachvollziehbare Weise kaputt machen. Stattdessen die Profile im Complain-Modus auflisten und nur die für tatsächlich genutzte Software erzwingen:
+
+```bash
+# Listet die geladenen Profile, gruppiert nach Enforce- und Complain-Modus
+sudo aa-status
+
+# Ein bestimmtes Profil erzwingen, z. B. für dnsmasq
+sudo aa-enforce /etc/apparmor.d/usr.sbin.dnsmasq
+
+# Prüfen: das Profil erscheint jetzt unter "profiles are in enforce mode"
+sudo aa-status
+```
+
+Nach jeder Umstellung eine Weile das Verweigerungs-Log (nächster Abschnitt) beobachten. Geht etwas kaputt, macht `sudo aa-complain <profil>` die Änderung rückgängig.
 
 ### Ein Profil für eine eigene Anwendung schreiben
 
@@ -67,19 +76,32 @@ Das generierte Profil wird in `/etc/apparmor.d/` gespeichert und sofort geladen.
 
 ### Verweigerungen inspizieren
 
-```bash
-# AppArmor-Verweigerungs-Log in Echtzeit
-sudo journalctl -f | grep apparmor
+Wo Verweigerungen landen, hängt davon ab, ob `auditd` (nächster Abschnitt) installiert ist. Ohne auditd gehen sie ins Kernel-Log; mit auditd übernimmt dieser sie und schreibt sie stattdessen nach `/var/log/audit/audit.log`:
 
-# Letzte Verweigerungen zusammenfassen
-sudo aa-logprof
+```bash
+# Ohne auditd: Verweigerungen in Echtzeit aus dem Kernel-Log
+sudo journalctl -k -f | grep 'apparmor="DENIED"'
+
+# Mit auditd: Verweigerungen der letzten zehn Minuten
+sudo ausearch -m AVC --start recent -i
 ```
+
+Für eine Zusammenfassung liest `aa-notify` (Paket `apparmor-notify`) das jeweils genutzte Log:
+
+```bash
+sudo apt install apparmor-notify -y
+
+# Zusammenfassung der Verweigerungen des letzten Tages, ausführlich
+sudo aa-notify -s 1 -v
+```
+
+`aa-logprof` ist das Werkzeug für den nächsten Schritt: Es geht die protokollierten Verweigerungen interaktiv durch und bietet an, die **Profile zu erweitern**, damit sie erlaubt werden. Nur Regeln annehmen, die man versteht — jedes "Allow" lockert die Einschränkung.
 
 ---
 
 ## 2 — auditd: Kernel-Level-Audit-Logging
 
-Das Linux Audit System ([auditd](https://linux.die.net/man/8/auditd)) zeichnet sicherheitsrelevante Ereignisse auf Syscall-Ebene auf. Anders als Anwendungslogs kann es von einem kompromittierten Prozess nicht zum Schweigen gebracht werden — es läuft im Kernel und schreibt direkt in eine dedizierte Log-Datei. Es ist die primäre Evidenzquelle in der Post-Incident-Forensik.
+Das Linux Audit System zeichnet sicherheitsrelevante Ereignisse auf Syscall-Ebene auf. Es besteht aus zwei Teilen: Das **Audit-Subsystem im Kernel** erzeugt die Ereignisse anhand der geladenen Regeln, und der Userspace-Daemon [auditd](https://man7.org/linux/man-pages/man8/auditd.8.html) nimmt sie entgegen und schreibt sie nach `/var/log/audit/audit.log`. Anders als Anwendungslogs kann ein unprivilegierter kompromittierter Prozess es nicht zum Schweigen bringen — die Ereignisse entstehen im Kernel, nicht im Prozess. Ein Angreifer mit Root-Rechten kann den Daemon zwar stoppen, aber genau das wird protokolliert (`DAEMON_END`), und mit gesperrten Regeln (`-e 2`, siehe unten) lassen sich die Regeln ohne Neustart nicht ändern. Damit ist es die primäre Evidenzquelle in der Post-Incident-Forensik.
 
 ```bash
 sudo apt install auditd audispd-plugins -y
@@ -113,15 +135,18 @@ sudo nano /etc/audit/rules.d/99-hardening.rules
 -w /etc/sudoers    -p wa -k sudoers
 -w /etc/sudoers.d/ -p wa -k sudoers
 -w /usr/bin/sudo   -p x  -k sudo_exec
--w /bin/su         -p x  -k su_exec
+-w /usr/bin/su     -p x  -k su_exec
 
 # ── SSH-Konfiguration ───────────────────────────────────────────────────
--w /etc/ssh/sshd_config -p wa -k sshd_config
+-w /etc/ssh/sshd_config   -p wa -k sshd_config
+-w /etc/ssh/sshd_config.d/ -p wa -k sshd_config
 
-# ── Login-Aktivität ─────────────────────────────────────────────────────
--w /var/log/faillog  -p wa -k login
--w /var/log/lastlog  -p wa -k login
+# ── Authentifizierungs-Konfiguration ────────────────────────────────────
+-w /etc/pam.d/                  -p wa -k pam
+-w /etc/security/faillock.conf  -p wa -k pam
 ```
+
+Ältere Anleitungen überwachen auch `/var/log/faillog` und `/var/log/lastlog`. Die kann man weglassen: `faillog` wurde von den ausgemusterten Modulen `pam_tally`/`pam_tally2` geschrieben und fehlt auf aktuellem Ubuntu meist (`pam_faillock` hält seine Zähler in `/var/run/faillock/`), und ab Ubuntu 25.04 ist `lastlog` durch `lastlog2` mit einer SQLite-Datenbank ersetzt — diese Watches würden schlicht nie auslösen. Man braucht sie ohnehin nicht: PAM meldet jede Anmeldung bereits als `USER_AUTH`-, `USER_LOGIN`- und `USER_START`-Ereignis an das Audit-Subsystem (siehe Abfragen unten).
 
 Regeln laden:
 
@@ -144,10 +169,16 @@ sudo ausearch --start recent
 # Alle fehlgeschlagenen Login-Versuche
 sudo ausearch --message USER_AUTH --success no
 
+# Bericht aller Anmeldungen
+sudo aureport --login --start today
+
 # Lesbarer Zusammenfassungsbericht
 sudo aureport --summary
 
-# Bericht aller via sudo ausgeführten Befehle des heutigen Tages
+# Jede Ausführung von sudo heute (aus dem sudo_exec-Watch)
+sudo ausearch -k sudo_exec --start today -i
+
+# Bericht aller Befehle, die in heutigen Audit-Ereignissen auftauchen (nicht nur sudo)
 sudo aureport --comm --start today
 ```
 
@@ -177,9 +208,9 @@ Das dauert beim ersten Durchlauf einige Minuten — AIDE hasht jede überwachte 
 
 ```bash
 sudo aideinit
-# Ausgabe: The new database will be written to /var/lib/aide/aide.db.new
-sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
 ```
+
+Unter Debian und Ubuntu schreibt `aideinit` `/var/lib/aide/aide.db.new` und kopiert sie anschließend selbst nach `/var/lib/aide/aide.db` — ein manuelles `mv` ist nicht nötig.
 
 Eine Prüfung ausführen um zu bestätigen dass es keine unerwarteten Unterschiede gibt:
 
@@ -190,20 +221,19 @@ sudo aide --check
 
 ### Tägliche Prüfungen automatisieren
 
-```bash
-sudo crontab -e
-```
-
-```text
-# Tägliche AIDE-Integritätsprüfung um 03:00, Ergebnisse per Mail senden
-0 3 * * * /usr/bin/aide --check 2>&1 | mail -s "AIDE-Bericht $(hostname)" root
-```
-
-Nach System-Updates die Datenbank neu initialisieren, um den neuen Zustand als Baseline zu akzeptieren:
+In cron ist nichts einzutragen: Ubuntus Paket `aide-common` bringt bereits einen systemd-Timer mit, `dailyaidecheck.timer`, der die Prüfung einmal täglich zwischen 02:00 und 04:00 ausführt. Sicherstellen, dass er aktiv ist:
 
 ```bash
-sudo aideinit
-sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+sudo systemctl enable --now dailyaidecheck.timer
+systemctl list-timers dailyaidecheck.timer
+```
+
+Der Bericht geht per Mail an die Adresse in `MAILTO` in `/etc/default/aide` (Standard: `root`). Mails verlassen die Maschine nur, wenn ein Mail Transfer Agent installiert und konfiguriert ist — etwa `postfix` als Satellitensystem, das über den eigenen Mailprovider zustellt. Ohne MTA das Ergebnis mit `sudo journalctl -u dailyaidecheck.service` lesen.
+
+Nach System-Updates die Datenbank neu initialisieren, um den neuen Zustand als Baseline zu akzeptieren. `-y` und `-f` beantworten die Überschreib-Rückfragen für eine bestehende Datenbank:
+
+```bash
+sudo aideinit -y -f
 ```
 
 ---
@@ -240,7 +270,7 @@ Keine einzelne Schicht bietet vollständige Sicherheit. Zusammen zwingen sie ein
 
 ## Weiterführende Links
 
-- [Ubuntu Security Guide](https://ubuntu.com/security/certifications/docs/usg)
+- [Ubuntu Security Guide](https://documentation.ubuntu.com/security/docs/compliance/usg/)
 - [AppArmor GitLab Wiki](https://gitlab.com/apparmor/apparmor/-/wikis/home)
-- [Linux Audit Dokumentation](https://linux.die.net/man/8/auditd)
+- [auditd(8) Man-Page](https://man7.org/linux/man-pages/man8/auditd.8.html)
 - [AIDE-Handbuch](https://aide.github.io/)

@@ -12,11 +12,11 @@ toc: true
 
 Windows 11 ist ein modernes Betriebssystem. Das Standard-Terminal setzt jedoch auf eine Shell von 2016.
 
-Wer PowerShell auf einem frischen Windows-11-System öffnet, landet bei **Windows PowerShell 5.1** — einer Version, die auf dem alten .NET Framework 4.x aufbaut, seit 2018 offiziell im [Maintenance-Modus](https://learn.microsoft.com/de-de/powershell/scripting/powershell-support-lifecycle) ist und von Microsoft keine neuen Features mehr erhält.
+Wer PowerShell auf einem frischen Windows-11-System öffnet, landet bei **Windows PowerShell 5.1** — einer Version, die im August 2016 erschien, auf dem alten .NET Framework 4.x aufbaut und für immer eingefroren ist. Als PowerShell Core 6.0 im Januar 2018 GA wurde, [kündigte Microsoft an](https://devblogs.microsoft.com/powershell/powershell-core-6-0-generally-available-ga-and-supported/), dass Windows PowerShell ab dann nur noch kritische Fehlerbehebungen erhält — keine neuen Features. Sie wird über den [Windows-Lebenszyklus](https://learn.microsoft.com/de-de/powershell/scripting/install/powershell-support-lifecycle) gewartet, nicht weiterentwickelt.
 
 Das ist mir auf die harte Tour klar geworden, als ich [Oh My Posh](https://ohmyposh.dev) auf einem frischen System einrichten wollte — ein Framework für individuell gestaltete Terminal-Prompts. Auf PowerShell 5.1 zeigte es entweder Fehler oder kaputte Symbole:
 
-{{< image src="img/oh-my-posh-error-5.1.png" alt="Oh My Posh mit kaputten Icons auf PowerShell 5.1" >}}
+{{< image image="img/oh-my-posh-error-5.1.png" imageAlt="Oh My Posh mit kaputten Icons auf PowerShell 5.1" >}}
 
 Die Lösung lag nicht im Anpassen der Oh-My-Posh-Konfiguration. Die Lösung war der Wechsel zu **PowerShell 7**.
 
@@ -31,7 +31,7 @@ Die Namensgebung ist verwirrend, aber wichtig. Microsoft liefert zwei verschiede
 | | Windows PowerShell | PowerShell |
 |---|---|---|
 | **Version** | 5.1 (abgeschlossen) | 7.x (aktiv entwickelt) |
-| **Laufzeit** | .NET Framework 4.x | .NET 8+ |
+| **Laufzeit** | .NET Framework 4.x | Modernes .NET (7.6 LTS: .NET 10) |
 | **Plattform** | Nur Windows | Windows, macOS, Linux |
 | **Quellcode** | Geschlossen | [Open Source auf GitHub](https://github.com/PowerShell/PowerShell) |
 | **Status** | Nur Wartung | Aktive Entwicklung, LTS-Releases |
@@ -64,7 +64,7 @@ PowerShell 5.1 kennt kein Äquivalent. Dort braucht man umständliche `if ($LAST
 ### Ternärer Operator
 
 ```powershell
-$env = $isProd ? "production" : "development"
+$environment = $isProd ? "production" : "development"
 ```
 
 In 5.1 ist dafür ein vollständiger `if/else`-Block notwendig.
@@ -76,10 +76,11 @@ In 5.1 ist dafür ein vollständiger `if/else`-Block notwendig.
 $config = $userConfig ?? $defaultConfig
 
 # Null-Conditional: Methode nur aufrufen wenn Objekt nicht null
-$laenge = $str?.Length
+# Die Klammern sind wichtig: `$str?.Length` würde eine Variable namens `str?` lesen
+$laenge = ${str}?.Length
 ```
 
-Beide kamen mit PowerShell 7.1 und fehlen in 5.1 vollständig.
+Die Null-Coalescing-Operatoren `??` und `??=` kamen mit PowerShell 7.0, die Null-Conditional-Operatoren `?.` und `?[]` wurden in PowerShell 7.1 stabil. In 5.1 fehlen sie alle.
 
 ### Parallele Pipeline-Ausführung
 
@@ -94,15 +95,15 @@ Beide kamen mit PowerShell 7.1 und fehlen in 5.1 vollständig.
 
 ### Bessere Fehlerbehandlung
 
-PowerShell 7.2 vereinheitlichte die Fehlerbehandlung und machte `$ErrorActionPreference = 'Stop'` konsistenter. Dazu kam `Get-Error`, das vollständige Exception-Details strukturiert anzeigt — deutlich nützlicher als die abgeschnittenen Stack-Traces in 5.1.
+PowerShell 7.0 brachte `Get-Error`, das vollständige Exception-Details strukturiert anzeigt — deutlich nützlicher als die abgeschnittenen Stack-Traces in 5.1.
 
 ### Moderner .NET-Zugriff
 
-Da PowerShell 7 auf .NET 8 läuft, sind alle .NET-8-APIs und -Typen direkt zugänglich:
+PowerShell 7 läuft auf modernem .NET — das aktuelle LTS-Release PowerShell 7.6 basiert auf .NET 10. Alle APIs und Typen dieser Laufzeit sind direkt zugänglich:
 
 ```powershell
 # JsonNode — auf dem alten .NET Framework 4.x von 5.1 nicht verfügbar
-[System.Text.Json.JsonNode]::Parse('{"key": "value"}')
+[System.Text.Json.Nodes.JsonNode]::Parse('{"key": "value"}')
 ```
 
 ### SSH-basiertes Remoting
@@ -111,11 +112,12 @@ PowerShell 5.1 setzt für Remoting auf WinRM (Windows Remote Management), das Fi
 
 ### Eingebaute ANSI-Farbunterstützung und `$PSStyle`
 
-PowerShell 7.2 führte `$PSStyle` ein — ein eingebautes Objekt, das die gesamte ANSI-Terminal-Ausgabe steuert. In 5.1 musste man Escape-Sequenzen manuell einbetten. In PowerShell 7 ist das ein natives Sprachkonstrukt:
+PowerShell 7.2 führte `$PSStyle` ein — ein eingebautes Objekt, das die gesamte ANSI-Terminal-Ausgabe steuert. In 5.1 musste man Escape-Sequenzen manuell einbetten — und weil es das Escape `` `e `` erst ab PowerShell 6 gibt, sogar das Escape-Zeichen selbst per `[char]27` bauen. In PowerShell 7 ist das ein natives Sprachkonstrukt:
 
 ```powershell
 # 5.1 — manuelle ANSI-Escape-Sequenzen
-Write-Host "`e[32mErfolgreich`e[0m"   # funktioniert nur in manchen Terminals
+$esc = [char]27
+Write-Host "$esc[32mErfolgreich$esc[0m"   # funktioniert nur in manchen Terminals
 
 # PowerShell 7 — $PSStyle ist immer verfügbar
 Write-Host "$($PSStyle.Foreground.Green)Erfolgreich$($PSStyle.Reset)"
@@ -174,10 +176,10 @@ Invoke-RestMethod https://api.example.com/daten `
 Invoke-WebRequest https://api.example.com `
     -HttpVersion 2.0
 
-# Antwort-Header als echtes Dictionary
+# Antwort-Header behalten alle Werte
 $response = Invoke-WebRequest https://api.example.com
-$response.Headers["Content-Type"]   # funktioniert korrekt in PS 7
-                                     # gibt string[] in PS 5.1 zurück
+$response.Headers["Content-Type"]   # string[] in PS 7 — mehrfache Header bleiben getrennt
+                                     # ein einzelner String in PS 5.1
 
 # Zertifikatsprüfung für lokale Entwicklung überspringen
 Invoke-RestMethod https://localhost:5001/api `
@@ -212,35 +214,34 @@ Get-ChildItem *.ps1 | Join-String -Property Name -Separator "`n" -OutputPrefix "
 # 'alpha', 'beta', 'gamma'
 ```
 
-### Syntax-Highlighting in der Konsole
+### Syntax-Highlighting und Predictive IntelliSense
 
-PowerShell 7 liefert eine neuere Version von [PSReadLine](https://github.com/PowerShell/PSReadLine) mit standardmäßig aktiviertem Syntax-Highlighting. Beim Tippen werden Schlüsselwörter, Strings, Variablen und Operatoren in Echtzeit eingefärbt:
+Beide Shells färben die Eingabe beim Tippen ein — Windows 10 und 11 liefern Windows PowerShell 5.1 mit [PSReadLine](https://github.com/PowerShell/PSReadLine) 2.0 aus, das bereits Syntax-Highlighting beherrscht. PowerShell 7 bringt ein aktuelles PSReadLine 2.x mit, das [Predictive IntelliSense](https://learn.microsoft.com/de-de/powershell/scripting/learn/shell/using-predictors) ergänzt: Vorschläge aus der History und aus Plugins, inline oder als Liste:
 
 ```powershell
 # PSReadLine-Version prüfen
 Get-Module PSReadLine | Select-Object Version
 
-# Syntax-Highlighting ist in PS 7 standardmäßig aktiv
-# Inline-Vorschau — zeigt Vervollständigungen in Grau während der Eingabe (PS 7.2+)
-Set-PSReadLineOption -PredictionViewStyle InlineView
+# Vorschläge aus History und Plugins (Standard seit PSReadLine 2.2.6)
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+
+# Vorschläge als Liste unter dem Prompt statt als graue Inline-Vorschau
+Set-PSReadLineOption -PredictionViewStyle ListView
 ```
 
-PowerShell 5.1 liefert PSReadLine 1.x ohne Syntax-Highlighting. Ein Upgrade in 5.1 ist möglich, aber fehleranfällig; in PowerShell 7 ist es die Standarderfahrung.
+Ein neueres PSReadLine lässt sich auch in 5.1 installieren und liefert dort History-basierte Vorschläge, Predictor-Plugins setzen aber PowerShell 7.2 oder neuer voraus. In PowerShell 7 ist die aktuelle Version einfach dabei.
 
 ### Startgeschwindigkeit
 
-PowerShell 7.2 brachte durch Ahead-of-Time-Kompilierung (AOT) der häufigsten Code-Pfade signifikante Verbesserungen der Startzeit. Auf einem typischen Entwicklerrechner:
+Die Startzeit hängt stark vom Rechner, vom Profil und von den geladenen Modulen ab — also lieber selbst messen, statt Zahlen aus einem Blogpost zu glauben:
 
 ```powershell
-# Kalte Startzeit messen
+# Startzeit beider Shells ohne Profile vergleichen
 Measure-Command { pwsh -NoProfile -Command "exit" }
-# PowerShell 7.4+: ~150–250 ms
-
 Measure-Command { powershell -NoProfile -Command "exit" }
-# Windows PowerShell 5.1: ~400–700 ms
 ```
 
-Der Unterschied spielt vor allem bei Skripten eine Rolle, die Unterprozesse starten — etwa CI-Pipeline-Schritte, die `pwsh -File skript.ps1` dutzende Male aufrufen. Auch die interaktive Nutzung (Win+R, `pwsh` tippen, schnellen Befehl ausführen) ist spürbar flotter.
+Jede Zeile ein paar Mal ausführen — der erste (kalte) Start ist meist deutlich langsamer als die folgenden. Wenn deine CI-Pipeline `pwsh -File skript.ps1` dutzende Male aufruft, ist `-NoProfile` der größte Hebel.
 
 ---
 
@@ -249,13 +250,13 @@ Der Unterschied spielt vor allem bei Skripten eine Rolle, die Unterprozesse star
 ### Option 1 — winget (empfohlen)
 
 ```powershell
-winget install Microsoft.PowerShell
+winget install --id Microsoft.PowerShell --source winget
 ```
 
-Damit wird die aktuell stabile Version aus der 7.x-Reihe installiert. Die `--id` bleibt über Hauptversionen stabil, sodass Updates einfach möglich sind:
+Damit wird die aktuell stabile Version installiert — zum Zeitpunkt des Schreibens PowerShell 7.6, das aktuelle LTS-Release (März 2026, basiert auf .NET 10). PowerShell 7.4 LTS und 7.5 haben am 10. November 2026 das Support-Ende erreicht; wer noch darauf läuft, sollte upgraden. Die `--id` bleibt über alle 7.x-Releases stabil, sodass Updates einfach möglich sind:
 
 ```powershell
-winget upgrade Microsoft.PowerShell
+winget upgrade --id Microsoft.PowerShell --source winget
 ```
 
 Der Installer trägt `pwsh` automatisch in den `PATH` ein.
@@ -282,7 +283,7 @@ pwsh --version
 Mit installiertem PowerShell 7 funktioniert Oh My Posh korrekt. Installation per winget:
 
 ```powershell
-winget install JanDeLaars.OhMyPosh
+winget install JanDeDobbeleer.OhMyPosh --source winget
 ```
 
 Anschließend einen [Nerd Font](https://www.nerdfonts.com/) installieren — Oh My Posh nutzt Schrift-Ligaturen und Icons, die einen gepatchten Font voraussetzen. [Cascadia Code NF](https://github.com/microsoft/cascadia-code) ist eine gute Wahl, die Microsoft ebenfalls ausliefert:
@@ -326,7 +327,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | 
 
 Terminal neu starten. Oh My Posh rendert jetzt korrekt mit Icons und Powerline-Segmenten:
 
-{{< image src="img/powershell-51-vs-70.png" alt="Oh My Posh funktioniert korrekt auf PowerShell 7" >}}
+{{< image image="img/powershell-51-vs-70.png" imageAlt="Oh My Posh funktioniert korrekt auf PowerShell 7" >}}
 
 ---
 
@@ -376,7 +377,7 @@ Die häufigsten Inkompatibilitäten:
 pwsh -Command "Import-Module DeinModul -ErrorAction Stop"
 ```
 
-**`#Requires -Version 5`** — Skripte mit diesem Header verweigern die Ausführung in PowerShell 7. Die Versionsanforderung entfernen oder aktualisieren.
+**`#Requires -PSEdition Desktop`** — Skripte mit diesem Header verweigern die Ausführung in PowerShell 7, denn das ist die `Core`-Edition. Ein einfaches `#Requires -Version 5` ist dagegen harmlos: Es bedeutet „5.0 oder neuer", PowerShell 7 erfüllt es also. Die Edition-Anforderung entfernen, sobald das Skript in 7 funktioniert.
 
 **Windows-exklusive Cmdlets** — Module wie `ActiveDirectory`, `Hyper-V` oder `GroupPolicy` sind für PowerShell 7 möglicherweise nicht verfügbar. Microsoft ergänzt [Kompatibilitäts-Shims](https://learn.microsoft.com/de-de/powershell/scripting/whats-new/module-compatibility), aber eine Prüfung im Einzelfall ist notwendig.
 
@@ -386,23 +387,23 @@ pwsh -Command "Import-Module DeinModul -ErrorAction Stop"
 
 ## Zusammenfassung
 
-Windows 11 setzt aus historischen und Kompatibilitätsgründen standardmäßig PowerShell 5.1 ein — aber es gibt keinen Grund, für die tägliche Arbeit dabei zu bleiben. PowerShell 7 ist schneller, leistungsfähiger, plattformübergreifend und Voraussetzung für moderne Entwicklerwerkzeuge wie Oh My Posh.
+Windows 11 setzt aus historischen und Kompatibilitätsgründen standardmäßig PowerShell 5.1 ein — aber es gibt keinen Grund, für die tägliche Arbeit dabei zu bleiben. PowerShell 7 ist leistungsfähiger, plattformübergreifend und Voraussetzung für moderne Entwicklerwerkzeuge wie Oh My Posh.
 
 Der Migrationspfad ist unkompliziert:
 
-1. `winget install Microsoft.PowerShell`
-2. `winget install JanDeLaars.OhMyPosh`
+1. `winget install --id Microsoft.PowerShell --source winget`
+2. `winget install JanDeDobbeleer.OhMyPosh --source winget`
 3. PowerShell 7 als Standard in Windows Terminal setzen
 4. Bestehendes Profil kopieren und prüfen
 
-Windows PowerShell 5.1 bleibt als Systemkomponente installiert — es verschwindet nirgendwo. Aber die Terminal-Sitzungen müssen nicht auf einer Shell laufen, die 2018 aufgehört hat, sich weiterzuentwickeln.
+Windows PowerShell 5.1 bleibt als Systemkomponente installiert — es verschwindet nirgendwo. Aber die Terminal-Sitzungen müssen nicht auf einer Shell laufen, die 2016 erschienen ist und seit 2018 kein neues Feature mehr bekommen hat.
 
 ---
 
 ## Weiterführende Links
 
 - [PowerShell 7 Versionshinweise und Changelog](https://learn.microsoft.com/de-de/powershell/scripting/whats-new/what-s-new-in-powershell-7x)
-- [PowerShell Support Lifecycle](https://learn.microsoft.com/de-de/powershell/scripting/powershell-support-lifecycle)
+- [PowerShell Support Lifecycle](https://learn.microsoft.com/de-de/powershell/scripting/install/powershell-support-lifecycle)
 - [Oh My Posh Dokumentation](https://ohmyposh.dev/docs)
 - [PowerShell auf GitHub](https://github.com/PowerShell/PowerShell)
 - [Windows Terminal Dokumentation](https://learn.microsoft.com/de-de/windows/terminal/)

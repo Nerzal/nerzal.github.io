@@ -17,7 +17,7 @@ In the [previous post](/blog/secure-ssh-server/) we secured SSH: replaced passwo
 
 But SSH is one layer. This series adds three more layers per post, ordered by how quickly you can apply them and how much impact they have. Start here — these three take less than fifteen minutes and protect against the most common active threats.
 
-> **Assumes:** Ubuntu 20.04 / 22.04 / 24.04, SSH already hardened, a non-root user with `sudo` access.
+> **Assumes:** Ubuntu 22.04 / 24.04 / 26.04, SSH already hardened, a non-root user with `sudo` access.
 
 ---
 
@@ -59,9 +59,15 @@ sudo ufw allow 2222/tcp comment "SSH"
 UFW can throttle incoming connections to a port — useful as a lightweight layer before Fail2ban is configured:
 
 ```bash
-# Ban IPs that attempt more than 6 connections in 30 seconds
+# Deny connections from an IP that opened 6 or more in the last 30 seconds
 sudo ufw limit OpenSSH
 ```
+
+This is a sliding-window throttle, not a ban: per the [ufw man page](https://manpages.ubuntu.com/manpages/noble/man8/ufw.8.html), UFW denies new connections from an IP once it has attempted 6 or more within 30 seconds. As soon as that IP slows down, it gets through again. Real bans with a configurable duration are what Fail2ban adds in the next section.
+
+### Docker bypasses UFW
+
+If you run Docker on this server, know this before you trust the firewall: ports published with `docker run -p` or `ports:` in Compose are **not** filtered by UFW. Docker inserts its own `iptables` rules, and the traffic is routed to the container before UFW's rules are evaluated — `ufw status` will not even show these ports. See Docker's documentation on [packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/). To keep a container port private, bind it to localhost (`-p 127.0.0.1:8080:80`) and put a reverse proxy in front of it.
 
 ### Verify from your local machine
 
@@ -94,33 +100,32 @@ Even with key-only SSH, other services (web servers, mail servers, custom APIs) 
 sudo apt install fail2ban -y
 ```
 
-Do not edit `/etc/fail2ban/jail.conf` — it gets overwritten on updates. Create a local override instead:
+Do not edit `/etc/fail2ban/jail.conf` — it gets overwritten on updates. Fail2ban reads `jail.local` on top of it, so create that file with **only the settings you want to change**. Do not copy the whole `jail.conf` over: a full copy freezes every default at today's values, and improvements that future package updates ship in `jail.conf` would never reach you.
 
 ```bash
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-sudo nano /etc/fail2ban/jail.local
-```
-
-Find the `[DEFAULT]` section at the top and set:
-
-```text
+sudo tee /etc/fail2ban/jail.local > /dev/null <<'EOF'
+[DEFAULT]
 bantime  = 1h
 findtime = 10m
 maxretry = 5
+
+[sshd]
+enabled = true
+EOF
 ```
 
-This bans any IP for one hour if it fails authentication more than five times within ten minutes. Adjust `bantime` to something longer (e.g., `24h` or `1w`) if your logs show persistent scanners.
-
-The `[sshd]` jail is enabled by default. Check that it is active:
-
-```bash
-sudo fail2ban-client status sshd
-```
+The `[DEFAULT]` values ban any IP for one hour if it fails authentication five times within ten minutes. Adjust `bantime` to something longer (e.g., `24h` or `1w`) if your logs show persistent scanners. Ubuntu's package already enables the `[sshd]` jail in `/etc/fail2ban/jail.d/defaults-debian.conf`; setting it here as well makes your intent explicit and independent of that file.
 
 Start and enable Fail2ban:
 
 ```bash
 sudo systemctl enable --now fail2ban
+```
+
+Then check that the `sshd` jail is active:
+
+```bash
+sudo fail2ban-client status sshd
 ```
 
 ### Useful commands

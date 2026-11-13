@@ -84,7 +84,7 @@ Die Verifikation fragt dann nicht „hast du meinen öffentlichen Schlüssel?“
 
 ```bash
 # braucht Go; Alternativen sind dein Paketmanager oder das Release-Binary
-go install github.com/sigstore/cosign/v2/cmd/cosign@latest
+go install github.com/sigstore/cosign/v3/cmd/cosign@latest
 cosign version
 ```
 

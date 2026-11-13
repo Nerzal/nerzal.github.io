@@ -2,7 +2,7 @@
 draft: false
 title: "Ubuntu Server Hardening — Part 2: Tightening the System"
 seo_title: "Ubuntu Hardening Part 2: System Tightening"
-date: 2026-05-10T00:00:00+00:00
+date: 2026-05-12T00:00:00+00:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The second hardening pass: tuning kernel parameters with sysctl, disabling attack surface you do not use, and restricting sudo and local login policies."
@@ -58,9 +58,6 @@ net.ipv4.conf.all.log_martians = 1
 
 # ── Kernel ────────────────────────────────────────────────────────────────
 
-# Restrict /proc/[pid] visibility to the owning user
-kernel.hidepid = 2
-
 # Restrict kernel pointer exposure in /proc (reduces info leakage to non-root)
 kernel.kptr_restrict = 2
 
@@ -90,7 +87,31 @@ sysctl net.ipv4.tcp_syncookies
 # net.ipv4.tcp_syncookies = 1
 ```
 
-> **`kernel.hidepid = 2` note:** Non-root users can no longer see other users' processes in `/proc`. If a monitoring tool like `htop` needs to see all processes, add its user to the `proc` group and use `hidepid=2,gid=proc` instead.
+### Hiding other users' processes
+
+A setting you will often find in hardening guides is `kernel.hidepid`. **It is not a sysctl** — `sysctl --system` would report it as an unknown key. `hidepid` is a mount option of the `proc` filesystem ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). With `hidepid=invisible` (the older numeric spelling is `hidepid=2`), non-root users can neither read nor even list other users' `/proc/[pid]` directories, so `ps` and `htop` only show their own processes.
+
+Add this line to `/etc/fstab`:
+
+```text
+proc  /proc  proc  defaults,hidepid=invisible  0  0
+```
+
+Apply it without a reboot:
+
+```bash
+sudo mount -o remount,hidepid=invisible /proc
+```
+
+If a monitoring agent needs to see all processes, create a dedicated group (Ubuntu has no `proc` group by default), add the agent's user, and exempt that group with `gid=`:
+
+```bash
+sudo groupadd --system procview
+sudo usermod -aG procview monitoring
+# fstab options then become: defaults,hidepid=invisible,gid=procview
+```
+
+> **Caveat:** systemd components such as `systemd-logind` and polkit inspect other processes in `/proc`. On some setups `hidepid` breaks polkit authorization or user sessions. Test it on a staging machine first, and keep a console session open when you apply it. For a single service, systemd's [`ProtectProc=invisible`](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#ProtectProc=) gives the same isolation without touching the global mount.
 
 ---
 
@@ -104,7 +125,7 @@ List what is active:
 sudo systemctl list-units --type=service --state=running
 ```
 
-Common candidates to disable on a headless server:
+Common candidates to disable on a headless server — if they exist. A minimal Ubuntu Server install does not ship Avahi, CUPS, or BlueZ at all; they usually appear when a desktop image was used or a package pulled them in. `Unit … not found` simply means there is nothing to do:
 
 ```bash
 # mDNS — device discovery, irrelevant on a server
@@ -145,15 +166,29 @@ Defaults timestamp_timeout=5
 
 # Log every sudo command with timestamps
 Defaults logfile=/var/log/sudo.log
-Defaults log_input, log_output
 ```
 
-If a user only needs to manage one specific service, restrict them to exactly that:
+> **About `log_input` / `log_output`:** Many guides add `Defaults log_input, log_output` for full session recording to `/var/log/sudo-io`. Be careful: `log_input` records **every keystroke** typed in a sudo session, including passwords entered into programs such as `sudo passwd` or `sudo mysql -p`, and `log_output` stores everything printed, including secrets. Only enable it if you protect and rotate `/var/log/sudo-io` accordingly ([sudoers(5)](https://www.sudo.ws/docs/man/sudoers.man/)).
+
+If a user only needs to manage one specific service, restrict them to exactly that. Put the rule in its own drop-in file:
+
+```bash
+sudo visudo -f /etc/sudoers.d/deploy
+```
 
 ```text
 # 'deploy' may only restart and reload nginx — nothing else
-deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx
-deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
+deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart nginx
+deploy ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
+```
+
+This rule only restricts anything if `deploy` is **not** also a member of the `sudo` group — otherwise the group's `%sudo ALL=(ALL:ALL) ALL` line still grants full root. Before removing the membership, confirm that another account still has working admin access (open a second SSH session as that user and run `sudo -v`), then:
+
+```bash
+sudo gpasswd -d deploy sudo
+
+# Verify: should list only the two nginx commands
+sudo -l -U deploy
 ```
 
 Check for any existing broad wildcard permissions in `/etc/sudoers.d/`:
@@ -169,19 +204,44 @@ sudo cat /etc/sudoers.d/*
 
 Even with key-only SSH, local accounts can be authenticated through the physical console or out-of-band management interfaces. Setting a password policy limits the impact of weak local credentials.
 
-Edit `/etc/login.defs`:
+What a _good_ policy looks like has changed. [NIST SP 800-63B (Revision 4)](https://pages.nist.gov/800-63-4/sp800-63b.html), the reference most compliance frameworks follow, now says verifiers:
+
+- **shall require a minimum length** — 15 characters for passwords used as the only factor,
+- **shall compare new passwords against a blocklist** of commonly used, expected, or compromised values,
+- **shall not impose composition rules** ("at least one digit, one uppercase, one symbol"),
+- **shall not force periodic changes** — only on evidence of compromise.
+
+Forced rotation and composition rules push users towards predictable patterns like `Summer2026!` → `Autumn2026!`. Length plus a blocklist is both stronger and easier to live with.
+
+### Password aging in `/etc/login.defs`
+
+Ubuntu's default `PASS_MAX_DAYS 99999` (no expiry) already matches NIST, so leave it. Note that `login.defs` does not support comments at the end of a value line — a trailing `# …` becomes part of the value and the setting is rejected. Comments always go on their own line:
 
 ```bash
 sudo nano /etc/login.defs
 ```
 
 ```text
-PASS_MAX_DAYS   90      # force rotation every 90 days
-PASS_MIN_DAYS   1       # prevent immediate re-use after change
-PASS_WARN_AGE   7       # warn 7 days before expiry
+# No forced rotation (NIST SP 800-63B)
+PASS_MAX_DAYS   99999
+# Prevent cycling through changes to get an old password back
+PASS_MIN_DAYS   1
+PASS_WARN_AGE   7
 ```
 
-For password complexity, install `libpam-pwquality`:
+`login.defs` is only read when an account is **created**. Existing accounts keep their values; inspect and change them with `chage`:
+
+```bash
+# Show the aging settings of an existing user
+sudo chage -l alice
+
+# Remove forced expiry and set a minimum age of 1 day
+sudo chage --maxdays 99999 --mindays 1 alice
+```
+
+### Length and blocklist with pwquality
+
+Install `libpam-pwquality`, which hooks into PAM whenever a password is changed with `passwd`:
 
 ```bash
 sudo apt install libpam-pwquality -y
@@ -189,13 +249,22 @@ sudo nano /etc/security/pwquality.conf
 ```
 
 ```text
-minlen   = 14     # minimum length
-dcredit  = -1     # require at least 1 digit
-ucredit  = -1     # require at least 1 uppercase letter
-ocredit  = -1     # require at least 1 special character
-difok    = 8      # must differ from previous password by at least 8 characters
-usercheck = 1     # reject passwords containing the username
+# Minimum length (NIST: 15 for single-factor passwords)
+minlen = 15
+# No composition rules: the credit options stay at their default of 0
+dcredit = 0
+ucredit = 0
+lcredit = 0
+ocredit = 0
+# Reject words found in the cracklib dictionary
+dictcheck = 1
+# Reject passwords containing the username
+usercheck = 1
+# Apply the policy to root as well
+enforce_for_root
 ```
+
+`dictcheck` uses the local cracklib word list. It catches common and dictionary-based passwords, but it is not a list of _breached_ passwords. If you need that, check candidates against a breach corpus such as [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords) — its range API uses k-anonymity, so only the first five characters of the password's SHA-1 hash leave the machine.
 
 ---
 

@@ -40,7 +40,7 @@ go version
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Wenn `go version` etwas wie `go version go1.22 linux/amd64` ausgibt, bist du startklar. Falls nicht, folge der [offiziellen Installationsanleitung](https://go.dev/doc/install).
+Wenn `go version` etwas wie `go version go1.27.3 linux/amd64` ausgibt, bist du startklar. Falls nicht, folge der [offiziellen Installationsanleitung](https://go.dev/doc/install).
 
 Erstelle eine neue Datei namens `main.go` in einem leeren Verzeichnis und folge der Anleitung.
 
@@ -95,7 +95,7 @@ func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
 
 ### 3. Die Spiellogik implementieren
 
-`NextState` berechnet die nächste Generation. Wir allokieren ein neues Slice, damit wir nie denselben Zustand gleichzeitig lesen und schreiben — ein klassischer Fehler bei Game-of-Life-Implementierungen.
+`NextState` berechnet die nächste Generation. Wir allokieren ein neues Slice, damit wir nie denselben Zustand gleichzeitig lesen und schreiben. Das Grid direkt zu aktualisieren ist ein klassischer Game-of-Life-Fehler: Bereits geänderte Zellen fließen mit ihrem _neuen_ Zustand in die Nachbarzählung ein, sodass die halbe Fläche aus der nächsten statt aus der aktuellen Generation berechnet wird.
 
 ```go
 func (g *Grid) NextState() {

@@ -18,7 +18,7 @@ Heute möchte ich einige dieser Projekte vorstellen und dir einen Einblick geben
 
 ## 1. Persönliches Portfolio
 
-![Last War Calculators Screenshot](/img/portfolio.png)
+![Screenshot der Portfolio-Website](/img/portfolio.png)
 
 
 Jeder Entwickler braucht eine Heimat im Web, und meine ist ein Zeugnis sauberer, moderner Frontend-Entwicklung. Mit React gebaut, dient dieses Portfolio als zentraler Anlaufpunkt für meine professionelle Identität und präsentiert meine Fähigkeiten, Erfahrungen und Projekte auf ansprechende Weise.

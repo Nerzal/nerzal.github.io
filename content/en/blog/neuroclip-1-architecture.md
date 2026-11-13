@@ -182,6 +182,8 @@ The second fix is a **live saver** mode. While OBS is streaming and the streamer
 
 It needs all of them because [`runtime.GOMAXPROCS`](https://pkg.go.dev/runtime#GOMAXPROCS) limits only the threads that execute Go code. It does not limit child processes. Two details I like: an OBS that does not answer counts as "not streaming", because there is nothing to protect, and `GOMAXPROCS` returns to the value it had at start when the stream ends, not to an assumed default.
 
+One caveat: since [Go 1.25](https://go.dev/doc/go1.25#runtime), the runtime adjusts `GOMAXPROCS` on its own when the cgroup CPU limit or the CPU affinity changes — but only until someone calls `runtime.GOMAXPROCS(n)`. Any explicit call switches that off for good, and writing the start value back just pins it. The correct way back is [`runtime.SetDefaultGOMAXPROCS()`](https://pkg.go.dev/runtime#SetDefaultGOMAXPROCS), which restores the runtime default and re-enables the automatic updates.
+
 On Windows, priority is a creation flag for new processes (`BELOW_NORMAL_PRIORITY_CLASS`) and `SetPriorityClass` for running ones; children inherit the class, so a Python-to-ffmpeg chain steps back as well. A related idea, asking before a heavy job starts live and queueing it until the stream ends, is on the roadmap, not in the product.
 
 ![OBS Regie page with a mute alarm](/img/neuroclip/regie-1440.jpg)
@@ -257,7 +259,7 @@ go vet ./...; if ($?) { go test -race ./... }
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Install Go from [go.dev/doc/install](https://go.dev/doc/install); the race detector is described in [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector).
+Install Go from [go.dev/doc/install](https://go.dev/doc/install); the race detector is described in [go.dev/doc/articles/race_detector](https://go.dev/doc/articles/race_detector). On Windows, `-race` needs cgo, so a C compiler such as [MinGW-w64](https://www.mingw-w64.org/) `gcc` must be on your `PATH` (and `CGO_ENABLED` must not be `0`); without it the PowerShell variant fails before a single test runs.
 
 ## What I would do differently
 

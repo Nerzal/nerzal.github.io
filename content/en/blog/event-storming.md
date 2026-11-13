@@ -91,7 +91,7 @@ Examples:
 
 1. **Scheduled** an appointment
 2. **Received** a payment
-3. **Waiting** for a patient
+3. **Checked in** a patient
 
 At this stage do not focus on all the values an appointment consists of like a date, the patients name etc instead focus on the behavior.
 

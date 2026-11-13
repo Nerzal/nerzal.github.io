@@ -377,7 +377,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version: "1.23"
+          go-version: "1.27"
           cache-dependency-path: tools/*/go.sum
       - run: make vet
       - run: make test
@@ -389,7 +389,7 @@ Er läuft bei jedem Pull Request und jedem Push auf `main`. `make vet` führt `g
 
 ## Selbst ausprobieren
 
-Du brauchst Go 1.23 oder neuer. Die Installationsanleitung steht auf [go.dev/doc/install](https://go.dev/doc/install). Dann das Repository klonen und die Tests starten.
+Du brauchst ein unterstütztes Go-Release (1.26 oder neuer). Die Installationsanleitung steht auf [go.dev/doc/install](https://go.dev/doc/install). Dann das Repository klonen und die Tests starten.
 
 {{< os-tabs >}}
 {{< os-tab "Linux" >}}

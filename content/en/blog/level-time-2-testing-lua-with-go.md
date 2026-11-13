@@ -377,7 +377,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version: "1.23"
+          go-version: "1.27"
           cache-dependency-path: tools/*/go.sum
       - run: make vet
       - run: make test
@@ -389,7 +389,7 @@ It runs on every pull request and every push to `main`. `make vet` runs `go vet`
 
 ## Run it yourself
 
-You need Go 1.23 or newer. Installation instructions are on [go.dev/doc/install](https://go.dev/doc/install). Then clone the repository and run the tests.
+You need a supported Go release (1.26 or newer). Installation instructions are on [go.dev/doc/install](https://go.dev/doc/install). Then clone the repository and run the tests.
 
 {{< os-tabs >}}
 {{< os-tab "Linux" >}}

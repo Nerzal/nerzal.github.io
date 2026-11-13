@@ -256,7 +256,7 @@ for _, case in ipairs({ { 0, 1 }, { 1.3, 7 }, { 5.9, 12 }, { -2, 4 } }) do
   for _, offset in ipairs({ -0.4, 0, 0.4 }) do
     local target = WheelDisplay.TargetRotation(case[1], case[2], SLICES, 3, offset)
     expectTrue("at least three turns", target >= case[1] + 3 * 2 * math.pi)
-    expect("lands on slice " .. case[2], WheelDisplay.SliceAt(target), case[2])
+    expect("lands on slice " .. case[2], WheelDisplay.SliceAt(target, SLICES), case[2])
   end
 end
 expect("ease start", WheelDisplay.Ease(0), 0)

@@ -182,7 +182,7 @@ ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
 Two refinements are worth knowing about:
 
 - **Aspect-ratio tolerance.** If the game box has roughly the shape of its strip, it is simply cropped and scaled. If it is a very different shape, it is **fitted without distortion** in the middle of the strip, and the rest of the strip shows the same picture enlarged, blurred (`boxblur`) and darkened. That is the familiar blurred-background look, built from the same filter vocabulary.
-- **Long graphs go to a file.** With effects and overlays the string can get long, so it is better to put it in a file and pass that to ffmpeg (`-filter_complex_script`) than to risk command-line limits.
+- **Long graphs go to a file.** With effects and overlays the string can get long, so it is better to put it in a file and pass that to ffmpeg than to risk command-line limits. Since ffmpeg 7.0 the way to do that is the generic `-/option file` syntax, here `-/filter_complex graph.txt`; the older `-filter_complex_script` still works but is [deprecated](https://ffmpeg.org/ffmpeg.html#Main-options).
 
 Because the process is started with an argument list instead of a shell, and the graph is assembled from numbers and fixed fragments, there is nothing for a malicious input to inject into. User-controlled text that ends up in the subtitle file gets the same care, which brings us to subtitles.
 

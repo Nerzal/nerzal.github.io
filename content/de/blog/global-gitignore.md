@@ -48,6 +48,8 @@ New-Item -ItemType File -Path "$env:USERPROFILE\.gitignore_global"
 
 Registriere die Datei bei Git über den Konfigurationsschlüssel `core.excludesFile`.
 
+> **Abkürzung:** Ist `core.excludesFile` nicht gesetzt, liest Git bereits `$XDG_CONFIG_HOME/git/ignore`, ersatzweise `~/.config/git/ignore` (`%USERPROFILE%\.config\git\ignore` unter Windows). Legst du deine Regeln dort ab, kannst du diesen Schritt komplett überspringen. Die explizite Einstellung unten lohnt sich, wenn die Datei woanders liegen oder in deiner `.gitconfig` sofort sichtbar sein soll.
+
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
 
@@ -99,7 +101,7 @@ Hier gehört alles rein, was von deinem **Betriebssystem, Editor oder Toolchain*
 
 Ein praktischer Ausgangspunkt:
 
-```bash
+```text
 # macOS
 .DS_Store
 .AppleDouble
@@ -126,11 +128,9 @@ Session.vim
 
 # direnv
 .envrc
-
-# mise / asdf Versionsmanager
-.tool-versions
-.mise.toml
 ```
+
+Versionsmanager-Dateien wie `.tool-versions` (asdf, mise) oder `mise.toml` gehören nicht in diese Liste. Viele Teams checken sie bewusst ein, um Tool-Versionen festzunageln — global ignoriert verschwinden sie aus `git status`, und du merkst nie, wenn die Änderung eines Kollegen daran in deinem Commit fehlt.
 
 Regeln verwenden dieselbe Glob-Syntax wie eine normale `.gitignore`. Leerzeilen und Zeilen, die mit `#` beginnen, werden ignoriert.
 
@@ -150,7 +150,7 @@ curl -sL "https://www.toptal.com/developers/gitignore/api/macos,windows,jetbrain
 {{< os-tab "Windows (PowerShell)" >}}
 
 ```powershell
-Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/windows,jetbrains+all,go" `
+Invoke-WebRequest -Uri "https://www.toptal.com/developers/gitignore/api/macos,windows,jetbrains+all,go" `
   -UseBasicParsing | Select-Object -ExpandProperty Content `
   | Add-Content -Path "$env:USERPROFILE\.gitignore_global"
 ```
@@ -192,7 +192,7 @@ git status
 
 ## Hinweise
 
-- **Regeln sind additiv, nicht überschreibend.** Ein Muster in `.gitignore_global` überschreibt keine `!Negation` in der `.gitignore` eines Projekts. Die spezifischste passende Regel gewinnt.
+- **Die Quellen haben eine feste Rangfolge.** Muster in den `.gitignore`-Dateien eines Repositorys schlagen `.git/info/exclude`, das wiederum `core.excludesFile` schlägt. Eine `!Negation` in der `.gitignore` eines Projekts holt also eine Datei zurück, die deine globale Datei ignoriert. Innerhalb einer Quelle gewinnt das **letzte** passende Muster — nicht das spezifischste.
 - **Bereits getrackte Dateien sind nicht betroffen.** Wenn eine Datei bereits in ein Repository eingecheckt ist, bewirkt das Hinzufügen zur `.gitignore` (auch zur globalen) kein Untracking. Dazu ist zuerst `git rm --cached <datei>` nötig.
 - **Teammitglieder benötigen ihre eigene Einrichtung.** Die globale Exclude-Datei ist rein lokal; sie wird nie eingecheckt. Wenn ein Muster für alle im Projekt gelten soll, gehört es in die projektbezogene `.gitignore`.
 

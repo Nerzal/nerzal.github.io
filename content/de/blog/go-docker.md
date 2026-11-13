@@ -12,7 +12,7 @@ toc: true
 
 ## Einführung
 
-Containerisierung ist zu einem wesentlichen Bestandteil moderner Softwareentwicklung geworden und erleichtert das Deployen und Verwalten von Anwendungen in verschiedenen Umgebungen. Eine der Programmiersprachen, die sich als hervorragende Wahl für containerisierte Anwendungen erwiesen hat, ist [Go](https://golang.org/).
+Containerisierung ist zu einem wesentlichen Bestandteil moderner Softwareentwicklung geworden und erleichtert das Deployen und Verwalten von Anwendungen in verschiedenen Umgebungen. Eine der Programmiersprachen, die sich als hervorragende Wahl für containerisierte Anwendungen erwiesen hat, ist [Go](https://go.dev/).
 
 In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für containerisierte Anwendungen ist und wie es nahtlos mit Containerisierungstechnologien wie Docker und Kubernetes zusammenarbeitet.
 
@@ -34,7 +34,7 @@ In diesem Blog-Post untersuchen wir, warum Go eine ausgezeichnete Wahl für cont
 
 ```dockerfile
 # Offizielles Golang-Base-Image
-FROM golang:1.22-alpine AS build
+FROM golang:1.27-alpine AS build
 
 # Arbeitsverzeichnis setzen
 WORKDIR /app
@@ -48,17 +48,20 @@ RUN go mod download
 # Quell-Dateien kopieren
 COPY . .
 
-# Anwendung bauen
-RUN go build -o myapp
+# Statisch gelinktes Binary ohne cgo bauen
+RUN CGO_ENABLED=0 go build -o myapp
 
-# Neue Stage vom Alpine-Base-Image
-FROM alpine:3.19
+# Neue Stage von einem minimalen Distroless-Image, das als Non-Root-User läuft
+FROM gcr.io/distroless/static-debian13:nonroot
 
 # Arbeitsverzeichnis setzen
 WORKDIR /app
 
 # Binary aus der Build-Stage kopieren
 COPY --from=build /app/myapp /app/
+
+# Die Anwendung niemals als root ausführen
+USER nonroot:nonroot
 
 # Port der Anwendung freigeben
 EXPOSE 8080
@@ -83,8 +86,10 @@ Multi-Stage Dockerfiles sind eine leistungsstarke Funktion, die helfen kann, den
 
 Hier ist eine Erläuterung des Multi-Stage `Dockerfile` aus unserem Beispiel:
 
-- Die erste Stage, `FROM golang:alpine AS build`, verwendet das offizielle Golang-Alpine-Image als Basis für die Build-Umgebung. Dieses Image enthält den Go-Compiler und andere notwendige Build-Tools.
-- Die zweite Stage, `FROM alpine:latest`, verwendet ein minimales Alpine-Base-Image für die Runtime-Umgebung. Dieses Image ist leichtgewichtig und enthält nur die wesentlichen Komponenten zum Ausführen der kompilierten Anwendung.
+- Die erste Stage, `FROM golang:1.27-alpine AS build`, verwendet das [offizielle Go-Alpine-Image](https://hub.docker.com/_/golang) als Basis für die Build-Umgebung. Dieses Image enthält den Go-Compiler und andere notwendige Build-Tools. Pinne die Go-Version, mit der du entwickelst, und aktualisiere sie regelmäßig: Das Go-Team unterstützt nur die [zwei neuesten Major-Releases](https://go.dev/doc/devel/release#policy).
+- `CGO_ENABLED=0` sorgt dafür, dass der Go-Compiler ein [statisch gelinktes Binary](/de/blog/check-static-linking/) erzeugt, das nicht von der C-Bibliothek des Base-Images abhängt.
+- Die zweite Stage, `FROM gcr.io/distroless/static-debian13:nonroot`, verwendet ein [Distroless](https://github.com/GoogleContainerTools/distroless)-Image für die Runtime-Umgebung. Es enthält nur CA-Zertifikate, Zeitzonendaten und ein paar Dateien wie `/etc/passwd`. Es gibt keine Shell und keinen Paketmanager, was einem Angreifer kaum Werkzeuge lässt.
+- `USER nonroot:nonroot` führt die Anwendung als unprivilegierten User (UID 65532) statt als root aus. Gelingt es einem Angreifer, deine Anwendung auszunutzen, erhält er im Container keine root-Rechte. Da der User keine Ports unter 1024 binden kann, lauscht die Anwendung auf Port 8080.
 - Der `COPY --from=build`-Befehl kopiert das kompilierte Binary von der Build-Stage in die Runtime-Stage und stellt sicher, dass nur die notwendigen Dateien im finalen Image enthalten sind.
 
 Durch die Verwendung eines Multi-Stage Dockerfiles kann man effiziente, leichtgewichtige und sichere Container-Images für Go-Anwendungen erstellen.
