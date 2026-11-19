@@ -130,7 +130,7 @@ The repository is organized by domain, not by technical layer:
 | `Assist/` | optional comfort features, reminders, warnings |
 | `UI/` | windows, stat lines, alerts, options, layouts |
 
-Because the TOC order is the dependency order, the folders do not decide what may depend on what; the discipline does. The rule I follow is the same one from my post on [bounded contexts](/blog/bounded-context/): keep the data modules free of UI knowledge, and let UI modules ask data modules for values, never the other way round.
+Because the TOC order is the dependency order, nothing in the folder structure enforces what may depend on what; that is left to discipline. The rule I follow is the same one from my post on [bounded contexts](/blog/bounded-context/): keep the data modules free of UI knowledge, and let UI modules ask data modules for values, never the other way round.
 
 {{< diagram src="level-time-1-dataflow.svg" caption="From client events to pixels. Solid arrows push data forward; dashed arrows are read access. The UI never receives pushed updates: it polls getters." >}}
 
@@ -261,7 +261,7 @@ The seven layouts (table, bar, compact, text only, clock, XP bar, tiles) are reg
 
 ## The journal archive: a load-on-demand addon
 
-Here is the problem the SavedVariables design creates. A long-running character accumulates a journal of kills, deaths, loot and quests that can reach tens of thousands of entries (the code caps kills at 250,000), and without an archive all of them are Lua tables in `LevelTimerStatsDB`. Everything in a SavedVariable is parsed at **login** and serialized at **logout**, whether or not you ever open the history. For a feature most players open rarely, that is a poor trade.
+The SavedVariables design causes trouble for characters that are played for a long time. Such a character accumulates a journal of kills, deaths, loot and quests that can reach tens of thousands of entries (the code caps kills at 250,000), and without an archive all of them are Lua tables in `LevelTimerStatsDB`. Everything in a SavedVariable is parsed at **login** and serialized at **logout**, whether or not you ever open the history. For a feature most players open rarely, that is a poor trade.
 
 WoW has a feature for exactly this: **load-on-demand addons**. A TOC with `## LoadOnDemand: 1` is not loaded at login. Its files **and its SavedVariables** are only read when some other code calls `LoadAddOn` ([`C_AddOns.LoadAddOn`](https://warcraft.wiki.gg/wiki/API_C_AddOns.LoadAddOn)). The client also only writes that file back in sessions where the addon was loaded. So Level Time ships a second, tiny addon:
 
@@ -299,7 +299,7 @@ The result: login and logout cost stays flat no matter how big the history gets,
 
 ## One download, four clients
 
-Retail, Classic Era, TBC Anniversary and WoW Forever differ in API availability, UI templates and even which values addons may read. Level Time does **not** ship four builds. It uses three mechanisms.
+Retail, Classic Era, TBC Anniversary and WoW Forever differ in API availability, UI templates and even which values addons may read. Level Time still ships **one** build and handles the differences with three mechanisms.
 
 **1. One TOC with several interface versions.** The line `## Interface: 120105, 11509, 20506, 16001` lists one interface number per client; the client loads the addon if its own number is in the list. The file list is the same for everybody. Interface numbers come from [`GetBuildInfo`](https://warcraft.wiki.gg/wiki/API_GetBuildInfo), whose fourth return value is the same number.
 
@@ -323,7 +323,7 @@ end
 
 It is used for features that exist in one client only. The camp fire and sleeping bag timers, for example, are WoW Forever features: their options simply do not appear in the other clients. The packaging side uses the same mapping, which keeps the code and the release in agreement.
 
-**3. Feature detection for everything else.** Most differences are not "which client is this" but "does this function exist". The code asks the API instead of the version:
+**3. Feature detection for everything else.** For most differences the useful question is "does this function exist?", so the code asks the API instead of checking the version:
 
 ```lua
 -- simplified from Tracking/Experience.lua
@@ -338,7 +338,7 @@ local function isAtMaxLevel()
 end
 ```
 
-Three clients, three ways to ask the same question, one function. The same idea covers events (`RegisterEvent` returning `false`), unit events (use `RegisterUnitEvent` if the frame has it, otherwise filter manually) and secret values (`issecretvalue` is checked before a value is compared). Guild bank repairs check for the API (`CanGuildBankRepair`) **and** the client.
+One function covers the three ways the clients answer the same question. The same idea covers events (`RegisterEvent` returning `false`), unit events (use `RegisterUnitEvent` if the frame has it, otherwise filter manually) and secret values (`issecretvalue` is checked before a value is compared). Guild bank repairs check for the API (`CanGuildBankRepair`) **and** the client.
 
 The honest downside: nothing checks this for me automatically. My test harness (the subject of [Part 2](/blog/level-time-2-testing-lua-with-go/)) fakes the API and can load the addon as different clients, but it verifies logic, not whether a function really exists on a given client. In-game testing on each client stays necessary, and the project keeps a manual checklist for exactly that.
 
@@ -385,7 +385,7 @@ The data lives in three places: `LevelTimerDB` (account settings and profiles), 
 
 ## Performance rules I learned the hard way
 
-An addon shares the frame budget with the game and with every other addon. The rules in Level Time's contributor notes all come from real profiles, not theory:
+An addon shares the frame budget with the game and with every other addon. The rules in Level Time's contributor notes all come from real profiling sessions:
 
 - **No private `OnUpdate` per module.** `ns.Every` multiplexes all background tasks onto one frame, and a task can carry an `enabled` predicate so a disabled feature costs zero.
 - **Narrow event subscriptions.** `UNIT_*` events go through `RegisterUnitEvent` for the player only. Very frequent events (the combat log) get their own frame with the cheapest early-out first.

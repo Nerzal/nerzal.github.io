@@ -13,17 +13,17 @@ toc: true
 
 This is the first post in a three-part series on hardening a public Ubuntu server.
 
-In the [previous post](/blog/secure-ssh-server/) we secured SSH: replaced password login with key-based authentication, disabled root, and restricted which users can connect at all. That alone eliminates the majority of attacks targeting internet-facing servers.
+In the [previous post](/blog/secure-ssh-server/) we secured SSH: replaced password login with key-based authentication, disabled root, and restricted which users can connect at all. That alone stops most attacks on internet-facing servers.
 
-But SSH is one layer. This series adds three more layers per post, ordered by how quickly you can apply them and how much impact they have. Start here — these three take less than fifteen minutes and protect against the most common active threats.
+SSH is only one layer, though. Each post in this series adds three more, ordered by how quickly you can apply them and how much they help. Start here: these three take less than fifteen minutes and protect against the most common active threats.
 
 > **Assumes:** Ubuntu 22.04 / 24.04 / 26.04, SSH already hardened, a non-root user with `sudo` access.
 
 ---
 
-## 1 — UFW: Default-Deny Firewall
+## 1. UFW: Default-Deny Firewall
 
-A freshly provisioned server often exposes every port that has a service listening on it. The firewall changes that: **block everything by default, allow only what you explicitly need.**
+A freshly provisioned server often exposes every port that has a service listening on it. The firewall changes that: **it blocks everything by default and allows only what you explicitly need.**
 
 Ubuntu ships with [UFW](https://help.ubuntu.com/community/UFW) (Uncomplicated Firewall) pre-installed. It is a usable frontend to `iptables`/`nftables` that keeps rules readable.
 
@@ -56,7 +56,7 @@ sudo ufw allow 2222/tcp comment "SSH"
 
 ### Rate-limit connections
 
-UFW can throttle incoming connections to a port — useful as a lightweight layer before Fail2ban is configured:
+UFW can throttle incoming connections to a port. That is useful as a lightweight layer before Fail2ban is configured:
 
 ```bash
 # Deny connections from an IP that opened 6 or more in the last 30 seconds
@@ -67,7 +67,7 @@ This is a sliding-window throttle, not a ban: per the [ufw man page](https://man
 
 ### Docker bypasses UFW
 
-If you run Docker on this server, know this before you trust the firewall: ports published with `docker run -p` or `ports:` in Compose are **not** filtered by UFW. Docker inserts its own `iptables` rules, and the traffic is routed to the container before UFW's rules are evaluated — `ufw status` will not even show these ports. See Docker's documentation on [packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/). To keep a container port private, bind it to localhost (`-p 127.0.0.1:8080:80`) and put a reverse proxy in front of it.
+If you run Docker on this server, know this before you trust the firewall: ports published with `docker run -p` or `ports:` in Compose are **not** filtered by UFW. Docker inserts its own `iptables` rules, and the traffic is routed to the container before UFW's rules are evaluated, so `ufw status` will not even show these ports. See Docker's documentation on [packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/). To keep a container port private, bind it to localhost (`-p 127.0.0.1:8080:80`) and put a reverse proxy in front of it.
 
 ### Verify from your local machine
 
@@ -92,7 +92,7 @@ ssh deploy@your-server-ip
 
 ---
 
-## 2 — Fail2ban: Brute-Force Protection
+## 2. Fail2ban: Brute-Force Protection
 
 Even with key-only SSH, other services (web servers, mail servers, custom APIs) accept connections that can be brute-forced. [Fail2ban](https://github.com/fail2ban/fail2ban) monitors log files and adds a temporary firewall ban for IPs that produce too many failures.
 
@@ -100,7 +100,7 @@ Even with key-only SSH, other services (web servers, mail servers, custom APIs) 
 sudo apt install fail2ban -y
 ```
 
-Do not edit `/etc/fail2ban/jail.conf` — it gets overwritten on updates. Fail2ban reads `jail.local` on top of it, so create that file with **only the settings you want to change**. Do not copy the whole `jail.conf` over: a full copy freezes every default at today's values, and improvements that future package updates ship in `jail.conf` would never reach you.
+Do not edit `/etc/fail2ban/jail.conf`, because it gets overwritten on updates. Fail2ban reads `jail.local` on top of it, so create that file with **only the settings you want to change**. Do not copy the whole `jail.conf` over: a full copy freezes every default at today's values, and improvements that future package updates ship in `jail.conf` would never reach you.
 
 ```bash
 sudo tee /etc/fail2ban/jail.local > /dev/null <<'EOF'
@@ -146,7 +146,7 @@ sudo tail -f /var/log/fail2ban.log
 
 ---
 
-## 3 — Unattended Upgrades: Automatic Security Patches
+## 3. Unattended Upgrades: Automatic Security Patches
 
 Unpatched packages are one of the most common root causes of server compromise. Enabling automatic security updates means you no longer depend on manually running `apt upgrade` before a CVE is exploited.
 
@@ -173,7 +173,7 @@ Unattended-Upgrade::Allowed-Origins {
 };
 ```
 
-This restricts automatic installation to security updates only — not feature updates that might break things.
+This restricts automatic installation to security updates only. Feature updates that might break things are left out.
 
 Two more settings worth reviewing:
 

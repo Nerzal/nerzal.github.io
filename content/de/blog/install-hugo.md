@@ -11,25 +11,25 @@ toc: true
 
 ## Was ist Hugo?
 
-Hugo ist ein Static-Site-Generator, der mehrere Vorteile beim Erstellen schneller und sicherer Websites bietet.
+Hugo ist ein Static-Site-Generator für schnelle und sichere Websites.
 
-Er hat eine schnelle Build-Zeit, was ihn ideal für das schnelle Generieren großer Seiten macht. Seine intuitive Oberfläche und unkomplizierte Verzeichnisstruktur erleichtern den Einstieg für neue Benutzer. Darüber hinaus bietet Hugo Flexibilität durch Templates, Shortcodes und benutzerdefinierte Ausgabeformate und kann einfach auf einer Vielzahl von Hosting-Plattformen deployt werden.
+Die Builds sind schnell, auch große Seiten sind in kurzer Zeit generiert. Die Verzeichnisstruktur ist unkompliziert und die Oberfläche intuitiv, was den Einstieg erleichtert. Templates, Shortcodes und benutzerdefinierte Ausgabeformate machen Hugo flexibel, und das Ergebnis lässt sich auf vielen Hosting-Plattformen deployen.
 
-Hugo eignet sich auch gut für große Seiten und ist sicherer als dynamische Seiten, weil es statische HTML-Dateien generiert. Insgesamt ist Hugo eine beliebte Wahl für Entwickler und Content-Creator, die effiziente und sichere Websites erstellen möchten.
+Hugo kommt gut mit großen Seiten zurecht, und weil es statische HTML-Dateien generiert, ist das Ergebnis sicherer als eine dynamische Seite. Bei Entwicklern und Content-Creatorn, die effiziente und sichere Websites wollen, ist Hugo entsprechend beliebt.
 
 ## Warum Hugo verwenden?
 
-1. **Geschwindigkeit**: Hugo ist für Schnelligkeit ausgelegt, mit einer Build-Zeit von Millisekunden für Seiten mit Tausenden von Seiten. Das macht ihn ideal für das schnelle Generieren großer Seiten. Außerdem führen statische HTML-Dateien oft zu blitzschnellen Ladezeiten, was zu guten [PageSpeedInsights](https://pagespeed.web.dev/)-Scores führt.
+1. Geschwindigkeit: Hugo baut Seiten mit Tausenden von Unterseiten in Millisekunden, große Seiten sind also schnell generiert. Statische HTML-Dateien laden außerdem meist blitzschnell, was zu guten [PageSpeedInsights](https://pagespeed.web.dev/)-Scores führt.
 
-2. **Benutzerfreundlichkeit**: Hugo hat eine einfache und intuitive Oberfläche mit einer unkomplizierten Verzeichnisstruktur und Markdown-basierten Inhaltsdateien. Das macht es einfach für neue Benutzer, mit Hugo anzufangen.
+2. Benutzerfreundlichkeit: Hugo hat eine einfache, intuitive Oberfläche, eine unkomplizierte Verzeichnisstruktur und Markdown-basierte Inhaltsdateien. Neue Benutzer finden sich damit schnell zurecht.
 
-3. **Flexibilität**: Hugo erlaubt es, Seiten mit Templates, Shortcodes und benutzerdefinierten Ausgabeformaten anzupassen. Das macht es einfach, eine Seite zu erstellen, die deinen spezifischen Bedürfnissen entspricht.
+3. Flexibilität: Du kannst deine Seite mit Templates, Shortcodes und benutzerdefinierten Ausgabeformaten anpassen und so eine Seite bauen, die zu deinen Bedürfnissen passt.
 
-4. **Portabilität**: Hugo-Seiten können einfach auf einer Vielzahl von Hosting-Plattformen deployt werden, einschließlich GitHub Pages, Amazon S3 und Netlify. Das macht es einfach, die Seite dort zu hosten, wo man es bevorzugt.
+4. Portabilität: Hugo-Seiten lassen sich auf vielen Hosting-Plattformen deployen, darunter GitHub Pages, Amazon S3 und Netlify. Du hostest die Seite also dort, wo du willst.
 
-5. **Skalierbarkeit**: Hugo ist dafür ausgelegt, große Seiten problemlos zu verwalten, was es einfach macht, die Seite zu skalieren, wenn sie wächst.
+5. Skalierbarkeit: Hugo kommt problemlos mit großen Seiten zurecht, deine Seite kann also weiter wachsen.
 
-6. **Sicherheit**: Hugo generiert statische HTML-Dateien, was bedeutet, dass es keine dynamischen Elemente oder Datenbankabfragen gibt. Das macht Hugo-Seiten sicherer und weniger anfällig für Angriffe.
+6. Sicherheit: Hugo generiert statische HTML-Dateien, es gibt also keine dynamischen Elemente oder Datenbankabfragen. Angreifer finden dadurch viel weniger Angriffsfläche.
 
 ## Hugo installieren
 
@@ -42,14 +42,14 @@ Seit [v0.170.0](https://github.com/gohugoio/hugo/releases/tag/v0.170.0) gibt es 
 
 Der einfachste Weg, Hugo unter Windows zu installieren, ist **Winget** (Windows Package Manager), der in modernem Windows 10/11 integriert ist.
 
-1.  Öffne PowerShell oder Eingabeaufforderung als Administrator.
+1.  Öffne die PowerShell oder die Eingabeaufforderung als Administrator.
 2.  Führe den folgenden Befehl aus:
 
     ```powershell
     winget install Hugo.Hugo
     ```
 
-3.  Starte dein Terminal neu, um sicherzustellen, dass der neue PATH geladen wird.
+3.  Starte dein Terminal neu, damit der neue PATH geladen wird.
 
 Hast du früher `Hugo.Hugo.Extended` installiert, wechsle das Paket mit `winget uninstall Hugo.Hugo.Extended` und führe dann den Installationsbefehl oben aus. Spätere Updates: `winget upgrade Hugo.Hugo`.
 
@@ -73,9 +73,9 @@ Für Debian-basierte Systeme (wie Ubuntu):
     sudo dpkg -i /path/to/hugo_VERSION_linux-amd64.deb
     ```
 
-Für andere Linux-Distributionen kannst du das Tarball herunterladen:
+Für andere Linux-Distributionen kannst du den Tarball herunterladen:
 1.  Lade `hugo_VERSION_linux-amd64.tar.gz` von der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases) herunter.
-2.  Entpacke es und verschiebe die ausführbare Datei in deinen PATH:
+2.  Entpacke ihn und verschiebe die ausführbare Datei in deinen PATH:
 
     ```bash
     tar -xf hugo_VERSION_linux-amd64.tar.gz
@@ -93,7 +93,7 @@ Für andere Linux-Distributionen kannst du das Tarball herunterladen:
 hugo version
 ```
 
-Du solltest die installierte Hugo-Version sehen, z.B. `hugo v0.170.0-... windows/amd64`. Seit v0.170.0 endet der Versionsstring nicht mehr auf `+extended`. Das neueste Release samt Changelog findest du jederzeit auf der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases).
+Du solltest die installierte Hugo-Version sehen, z. B. `hugo v0.170.0-... windows/amd64`. Seit v0.170.0 endet der Versionsstring nicht mehr auf `+extended`. Das neueste Release samt Changelog findest du jederzeit auf der [Hugo-Releases-Seite](https://github.com/gohugoio/hugo/releases).
 
 ## Docker verwenden
 
@@ -185,7 +185,7 @@ Der Befehl ist in Bash und PowerShell identisch. Deine Seite ist jetzt unter [ht
 
 ## Eine neue Website erstellen
 
-Um eine neue Website zu erstellen, führe einfach folgenden Befehl aus:
+Um eine neue Website zu erstellen, führe folgenden Befehl aus:
 
 ```bash
 hugo new site example.com
@@ -197,13 +197,13 @@ Der Befehl ist wie folgt aufgebaut:
 hugo(cli) new (Befehl) site (Parameter) siteName (Parameter)
 ```
 
-Dadurch wird eine neue Ordnerstruktur für deine Seite erstellt. Wechsle hinein, alle folgenden Befehle werden im Site-Verzeichnis ausgeführt:
+Dadurch wird eine neue Ordnerstruktur für deine Seite erstellt. Wechsle hinein, denn alle folgenden Befehle laufen im Site-Verzeichnis:
 
 ```bash
 cd example.com
 ```
 
-Wenn du die Ausgabe des Create-Befehls betrachtest, sagt Hugo dir etwas wie das Folgende:
+In der Ausgabe des Befehls zeigt Hugo dir ungefähr Folgendes an:
 
 ```text
 Just a few more steps...
@@ -221,9 +221,9 @@ See documentation at https://gohugo.io/.
 
 ### Ein neues Theme erstellen
 
-Du kannst jetzt entweder ein Hugo-Theme aus dem [Hugo-Theme-Verzeichnis](https://themes.gohugo.io/) herunterladen oder dein ganz eigenes Theme erstellen. In dieser Tutorial-Reihe werden wir unser eigenes Theme erstellen.
+Du kannst jetzt entweder ein Hugo-Theme aus dem [Hugo-Theme-Verzeichnis](https://themes.gohugo.io/) herunterladen oder dein ganz eigenes Theme erstellen. In dieser Tutorial-Reihe erstellen wir unser eigenes Theme.
 
-Also verwenden wir folgenden Befehl, während wir uns im Site-Verzeichnis befinden:
+Führe dazu im Site-Verzeichnis folgenden Befehl aus:
 
 ```bash
 hugo new theme my-theme
@@ -251,7 +251,7 @@ Als ersten Schritt ersetzen wir den Inhalt der **home.html**-Datei, die sich in 
 {{ end }}
 ```
 
-`{{ .Content }}` ist eine Template-Aktion, die einfach den Markdown-Inhalt einer Datei in HTML rendert. Es gibt noch viel mehr über Templates, Shortcodes usw. zu erklären, aber für jetzt ist es nur wichtig, dass dadurch der Markdown-Inhalt deiner Datei in HTML umgewandelt wird.
+`{{ .Content }}` ist eine Template-Aktion, die einfach den Markdown-Inhalt einer Datei in HTML rendert. Es gibt noch viel mehr über Templates, Shortcodes usw. zu erklären, aber für jetzt zählt nur, dass dein Markdown-Inhalt im HTML landet.
 
 Jetzt brauchen wir eine Inhaltsdatei zum Rendern. Verwende folgenden Befehl:
 
@@ -289,7 +289,7 @@ title = 'Meine erste Seite'
 Es ist **sehr schön**, dich kennenzulernen!
 ```
 
-Wir haben den letzten Schritt erreicht. Jetzt können wir einen Hugo-Server starten, um zu sehen, was wir erreicht haben. Verwende folgenden Befehl:
+Im letzten Schritt starten wir einen Hugo-Server, um das Ergebnis zu sehen. Verwende folgenden Befehl:
 
 ```bash
 hugo server -D

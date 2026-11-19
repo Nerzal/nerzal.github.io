@@ -22,9 +22,9 @@ featured_image: "img/level-time/logo.png"
 toc: true
 ---
 
-> **Series: Building Level Time** — Part 3 of 4. [Part 1: Addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: Testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · **Part 3: Release pipeline** · [Part 4: Goals and the public API](/blog/level-time-4-goals-public-api/) · Product page: [Level Time](/page/level-time/)
+> **Series: Building Level Time**, part 3 of 4. [Part 1: Addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: Testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · **Part 3: Release pipeline** · [Part 4: Goals and the public API](/blog/level-time-4-goals-public-api/) · Product page: [Level Time](/page/level-time/)
 
-Writing an addon is one thing. Getting it to players without clicking through several upload forms is another. For [Level Time](/page/level-time/), a World of Warcraft addon that tracks time, XP and kills per level, I wanted one rule: **I push a git tag and everything else happens by itself.**
+Once an addon works, it still has to reach the players, and I did not want to click through several upload forms for every version. For [Level Time](/page/level-time/), a World of Warcraft addon that tracks time, XP and kills per level, I wanted one rule: **I push a git tag and everything else happens by itself.**
 
 In this post I walk through the whole path from `git tag` to a file on CurseForge: the GitHub Actions workflow, the [BigWigs packager](https://github.com/BigWigsMods/packager), the `.pkgmeta` file, the `.toc` files that serve several game clients, a trick for shipping a second addon from the same repository, and the small Go installer I use to test builds in my own WoW folders.
 
@@ -116,7 +116,7 @@ The format is `{file name}:{label}`. Both parts expand to `LevelTimer-v2.26.0`, 
 
 ## `.pkgmeta`: what goes in the zip
 
-The packager ships the repository minus what `.pkgmeta` ignores. That is a deny-list, and it has a consequence I want to be upfront about: **every new non-addon file in the repo must be added to `ignore`**, or it ends up in the zip. This is the full file, with the comments translated:
+The packager ships the repository minus what `.pkgmeta` ignores. That is a deny-list, and that has a consequence: **every new non-addon file in the repo must be added to `ignore`**, or it ends up in the zip. This is the full file, with the comments translated:
 
 ```yaml
 # Config for the BigWigs packager (.github/workflows/release.yml).
@@ -141,7 +141,7 @@ ignore:
 Walking through it:
 
 - **`package-as`** sets the folder name inside the zip. The repository is called `wow-statistics`, but WoW expects the addon folder to match the `.toc` file name, so the folder must be `LevelTimer`.
-- **`move-folders`** is the interesting part. Level Time has a second, load-on-demand addon, `LevelTimer_Archive`, a journal archive that is only loaded when needed. WoW only sees addons that sit directly in `Interface/AddOns/`. Since the archive lives in a subfolder of the repository, the packager first puts it at `LevelTimer/LevelTimer_Archive/` and `move-folders` lifts it to the top level of the zip. The archive's own `.toc` carries `## LoadOnDemand: 1` and `## Dependencies: LevelTimer`.
+- **`move-folders`** solves a placement problem. Level Time has a second, load-on-demand addon, `LevelTimer_Archive`, a journal archive that is only loaded when needed. WoW only sees addons that sit directly in `Interface/AddOns/`. Since the archive lives in a subfolder of the repository, the packager first puts it at `LevelTimer/LevelTimer_Archive/` and `move-folders` lifts it to the top level of the zip. The archive's own `.toc` carries `## LoadOnDemand: 1` and `## Dependencies: LevelTimer`.
 - **`ignore`** excludes tests, Go tools, CurseForge texts and project docs. Also `StreamGoal`, which is a separate addon with its own package (next section).
 
 For the full list of directives see the [`.pkgmeta` documentation](https://github.com/BigWigsMods/packager/wiki/Preparing-the-PackageMeta-File).
@@ -190,7 +190,7 @@ My solution is a second packager run against a throwaway clone whose root *is* `
 
 [`git filter-branch --subdirectory-filter`](https://git-scm.com/docs/git-filter-branch) rewrites the clone so the contents of `StreamGoal/` become the repository root, and only commits that touched that folder remain. `--tag-name-filter cat` rewrites tags along with the history. A nice side effect is that the changelog for Level Time Goals then contains only commits that actually changed that addon.
 
-Two points of honesty:
+Two caveats:
 
 - `git filter-branch` is flagged by Git itself as discouraged. [`git filter-repo`](https://github.com/newren/git-filter-repo) is the recommended successor, but it is an extra dependency and the clone is disposable, so I have kept the built-in command so far.
 - Blanking `GITHUB_OAUTH` for the second run is deliberate. The first run already created the GitHub release for the tag; without that line the second run would try to create another one.

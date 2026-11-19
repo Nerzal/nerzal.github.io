@@ -21,11 +21,11 @@ featured_image: "img/neuroclip/facecam-nachher-460.jpg"
 toc: true
 ---
 
-> **Building Neuroclip, Teil 4 von 5.** Davor: [Teil 3 — die OBS-Regie](/de/blog/neuroclip-3-obs-regie/). Weitere Teile: [Teil 1 — Architektur](/de/blog/neuroclip-1-architecture/), [Teil 2 — die VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/), [Teil 5 — Ausliefern auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/) (Early Access, Single-User-Beta).
+> **Building Neuroclip, Teil 4 von 5.** Davor: [Teil 3: die OBS-Regie](/de/blog/neuroclip-3-obs-regie/). Weitere Teile: [Teil 1: Architektur](/de/blog/neuroclip-1-architecture/), [Teil 2: die VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/), [Teil 5: Ausliefern auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/) (Early Access, Single-User-Beta).
 
 Ein Twitch-Stream hat 1920x1080 Pixel, und die Facecam in der Ecke ist klein, nur ein paar hundert Pixel breit. Ein Hochkant-Short ist 1080 Pixel breit, und das Layout zeigt die Cam als Streifen über die volle Breite. Das ist eine Vergrößerung um mehr als das Doppelte, und es sieht aus, wie du es dir vorstellst: weich, pixelig, ein bisschen traurig.
 
-In diesem Artikel geht es um das Feature, das das behebt, und um drei Engineering-Entscheidungen, die ich spannender finde als das KI-Modell selbst:
+In diesem Artikel geht es um das Feature, das ich dagegen gebaut habe, und um drei Engineering-Entscheidungen, die ich spannender finde als das KI-Modell selbst:
 
 1. **Umfang**: nur den Cam-Ausschnitt hochskalieren, nie das Spiel.
 2. **Grenzen**: das Modell als externes Programm hinter einem kleinen Interface betreiben, mit Cache und einem Rückfall, der einen Render nie kaputtmachen kann.
@@ -37,7 +37,7 @@ Neuroclip ist mein eigenes Werkzeug für Streamer (siehe [Teil 1](/de/blog/neuro
 
 Die Rechnung ist simpel: ein paar hundert Pixel Quelle müssen 1080 Pixel Ausgabe füllen. Der [`scale`-Filter](https://ffmpeg.org/ffmpeg-filters.html#scale-1) von ffmpeg mit Lanczos macht das ordentlich, kann aber keine Details erfinden, die der Stream-Encoder schon weggeworfen hat. Heraus kommt ein glattes, aber unscharfes Gesicht.
 
-Die Optionen, die ich erwogen habe:
+Ich habe vier Optionen erwogen, und die letzte Zeile hat gewonnen:
 
 | Option | Warum nicht (oder warum doch) |
 | --- | --- |
@@ -45,8 +45,6 @@ Die Optionen, die ich erwogen habe:
 | Den ganzen Clip hochskalieren | Volle Bilder durch ein neuronales Netz sind viel zu langsam, und das Spiel braucht es nicht |
 | Gesichts-Restaurationsmodell (CodeFormer) | Für Gesichter gemacht, aber ein Lizenzproblem (dazu unten mehr) |
 | **Allgemeine Super-Resolution nur auf dem Cam-Ausschnitt** | Kleine Eingabe, klarer Umfang, freizügige Lizenz |
-
-Die letzte Zeile hat gewonnen.
 
 ## Der Ansatz in einem Bild
 
@@ -60,7 +58,7 @@ Auf Kasten-und-Pfeil-Ebene:
 4. **Cache.** Das Ergebnis wird unter einem Schlüssel abgelegt, der alles enthält, was es beeinflusst: Quelle, Ausschnitt, sichtbare Stücke und Einstellungen. Ein erneuter Render desselben Clips nimmt die Datei aus dem Cache.
 5. **Render.** Der Short-Render bekommt diese Datei als zusätzlichen Eingang und nutzt sie statt des normal vergrößerten Ausschnitts.
 
-Eine Entwurfsentscheidung hält Schnitte, Zeitlupe und Intros funktionsfähig: Die hochskalierte Cam ist kein separates Overlay mit eigener Zeitlogik. Sie wird an das Quellbild angehängt, sodass alles danach beide Teile gleich behandelt. Die ffmpeg-Filter [`pad`](https://ffmpeg.org/ffmpeg-filters.html#pad-1) und [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#overlay-1) sind die Bausteine für so einen Trick.
+Eine Entwurfsentscheidung hält Schnitte, Zeitlupe und Intros funktionsfähig: Die hochskalierte Cam wird an das Quellbild angehängt und hat keine eigene Zeitlogik, sodass alles danach beide Teile gleich behandelt. Die ffmpeg-Filter [`pad`](https://ffmpeg.org/ffmpeg-filters.html#pad-1) und [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#overlay-1) sind die Bausteine für so einen Trick.
 
 ## Warum ein externes Programm hinter einem Interface
 
@@ -83,19 +81,19 @@ func (tool ExternalTool) Upscale(ctx context.Context, inputDir, outputDir string
 }
 ```
 
-Die Flags unterscheiden sich je Programm, prüfe also die des Programms, das du nutzt. Drei Dinge sind erwähnenswert:
+Die Flags unterscheiden sich je Programm, prüfe also die des Programms, das du nutzt. Was mir an diesem Aufbau gefällt:
 
-- **Ordner rein, Ordner raus.** Keine Pipes, kein eigenes Protokoll, leicht zu debuggen, indem man in die Ordner schaut.
+- **Ordner rein, Ordner raus.** Keine Pipes, kein eigenes Protokoll, leicht zu debuggen, weil du einfach in die Ordner schauen kannst.
 - **Der Context beendet den Prozess.** Mit [`exec.CommandContext`](https://pkg.go.dev/os/exec#CommandContext) stoppt ein abgebrochener Render auch den GPU-Job. Das vergisst man beim Aufruf externer Programme leicht.
 - **Tests nutzen eine Attrappe.** Weil Aufrufer nur das Interface kennen, lassen sich Cache und Rückfall ohne GPU testen, und eine künftige Engine ist nur eine weitere Umsetzung.
 
-Die Aufrufstelle folgt derselben Disziplin wie überall bei mir: Sie integriert und entscheidet nur, die schwere Arbeit steckt in Funktionen, die nur operieren. Ihre wichtigste Eigenschaft: **Jeder Fehlerpfad gibt die ursprünglichen, unveränderten Optionen zurück.** Kein Fehler wandert nach oben und bricht den Render ab.
+Die Aufrufstelle folgt derselben Disziplin wie überall bei mir: Sie integriert und entscheidet nur, die schwere Arbeit steckt in Funktionen, die nur operieren. **Jeder Fehlerpfad gibt die ursprünglichen, unveränderten Optionen zurück**, sodass kein Fehler nach oben durchschlägt und den Render abbricht.
 
 ## Sauberer Rückfall
 
 {{< diagram src="neuroclip-4-fallback.svg" caption="Jeder Nein-Zweig endet in einem normalen Render mit einer Protokollzeile, die den Grund nennt. Der Cache wird geprüft, bevor das Programm überhaupt gesucht wird." >}}
 
-Alles, was schiefgeht, fällt auf einen normalen Render zurück: Programm oder Modelle fehlen, der Lauf schlägt fehl, die Platte ist voll, der Job würde unverhältnismäßig lange dauern, oder das Layout hat schlicht keine Verwendung für eine größere Cam. In allen Fällen wird der Short wie gewohnt gerendert, und das Protokoll nennt den Grund. Bei einem Werkzeug, das unbeaufsichtigt rendern kann, nehme ich „Cam etwas weicher, Video ist da“ immer vor „kein Video“.
+Alles, was schiefgeht, fällt auf einen normalen Render zurück: Programm oder Modelle fehlen, der Lauf schlägt fehl, die Platte ist voll, der Job würde unverhältnismäßig lange dauern, oder das Layout hat schlicht keine Verwendung für eine größere Cam. In allen Fällen wird der Short wie gewohnt gerendert, und das Protokoll nennt den Grund. Bei einem Werkzeug, das unbeaufsichtigt rendern kann, ist mir „Cam etwas weicher, Video ist da“ immer lieber als „kein Video“.
 
 Das Feature ist außerdem **standardmäßig aus**. Es ist langsam, also schalte ich es gezielt für ausgewählte Top-Shorts ein und rendere nie während eines Streams. Auf meiner Laptop-GPU braucht das gute Modell Minuten statt Sekunden pro Short, deshalb ist der Cache wichtig: Ein erneuter Render desselben Clips geht schnell.
 
@@ -114,11 +112,11 @@ Dasselbe Bild, beide Wege gerendert:
 </figure>
 </div>
 
-Auf den Bildern bin ich selbst zu sehen. Ich habe ein allgemeines Modell mit einem leichteren, auf Anime ausgelegten verglichen. Das allgemeine sah klar am besten aus, das Anime-Modell wirkte auf Gesichtern wachsig und gemalt. Am natürlichsten fand ich es, das KI-Bild mit der normalen Vergrößerung zu mischen, statt es mit voller Stärke zu nutzen. Das ist der Blick einer Person auf ein Gesicht, kein Benchmark.
+Auf den Bildern bin ich selbst zu sehen. Ich habe ein allgemeines Modell mit einem leichteren, auf Anime ausgelegten verglichen. Das allgemeine sah klar am besten aus, das Anime-Modell wirkte auf Gesichtern wachsig und gemalt. Am natürlichsten fand ich es, das KI-Bild mit der normalen Vergrößerung zu mischen, statt es mit voller Stärke zu nutzen. Das ist der Eindruck einer einzelnen Person an einem einzigen Gesicht, bitte lies es also nicht als Benchmark.
 
 ## Warum nicht CodeFormer
 
-[CodeFormer](https://github.com/sczhou/CodeFormer) ist ein Modell zur Gesichts-Restauration und für eine Facecam das naheliegendere Werkzeug. Ich habe es mir angesehen und mich dagegen entschieden, weil es nach meinem Verständnis seiner Lizenz nur für nicht-kommerzielle Nutzung gedacht ist, was sich nicht mit meinem Ziel verträgt, Neuroclip irgendwann zu verkaufen. [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) steht unter freizügigen Lizenzen. **Lies beide Lizenzen bitte selbst**, statt meiner Einzeiler-Zusammenfassung zu vertrauen: Lizenzen ändern sich, Modelle und Code können unterschiedlich lizenziert sein, und dein Anwendungsfall kann von meinem abweichen. CodeFormer habe ich nicht ausprobiert, daher mache ich keine Aussage zu seiner Qualität im Vergleich zu Real-ESRGAN.
+[CodeFormer](https://github.com/sczhou/CodeFormer) ist ein Modell zur Gesichts-Restauration und für eine Facecam das naheliegendere Werkzeug. Ich habe es mir angesehen und mich dagegen entschieden, weil es nach meinem Verständnis seiner Lizenz nur für nichtkommerzielle Nutzung gedacht ist, was sich nicht mit meinem Ziel verträgt, Neuroclip irgendwann zu verkaufen. [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) steht unter freizügigen Lizenzen. **Lies beide Lizenzen bitte selbst**, statt meiner Einzeiler-Zusammenfassung zu vertrauen: Lizenzen ändern sich, Modelle und Code können unterschiedlich lizenziert sein, und dein Anwendungsfall kann von meinem abweichen. CodeFormer habe ich nicht ausprobiert, daher mache ich keine Aussage zu seiner Qualität im Vergleich zu Real-ESRGAN.
 
 ### Lizenzentscheidungen in der CI durchsetzen
 
@@ -126,7 +124,7 @@ Lizenz-Überlegungen helfen nur, wenn sie durchgesetzt werden. Ein kleines Skrip
 
 ## Gelernt
 
-- **Der Umfang ist die Optimierung.** Die Eingabe vom ganzen Bild auf die sichtbaren Stücke eines kleinen Ausschnitts zu verkleinern, macht aus einer unmöglichen Aufgabe eine machbare.
+- **Zuerst die Eingabe verkleinern.** Die Eingabe vom ganzen Bild auf die sichtbaren Stücke eines kleinen Ausschnitts zu verkleinern, macht aus einer unmöglichen Aufgabe eine machbare.
 - **Das Langsame und Optionale gehört hinter ein Interface und einen Cache.** Alles, was schiefgehen kann, fällt auf den billigen Weg zurück.
 - **Kläre Lizenzen, bevor du dich in ein Modell verliebst.** Die schönste Option ist wertlos, wenn du sie nicht ausliefern darfst.
 - **Messen.** Ein A/B-Test hat die Modellwahl an einem Nachmittag entschieden.

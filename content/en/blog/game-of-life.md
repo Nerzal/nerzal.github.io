@@ -11,7 +11,7 @@ tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]
 show_reading_time: true
 ---
 
-[Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a famous cellular automaton devised by British mathematician John Horton Conway in 1970. It is a zero-player game: you define an initial state and then watch it evolve according to a fixed set of rules — no further input required. Despite its simple rules, it produces surprisingly complex, lifelike patterns.
+[Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a famous cellular automaton devised by British mathematician John Horton Conway in 1970. It is a zero-player game: you define an initial state and then watch it evolve according to a fixed set of rules, with no further input. The rules are simple, yet they produce surprisingly complex, lifelike patterns.
 
 In this post we implement Game of Life in Go from scratch, step by step. By the end you will have a working terminal simulation that renders a **Glider** and a **Lightweight Spaceship (LWSS)** in real time.
 
@@ -19,7 +19,7 @@ In this post we implement Game of Life in Go from scratch, step by step. By the 
 
 ## Prerequisites
 
-You need [Go](https://go.dev/dl/) installed on your machine. The standard library is sufficient — no third-party packages are required for this tutorial.
+You need [Go](https://go.dev/dl/) installed on your machine. The standard library is enough; this tutorial needs no third-party packages.
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -48,20 +48,20 @@ Create a new file called `main.go` in an empty directory and follow along.
 
 The Game of Life follows four rules, applied simultaneously to every cell on the grid at each step:
 
-1. A **live cell** with fewer than two live neighbours dies — _underpopulation_.
+1. A **live cell** with fewer than two live neighbours dies (_underpopulation_).
 2. A **live cell** with two or three live neighbours survives.
-3. A **live cell** with more than three live neighbours dies — _overpopulation_.
-4. A **dead cell** with exactly three live neighbours becomes alive — _reproduction_.
+3. A **live cell** with more than three live neighbours dies (_overpopulation_).
+4. A **dead cell** with exactly three live neighbours becomes alive (_reproduction_).
 
-These four rules are all you need. The rest emerges from the initial state.
+Everything else emerges from the initial state.
 
 ## Implementation
 
-We break the implementation into five focused steps.
+We build it in five steps.
 
 ### 1. Define the Data Structures
 
-`Cell` is just a boolean — alive or dead. `Grid` holds the dimensions and a two-dimensional slice of cells.
+`Cell` is just a boolean: alive or dead. `Grid` holds the dimensions and a two-dimensional slice of cells.
 
 ```go
 type Cell bool
@@ -120,7 +120,7 @@ func (g *Grid) NextState() {
 }
 ```
 
-`countLiveNeighbors` checks the eight surrounding cells. The `%` operator creates a **toroidal grid** — cells that leave one edge reappear on the opposite side, so the simulation never has boundary artifacts.
+`countLiveNeighbors` checks the eight surrounding cells. The `%` operator creates a **toroidal grid**: cells that leave one edge reappear on the opposite side, so the simulation never has boundary artifacts.
 
 ```go
 func (g *Grid) countLiveNeighbors(x, y int) int {
@@ -146,7 +146,7 @@ func (g *Grid) countLiveNeighbors(x, y int) int {
 
 ### 4. Render the Grid
 
-`Render` prints the grid to the terminal. Live cells appear as `█`, dead cells as a space. The ANSI escape sequence `\033[H` moves the cursor to the top-left corner before each frame, preventing the output from scrolling — giving a smooth animation effect.
+`Render` prints the grid to the terminal. Live cells appear as `█`, dead cells as a space. The ANSI escape sequence `\033[H` moves the cursor to the top-left corner before each frame. The output does not scroll, so the frames replace each other and the animation looks smooth.
 
 ```go
 func (g *Grid) Render() {
@@ -167,7 +167,7 @@ func (g *Grid) Render() {
 
 ### 5. Set Up the Main Loop
 
-We seed the grid with two well-known patterns — a **Glider** (moves diagonally across the grid) and a **Lightweight Spaceship (LWSS)** (moves horizontally) — then run the simulation indefinitely.
+We seed the grid with two well-known patterns, a **Glider** (moves diagonally across the grid) and a **Lightweight Spaceship (LWSS)** (moves horizontally), then run the simulation indefinitely.
 
 ```go
 func main() {
@@ -316,6 +316,6 @@ Press `Ctrl+C` to stop. You should see the Glider and LWSS patterns moving acros
 
 ## What's Next
 
-- Try different starting patterns — the [LifeWiki](https://conwaylife.com/wiki/) catalogues thousands of them.
+- Try different starting patterns. The [LifeWiki](https://conwaylife.com/wiki/) catalogues thousands of them.
 - Replace `fmt.Print` with a proper terminal library like [tcell](https://github.com/gdamore/tcell) or [bubbletea](https://github.com/charmbracelet/bubbletea) for colour and keyboard input.
 - If you are interested in containerising your Go applications, check out my post on [Go and Docker](/blog/go-docker/).

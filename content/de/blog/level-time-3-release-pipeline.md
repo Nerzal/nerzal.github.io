@@ -22,9 +22,9 @@ featured_image: "img/level-time/logo.png"
 toc: true
 ---
 
-> **Serie: Level Time bauen** — Teil 3 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · **Teil 3: Release-Pipeline** · [Teil 4: Goals und die öffentliche API](/de/blog/level-time-4-goals-public-api/) · Produktseite: [Level Time](/de/page/level-time/)
+> **Serie: Level Time bauen**, Teil 3 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · **Teil 3: Release-Pipeline** · [Teil 4: Goals und die öffentliche API](/de/blog/level-time-4-goals-public-api/) · Produktseite: [Level Time](/de/page/level-time/)
 
-Ein Addon zu schreiben ist eine Sache. Es zu den Spielern zu bringen, ohne mich durch mehrere Upload-Formulare zu klicken, eine andere. Für [Level Time](/de/page/level-time/), ein World-of-Warcraft-Addon, das Zeit, XP und Kills pro Level misst, wollte ich eine einzige Regel: **Ich pushe einen Git-Tag, und alles andere passiert von selbst.**
+Wenn ein Addon funktioniert, muss es noch zu den Spielern kommen, und ich wollte mich nicht für jede Version durch mehrere Upload-Formulare klicken. Für [Level Time](/de/page/level-time/), ein World-of-Warcraft-Addon, das Zeit, XP und Kills pro Level misst, wollte ich eine einzige Regel: **Ich pushe einen Git-Tag, und alles andere passiert von selbst.**
 
 In diesem Artikel gehe ich den ganzen Weg von `git tag` bis zur Datei auf CurseForge durch: den GitHub-Actions-Workflow, den [BigWigs-Packager](https://github.com/BigWigsMods/packager), die `.pkgmeta`, die `.toc`-Dateien für mehrere Spielversionen, einen Trick, um ein zweites Addon aus demselben Repository auszuliefern, und den kleinen Go-Installer, mit dem ich Builds in meinen eigenen WoW-Ordnern teste.
 
@@ -34,7 +34,7 @@ Alles hier stammt aus `release.yml`, `.pkgmeta`, `Makefile` und `tools/installer
 
 ## Das Ziel: Ein Tag ist ein Release
 
-Der Workflow startet bei Tags, die auf `v*` passen. Sonst veröffentlicht nichts. Normale Pushes auf `main` und Pull Requests laufen durch einen separaten `Test`-Workflow (`make vet` und `make test`), ein kaputter Test fällt also meist lange vor dem Tag auf.
+Der Workflow startet bei Tags, die auf `v*` passen. Kein anderer Weg veröffentlicht etwas. Normale Pushes auf `main` und Pull Requests laufen durch einen separaten `Test`-Workflow (`make vet` und `make test`), ein kaputter Test fällt also meist lange vor dem Tag auf.
 
 {{< diagram src="level-time-3-pipeline.svg" caption="Vom Tag zum Release. Der Test-Job schützt den Release-Job; der Packager läuft zweimal, weil Level Time und Level Time Goals getrennte CurseForge-Projekte sind." >}}
 
@@ -98,7 +98,7 @@ Die Action `BigWigsMods/packager@v2` verpackt das Skript. Zu welchen Plattformen
 | Wago | `## X-Wago-ID` | `WAGO_API_TOKEN` |
 | WoWInterface | `## X-WoWI-ID` | `WOWI_API_TOKEN` |
 
-Fehlt eine ID oder ein Token, wird die Plattform übersprungen. Fehlt alles, bekommst du trotzdem das GitHub-Release. Das ist eine schöne Eigenschaft: Die Pipeline wird genügsamer, statt zu scheitern. Aktuell tragen meine `.toc`-Dateien nur eine CurseForge-Projekt-ID (1721235 für Level Time, 1744370 für Level Time Goals). Die Tokens liegen als Repository-Secrets und werden als Umgebungsvariablen durchgereicht; ihre Werte stehen nie im Repo.
+Fehlt eine ID oder ein Token, wird die Plattform übersprungen. Fehlt alles, bekommst du trotzdem das GitHub-Release. Das ist eine schöne Eigenschaft: Die Pipeline macht dann eben weniger, statt zu scheitern. Aktuell tragen meine `.toc`-Dateien nur eine CurseForge-Projekt-ID (1721235 für Level Time, 1744370 für Level Time Goals). Die Tokens liegen als Repository-Secrets und werden als Umgebungsvariablen durchgereicht; ihre Werte stehen nie im Repo.
 
 ### Den Upload benennen
 
@@ -116,7 +116,7 @@ Das Format ist `{Dateiname}:{Label}`. Beide Teile werden zu `LevelTimer-v2.26.0`
 
 ## `.pkgmeta`: Was ins Zip kommt
 
-Der Packager liefert das Repository ohne das aus, was `.pkgmeta` ignoriert. Das ist eine Deny-Liste, und die hat eine Konsequenz, die ich offen sagen will: **Jede neue Datei, die kein Addon-Code ist, muss in `ignore` eingetragen werden**, sonst landet sie im Zip. Hier die komplette Datei, Kommentare übersetzt:
+Der Packager liefert das Repository ohne das aus, was `.pkgmeta` ignoriert. Das ist eine Deny-Liste, und die hat eine Konsequenz: **Jede neue Datei, die kein Addon-Code ist, muss in `ignore` eingetragen werden**, sonst landet sie im Zip. Hier die komplette Datei, Kommentare übersetzt:
 
 ```yaml
 # Config for the BigWigs packager (.github/workflows/release.yml).
@@ -141,7 +141,7 @@ ignore:
 Zeile für Zeile:
 
 - **`package-as`** legt den Ordnernamen im Zip fest. Das Repository heißt `wow-statistics`, aber WoW erwartet, dass der Addon-Ordner wie die `.toc`-Datei heißt, also muss er `LevelTimer` sein.
-- **`move-folders`** ist der interessante Teil. Level Time hat ein zweites Addon, das bei Bedarf geladen wird: `LevelTimer_Archive`, ein Journal-Archiv. WoW sieht nur Addons, die direkt in `Interface/AddOns/` liegen. Weil das Archiv im Repository in einem Unterordner liegt, legt der Packager es zuerst nach `LevelTimer/LevelTimer_Archive/`, und `move-folders` hebt es auf die oberste Ebene des Zips. Die eigene `.toc` des Archivs enthält `## LoadOnDemand: 1` und `## Dependencies: LevelTimer`.
+- **`move-folders`** löst ein Platzierungsproblem. Level Time hat ein zweites Addon, das bei Bedarf geladen wird: `LevelTimer_Archive`, ein Journal-Archiv. WoW sieht nur Addons, die direkt in `Interface/AddOns/` liegen. Weil das Archiv im Repository in einem Unterordner liegt, legt der Packager es zuerst nach `LevelTimer/LevelTimer_Archive/`, und `move-folders` hebt es auf die oberste Ebene des Zips. Die eigene `.toc` des Archivs enthält `## LoadOnDemand: 1` und `## Dependencies: LevelTimer`.
 - **`ignore`** schließt Tests, Go-Tools, CurseForge-Texte und Projektdokumente aus. Dazu `StreamGoal`, ein eigenes Addon mit eigenem Paket (nächster Abschnitt).
 
 Alle Direktiven stehen in der [`.pkgmeta`-Dokumentation](https://github.com/BigWigsMods/packager/wiki/Preparing-the-PackageMeta-File).
@@ -190,7 +190,7 @@ Meine Lösung ist ein zweiter Packager-Lauf gegen einen Wegwerf-Klon, dessen Wur
 
 [`git filter-branch --subdirectory-filter`](https://git-scm.com/docs/git-filter-branch) schreibt den Klon so um, dass der Inhalt von `StreamGoal/` zur Repository-Wurzel wird, und nur Commits, die diesen Ordner berührt haben, bleiben übrig. `--tag-name-filter cat` schreibt die Tags mit der Historie um. Als Nebeneffekt enthält das Changelog von Level Time Goals nur Commits, die dieses Addon wirklich geändert haben.
 
-Zwei ehrliche Anmerkungen:
+Zwei Einschränkungen:
 
 - `git filter-branch` wird von Git selbst als nicht empfohlen markiert. [`git filter-repo`](https://github.com/newren/git-filter-repo) ist der empfohlene Nachfolger, aber eine zusätzliche Abhängigkeit, und der Klon ist ohnehin Wegwerfware. Deshalb bleibe ich bisher beim eingebauten Befehl.
 - `GITHUB_OAUTH` im zweiten Lauf zu leeren ist Absicht. Der erste Lauf hat das GitHub-Release für den Tag bereits angelegt; ohne diese Zeile würde der zweite Lauf ein weiteres anlegen wollen.

@@ -22,11 +22,11 @@ featured_image: "img/level-time/goal-bingo.png"
 toc: true
 ---
 
-> **Building Level Time** — Part 4 of 4. [Part 1: addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · [Part 3: the release pipeline](/blog/level-time-3-release-pipeline/) · Part 4 (this post). Product page: [Level Time](/page/level-time/).
+> **Building Level Time**, part 4 of 4. [Part 1: addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · [Part 3: the release pipeline](/blog/level-time-3-release-pipeline/) · Part 4 (this post). Product page: [Level Time](/page/level-time/).
 
 In the first three parts I described how Level Time is built, how I test its Lua from Go and how it gets released. This part is about what happens when a second addon wants to stand on the shoulders of the first one: **Level Time Goals**, a sister addon for streamers that lives in the same repository (`StreamGoal/`) and ships as its own CurseForge project.
 
-It is also a story about an API that I did not design as an API at first. I will be honest about that, because the interesting lessons are in the gap between what a comment promises and what the code actually guarantees. Level Time and Level Time Goals are early projects, built in public on [GitHub](https://github.com/Noobygames/wow-statistics), and the wheel animation at the end has not yet been fully verified in the game client (more on that below).
+It is also a story about an API that I did not design as an API at first. The lessons are in the gap between what a comment promises and what the code actually guarantees. Level Time and Level Time Goals are early projects, built in public on [GitHub](https://github.com/Noobygames/wow-statistics), and the wheel animation at the end has not yet been fully verified in the game client (more on that below).
 
 ## What Level Time Goals does
 
@@ -64,7 +64,7 @@ The coupling is declared in `StreamGoal/StreamGoal.toc`:
 
 ## The public API Level Time exposes
 
-Here is the honest part. When I wrote the sister addon, the "API" was one line in `Core/LevelTimer.lua`:
+When I wrote the sister addon, the "API" was one line in `Core/LevelTimer.lua`:
 
 ```lua
 -- Interface for sister addons: the namespace with all building blocks
@@ -106,7 +106,7 @@ LT.Theme.RGB("accent")          -- theme tokens, so a theme switch recolours Goa
 
 ### How callbacks stay safe
 
-The most important design decision in that surface is not the global, it is how events are delivered. Level Time runs level-ups in two phases (`OnLevelCompleted` with the old level, then `OnLevelStarted` with the new one) and runs every callback through `ns.RunCallbacks`:
+The most important design decision in that surface is how events are delivered. Level Time runs level-ups in two phases (`OnLevelCompleted` with the old level, then `OnLevelStarted` with the new one) and runs every callback through `ns.RunCallbacks`:
 
 ```lua
 -- Simplified from Lib/Lifecycle.lua
@@ -121,7 +121,7 @@ Each callback is protected with [`xpcall`](https://www.lua.org/manual/5.1/manual
 
 ### What the API is not
 
-Reading my own code critically, here is what the "public API" does **not** have:
+Reading my own code critically, the "public API" lacks three things:
 
 - **No version number.** There is no `LevelTimerAPI.version` and no compatibility check. Both addons are released from one repository, so I have been relying on "they are always updated together".
 - **No stable/internal split.** Everything in `ns` is reachable, including things that were never meant for other addons.
@@ -242,7 +242,7 @@ The tick sound while slices pass the pointer uses the same "slice under pointer 
 
 ### What is still open
 
-I want to be upfront: `ROADMAP.md` marks the wheel as implemented, with the note that it still needs checking in the real game (an item in my manual check list). The tests prove the logic, not the rendering. Whether `SetRotation` on textures looks right in all four supported clients is something only a login can tell me; the repository even has a debug check (`/lt debug check`) that asks the client whether it can rotate those textures. The viewer-voting idea from the roadmap is open for a plain reason: addons cannot read Twitch chat.
+`ROADMAP.md` marks the wheel as implemented, with the note that it still needs checking in the real game (an item in my manual check list). The tests prove the logic, not the rendering. Whether `SetRotation` on textures looks right in all four supported clients is something only a login can tell me; the repository even has a debug check (`/lt debug check`) that asks the client whether it can rotate those textures. The viewer-voting idea from the roadmap is open for a plain reason: addons cannot read Twitch chat.
 
 ## Testing the wheel with the Go harness
 

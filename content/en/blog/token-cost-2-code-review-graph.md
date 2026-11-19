@@ -205,7 +205,7 @@ fi
 # <<< code-review-graph sync hook <<<
 ```
 
-Two details worth knowing. All hooks end with `|| true`: **the graph never blocks a commit**. And they skip linked [git worktrees](https://git-scm.com/docs/git-worktree) unless you set `CRG_HOOK_WORKTREES=1`, because each worktree would need its own graph. If you run several agents in parallel worktrees, set that variable, or the agents in the worktrees query a graph of the main checkout.
+All hooks end with `|| true`, so **the graph never blocks a commit**. They also skip linked [git worktrees](https://git-scm.com/docs/git-worktree) unless you set `CRG_HOOK_WORKTREES=1`, because each worktree would need its own graph. If you run several agents in parallel worktrees, set that variable, or the agents in the worktrees query a graph of the main checkout.
 
 If your team uses a hook manager such as [pre-commit](https://pre-commit.com/), [Husky](https://typicode.github.io/husky/) or [Lefthook](https://lefthook.dev/), it may own `.git/hooks/`. Add the same `code-review-graph update --quiet` call as a local hook there instead.
 
@@ -261,7 +261,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-The optional `fail-on-risk` input turns it into a merge gate. This is the right place for a hard gate, not the local `pre-commit` hook.
+The optional `fail-on-risk` input turns it into a merge gate. If you want a hard gate, put it here rather than in the local `pre-commit` hook.
 
 ### Convenience: make targets
 

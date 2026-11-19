@@ -21,7 +21,7 @@ featured_image: "img/neuroclip/facecam-nachher-460.jpg"
 toc: true
 ---
 
-> **Building Neuroclip, Part 4 of 5.** Previous: [Part 3 — the OBS Regie](/blog/neuroclip-3-obs-regie/). Others: [Part 1 — architecture](/blog/neuroclip-1-architecture/), [Part 2 — the VOD-to-short pipeline](/blog/neuroclip-2-vod-to-short-pipeline/), [Part 5 — shipping on Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). The product page is [Neuroclip](/page/neuroclip/) (early access, single-user beta).
+> **Building Neuroclip, Part 4 of 5.** Previous: [Part 3: the OBS Regie](/blog/neuroclip-3-obs-regie/). Others: [Part 1: architecture](/blog/neuroclip-1-architecture/), [Part 2: the VOD-to-short pipeline](/blog/neuroclip-2-vod-to-short-pipeline/), [Part 5: shipping on Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). The product page is [Neuroclip](/page/neuroclip/) (early access, single-user beta).
 
 A Twitch stream is 1920x1080 and the facecam in the corner is small, a few hundred pixels wide. A vertical short is 1080 pixels wide, and the layout shows the cam as a strip across the full width. That is a magnification of more than 2x, and it looks exactly like you think: soft, blocky, a bit sad.
 
@@ -37,7 +37,7 @@ Neuroclip is my own tool for streamers (see [Part 1](/blog/neuroclip-1-architect
 
 Scaling is simple arithmetic: a few hundred pixels of source have to cover 1080 pixels of output. ffmpeg's [`scale` filter](https://ffmpeg.org/ffmpeg-filters.html#scale-1) with Lanczos does a decent job, but it cannot invent detail that the stream encoder already threw away. The result is a smooth but blurry face.
 
-The options I considered:
+I considered four options, and the last row won:
 
 | Option | Why not (or why yes) |
 | --- | --- |
@@ -45,8 +45,6 @@ The options I considered:
 | Upscale the whole clip | Full frames through a neural network are far too slow, and the game does not need it |
 | Face restoration model (CodeFormer) | Made for faces, but a license problem (more on that below) |
 | **General super-resolution on the cam crop only** | Small input, fixed scope, permissive license |
-
-The last row won.
 
 ## The approach in one picture
 
@@ -60,7 +58,7 @@ On a box-and-arrow level:
 4. **Cache.** The result is stored under a key made of everything that influences it: the source, the crop, the visible parts and the settings. Rendering the same clip again reuses the file.
 5. **Render.** The short render gets that file as an additional input and uses it in place of the plain upscaled crop.
 
-One design choice keeps cuts, slow motion and intros working: the upscaled cam is not a separate overlay with its own timeline logic. It is attached to the source frame, so everything downstream treats both the same way. ffmpeg's [`pad`](https://ffmpeg.org/ffmpeg-filters.html#pad-1) and [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#overlay-1) filters are the building blocks for this kind of trick.
+One design choice keeps cuts, slow motion and intros working: the upscaled cam is attached to the source frame and has no timeline logic of its own, so everything downstream treats both the same way. ffmpeg's [`pad`](https://ffmpeg.org/ffmpeg-filters.html#pad-1) and [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#overlay-1) filters are the building blocks for this kind of trick.
 
 ## Why an external tool behind an interface
 
@@ -83,13 +81,13 @@ func (tool ExternalTool) Upscale(ctx context.Context, inputDir, outputDir string
 }
 ```
 
-The flags differ per tool, so check the one you use. Three things are worth pointing out:
+The flags differ per tool, so check the one you use. What I like about this shape:
 
 - **Folder in, folder out.** No pipes, no custom protocol, easy to debug by looking at the folders.
 - **The context ends the process.** With [`exec.CommandContext`](https://pkg.go.dev/os/exec#CommandContext), cancelling a render also stops the GPU job. That is easy to forget when you shell out.
 - **Tests use a fake.** Because callers only know the interface, cache and fallback logic can be tested without a GPU, and a future engine is just another implementation.
 
-The call site follows the same discipline I use everywhere: it only integrates and decides, and the heavy lifting sits in functions that only operate. Its most important property is that **every failure path returns the original, unchanged options**. No error propagates up and aborts the render.
+The call site follows the same discipline I use everywhere: it only integrates and decides, and the heavy lifting sits in functions that only operate. **Every failure path returns the original, unchanged options**, so no error propagates up and aborts the render.
 
 ## Graceful fallback
 
@@ -114,7 +112,7 @@ The same frame, rendered both ways:
 </figure>
 </div>
 
-That is me in the pictures. I compared a general-purpose model with a lighter anime-oriented one. The general one clearly looked best, while the anime one looked waxy and painted on faces. Blending the AI picture with the plain upscale instead of using it at full strength looked the most natural to me. This is one person's eyes on one face, not a benchmark.
+That is me in the pictures. I compared a general-purpose model with a lighter anime-oriented one. The general one clearly looked best, while the anime one looked waxy and painted on faces. Blending the AI picture with the plain upscale instead of using it at full strength looked the most natural to me. That is one person's eyes on one face, so please do not read it as a benchmark.
 
 ## Why not CodeFormer
 
@@ -126,7 +124,7 @@ License reasoning only helps if it is enforced. A small script in CI that lists 
 
 ## Lessons learned
 
-- **Scope is the optimisation.** Shrinking the input from the full frame to the visible parts of a small crop turns an impossible job into a feasible one.
+- **Shrink the input first.** Going from the full frame to the visible parts of a small crop turns an impossible job into a feasible one.
 - **Put the slow, optional thing behind an interface and a cache.** Everything that can go wrong falls back to the cheap path.
 - **Decide on licenses before you fall in love with a model.** The best-looking option is worthless if you cannot ship it.
 - **Measure.** An A/B test settled the model choice in one afternoon.

@@ -27,7 +27,7 @@ toc: true
 
 In [part 1](/blog/neuroclip-1-architecture/) I described the shape of Neuroclip: a Go server, a React dashboard and a few small Python helpers. This part follows one piece of footage through that machinery: a multi-hour Twitch recording goes in, a short vertical video with burned-in word-by-word subtitles comes out.
 
-Neuroclip is a commercial product, so this post stays on the concept level: the ideas, the trade-offs and the general techniques, not a build plan. [ffmpeg](https://ffmpeg.org/documentation.html) and [Whisper](https://github.com/openai/whisper) do the heavy lifting. The engineering is in how a Go program drives them: keeping long-running child processes cancellable, not leaving half-written files behind, and staying out of the way of a game that runs on the same machine.
+Neuroclip is a commercial product, so this post stays on the concept level: the ideas, the trade-offs and the general techniques. It is not a build plan. [ffmpeg](https://ffmpeg.org/documentation.html) and [Whisper](https://github.com/openai/whisper) do the heavy lifting, and my work went into how a Go program drives them: keeping long-running child processes cancellable, not leaving half-written files behind, and staying out of the way of a game that runs on the same machine.
 
 ![The Neuroclip project editor with the timeline of a stream clip](/img/neuroclip/editor-1440.jpg)
 
@@ -44,7 +44,7 @@ A Twitch VOD is an HLS playlist: a list of short media segments, specified in [R
 - when all segments are there, ffmpeg joins them **without re-encoding**,
 - a small metadata file is written last, and without it the video does not count as downloaded.
 
-That "metadata file written last" trick is a cheap commit marker. Any code that asks "is this VOD available locally?" looks for the marker, never for the big file, so a crash in the middle cannot produce a video that looks complete but is not. The chat log of the stream is fetched alongside, because the pre-selection later uses it.
+Writing the metadata file last turns it into a cheap commit marker. Any code that asks "is this VOD available locally?" looks for the marker, never for the big file, so a crash in the middle cannot leave behind a video that only looks complete. The chat log of the stream is fetched alongside, because the pre-selection later uses it.
 
 Before downloading, the code estimates the size and checks the free disk space with a spare margin. Running out of disk in hour three of a download is a failure you want to turn into an error message before the first byte.
 
@@ -52,7 +52,7 @@ Before downloading, the code estimates the size and checks the free disk space w
 
 The most valuable decision for transcription quality happens in OBS, before Neuroclip is involved. I record several audio tracks: the full mix as heard on stream (kept as the **first** track, because most clip tools take the first audio stream by default), the microphone alone, and the game alone.
 
-Why does this matter? A speech model that hears game explosions, alert sounds and a friend in a call at the same time makes worse guesses. Feeding it the microphone alone is the cheapest accuracy gain available. If a source has more than one audio track, the mic track is extracted into a temporary 16 kHz mono WAV; otherwise the mix is used. This is plain ffmpeg, and you can try it on your own recording:
+A speech model that hears game explosions, alert sounds and a friend in a call at the same time makes worse guesses, so feeding it the microphone alone is the cheapest accuracy gain available. If a source has more than one audio track, the mic track is extracted into a temporary 16 kHz mono WAV; otherwise the mix is used. This is plain ffmpeg, and you can try it on your own recording:
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -114,11 +114,11 @@ winget install --id Gyan.FFmpeg -e
 
 ## Stage 3: Speech recognition with faster-whisper
 
-Recognition is a small Python helper that the Go server starts as a child process. I could have used a Go binding for Whisper, but the Python ecosystem around [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (a CTranslate2 re-implementation of Whisper) gives me CUDA support and word timestamps with the least code. It runs on the GPU and falls back to a slower, less accurate CPU model when no usable GPU stack is found: it should work everywhere and be good where it can.
+Recognition is a small Python helper that the Go server starts as a child process. I could have used a Go binding for Whisper, but the Python ecosystem around [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (a CTranslate2 re-implementation of Whisper) gives me CUDA support and word timestamps with the least code. It runs on the GPU and falls back to a slower, less accurate CPU model when no usable GPU stack is found. I want it to work everywhere and to be good where the hardware allows it.
 
-Three ideas carry most of the quality:
+Most of the quality comes from three things:
 
-- **Word timestamps** are the whole reason for this route. The word-by-word highlight in the final video needs a start and end time per word, not per sentence.
+- **Word timestamps** are the whole reason for this route. The word-by-word highlight in the final video needs a start and end time for every single word; sentence timings are too coarse.
 - **Voice activity detection** runs first, so silence and game noise are not turned into invented words.
 - **A vocabulary prompt** built from the game's character names and jargon. Whisper is a language model; telling it which unusual words to expect helps more than any post-processing. A list of manual corrections catches names it still gets wrong.
 
@@ -136,13 +136,13 @@ So the pre-selection is plain, deterministic Go. It merges independent signals a
 - moments I marked myself while streaming (see [part 3](/blog/neuroclip-3-obs-regie/)),
 - clips that viewers made on Twitch.
 
-Each signal contributes with its own weight. Signals that land close together in time count as one moment, and a moment confirmed by several different kinds of signal ranks higher than one with a single strong signal. The weights are named constants in code, so tuning is a reviewable change rather than a prompt experiment.
+Each signal contributes with its own weight. Signals that land close together in time count as one moment, and a moment confirmed by several different kinds of signal ranks higher than one with a single strong signal. The weights are named constants in code, so tuning them is a change someone can review in a pull request, and nobody has to experiment with prompts.
 
-The chat signal is the interesting one. Chat reacts a few seconds *after* the thing happened, so message times are shifted back. A burst is judged against the **local** level of chat activity, not a global threshold, which means a quiet stream with a sudden burst is detected just as well as a busy one. If you build something similar, tune the numbers on your own audience.
+The chat signal is the most interesting of them. Chat reacts a few seconds *after* the thing happened, so message times are shifted back. A burst is judged against the **local** level of chat activity instead of a global threshold, which means a quiet stream with a sudden burst is detected just as well as a busy one. If you build something similar, tune the numbers on your own audience.
 
 The suggestion threshold is not fixed either. It starts from a default and adapts to what I actually finish and what I throw away. What a person picked by hand, a marker or a viewer clip, is always suggested regardless of the score.
 
-**Claude is an optional layer on top.** With Claude enabled, the pre-selection only attaches its reasons to the candidates and Claude scores them; without Claude the editor shows the rule-based list directly. Both paths end in the same editor, and the reasons are plain sentences, so the list explains itself.
+**Claude is an optional layer on top.** With Claude enabled, the pre-selection only attaches its reasons to the candidates and Claude scores them; without Claude the editor shows the rule-based list directly. Both paths end in the same editor, and the reasons are plain sentences that say why each moment is on the list.
 
 ## Stage 5: From 16:9 to 9:16
 
@@ -179,7 +179,7 @@ ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
 
 (608 + 1312 = 1920. Replace `libx264` with `h264_nvenc` if you have an NVIDIA GPU.)
 
-Two refinements are worth knowing about:
+The renderer adds two refinements on top:
 
 - **Aspect-ratio tolerance.** If the game box has roughly the shape of its strip, it is simply cropped and scaled. If it is a very different shape, it is **fitted without distortion** in the middle of the strip, and the rest of the strip shows the same picture enlarged, blurred (`boxblur`) and darkened. That is the familiar blurred-background look, built from the same filter vocabulary.
 - **Long graphs go to a file.** With effects and overlays the string can get long, so it is better to put it in a file and pass that to ffmpeg than to risk command-line limits. Since ffmpeg 7.0 the way to do that is the generic `-/option file` syntax, here `-/filter_complex graph.txt`; the older `-filter_complex_script` still works but is [deprecated](https://ffmpeg.org/ffmpeg.html#Main-options).
@@ -190,19 +190,19 @@ Because the process is started with an argument list instead of a shell, and the
 
 The burned-in subtitles are an [Advanced SubStation Alpha (ASS)](https://www.aegisub.org/) script that ffmpeg's `ass` filter renders. I chose ASS over SRT because ASS can style individual events, position text freely and draw a box behind a word, while SRT cannot. The builder writes one event per spoken word: the block of text is shown for the duration of its line, and during each word's time span exactly that word gets the highlight. Highlight style, font and colours are configurable.
 
-Anything a user can type ends up inside this script, and ASS has its own control syntax: `{` starts override tags and a backslash starts an escape. So text is sanitised before it enters an event, and style overrides are validated. That is input sanitising for a format nobody thinks of as an attack surface until a viewer's chat message ends up in it.
+Anything a user can type ends up inside this script, and ASS has its own control syntax: `{` starts override tags and a backslash starts an escape. So text is sanitised before it enters an event, and style overrides are validated. Nobody thinks of a subtitle format as an attack surface until a viewer's chat message ends up in it.
 
 ### The safe zone
 
-Vertical platforms cover parts of the picture with their own interface: a header at the top, buttons at the side, controls at the bottom. Burned-in text has to stay clear of those regions, so the editor draws a safe-zone overlay. The margins are my own working values for the platforms I post to, not an official specification, so check the current guidelines of your platform.
+Vertical platforms cover parts of the picture with their own interface: a header at the top, buttons at the side, controls at the bottom. Burned-in text has to stay clear of those regions, so the editor draws a safe-zone overlay. The margins are my own working values for the platforms I post to and come from no official specification, so check the current guidelines of your platform.
 
 ## Stage 6: Hardware encoding, and what to do when it fails
 
 [NVENC](https://developer.nvidia.com/video-codec-sdk) is the hardware encoder on NVIDIA GPUs; it takes the encoding load off a CPU that is also busy running a game. The renderer tries the GPU encoder first and has a matching x264 fallback.
 
-The robustness is in the retry rule. If NVENC fails, the renderer retries with x264, but only when the failure plausibly is the GPU's fault: the ffmpeg error output mentions the encoder, CUDA or the driver, or there is no message at all, which usually means the process was killed. If the error is about the filter graph or a missing file, a second attempt with x264 would fail identically, after minutes of work, so it stops immediately. A cancelled job is not retried either: that is not a missing GPU. A cheap probe that encodes a few frames of a generated test pattern tells the program once whether hardware encoding is available at all.
+Most of the reliability comes from the retry rule. If NVENC fails, the renderer retries with x264, but only when the failure plausibly is the GPU's fault: the ffmpeg error output mentions the encoder, CUDA or the driver, or there is no message at all, which usually means the process was killed. If the error is about the filter graph or a missing file, a second attempt with x264 would fail identically, after minutes of work, so it stops immediately. A cancelled job is not retried either, because cancelling says nothing about the GPU. A cheap probe that encodes a few frames of a generated test pattern tells the program once whether hardware encoding is available at all.
 
-After rendering, a second pass measures the loudness of the short and, if it is clearly off target, applies one linear gain while the picture is copied without re-encoding. That pass is allowed to fail: a failure becomes a note, not an error.
+After rendering, a second pass measures the loudness of the short and, if it is clearly off target, applies one linear gain while the picture is copied without re-encoding. That pass is allowed to fail, and a failure there only produces a note.
 
 ## How Go drives external processes robustly
 
@@ -210,7 +210,7 @@ Everything above is useless if a render can hang forever, leave a corrupt file, 
 
 **1. Context cancellation everywhere.** Use [`exec.CommandContext`](https://pkg.go.dev/os/exec#CommandContext), so cancelling the context kills ffmpeg. Map a cancelled run to one well-known error, so callers do not misread "the user pressed cancel" as "the encoder is broken".
 
-**2. Part files and atomic rename.** Write to a temporary name and rename it over the real name only after ffmpeg exited with 0. On any error or cancellation, delete the part file and keep the previous output. Nothing downstream can mistake a half-encoded file for a finished one. Keep the original extension in the temporary name, because ffmpeg selects the muxer from it.
+**2. Part files and atomic rename.** Write to a temporary name and rename it over the real name only after ffmpeg exited with 0. On any error or cancellation, delete the part file and keep the previous output, so nothing downstream can mistake a half-encoded file for a finished one. Keep the original extension in the temporary name, because ffmpeg selects the muxer from it.
 
 **3. Progress without scraping stderr.** ffmpeg can write machine-readable progress to a file with `-progress <file> -nostats`. Poll that key=value file and divide the output time by the expected length to get a share from 0 to 1 for the UI.
 
@@ -232,11 +232,11 @@ The standard library does most of this: [`os/exec`](https://pkg.go.dev/os/exec),
 
 ## Stage 7: Review and checks
 
-A render is not done when ffmpeg exits. After a short exists, automatic quality checks look at the edit, the final render, the camera crop and the loudness. Each returns ok, warning, problem or "could not run", and the dashboard condenses them to a traffic light.
+When ffmpeg exits, the short still has to pass review. Once it exists, automatic quality checks look at the edit, the final render, the camera crop and the loudness. Each returns ok, warning, problem or "could not run", and the dashboard condenses them to a traffic light.
 
-The key design rule: **a check is a soft step**. A failing or missing check never fails the job. A broken checker should not prevent me from seeing the video.
+The design rule here: **a check is a soft step**. A failing or missing check never fails the job, because a broken checker should not prevent me from seeing the video.
 
-Shorts are only the first of two products. The same building blocks feed a pipeline for longer YouTube episodes, where one decision shows the philosophy: shorts burn subtitles in, episodes ship a subtitle *track*, because burned-in text is a nuisance on long videos and YouTube indexes caption tracks.
+Shorts are only the first of two products. The same building blocks feed a pipeline for longer YouTube episodes, and the two differ in how they handle subtitles: shorts burn subtitles in, episodes ship a subtitle *track*, because burned-in text is a nuisance on long videos and YouTube indexes caption tracks.
 
 ## What is still rough
 
@@ -246,4 +246,4 @@ Shorts are only the first of two products. The same building blocks feed a pipel
 
 ## What's next
 
-Next is the part that turns the stream itself into data: [part 3 covers the OBS Regie](/blog/neuroclip-3-obs-regie/), the control room that talks to OBS, raises alarms and writes the markers this pipeline scores so highly. If you want to see the whole thing rather than read about it, the [Neuroclip page](/page/neuroclip/) has the details and the early access waitlist.
+Next, the stream itself becomes data: [part 3 covers the OBS Regie](/blog/neuroclip-3-obs-regie/), the control room that talks to OBS, raises alarms and writes the markers this pipeline scores so highly. If you would rather see the whole thing than read about it, the [Neuroclip page](/page/neuroclip/) has the details and the early access waitlist.

@@ -13,13 +13,13 @@ toc: true
 
 [Part 1](/blog/ubuntu-server-hardening-1-essentials/) covered the three basics that every public server needs: UFW, Fail2ban, and automatic security updates. With those in place, the most common automated attacks are already mitigated.
 
-This part focuses on reducing attack surface — both at the kernel level and in the privilege model. The measures here require slightly more thought than Part 1 but none of them involve installing additional software.
+This part reduces the attack surface, both at the kernel level and in the privilege model. The measures need a bit more thought than Part 1, but none of them require installing additional software.
 
 > **Assumes:** Part 1 complete, SSH hardened, non-root sudo user.
 
 ---
 
-## 1 — Kernel Hardening with sysctl
+## 1. Kernel Hardening with sysctl
 
 The Linux kernel exposes runtime parameters in `/proc/sys/`. Many defaults favor compatibility over security. The `sysctl` command writes to these parameters; placing configuration in `/etc/sysctl.d/` makes it persist across reboots.
 
@@ -89,7 +89,7 @@ sysctl net.ipv4.tcp_syncookies
 
 ### Hiding other users' processes
 
-A setting you will often find in hardening guides is `kernel.hidepid`. **It is not a sysctl** — `sysctl --system` would report it as an unknown key. `hidepid` is a mount option of the `proc` filesystem ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). With `hidepid=invisible` (the older numeric spelling is `hidepid=2`), non-root users can neither read nor even list other users' `/proc/[pid]` directories, so `ps` and `htop` only show their own processes.
+Hardening guides often list a setting called `kernel.hidepid`. **It is not a sysctl**, and `sysctl --system` would report it as an unknown key. `hidepid` is a mount option of the `proc` filesystem ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). With `hidepid=invisible` (the older numeric spelling is `hidepid=2`), non-root users can neither read nor even list other users' `/proc/[pid]` directories, so `ps` and `htop` only show their own processes.
 
 Add this line to `/etc/fstab`:
 
@@ -115,9 +115,9 @@ sudo usermod -aG procview monitoring
 
 ---
 
-## 2 — Disable Unnecessary Services
+## 2. Disable Unnecessary Services
 
-Every running service is a potential attack surface. On a minimal VPS, several services that make sense on a desktop are running by default and serve no purpose.
+Every running service adds attack surface. On a minimal VPS, several services that make sense on a desktop run by default and do nothing useful.
 
 List what is active:
 
@@ -125,7 +125,7 @@ List what is active:
 sudo systemctl list-units --type=service --state=running
 ```
 
-Common candidates to disable on a headless server — if they exist. A minimal Ubuntu Server install does not ship Avahi, CUPS, or BlueZ at all; they usually appear when a desktop image was used or a package pulled them in. `Unit … not found` simply means there is nothing to do:
+These are common candidates to disable on a headless server, if they exist. A minimal Ubuntu Server install does not ship Avahi, CUPS, or BlueZ at all; they usually appear when a desktop image was used or a package pulled them in. `Unit … not found` simply means there is nothing to do:
 
 ```bash
 # mDNS — device discovery, irrelevant on a server
@@ -144,15 +144,15 @@ After disabling, check which ports are still open and match them to processes:
 sudo ss -tlnp
 ```
 
-Every line in the output should correspond to a service you consciously chose to expose. If you see a port you do not recognize, investigate before closing it — `systemd-resolved` listening on `127.0.0.53:53` is expected, for example.
+Every line in the output should correspond to a service you consciously chose to expose. If you see a port you do not recognize, investigate before closing it. `systemd-resolved` listening on `127.0.0.53:53` is expected, for example.
 
 ---
 
-## 3 — Sudo Hardening
+## 3. Sudo Hardening
 
 The default `sudo` group grants unrestricted root access. For most tasks, that is wider than necessary.
 
-Edit sudoers exclusively through `visudo` — it validates syntax before saving and prevents you from locking yourself out of sudo:
+Edit sudoers only through `visudo`. It validates the syntax before saving, so a typo cannot lock you out of sudo:
 
 ```bash
 sudo visudo
@@ -182,7 +182,7 @@ deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart nginx
 deploy ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
 ```
 
-This rule only restricts anything if `deploy` is **not** also a member of the `sudo` group — otherwise the group's `%sudo ALL=(ALL:ALL) ALL` line still grants full root. Before removing the membership, confirm that another account still has working admin access (open a second SSH session as that user and run `sudo -v`), then:
+This rule only restricts anything if `deploy` is **not** also a member of the `sudo` group. Otherwise the group's `%sudo ALL=(ALL:ALL) ALL` line still grants full root. Before removing the membership, confirm that another account still has working admin access (open a second SSH session as that user and run `sudo -v`), then:
 
 ```bash
 sudo gpasswd -d deploy sudo
@@ -200,22 +200,22 @@ sudo cat /etc/sudoers.d/*
 
 ---
 
-## 4 — Login and Password Policy
+## 4. Login and Password Policy
 
 Even with key-only SSH, local accounts can be authenticated through the physical console or out-of-band management interfaces. Setting a password policy limits the impact of weak local credentials.
 
 What a _good_ policy looks like has changed. [NIST SP 800-63B (Revision 4)](https://pages.nist.gov/800-63-4/sp800-63b.html), the reference most compliance frameworks follow, now says verifiers:
 
-- **shall require a minimum length** — 15 characters for passwords used as the only factor,
+- **shall require a minimum length** of 15 characters for passwords used as the only factor,
 - **shall compare new passwords against a blocklist** of commonly used, expected, or compromised values,
 - **shall not impose composition rules** ("at least one digit, one uppercase, one symbol"),
-- **shall not force periodic changes** — only on evidence of compromise.
+- **shall not force periodic changes**, only on evidence of compromise.
 
 Forced rotation and composition rules push users towards predictable patterns like `Summer2026!` → `Autumn2026!`. Length plus a blocklist is both stronger and easier to live with.
 
 ### Password aging in `/etc/login.defs`
 
-Ubuntu's default `PASS_MAX_DAYS 99999` (no expiry) already matches NIST, so leave it. Note that `login.defs` does not support comments at the end of a value line — a trailing `# …` becomes part of the value and the setting is rejected. Comments always go on their own line:
+Ubuntu's default `PASS_MAX_DAYS 99999` (no expiry) already matches NIST, so leave it. Note that `login.defs` does not support comments at the end of a value line: a trailing `# …` becomes part of the value and the setting is rejected. Comments always go on their own line:
 
 ```bash
 sudo nano /etc/login.defs
@@ -264,7 +264,7 @@ usercheck = 1
 enforce_for_root
 ```
 
-`dictcheck` uses the local cracklib word list. It catches common and dictionary-based passwords, but it is not a list of _breached_ passwords. If you need that, check candidates against a breach corpus such as [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords) — its range API uses k-anonymity, so only the first five characters of the password's SHA-1 hash leave the machine.
+`dictcheck` uses the local cracklib word list. It catches common and dictionary-based passwords, but it is not a list of _breached_ passwords. If you need that, check candidates against a breach corpus such as [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords). Its range API uses k-anonymity, so only the first five characters of the password's SHA-1 hash leave the machine.
 
 ---
 
@@ -277,6 +277,6 @@ enforce_for_root
 | Sudo restrictions | Limits the blast radius of a compromised account           |
 | Password policy   | Raises the cost of brute-forcing local credentials         |
 
-These four measures require no external tools and produce no network traffic — they are pure configuration changes to what is already there.
+These four measures need no external tools and produce no network traffic. All of them change the configuration of software that is already installed.
 
 **Part 3** covers the deeper layer: AppArmor mandatory access control, kernel-level auditing with `auditd`, and filesystem integrity monitoring with AIDE.

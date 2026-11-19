@@ -22,13 +22,13 @@ featured_image: "img/neuroclip/heute-1440.jpg"
 toc: true
 ---
 
-> **Neuroclip bauen — eine Serie.** Teil 1: Architektur (du bist hier) · [Teil 2: VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/) · [Teil 3: OBS-Regie](/de/blog/neuroclip-3-obs-regie/) · [Teil 4: Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · [Teil 5: Auslieferung auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/). Status: **Early Access, Beta mit einem einzigen Nutzer**.
+> **Neuroclip bauen, eine Serie.** Teil 1: Architektur (du bist hier) · [Teil 2: VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/) · [Teil 3: OBS-Regie](/de/blog/neuroclip-3-obs-regie/) · [Teil 4: Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · [Teil 5: Auslieferung auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/). Status: **Early Access, Beta mit einem einzigen Nutzer**.
 
-Neuroclip ist ein Werkzeug, das ich für Streamer baue. In dieser Serie geht es um die Technik dahinter, nicht um Gaming: ein langlebiger Go-Prozess, der ffmpeg, OBS, Spracherkennung und ein paar LLM-Aufrufe so zusammenbringt, dass nichts mitten im Stream umfällt.
+Neuroclip ist ein Werkzeug, das ich für Streamer baue. In dieser Serie geht es um die Technik dahinter: einen langlebigen Go-Prozess, der ffmpeg, OBS, Spracherkennung und ein paar LLM-Aufrufe so zusammenbringt, dass nichts mitten im Stream umfällt. Mit Gaming hat das wenig zu tun.
 
-Neuroclip ist ein kommerzielles Produkt im Early Access. Deshalb bleibt diese Serie auf der Ebene der Ideen: Rollen der Komponenten, Designentscheidungen, Abwägungen und die allgemeinen Techniken dahinter. Es ist kein Bauplan, und der Code hier ist generisch.
+Neuroclip ist ein kommerzielles Produkt im Early Access. Deshalb bleibt diese Serie auf der Ebene der Ideen: Rollen der Komponenten, Designentscheidungen, Abwägungen und die allgemeinen Techniken dahinter. Einen Bauplan findest du hier nicht, und der Code ist generisch.
 
-In diesem ersten Teil gehe ich das System von oben durch: welches Problem es löst, welche Komponenten es gibt, wie Daten von einem Live-Stream bis zum Upload fließen, und die Designentscheidungen, die ich in einem Code-Review verteidigen würde. Das sind ein Server, der sich während des Streams zurückhält, ein profilgetriebenes Design ohne fest eingebaute Streamer-Werte und die Regel, dass nichts ohne ein menschliches Ja veröffentlicht wird.
+In diesem ersten Teil gehe ich das System von oben durch: welches Problem es löst, welche Komponenten es gibt, wie Daten von einem Live-Stream bis zum Upload fließen, und die Designentscheidungen, die ich in einem Code-Review verteidigen würde. Das sind ein Server, der sich während des Streams zurückhält, ein profilgetriebenes Design ohne fest eingebaute Streamer-Werte und die strikte Regel, dass nichts ohne ein menschliches Ja veröffentlicht wird.
 
 ## Das Problem: Stunden Stream, Minuten Inhalt
 
@@ -41,7 +41,7 @@ Neuroclip automatisiert die langweilige Mitte und lässt den Menschen bei den En
 - **Prüfen** von allem in einem Browser-Dashboard.
 - **Hochladen** erst nach ausdrücklicher Bestätigung.
 
-Alles andere in diesem Beitrag — Prozess-Layout, Nebenläufigkeit, Fallbacks — folgt daraus, diese Liste ernst zu nehmen.
+Prozess-Layout, Nebenläufigkeitsmodell und Fallbacks in diesem Beitrag ergeben sich alle daraus, dass ich diese Liste ernst nehme.
 
 ![Neuroclip-Übersicht "Heute" mit dem Tagesstatus im Dashboard](/img/neuroclip/heute-1440.jpg)
 
@@ -53,7 +53,7 @@ Neuroclip ist ein Go-Programm plus ein paar Satelliten. Intern heißt das Go-Pro
 
 {{< diagram src="neuroclip-1-components.svg" caption="Das Cockpit ist ein einzelner Go-Prozess. Alles Schwere (ffmpeg, Spracherkennung, Claude, Upscaling) läuft als Kindprozess; alles Persönliche liegt in einem Workspace-Ordner." >}}
 
-| Komponente | Was es ist | Warum getrennt |
+| Komponente | Was sie ist | Warum getrennt |
 | --- | --- | --- |
 | **Cockpit** | Ein Go-Prozess: HTTP-API, Job-Runner, OBS-Client, Render-Logik. | Der einzige Besitzer von Zustand und jedem Kindprozess. |
 | **Dashboard** | Eine React- und TypeScript-Single-Page-App. | Spricht nur mit der API des Cockpits. Das Cockpit liefert die gebauten Dateien aus. |
@@ -62,10 +62,10 @@ Neuroclip ist ein Go-Programm plus ein paar Satelliten. Intern heißt das Go-Pro
 | **Python-Helfer** | Spracherkennung, Personen-Tracking, Hintergrundentfernung. | Das ML-Ökosystem dafür lebt in Python. |
 | **Claude-Jobs** | Die `claude`-CLI, vom Cockpit headless gestartet. | Momente zu ranken und zu benennen ist eine Sprachaufgabe. |
 
-Zwei Details sind wichtiger, als sie aussehen:
+Zwei Details in dieser Tabelle haben größere Folgen, als man erwartet:
 
-1. **Kindprozesse statt Bibliotheken.** Das Cockpit linkt weder ffmpeg noch das Sprachmodell. Es startet sie als Prozesse, leitet ihre Ausgabe in ein begrenztes Log und kann den ganzen Baum beenden. Ein Absturz in einem Helfer ist ein fehlgeschlagener Job, kein toter Server. Go hält das Cockpit außerdem als einzelne, leicht auslieferbare Binärdatei (warum das wichtig ist, steht in [Containerisierung und Go](/de/blog/go-docker/)).
-2. **Das Dashboard ist nichts Besonderes.** Es ist ein Client einer einfachen HTTP-API mit Server-Sent Events für Live-Logs ([SSE-Spezifikation](https://html.spec.whatwg.org/multipage/server-sent-events.html)). Fernsteuerungen erreichen das Cockpit auf demselben Weg.
+1. **Kindprozesse statt Bibliotheken.** Das Cockpit linkt weder ffmpeg noch das Sprachmodell. Es startet sie als Prozesse, leitet ihre Ausgabe in ein begrenztes Log und kann den ganzen Baum beenden. Stürzt ein Helfer ab, scheitert ein Job, und der Server läuft weiter. Go hält das Cockpit außerdem als einzelne, leicht auslieferbare Binärdatei (warum das wichtig ist, steht in [Containerisierung und Go](/de/blog/go-docker/)).
+2. **Das Dashboard hat keine Sonderrolle.** Es ist ein Client einer einfachen HTTP-API mit Server-Sent Events für Live-Logs ([SSE-Spezifikation](https://html.spec.whatwg.org/multipage/server-sent-events.html)). Fernsteuerungen erreichen das Cockpit auf demselben Weg.
 
 Der Code ist in viele kleine Pakete mit je einem Vokabular gegliedert. Wenn du meinen Beitrag über [Bounded Contexts](/de/blog/bounded-context/) kennst: Das ist derselbe Instinkt im Paketmaßstab. Jedes Paket hat eine kleine Oberfläche, und die HTTP-Schicht ist der einzige Ort, der sie zusammenfügt.
 
@@ -81,9 +81,9 @@ Was auf dem Streaming-PC bleiben muss:
 - **GPU-lastige Arbeit** wie Spracherkennung, wo die GPU die Geschwindigkeit bringt (ein CPU-Fallback existiert).
 - **Claude-Jobs**, die die eigene `claude`-CLI des Streamers nutzen.
 
-Ein Server kann das Dashboard und die API ausliefern, den Workspace als Volume halten und die Teile ausführen, die den Desktop nicht brauchen. Die Grenze wird durchgesetzt statt erhofft: Der Server weigert sich, ohne Authentifizierung über Loopback hinaus zu lauschen, das Dashboard fragt, welche Fähigkeiten dieser Rechner bietet, und jedes Tool deklariert, was es braucht. Ein Job mit fehlender Voraussetzung wird mit einer verständlichen Begründung abgelehnt, statt auf halbem Weg zu scheitern.
+Ein Server kann das Dashboard und die API ausliefern, den Workspace als Volume halten und die Teile ausführen, die den Desktop nicht brauchen. Der Code setzt diese Grenze durch: Der Server weigert sich, ohne Authentifizierung über Loopback hinaus zu lauschen, das Dashboard fragt, welche Fähigkeiten dieser Rechner bietet, und jedes Tool deklariert, was es braucht. Ein Job mit fehlender Voraussetzung wird mit einer verständlichen Begründung abgelehnt, statt auf halbem Weg zu scheitern.
 
-Ich will ehrlich zum Stand sein: Der Container-Weg existiert, aber das Produkt ist eine Early-Access-Beta mit genau einem Nutzer, mir. Die Aufteilung oben ist das Design, nichts im großen Maßstab Bewiesenes.
+Zum Stand: Der Container-Weg existiert, aber das Produkt ist eine Early-Access-Beta mit genau einem Nutzer, mir. Die Aufteilung oben ist das Design, und im großen Maßstab hat sie noch niemand erprobt.
 
 ## Der Datenfluss: vom Stream zum Upload
 
@@ -99,18 +99,18 @@ Der Weg, Schritt für Schritt:
 6. **Bearbeiten.** Der Streamer öffnet einen Vorschlag im Projekt-Editor und passt den Schnitt an.
 7. **Rendern.** ffmpeg erzeugt den Short oder die Episode.
 8. **Bereit.** Das Ergebnis landet in einem Ready-Ordner zusammen mit einem kleinen Plan: Titel, Beschreibung, Ziele.
-9. **Prüfen.** Der Streamer gibt im Dashboard frei — oder schickt es zurück in den Editor.
+9. **Prüfen.** Der Streamer gibt im Dashboard frei oder schickt es zurück in den Editor.
 10. **Hochladen.** Über eine Plattform-API oder über Brücke und Erweiterung.
 
 Zwei Regeln liegen über diesem Fluss. **Claude-Jobs laden nie hoch**: Posting-Werkzeuge stehen ihnen schlicht nicht zur Verfügung. Und **nichts wird veröffentlicht, ohne dass ein Mensch im Dashboard bestätigt.** [Teil 2](/de/blog/neuroclip-2-vod-to-short-pipeline/) behandelt die Mitte dieses Flusses.
 
-## Claude als optionale Erweiterung, nicht als Abhängigkeit
+## Claude als optionale Erweiterung
 
 Ich nutze die `claude`-CLI headless für Aufgaben, die eigentlich Sprachprobleme sind: Kandidaten-Momente bewerten, Episoden benennen, Kapitel vorschlagen. Das Cockpit startet sie als Kindprozess. Weil diese Sitzungen den Chat und die Sprache anderer Leute lesen, laufen sie mit eingeschränkten Rechten: kein Zugriff auf Geheimnisse, kein Bearbeiten von Code oder Einstellungen, keine Posting-Werkzeuge.
 
-Die Designentscheidung, die mir am wichtigsten ist: **Jeder Claude-Pfad hat einen Fallback ohne LLM.** Ist die CLI nicht installiert oder bevorzugt der Streamer es so, zeigt der Editor stattdessen ein regelbasiertes Ranking. Es fasst mehrere Signale — Lautstärke, Hype-Wörter, Chat-Aktivität, live gesetzte Marker, Clips von Zuschauern — zu einer Bewertung zusammen, und Signale, die nah beieinander liegen, zählen als ein Moment. Übereinstimmung verschiedener Signalarten erhöht die Bewertung. Neben jedem Vorschlag stehen die Gründe, sodass ein Ranking nie eine Blackbox ist.
+Die Designentscheidung, die mir am wichtigsten ist: **Jeder Claude-Pfad hat einen Fallback ohne LLM.** Ist die CLI nicht installiert oder bevorzugt der Streamer es so, zeigt der Editor stattdessen ein regelbasiertes Ranking. Es fasst mehrere Signale (Lautstärke, Hype-Wörter, Chat-Aktivität, live gesetzte Marker, Clips von Zuschauern) zu einer Bewertung zusammen, und Signale, die nah beieinander liegen, zählen als ein Moment. Übereinstimmung verschiedener Signalarten erhöht die Bewertung. Neben jedem Vorschlag stehen die Gründe, sodass der Streamer sieht, warum ein Moment dort steht, wo er steht.
 
-Die Form ist wichtiger als die Zahlen. Das Ranking ist eine reine Funktion, und eine getrennte integrierende Funktion liest die Dateien und schreibt das Ergebnis. Das ist die IOSP-Regel (Integration Operation Segregation Principle), die ich überall zu befolgen versuche: Eine Funktion integriert entweder andere Funktionen oder rechnet, nie beides.
+Mir ist die Form dieses Codes wichtiger als die genauen Gewichte. Das Ranking ist eine reine Funktion, und eine getrennte integrierende Funktion liest die Dateien und schreibt das Ergebnis. Das ist die IOSP-Regel (Integration Operation Segregation Principle), die ich überall zu befolgen versuche: Eine Funktion integriert entweder andere Funktionen oder rechnet, nie beides.
 
 ```go
 // rank is pure: same input, same ordered list. No files, no clock, no network.
@@ -133,11 +133,11 @@ func generateSuggestions(source Source, sink Sink) error {
 }
 ```
 
-Das ist eine generische Illustration des Musters, kein Produktcode. Der reine Kern lässt sich leicht mit tabellengetriebenen Tests prüfen, und der Fallback ist kein abgespeckter Nachgedanke, sondern ein vollwertiger Pfad.
+Das ist eine generische Illustration des Musters und stammt nicht aus dem Produkt. Der reine Kern lässt sich leicht mit tabellengetriebenen Tests prüfen, und der Fallback bekommt dieselbe Sorgfalt und dieselben Tests wie der Claude-Pfad.
 
 ## Der Job-Runner und Go-Nebenläufigkeit
 
-Jedes Tool, das echte Arbeit macht — rendern, transkribieren, analysieren, hochladen — läuft über einen Job-Manager. Die API startet einen Job, bekommt eine ID zurück, und das Dashboard folgt dem Log per SSE.
+Jedes Tool, das echte Arbeit macht (rendern, transkribieren, analysieren, hochladen), läuft über einen Job-Manager. Die API startet einen Job, bekommt eine ID zurück, und das Dashboard folgt dem Log per SSE.
 
 Die Designentscheidungen, allgemein gehalten:
 
@@ -150,7 +150,7 @@ Das Nebenläufigkeitsmodell ist bewusst langweilig: eine Map hinter einem Mutex,
 
 ### Einen Prozessbaum beenden
 
-Einen Job abzubrechen klingt trivial und ist es nicht. Ein Tool startet einen Helfer, der ein weiteres Programm startet. `exec.CommandContext` beendet nur das direkte Kind, sodass Enkelprozesse überleben und Pipes offen halten können. Die allgemeine Lösung ist ein eigenes `Cancel` plus ein `WaitDelay` (beides seit Go 1.20, siehe die [`os/exec`-Dokumentation](https://pkg.go.dev/os/exec#Cmd)):
+Einen Job abzubrechen klingt trivial, aber ein Tool kann einen Helfer starten, der wiederum ein weiteres Programm startet. `exec.CommandContext` beendet nur das direkte Kind, sodass Enkelprozesse überleben und Pipes offen halten können. Die allgemeine Lösung ist ein eigenes `Cancel` plus ein `WaitDelay` (beides seit Go 1.20, siehe die [`os/exec`-Dokumentation](https://pkg.go.dev/os/exec#Cmd)):
 
 ```go
 cmd := exec.CommandContext(ctx, "ffmpeg", "-version")
@@ -169,7 +169,7 @@ Ein langlebiger lokaler Server muss einen Bug in einer Goroutine überleben. Zwe
 
 ## Live-Sparmodus: dem Streamer nicht die CPU wegfressen
 
-Das ist der Teil, der das Projekt nach echter Ingenieursarbeit anfühlen ließ. Ein Streaming-PC hat eine Aufgabe unter Volllast: OBS plus das Spiel. Startet das Cockpit mitten im Stream einen ffmpeg-Render mit normaler Priorität, kann der Stream Frames verlieren. Ein Werkzeug, das nach dem Stream hilft, darf währenddessen nicht schaden.
+Mit dem Live-Sparmodus hat sich das Projekt für mich zum ersten Mal nach echter Ingenieursarbeit angefühlt. Ein Streaming-PC hat eine Aufgabe unter Volllast: OBS plus das Spiel. Startet das Cockpit mitten im Stream einen ffmpeg-Render mit normaler Priorität, kann der Stream Frames verlieren, und ein Werkzeug, das nach dem Stream hilft, darf währenddessen nicht schaden.
 
 Eine statische Durchsicht des Codes fand ein klassisches Problem: Statusabfragen an OBS waren teuer, weil jeder Aufruf eine neue WebSocket-Verbindung öffnete, sich anmeldete und viele Fragen stellte, und mehrere Aufrufer fragten ständig nach. Die erste Korrektur ist ein kleiner, kurzlebiger Cache, den alle Aufrufer teilen.
 
@@ -180,11 +180,11 @@ Die zweite Korrektur ist ein **Live-Sparmodus**. Solange OBS streamt und der Str
 - **Ein kleineres `GOMAXPROCS`** für das Cockpit selbst.
 - **Seltenere UI-Updates** und aufgeschobene Hintergrundmessungen.
 
-Alle werden gebraucht, weil [`runtime.GOMAXPROCS`](https://pkg.go.dev/runtime#GOMAXPROCS) nur die Threads begrenzt, die Go-Code ausführen. Kindprozesse begrenzt es nicht. Zwei Details, die ich mag: Ein OBS, das nicht antwortet, zählt als "streamt nicht", weil es nichts zu schützen gibt, und `GOMAXPROCS` kehrt am Ende des Streams auf den Wert vom Start zurück, nicht auf einen angenommenen Standard.
+Es braucht alle vier, weil [`runtime.GOMAXPROCS`](https://pkg.go.dev/runtime#GOMAXPROCS) nur die Threads begrenzt, die Go-Code ausführen. Kindprozesse begrenzt es nicht. Zwei Details, die ich mag: Ein OBS, das nicht antwortet, zählt als "streamt nicht", weil es nichts zu schützen gibt, und `GOMAXPROCS` kehrt am Ende des Streams auf den Wert vom Start zurück, nicht auf einen angenommenen Standard.
 
-Ein Haken: Seit [Go 1.25](https://go.dev/doc/go1.25#runtime) passt die Runtime `GOMAXPROCS` selbst an, wenn sich das CPU-Limit der cgroup oder die CPU-Affinität ändert — aber nur, bis jemand `runtime.GOMAXPROCS(n)` aufruft. Jeder explizite Aufruf schaltet das dauerhaft ab, und den Startwert zurückzuschreiben nagelt ihn nur fest. Der richtige Weg zurück ist [`runtime.SetDefaultGOMAXPROCS()`](https://pkg.go.dev/runtime#SetDefaultGOMAXPROCS): Es stellt den Runtime-Standard wieder her und aktiviert die automatischen Anpassungen erneut.
+Ein Haken: Seit [Go 1.25](https://go.dev/doc/go1.25#runtime) passt die Runtime `GOMAXPROCS` selbst an, wenn sich das CPU-Limit der cgroup oder die CPU-Affinität ändert, aber nur, bis jemand `runtime.GOMAXPROCS(n)` aufruft. Jeder explizite Aufruf schaltet das dauerhaft ab, und den Startwert zurückzuschreiben nagelt ihn nur fest. Der richtige Weg zurück ist [`runtime.SetDefaultGOMAXPROCS()`](https://pkg.go.dev/runtime#SetDefaultGOMAXPROCS): Es stellt den Runtime-Standard wieder her und aktiviert die automatischen Anpassungen erneut.
 
-Unter Windows ist die Priorität ein Creation-Flag für neue Prozesse (`BELOW_NORMAL_PRIORITY_CLASS`) und `SetPriorityClass` für laufende; Kinder erben die Klasse, sodass auch eine Kette Python-zu-ffmpeg zurücktritt. Eine verwandte Idee, vor einem schweren Job während des Streams nachzufragen und ihn bis zum Stream-Ende zu queuen, steht auf der Roadmap, nicht im Produkt.
+Unter Windows ist die Priorität ein Creation-Flag für neue Prozesse (`BELOW_NORMAL_PRIORITY_CLASS`) und `SetPriorityClass` für laufende; Kinder erben die Klasse, sodass auch eine Kette aus Python und ffmpeg zurücktritt. Eine verwandte Idee, vor einem schweren Job während des Streams nachzufragen und ihn bis zum Stream-Ende zurückzustellen, steht auf der Roadmap und ist noch nicht im Produkt.
 
 ![OBS-Regie-Seite mit Stumm-Alarm](/img/neuroclip/regie-1440.jpg)
 
@@ -192,11 +192,11 @@ Unter Windows ist die Priorität ein Creation-Flag für neue Prozesse (`BELOW_NO
 
 ## Workspace und Profil: Design für jemanden, der nicht ich ist
 
-Neuroclip begann als mein eigenes Werkzeug, und die erste Version war voller mir: mein Kanalname in einem String, meine Hype-Wörter, mein Ordnerlayout. Daraus etwas zu machen, das andere Streamer nutzen können, bedeutete eine Regel, die ich heute bei jeder Änderung anwende: **kein streamerspezifischer Wert im Code**.
+Neuroclip begann als mein eigenes Werkzeug, und die erste Version steckte voller persönlicher Details: mein Kanalname in einem String, meine Hype-Wörter, mein Ordnerlayout. Daraus etwas zu machen, das andere Streamer nutzen können, bedeutete eine Regel, die ich heute bei jeder Änderung anwende: **kein streamerspezifischer Wert im Code**.
 
-Zwei Dinge ersetzen sie:
+Stattdessen gibt es zwei Dinge:
 
-- **Der Workspace.** Ein Ordner hält alle persönlichen Daten — Videos, Berichte, Zustandsdateien. Er ist git-ignoriert, und jeder Pfad aus dem Browser wird geprüft, damit ein API-Aufruf ihn nicht verlassen kann.
+- **Der Workspace.** Ein Ordner hält alle persönlichen Daten: Videos, Berichte, Zustandsdateien. Er ist git-ignoriert, und jeder Pfad aus dem Browser wird geprüft, damit ein API-Aufruf ihn nicht verlassen kann.
 - **Das Profil.** Eine typisierte Konfiguration mit Handles, Sprache, Hype-Wörtern, Untertitelstil und Upload-Zielen des Streamers. Geheimnisse liegen getrennt, und ein Pre-Commit-Hook verhindert, dass beides committet wird.
 
 Jedes Feld hat einen neutralen Standardwert, sodass ein fehlender Schlüssel nie zur Überraschung wird und das Format über Versionen hinweg nachsichtig bleibt.
@@ -215,7 +215,7 @@ func findFFmpeg(environmentValue string, lookPath func(string) (string, error)) 
 }
 ```
 
-Die entscheidende Funktion nimmt ihre Lookups als Parameter, sodass ein Unit-Test jeden Zweig abdeckt, ohne etwas zu installieren, während ein dünner Aufrufer `os.Getenv` und `exec.LookPath` einsteckt. So zeigst du einem Tool ein bestimmtes ffmpeg:
+Die Funktion, die entscheidet, nimmt ihre Lookups als Parameter, sodass ein Unit-Test jeden Zweig abdeckt, ohne etwas zu installieren, während ein dünner Aufrufer `os.Getenv` und `exec.LookPath` einsteckt. So zeigst du einem Tool ein bestimmtes ffmpeg:
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -234,11 +234,11 @@ $env:FFMPEG = "C:\tools\ffmpeg\bin\ffmpeg.exe"
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Wenn du ffmpeg selbst brauchst, listet die offizielle [Download-Seite](https://ffmpeg.org/download.html) Builds für beide Plattformen. Ein fehlendes optionales Programm ist eine *Fähigkeit*, die das Dashboard mit Begründung als nicht verfügbar anzeigt, kein Absturz.
+Wenn du ffmpeg selbst brauchst, listet die offizielle [Download-Seite](https://ffmpeg.org/download.html) Builds für beide Plattformen. Ein fehlendes optionales Programm ist eine *Fähigkeit*, die das Dashboard mit Begründung als nicht verfügbar anzeigt, und das Cockpit läuft weiter.
 
 ## Testen unter Windows und Linux
 
-Das Cockpit wird unter Windows entwickelt und als Linux-Container ausgeliefert, also zählen beide Plattformen. Ich lasse die komplette Suite mit Race-Detector lokal unter Windows laufen, und die CI führt die Go-Tests unter Linux aus. Ich bin absichtlich genau: **Die CI läuft nicht unter Windows.** Windows-spezifischer Code wird von Testdateien abgedeckt, die nur auf meinem Rechner laufen. Das ist eine bekannte Lücke.
+Das Cockpit wird unter Windows entwickelt und als Linux-Container ausgeliefert, also zählen beide Plattformen. Ich lasse die komplette Suite mit Race-Detector lokal unter Windows laufen, und die CI führt die Go-Tests unter Linux aus. Genauer gesagt: **Die CI läuft nicht unter Windows.** Windows-spezifischer Code wird von Testdateien abgedeckt, die nur auf meinem Rechner laufen, und das ist eine bekannte Lücke.
 
 Plattformunterschiede sind über Dateisuffixe und Build-Constraints (`_windows.go`, `_other.go`) isoliert statt über `if runtime.GOOS == ...` im ganzen Code. Die üblichen Prüfungen für jedes Go-Projekt:
 
@@ -264,8 +264,8 @@ Go installierst du über [go.dev/doc/install](https://go.dev/doc/install); der R
 ## Was ich anders machen würde
 
 - **Am Anfang weniger, größere Pakete.** Ich habe zu fein geschnitten, und viele winzige Pakete haben ihren Preis in der Navigation.
-- **Früher natives Go.** Die Python-Helfer sind der schwächste Teil der Installationsgeschichte. Sie zu ersetzen ist geplant, nicht erledigt.
-- **Ein Windows-CI-Runner.** Die ehrliche Antwort auf die Testlücke oben.
+- **Früher natives Go.** Die Python-Helfer sind der schwächste Teil der Installationsgeschichte. Sie zu ersetzen ist geplant, aber nicht erledigt.
+- **Ein Windows-CI-Runner**, um die Testlücke oben zu schließen.
 
 ## Wie es weitergeht
 

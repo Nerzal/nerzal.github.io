@@ -124,7 +124,7 @@ Rückgängig machen mit `headroom unwrap claude` oder die Datei löschen.
 
 ## Globales Setup: jeder Agent auf dem Rechner
 
-Für den Alltag will man einen Proxy, der Neustarts überlebt, und jeden Agenten so konfiguriert, dass er ihn nutzt. Headroom nennt das Persistent Install:
+Für den Alltag will man einen Proxy, der Neustarts überlebt, und Agenten, die alle so konfiguriert sind, dass sie ihn nutzen. Headroom nennt das Persistent Install:
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -178,13 +178,13 @@ Was pro Agent konfiguriert wird, laut [Anleitung zu Persistent Installs](https:/
 
 Prüfen lässt sich das mit `headroom install status`, dem Endpunkt `/health` und `headroom dashboard` für Live-Einsparungen. `headroom savings` zeigt, was es bei deinem echten Traffic gespart hat.
 
-**Das eine große Risiko des globalen Setups:** Sobald `ANTHROPIC_BASE_URL` in den Benutzereinstellungen auf `127.0.0.1:8787` zeigt, hängt *jede* Claude-Code-Session an diesem Proxy. Ist er down, erreicht der Agent das Modell überhaupt nicht. Deshalb bekommt der nächste Abschnitt einen Health-Check mit Desktop-Benachrichtigung.
+**Das eine große Risiko des globalen Setups:** Sobald `ANTHROPIC_BASE_URL` in den Benutzereinstellungen auf `127.0.0.1:8787` zeigt, hängt *jede* Claude-Code-Session an diesem Proxy. Läuft er nicht, erreicht der Agent das Modell überhaupt nicht. Deshalb bekommt der nächste Abschnitt einen Health-Check mit Desktop-Benachrichtigung.
 
 **Telemetrie:** Laut README ist ein anonymer Beacon (Kompressionsraten, Modell-IDs, Betriebssystem; keine Prompts, kein Code) **standardmäßig an**; die Konfigurationsseite führt `HEADROOM_TELEMETRY` als standardmäßig aus. Die Dokumentation widerspricht sich, also im Zweifel explizit `HEADROOM_BEACON=off` setzen.
 
 ## Headroom automatisch aktuell halten
 
-Headroom erscheint häufig (vier Releases zwischen 26.10. und 10.11.2026). Eingebaut ist:
+Neue Headroom-Versionen erscheinen häufig (vier Releases zwischen 26.10. und 10.11.2026). Eingebaut ist:
 
 - `headroom update --check` meldet das neueste Release, ohne zu aktualisieren.
 - `headroom update --yes` erkennt, wie Headroom installiert wurde (pip, pipx, uv tool), und führt das passende Upgrade ohne Rückfrage aus.
@@ -444,14 +444,14 @@ Genauigkeit, ebenfalls vom Hersteller gemessen, mit N = 100 je Benchmark: GSM8K 
 
 Headrooms eigene [Seite zu Einschränkungen](https://docs.headroomlabs.ai/docs/limitations) ist erfrischend direkt: Die Zahlen seien „one-off, synthetic measurements, not a published benchmark“, und agentische Gespräche seien „not independently measured“.
 
-Die einzige Zahl von Dritten, die ich gefunden habe, stammt von einem Konkurrenten: Cavemans README berichtet, dass Headroom auf Cavemans eigener Testsuite mit sechs Dateien 15 von 18 Fragen richtig beantwortet hat, bei 6,7 % weniger Tokens; Cavemans eigene Engine kam auf 18 von 18 bei 33,2 % weniger. Ein Hersteller, der ein Konkurrenzprodukt auf seinem eigenen Benchmark misst, ist nicht unabhängig, also bitte als Datenpunkt lesen, nicht als Urteil. Einen **unabhängigen Benchmark** von Headroom habe ich nicht gefunden.
+Die einzige Zahl von Dritten, die ich gefunden habe, stammt von einem Konkurrenten: Cavemans README berichtet, dass Headroom auf Cavemans eigener Testsuite mit sechs Dateien 15 von 18 Fragen richtig beantwortet hat, bei 6,7 % weniger Tokens; Cavemans eigene Engine kam auf 18 von 18 bei 33,2 % weniger. Ein Hersteller, der ein Konkurrenzprodukt auf seinem eigenen Benchmark misst, ist nicht unabhängig, also zähle ich das als einen Datenpunkt und mehr nicht. Einen **unabhängigen Benchmark** von Headroom habe ich nicht gefunden.
 
 ## Kosten und wann Headroom nicht hilft
 
 - **Quellcode geht größtenteils unverändert durch.** Standardmäßig sind aktueller Code und Code unter Analyse geschützt. In einer reinen Coding-Session mit wenigen Logs ist die Ersparnis klein. Das ist das Revier von code-review-graph.
 - **Kurze Wechsel und Fließtext.** Unterhalb einer Mindestgröße kommen Blöcke Byte für Byte gleich zurück, und bei kleinen Payloads kann der Overhead die Ersparnis übersteigen.
 - **Ein neuer Single Point of Failure.** Im globalen Setup bedeutet ein toter Proxy einen toten Agenten. Der Health-Check oben mildert das ab.
-- **Verlustbehaftet by Design.** Die Auswahl der Einträge ist heuristisch. CCR kann Originale zurückholen, aber nur, wenn das Modell merkt, dass es sie braucht.
+- **Absichtlich verlustbehaftet.** Die Auswahl der Einträge ist heuristisch. CCR kann Originale zurückholen, aber nur, wenn das Modell merkt, dass es sie braucht.
 - **Noch eine Komponente mit Lieferkette.** Ein Python-Paket mit nativem Code, ein ML-Modell-Download von Hugging Face, ONNX Runtime, häufige Releases. Für Firmennetze mit TLS-Inspektion hat das README einen eigenen Abschnitt zu Zertifikaten.
 - **Telemetrie standardmäßig an** (siehe oben).
 

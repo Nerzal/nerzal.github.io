@@ -13,23 +13,23 @@ toc: true
 
 Dies ist der erste Teil einer dreiteiligen Serie zur Absicherung eines öffentlichen Ubuntu-Servers.
 
-Im [vorherigen Beitrag](/de/blog/secure-ssh-server/) haben wir SSH abgesichert: Passwort-Login durch schlüsselbasierte Authentifizierung ersetzt, Root deaktiviert und eingeschränkt, welche Benutzer sich verbinden dürfen. Das allein eliminiert den Großteil der Angriffe auf internet-exponierte Server.
+Im [vorherigen Beitrag](/de/blog/secure-ssh-server/) haben wir SSH abgesichert: Passwort-Login durch schlüsselbasierte Authentifizierung ersetzt, Root deaktiviert und eingeschränkt, welche Benutzer sich verbinden dürfen. Das allein stoppt den Großteil der Angriffe auf Server, die aus dem Internet erreichbar sind.
 
-Aber SSH ist nur eine Schicht. Diese Serie fügt drei weitere Schichten pro Teil hinzu, geordnet nach Umsetzungsgeschwindigkeit und Impact. Hier anfangen — diese drei kosten zusammen weniger als fünfzehn Minuten und schützen vor den häufigsten aktiven Bedrohungen.
+SSH ist aber nur eine Schicht. Jeder Teil dieser Serie fügt drei weitere hinzu, geordnet danach, wie schnell man sie umsetzt und wie viel sie bringen. Den Anfang machen diese drei: Sie kosten zusammen weniger als fünfzehn Minuten und schützen vor den häufigsten aktiven Bedrohungen.
 
 > **Voraussetzungen:** Ubuntu 22.04 / 24.04 / 26.04, SSH bereits abgesichert, Nicht-Root-Benutzer mit `sudo`-Zugang.
 
 ---
 
-## 1 — UFW: Default-Deny-Firewall
+## 1. UFW: Default-Deny-Firewall
 
-Ein frisch bereitgestellter Server exponiert oft jeden Port, auf dem ein Dienst lauscht. Die Firewall ändert das: **alles standardmäßig blockieren, nur explizit Erlaubtes durchlassen.**
+Auf einem frisch bereitgestellten Server ist oft jeder Port erreichbar, auf dem ein Dienst lauscht. Die Firewall ändert das: **alles standardmäßig blockieren, nur explizit Erlaubtes durchlassen.**
 
-Ubuntu liefert [UFW](https://help.ubuntu.com/community/UFW) (Uncomplicated Firewall) vorinstalliert mit — ein nutzbares Frontend für `iptables`/`nftables`, das Regeln lesbar hält.
+Ubuntu liefert [UFW](https://help.ubuntu.com/community/UFW) (Uncomplicated Firewall) vorinstalliert mit. Es ist ein handliches Frontend für `iptables`/`nftables`, mit dem die Regeln lesbar bleiben.
 
 ### Mit bereits geöffnetem SSH aktivieren
 
-Der häufigste Weg sich auszusperren: Firewall aktivieren bevor SSH erlaubt wurde. Deshalb immer zuerst:
+Der häufigste Weg, sich auszusperren: die Firewall aktivieren, bevor SSH erlaubt wurde. Deshalb immer zuerst:
 
 ```bash
 # SSH durch die Firewall erlauben, bevor sie aktiviert wird
@@ -46,9 +46,9 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
-Die Ausgabe sollte `Status: active` zeigen und exakt die freigegebenen Ports auflisten. Jeder Port der nicht in dieser Liste steht ist jetzt geschlossen, egal was darauf lauscht.
+Die Ausgabe sollte `Status: active` zeigen und exakt die freigegebenen Ports auflisten. Jeder Port, der nicht in dieser Liste steht, ist jetzt geschlossen, egal was darauf lauscht.
 
-**Nicht-Standard-SSH-Port:** Falls der SSH-Port geändert wurde, stattdessen diesen Port freigeben:
+**Nicht-Standard-SSH-Port:** Falls der SSH-Port von 22 auf einen anderen geändert wurde, stattdessen diesen Port freigeben:
 
 ```bash
 sudo ufw allow 2222/tcp comment "SSH"
@@ -56,7 +56,7 @@ sudo ufw allow 2222/tcp comment "SSH"
 
 ### Verbindungsrate begrenzen
 
-UFW kann eingehende Verbindungen zu einem Port drosseln — nützlich als leichtgewichtige Schicht bevor Fail2ban konfiguriert ist:
+UFW kann eingehende Verbindungen zu einem Port drosseln. Das ist eine nützliche, leichtgewichtige Schicht, solange Fail2ban noch nicht konfiguriert ist:
 
 ```bash
 # Verbindungen einer IP ablehnen, die 6 oder mehr in den letzten 30 Sekunden geöffnet hat
@@ -67,11 +67,11 @@ Das ist eine Drosselung mit gleitendem Zeitfenster, keine Sperre: Laut [ufw-Manp
 
 ### Docker umgeht UFW
 
-Wer Docker auf dem Server betreibt, sollte das wissen, bevor er der Firewall vertraut: Ports, die mit `docker run -p` oder `ports:` in Compose veröffentlicht werden, filtert UFW **nicht**. Docker legt eigene `iptables`-Regeln an, und der Traffic wird zum Container geroutet, bevor die UFW-Regeln greifen — `ufw status` zeigt diese Ports nicht einmal an. Siehe Dockers Dokumentation zu [Packet Filtering und Firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/). Soll ein Container-Port privat bleiben, ihn an localhost binden (`-p 127.0.0.1:8080:80`) und einen Reverse Proxy davorsetzen.
+Wer Docker auf dem Server betreibt, sollte das wissen, bevor er der Firewall vertraut: Ports, die mit `docker run -p` oder `ports:` in Compose veröffentlicht werden, filtert UFW **nicht**. Docker legt eigene `iptables`-Regeln an, und der Traffic wird zum Container geroutet, bevor die UFW-Regeln greifen. Deshalb zeigt `ufw status` diese Ports nicht einmal an. Siehe Dockers Dokumentation zu [Packet Filtering und Firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/). Soll ein Container-Port privat bleiben, ihn an localhost binden (`-p 127.0.0.1:8080:80`) und einen Reverse Proxy davorsetzen.
 
 ### Von der lokalen Maschine prüfen
 
-Vor dem Schließen der Session in einem zweiten Terminal bestätigen, dass SSH noch funktioniert:
+Vor dem Schließen der Session ein zweites Terminal öffnen und bestätigen, dass SSH noch funktioniert:
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -92,7 +92,7 @@ ssh deploy@deine-server-ip
 
 ---
 
-## 2 — Fail2ban: Brute-Force-Schutz
+## 2. Fail2ban: Brute-Force-Schutz
 
 Auch mit schlüsselbasiertem SSH können andere Dienste (Webserver, Mailserver, eigene APIs) mit Brute-Force angegriffen werden. [Fail2ban](https://github.com/fail2ban/fail2ban) überwacht Log-Dateien und fügt temporäre Firewall-Sperren für IPs hinzu, die zu viele Fehler produzieren.
 
@@ -100,7 +100,7 @@ Auch mit schlüsselbasiertem SSH können andere Dienste (Webserver, Mailserver, 
 sudo apt install fail2ban -y
 ```
 
-`/etc/fail2ban/jail.conf` nicht direkt bearbeiten — sie wird bei Updates überschrieben. Fail2ban liest `jail.local` zusätzlich darüber, also diese Datei **nur mit den Einstellungen anlegen, die man ändern will**. Nicht die ganze `jail.conf` kopieren: Eine vollständige Kopie friert alle Standardwerte auf dem heutigen Stand ein, und Verbesserungen, die künftige Paket-Updates in `jail.conf` mitbringen, kämen nie an.
+`/etc/fail2ban/jail.conf` nicht direkt bearbeiten, denn sie wird bei Updates überschrieben. Fail2ban liest `jail.local` zusätzlich darüber, also diese Datei **nur mit den Einstellungen anlegen, die man ändern will**. Nicht die ganze `jail.conf` kopieren: Eine vollständige Kopie friert alle Standardwerte auf dem heutigen Stand ein, und Verbesserungen, die künftige Paket-Updates in `jail.conf` mitbringen, kämen nie an.
 
 ```bash
 sudo tee /etc/fail2ban/jail.local > /dev/null <<'EOF'
@@ -114,7 +114,7 @@ enabled = true
 EOF
 ```
 
-Die `[DEFAULT]`-Werte sperren jede IP für eine Stunde, wenn sie innerhalb von zehn Minuten fünfmal bei der Authentifizierung scheitert. `bantime` bei anhaltenden Scannern auf `24h` oder `1w` erhöhen. Ubuntus Paket aktiviert den `[sshd]`-Jail bereits in `/etc/fail2ban/jail.d/defaults-debian.conf`; ihn hier ebenfalls zu setzen macht die Absicht explizit und unabhängig von dieser Datei.
+Die `[DEFAULT]`-Werte sperren jede IP für eine Stunde, wenn sie innerhalb von zehn Minuten fünfmal bei der Authentifizierung scheitert. Zeigen die Logs hartnäckige Scanner, `bantime` auf einen längeren Wert erhöhen (z. B. `24h` oder `1w`). Ubuntus Paket aktiviert den `[sshd]`-Jail bereits in `/etc/fail2ban/jail.d/defaults-debian.conf`. Wer ihn hier trotzdem setzt, macht die Absicht explizit und ist nicht von dieser Datei abhängig.
 
 Fail2ban starten und aktivieren:
 
@@ -146,9 +146,9 @@ sudo tail -f /var/log/fail2ban.log
 
 ---
 
-## 3 — Unattended Upgrades: Automatische Sicherheits-Patches
+## 3. Unattended Upgrades: Automatische Sicherheits-Patches
 
-Ungepatchte Pakete sind eine der häufigsten Ursachen für Server-Kompromittierungen. Automatische Sicherheitsupdates bedeuten, dass man nicht mehr darauf angewiesen ist, manuell `apt upgrade` auszuführen, bevor eine CVE ausgenutzt wird.
+Ungepatchte Pakete sind eine der häufigsten Ursachen für Server-Kompromittierungen. Mit automatischen Sicherheitsupdates ist man nicht mehr darauf angewiesen, `apt upgrade` von Hand auszuführen, bevor eine CVE ausgenutzt wird.
 
 ```bash
 sudo apt install unattended-upgrades apt-listchanges -y
@@ -173,9 +173,9 @@ Unattended-Upgrade::Allowed-Origins {
 };
 ```
 
-Das beschränkt die automatische Installation auf Sicherheitsupdates — keine Feature-Updates, die etwas kaputt machen könnten.
+Das beschränkt die automatische Installation auf Sicherheitsupdates. Feature-Updates, die etwas kaputt machen könnten, bleiben außen vor.
 
-Zwei weitere Einstellungen die es wert sind zu prüfen:
+Zwei weitere Einstellungen, die einen Blick wert sind:
 
 ```text
 // Alte Kernel-Pakete entfernen die nicht mehr benötigt werden
@@ -205,7 +205,7 @@ sudo unattended-upgrade --dry-run --debug
 
 | Maßnahme            | Was sie stoppt                                                  |
 | ------------------- | --------------------------------------------------------------- |
-| UFW Default-Deny    | Dienste die versehentlich auf unerwarteten Ports exponiert sind |
+| UFW Default-Deny    | Dienste, die versehentlich auf unerwarteten Ports exponiert sind |
 | Fail2ban            | Automatisiertes Credential-Brute-Forcing                        |
 | Unattended Upgrades | Ausnutzung bekannter, gepatchter CVEs                           |
 

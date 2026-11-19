@@ -444,7 +444,7 @@ Accuracy, also vendor-measured with N = 100 per benchmark: GSM8K 0.870 → 0.870
 
 Headroom's own [limitations page](https://docs.headroomlabs.ai/docs/limitations) is refreshingly direct: the figures are "one-off, synthetic measurements, not a published benchmark", and agentic conversations are "not independently measured".
 
-The only third-party number I found comes from a competitor: Caveman's README reports that on its own six-file test suite, Headroom answered 15 of 18 questions correctly with 6.7 % fewer tokens, while Caveman's own engine got 18 of 18 with 33.2 % fewer. A vendor measuring a competing product on its own benchmark is not independent, so treat it as a data point, not a verdict. I found **no independent benchmark** of Headroom.
+The only third-party number I found comes from a competitor: Caveman's README reports that on its own six-file test suite, Headroom answered 15 of 18 questions correctly with 6.7 % fewer tokens, while Caveman's own engine got 18 of 18 with 33.2 % fewer. A vendor measuring a competing product on its own benchmark is not independent, so I count it as one data point and nothing more. I found **no independent benchmark** of Headroom.
 
 ## Costs and when Headroom does not help
 

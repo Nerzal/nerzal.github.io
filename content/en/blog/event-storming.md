@@ -11,7 +11,7 @@ toc: true
 
 ## What is Event Storming?
 
-Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. It involves bringing together a diverse group of stakeholders, including developers, domain experts, and business analysts, to collaborate on the creation of a visual representation of a business process or system.
+Event storming is a collaborative modeling technique used in domain-driven design (DDD) to explore and understand complex business domains. You bring together a mixed group of stakeholders, such as developers, domain experts, and business analysts, and they build a visual representation of a business process or system together.
 
 In event storming, the participants work together to **identify events** that occur within the system or process, and then organize these events into a **timeline** that represents the **flow of actions** and outcomes. These events can include user actions, system responses, and any other activities or processes that occur within the domain being modeled.
 
@@ -19,7 +19,7 @@ As the events are identified and organized, the participants can begin to identi
 
 **Aggregates** are collections of entities that are treated as a single unit within the system, while **entities** are individual objects with a unique identity and state. **Value objects**, on the other hand, are objects that represent a value or concept within the domain, but do not have a unique identity.
 
-The visual representation created through event storming can be used as a starting point for further discussion and refinement, helping to ensure that all stakeholders have a shared understanding of the business domain and the processes that occur within it. This shared understanding can then be used to guide the development of software systems that meet the needs of the business and its stakeholders.
+The resulting picture is a starting point for further discussion and refinement. It gives all stakeholders the same understanding of the business domain and its processes, and that understanding then guides the development of software that meets the needs of the business and its stakeholders.
 
 ## When to use?
 A good list of examples when to use event storming is provided by [eventstorming.com](https://www.eventstorming.com/)

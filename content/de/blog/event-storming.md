@@ -11,19 +11,19 @@ toc: true
 
 ## Was ist Event Storming?
 
-Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine diverse Gruppe von Stakeholdern zusammen – darunter Entwickler, Domänenexperten und Business-Analysten –, um gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems zu erarbeiten.
+Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine gemischte Gruppe von Stakeholdern zusammen, etwa Entwickler, Domänenexperten und Business-Analysten, die gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems erarbeiten.
 
-Beim Event Storming arbeiten die Teilnehmer zusammen, um **Ereignisse** (Events) zu identifizieren, die innerhalb des Systems oder Prozesses auftreten, und ordnen diese dann in einer **Zeitleiste** an, die den **Ablauf von Aktionen** und Ergebnissen darstellt. Diese Ereignisse können Benutzeraktionen, Systemreaktionen und alle anderen Aktivitäten oder Prozesse umfassen, die im modellierten Bereich stattfinden.
+Beim Event Storming identifizieren die Teilnehmer gemeinsam **Ereignisse** (Events), die innerhalb des Systems oder Prozesses auftreten, und ordnen sie dann in einer **Zeitleiste** an, die den **Ablauf von Aktionen** und Ergebnissen darstellt. Diese Ereignisse können Benutzeraktionen, Systemreaktionen und alle anderen Aktivitäten oder Prozesse umfassen, die im modellierten Bereich stattfinden.
 
 Während die Ereignisse identifiziert und angeordnet werden, können die Teilnehmer beginnen, die verschiedenen Komponenten des Systems zu identifizieren und zu definieren, darunter Aggregates, Entities und Value Objects.
 
 **Aggregates** sind Sammlungen von Entities, die innerhalb des Systems als eine einzige Einheit behandelt werden, während **Entities** einzelne Objekte mit einer eindeutigen Identität und einem Zustand sind. **Value Objects** hingegen sind Objekte, die einen Wert oder ein Konzept innerhalb der Domäne repräsentieren, aber keine eindeutige Identität besitzen.
 
-Die durch Event Storming erstellte visuelle Darstellung kann als Ausgangspunkt für weitere Diskussionen und Verfeinerungen dienen. Sie hilft sicherzustellen, dass alle Stakeholder ein gemeinsames Verständnis des Geschäftsbereichs und der darin ablaufenden Prozesse haben. Dieses gemeinsame Verständnis kann dann genutzt werden, um Softwaresysteme zu entwickeln, die den Bedürfnissen des Unternehmens und seiner Stakeholder gerecht werden.
+Das entstandene Bild ist ein Ausgangspunkt für weitere Diskussionen und Verfeinerungen. Alle Stakeholder bekommen dadurch dasselbe Verständnis des Geschäftsbereichs und seiner Prozesse, und dieses Verständnis leitet dann die Entwicklung von Software, die den Bedürfnissen des Unternehmens und seiner Stakeholder gerecht wird.
 
 ## Wann einsetzen?
 
-Eine gute Liste von Beispielen, wann Event Storming eingesetzt werden sollte, liefert [eventstorming.com](https://www.eventstorming.com/):
+Eine gute Liste von Beispielen dafür, wann sich Event Storming lohnt, liefert [eventstorming.com](https://www.eventstorming.com/):
 
 > Es (Event Storming) gibt es in verschiedenen Ausprägungen, die in unterschiedlichen Szenarien verwendet werden können:
 >
@@ -40,9 +40,9 @@ Du möchtest vielleicht ein komplett neues Softwaresystem entwerfen oder nur ein
 
 Wende die 2-Pizza-Regel an.
 
-Die 2-Pizza-Regel ist ein von Jeff Bezos, dem Gründer von Amazon, eingeführtes Konzept bezüglich der optimalen Teilnehmerzahl in einem Meeting. Die Regel besagt, dass die ideale Anzahl von Personen für ein produktives Meeting nicht größer sein sollte als die Anzahl von Personen, die mit zwei Pizzen gesättigt werden können. Mit anderen Worten: Wenn man nicht alle Meeting-Teilnehmer mit zwei Pizzen versorgen kann, ist die Gruppe zu groß.
+Die 2-Pizza-Regel stammt von Jeff Bezos, dem Gründer von Amazon, und betrifft die optimale Teilnehmerzahl in einem Meeting. Die Regel besagt, dass die ideale Anzahl von Personen für ein produktives Meeting nicht größer sein sollte als die Zahl der Personen, die zwei Pizzen satt machen. Mit anderen Worten: Wenn man nicht alle Meeting-Teilnehmer mit zwei Pizzen versorgen kann, ist die Gruppe zu groß.
 
-Der Grund für diese Regel liegt darin, dass zu viele Personen in einem Meeting oft zu Ineffizienz und mangelnder Produktivität führen. Große Meetings neigen dazu, weniger fokussiert zu sein und sind anfälliger für Ablenkungen und Nebenthemen. Außerdem ist es für Einzelne schwieriger, sinnvoll zur Diskussion beizutragen und Gehör zu finden.
+Der Grund für diese Regel liegt darin, dass zu viele Personen in einem Meeting oft zu Ineffizienz und mangelnder Produktivität führen. Große Meetings sind oft weniger fokussiert und anfälliger für Ablenkungen und Nebenthemen. Außerdem ist es für Einzelne schwieriger, sinnvoll zur Diskussion beizutragen und Gehör zu finden.
 
 ## Moderator (Facilitator)
 
@@ -64,11 +64,11 @@ Die Anforderungen für dieses Meeting hängen von der Art des Meetings ab. Vor-O
 
 ### Vor Ort
 
-Typischerweise braucht man ein sehr großes Whiteboard, Whiteboard-Marker und Haftnotizen.
+Typischerweise brauchst du ein sehr großes Whiteboard, Whiteboard-Marker und Haftnotizen.
 
 ### Remote
 
-Man benötigt ein Zeichen-Tool, das schnelle Eingabeiterationen ermöglicht. Zum Beispiel eignen sich [Excalidraw](https://excalidraw.com/) oder [draw.io](https://draw.io).
+Du brauchst ein Zeichen-Tool, mit dem ihr schnell iterieren könnt. Gut geeignet sind zum Beispiel [Excalidraw](https://excalidraw.com/) oder [draw.io](https://draw.io).
 
 ## Arbeitsablauf
 
@@ -91,7 +91,7 @@ Beispiele:
 2. **Zahlung erhalten**
 3. **Patient eingecheckt**
 
-Fokussiere dich in diesem Stadium nicht auf alle Werte, aus denen ein Termin besteht, wie Datum, Patientenname usw., sondern konzentriere dich auf das Verhalten.
+Achte in diesem Stadium noch nicht auf die Werte, aus denen ein Termin besteht (Datum, Patientenname usw.), sondern auf das Verhalten.
 
 ## Vorteile
 

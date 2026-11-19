@@ -23,7 +23,7 @@ featured_image: "img/level-time/logo.png"
 toc: true
 ---
 
-> **Level Time bauen — Teil 2 von 4.** [Level Time](/de/page/level-time/) ist mein World-of-Warcraft-Addon, das die Levelzeit misst. Diese Serie erzählt die Technik dahinter. Teil 1: [Addon-Architektur](/de/blog/level-time-1-addon-architecture/). **Teil 2 (dieser Artikel): Lua mit Go testen.** Teil 3: [Die Release-Pipeline](/de/blog/level-time-3-release-pipeline/). Teil 4: [Ziele und die öffentliche API](/de/blog/level-time-4-goals-public-api/).
+> **Level Time bauen, Teil 2 von 4.** [Level Time](/de/page/level-time/) ist mein World-of-Warcraft-Addon, das die Levelzeit misst. Diese Serie erzählt die Technik dahinter. Teil 1: [Addon-Architektur](/de/blog/level-time-1-addon-architecture/). **Teil 2 (dieser Artikel): Lua mit Go testen.** Teil 3: [Die Release-Pipeline](/de/blog/level-time-3-release-pipeline/). Teil 4: [Ziele und die öffentliche API](/de/blog/level-time-4-goals-public-api/).
 
 Ein World-of-Warcraft-Addon läuft im Spielclient. Es gibt kein `npm test`, kein `go test`, kein `pytest` und keine Möglichkeit, den Lua-Code des Addons einfach so zu starten. Die einzige eingebaute Rückkopplung lautet: Datei ändern, `/reload` tippen, herumklicken, den Chat lesen.
 
@@ -41,7 +41,7 @@ Drei Probleme haben mich dahin gebracht.
 2. **Langsame, manuelle Reload-Zyklen.** Jede Prüfung braucht einen Reload, einen passenden Login-Zustand (richtiges Level, XP, Kampfstatus) und Klickarbeit. „Was passiert genau im Moment des Level-Ups, wenn noch ein Timer läuft?“ von Hand nachzustellen ist mühsam und unzuverlässig.
 3. **Regressionen in Code, den niemand ansieht.** Level Time ist lokalisiert (Deutsch, Englisch, Französisch, Spanisch) und läuft auf mehreren Spielversionen. Eine Änderung an einem Modul kann ein Fenster in einer Sprache zerlegen, die ich gerade nicht offen hatte.
 
-Der Harness soll das Spielen nicht ersetzen. Er soll die große Klasse von Fehlern abfangen, die reine Logik sind (Zähler, Zustandsautomaten, Migrationen, Event-Behandlung, Layout-Rechnung), und zwar in der Zeit, die `go test` braucht.
+Der Harness fängt die große Klasse von Fehlern ab, die reine Logik sind (Zähler, Zustandsautomaten, Migrationen, Event-Behandlung, Layout-Rechnung), und zwar in der Zeit, die `go test` braucht. Alles andere prüfe ich weiterhin im Spiel.
 
 ---
 
@@ -199,7 +199,7 @@ function wow.runTimers() -- run everything scheduled so far, delay ignored
 end
 ```
 
-Die Zeit ist der Schlüssel zur Testbarkeit: Nichts schläft. `C_Timer.After`-Callbacks werden nur eingereiht, und `wow.runTimers()` führt sie auf Abruf aus. Ein Szenario wie „die Einnahme erscheint, nachdem die Reparatur bezahlt wurde“ läuft in Mikrosekunden und ist vollständig deterministisch. `wow.update(seconds)` macht dasselbe für `OnUpdate`-Handler; so ticken wiederkehrende Aufgaben und das Zeitfenster.
+Testbar wird das, weil der Test die Zeit steuert: Nichts schläft. `C_Timer.After`-Callbacks werden nur eingereiht, und `wow.runTimers()` führt sie auf Abruf aus. Ein Szenario wie „die Einnahme erscheint, nachdem die Reparatur bezahlt wurde“ läuft in Mikrosekunden und ist vollständig deterministisch. `wow.update(seconds)` macht dasselbe für `OnUpdate`-Handler; so ticken wiederkehrende Aufgaben und das Zeitfenster.
 
 Der Spielzustand selbst ist eine Tabelle, `wow.state` (Name, Level, XP, Geld, Buffs, Kampfstatus, Zone und mehr), aus der API-Funktionen wie `UnitLevel` und `GetTime` lesen. Ein Szenario ändert den Zustand und löst dann das Event aus, das der Client ausgelöst hätte.
 
@@ -207,7 +207,7 @@ Der Spielzustand selbst ist eine Tabelle, `wow.state` (Name, Level, XP, Geld, Bu
 
 Die moderne WoW-API liegt in Namespaces wie `C_Timer`, `C_Spell`, `C_Container` oder `C_UnitAuras` ([Überblick auf warcraft.wiki.gg](https://warcraft.wiki.gg/wiki/World_of_Warcraft_API)). Die Attrappe definiert die, die das Addon nutzt, in der passenden Bereichsdatei. Die Projektregel ist einfach: Sobald das Addon eine neue API-Funktion benutzt, kommt sie in derselben Änderung in die Attrappe.
 
-Level Time unterstützt mehrere Client-Varianten (Retail, Classic Era, WoW Forever). Der *Dateiname* des Szenarios wählt die Variante: `era_*`-Szenarien laden als Classic Era (Interface 11509), `forever_*` als WoW Forever (16001), alles andere als Retail. Das ist eine Zeile in der Attrappe, die die vom Go-Runner gesetzte Global `SCENARIO` liest.
+Level Time unterstützt mehrere Client-Varianten (Retail, Classic Era, WoW Forever). Der *Dateiname* des Szenarios wählt die Variante: `era_*`-Szenarien laden als Classic Era (Interface 11509), `forever_*` als WoW Forever (16001), alles andere als Retail. Das ist eine Zeile in der Attrappe, die die vom Go-Runner gesetzte globale Variable `SCENARIO` liest.
 
 ---
 
@@ -264,7 +264,7 @@ Reines Lua, kein Framework. `expectNear` und `expectTrue` haben dieselbe Form. D
 Aber „gleiche Sprachversion“ heißt nicht „gleiche Laufzeit“. Die Unterschiede, die in der Praxis zählen:
 
 - **WoW bringt Globals mit, die Standard-Lua nicht hat.** Beispiele sind `strsplit`, `wipe`, `tinsert`, `hooksecurefunc` und `geterrorhandler`. Nutzt das Addon eine davon, muss die Attrappe sie definieren. Vergesse ich das, scheitert der Test laut mit „attempt to call a nil value“, eine billige Erinnerung.
-- **gopher-lua hat eigene Macken.** Zwei stehen in der `CLAUDE.md` des Projekts, weil sie mich Zeit gekostet haben. Erstens: `tonumber(s:match(...))` wirft einen Fehler, wenn `match` nichts findet, weil `tonumber()` dann gar kein Argument bekommt; die Lösung sind die zusätzlichen Klammern in `tonumber((s:match(...)))`. Zweitens: Nach einem `pcall`-Fehler aktualisierten sich Zahl-Locals im Hauptteil des Tests, die Closures erfasst hatten, nicht mehr. Zähler in Tests liegen deshalb in Tabellen.
+- **gopher-lua hat eigene Macken.** Zwei stehen in der `CLAUDE.md` des Projekts, weil sie mich Zeit gekostet haben. Erstens: `tonumber(s:match(...))` wirft einen Fehler, wenn `match` nichts findet, weil `tonumber()` dann gar kein Argument bekommt; die Lösung sind die zusätzlichen Klammern in `tonumber((s:match(...)))`. Zweitens: Nach einem `pcall`-Fehler wurden Zahl-Locals im Hauptteil des Tests, die von Closures erfasst waren, nicht mehr aktualisiert. Zähler in Tests liegen deshalb in Tabellen.
 - **WoW schränkt die Umgebung ein.** Der Client entfernt oder kapselt einige Funktionen der Standardbibliothek, und neuere Spiel-APIs können „geheime“ Werte liefern, die Addons in bestimmten Situationen nicht vergleichen oder verzweigen dürfen. Eine normale Lua-VM erlaubt das alles, und die Attrappe bildet nur nach, was ich ihr beigebracht habe.
 
 Die Praxisregel: Beißt eine gopher-lua-Macke, behebe ich sie im Test oder schreibe Code, der in beiden Laufzeiten gültig ist. Das Verhalten des Addons hängt nie davon ab, ob gerade ein Test läuft.
@@ -273,7 +273,7 @@ Die Praxisregel: Beißt eine gopher-lua-Macke, behebe ich sie im Test oder schre
 
 ## Layout-Tests in vier Sprachen
 
-Das ist der Teil, der mehr findet, als ich erwartet hätte. Level Time gibt es auf Deutsch, Englisch, Französisch und Spanisch (`deDE`, `enUS`, `frFR`, `esES`). Französische und spanische Texte sind spürbar länger, und ein Einstellungsfenster, das auf Englisch passt, kann auf Französisch ein Schalter-Label in den Nachbarn schieben.
+Die Layout-Tests finden mehr Fehler, als ich erwartet hätte. Level Time gibt es auf Deutsch, Englisch, Französisch und Spanisch (`deDE`, `enUS`, `frFR`, `esES`). Französische und spanische Texte sind spürbar länger, und ein Einstellungsfenster, das auf Englisch passt, kann auf Französisch ein Schalter-Label in den Nachbarn schieben.
 
 {{< diagram src="level-time-2-layout-flow.svg" caption="Der Layout-Test wechselt die Sprache, baut das echte Fenster, liest gemerkte Anker und gemessene Textbreiten aus der Attrappe und prüft, dass nichts überlappt oder aus dem Fenster ragt." >}}
 
@@ -310,7 +310,7 @@ Dieselbe Datei deckt das Historienfenster ab (Unterreiter müssen in zusätzlich
 
 ### Wie die Textbreite gemessen wird, ehrlich gesagt
 
-Man könnte das „pixelgenaue Layout-Tests“ nennen. Das sind sie nicht, und das sollte man genau sagen. Die Attrappe kennt keine Schrift. Ihre Textmessung ist:
+Pixelgenau sind diese Layout-Tests nicht, denn die Attrappe kennt keine Schrift. Ihre Textmessung ist:
 
 ```lua
 GetStringWidth = function(self) return #self._text * 6 end,
@@ -318,7 +318,7 @@ GetStringWidth = function(self) return #self._text * 6 end,
 
 Die Breite ist die Stringlänge in **Bytes** mal 6. Das ist eine grobe Näherung: Eine echte Schrift hat proportionale Glyphen (ein „i“ ist schmaler als ein „m“), Schrift und Größe sind in Level Time einstellbar, und UTF-8-Umlaute zählen hier als zwei Bytes, obwohl sie als ein Zeichen gezeichnet werden.
 
-Warum findet das trotzdem echte Fehler? Weil das *relative* Verhalten stimmt. Französische und spanische Texte sind länger, also werden sie in der Attrappe auch breiter, und ein Layout, das für den englischen Text eine feste Breite annimmt, fällt durch. Der Layout-Code des Addons hilft dabei: Die Breiten der Einstellungsspalten werden aus den gemessenen Label-Breiten berechnet (`fitWidth`), statt fest zu sein. Der Test prüft also, dass die *Regel* in jeder Sprache hält. Er beweist nicht, dass das Ergebnis mit der echten Schrift gut aussieht.
+Trotzdem findet das echte Fehler, weil das *relative* Verhalten stimmt. Französische und spanische Texte sind länger, also werden sie in der Attrappe auch breiter, und ein Layout, das für den englischen Text eine feste Breite annimmt, fällt durch. Der Layout-Code des Addons hilft dabei: Die Breiten der Einstellungsspalten werden aus den gemessenen Label-Breiten berechnet (`fitWidth`), statt fest zu sein. Der Test prüft also, dass die *Regel* in jeder Sprache hält. Er beweist nicht, dass das Ergebnis mit der echten Schrift gut aussieht.
 
 Was er nie sagen kann, ist „dieser Text ist auf Französisch mit der Standardschrift um zwei Pixel abgeschnitten“. Dafür muss man ins Spiel schauen.
 
@@ -353,7 +353,7 @@ SlashCmdList.LEVELTIMER("debug perf off")
 expect("dispatcher restored", addon.SafeCall, plainSafeCall)
 ```
 
-Beachte, was dieser Test beweist: Die Buchführung stimmt (Summen, Maxima, Aufrufzahlen), und das Ausschalten stellt die Originalfunktionen wieder her. Er misst **nicht**, wie schnell das Addon ist. Der Go-Harness läuft auf einem Entwicklerrechner oder CI-Runner, nicht im Spielclient, seine Zeiten wären bedeutungslos. Echte Zahlen kommen vom Spielen mit eingeschaltetem Profiler, und so finde ich auch die Hotspots.
+Beachte, was dieser Test beweist: Die Buchführung stimmt (Summen, Maxima, Aufrufzahlen), und das Ausschalten stellt die Originalfunktionen wieder her. Er misst **nicht**, wie schnell das Addon ist. Der Go-Harness läuft auf einem Entwicklerrechner oder CI-Runner, nicht im Spielclient, deshalb wären seine Zeiten bedeutungslos. Echte Zahlen kommen vom Spielen mit eingeschaltetem Profiler, und so finde ich auch die Hotspots.
 
 ---
 
@@ -444,7 +444,7 @@ Eine grüne Suite heißt: Die Logik tut, was die Szenarien sagen. Sie heißt nic
 - **Performance.** Siehe oben: Er beweist die Buchführung, nicht die Geschwindigkeit.
 - **Meine eigenen falschen Annahmen.** Wenn ich falsch verstehe, was ein Event liefert, schreibe ich dasselbe Missverständnis in Addon und Attrappe, und der Test stimmt dem Fehler zu.
 
-Das Letzte sind die eigentlichen Kosten jeder handgeschriebenen Attrappe. Das Gegenmittel ist eine manuelle Checkliste im Repository (`ManualToCheck.md`) mit Dingen, die weiter im Spiel probiert werden müssen, und die Disziplin, „in der Attrappe getestet“ und „im Spiel geprüft“ als zwei verschiedene Status zu behandeln.
+Falsche Annahmen sind der größte Preis jeder handgeschriebenen Attrappe. Das Gegenmittel ist eine manuelle Checkliste im Repository (`ManualToCheck.md`) mit Dingen, die weiter im Spiel probiert werden müssen, und die Disziplin, „in der Attrappe getestet“ und „im Spiel geprüft“ als zwei verschiedene Status zu behandeln.
 
 ---
 
@@ -461,4 +461,4 @@ Das Letzte sind die eigentlichen Kosten jeder handgeschriebenen Attrappe. Das Ge
 
 ## Wie geht es weiter?
 
-In [Teil 3](/de/blog/level-time-3-release-pipeline/) zeige ich, wie aus einem Tag mit dem [BigWigs-Packager](https://github.com/BigWigsMods/packager) ein Release auf GitHub, CurseForge, Wago und WoWInterface wird und wie die Tests davor als Tor dienen. Wenn du Classic spielst und sehen willst, wofür der ganze Code da ist: Die [Level-Time-Seite](/de/page/level-time/) hat Screenshots und den Download-Link. Zum Werkzeug-Denken passen auch meine Artikel zu [Go in Docker](/de/blog/go-docker/) und zum [Prüfen von statischem Linking](/de/blog/check-static-linking/).
+In [Teil 3](/de/blog/level-time-3-release-pipeline/) zeige ich, wie aus einem Tag mit dem [BigWigs-Packager](https://github.com/BigWigsMods/packager) ein Release auf GitHub, CurseForge, Wago und WoWInterface wird und wie die Tests das Release vorher absichern. Wenn du Classic spielst und sehen willst, wofür der ganze Code da ist: Die [Level-Time-Seite](/de/page/level-time/) hat Screenshots und den Download-Link. Zum Werkzeug-Denken passen auch meine Artikel zu [Go in Docker](/de/blog/go-docker/) und zum [Prüfen von statischem Linking](/de/blog/check-static-linking/).

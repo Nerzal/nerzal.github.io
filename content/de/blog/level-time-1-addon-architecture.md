@@ -42,7 +42,7 @@ Drei Gruppen sind die Hauptzielgruppe:
 - **Speedrunner**, die LiveSplit-artige Splits pro Level, den Vergleich mit der persönlichen Bestzeit und einen Export nach LiveSplit wollen.
 - **Streamer**, die Anzeigen brauchen, die im Stream gut aussehen: ein Layout nur mit Text ohne Hintergrund, einen Chroma-Key-Hintergrund für OBS, verborgene Namen und eine Recap-Karte.
 
-Alles ist konfigurierbar, die meisten Extras sind standardmäßig aus, und das Addon läuft mit einem Download auf Retail, Classic Era, TBC Anniversary und WoW Forever. Es wird aktiv weiterentwickelt; ich beschreibe den Stand des Repositorys beim Schreiben, kein fertiges Produkt.
+Alles ist konfigurierbar, die meisten Extras sind standardmäßig aus, und das Addon läuft mit einem Download auf Retail, Classic Era, TBC Anniversary und WoW Forever. Es wird aktiv weiterentwickelt; ich beschreibe den Stand des Repositorys zum Zeitpunkt dieses Beitrags, kein fertiges Produkt.
 
 ## Wie ein WoW-Addon funktioniert
 
@@ -130,7 +130,7 @@ Das Repository ist nach Fachgebieten gegliedert, nicht nach technischen Schichte
 | `Assist/` | optionale Komfortfunktionen, Erinnerungen, Warnungen |
 | `UI/` | Fenster, Stat-Zeilen, Hinweise, Optionen, Layouts |
 
-Weil die TOC-Reihenfolge die Abhängigkeitsreihenfolge ist, entscheiden die Ordner nicht darüber, was wovon abhängen darf; das tut die Disziplin. Meine Regel ist dieselbe wie in meinem Beitrag zu [Bounded Contexts](/de/blog/bounded-context/): Datenmodule wissen nichts von der UI, und UI-Module fragen Datenmodule nach Werten, nie umgekehrt.
+Weil die TOC-Reihenfolge die Abhängigkeitsreihenfolge ist, erzwingt die Ordnerstruktur nicht, was wovon abhängen darf; das bleibt Sache der Disziplin. Meine Regel ist dieselbe wie in meinem Beitrag zu [Bounded Contexts](/de/blog/bounded-context/): Datenmodule wissen nichts von der UI, und UI-Module fragen Datenmodule nach Werten, nie umgekehrt.
 
 {{< diagram src="level-time-1-dataflow.svg" caption="Von Client-Events bis zu den Pixeln. Durchgezogene Pfeile schieben Daten vorwärts, gestrichelte sind lesender Zugriff. Die UI bekommt keine geschobenen Updates, sie fragt Getter ab." >}}
 
@@ -222,7 +222,7 @@ Alles andere (Analyse-Reihen, Prognose bis zum Max-Level, persönliche Rekorde, 
 
 ## UI: Abfragen schlägt Schieben
 
-Datenmodule bieten Getter an; Fenster lesen sie. Das Hauptfenster bekommt nie „Wert X hat sich geändert“-Aufrufe. Stattdessen markiert jede Änderung es als schmutzig (dirty), und ein gedrosseltes `OnUpdate` zeichnet neu:
+Datenmodule bieten Getter an; Fenster lesen sie. Das Hauptfenster bekommt nie „Wert X hat sich geändert“-Aufrufe. Stattdessen setzt jede Änderung ein Dirty-Flag, und ein gedrosseltes `OnUpdate` zeichnet neu:
 
 ```lua
 -- simplified from UI/TimerWindow.lua
@@ -261,7 +261,7 @@ Die sieben Layouts (Tabelle, Leiste, kompakt, nur Text, Uhr, XP-Balken, Kacheln)
 
 ## Das Journalarchiv: ein Load-on-Demand-Addon
 
-Hier das Problem, das das SavedVariables-Design erzeugt. Ein lange gespielter Charakter sammelt ein Journal aus Kills, Toden, Beute und Quests, das zehntausende Einträge erreichen kann (der Code begrenzt Kills auf 250.000), und ohne Archiv sind alle davon Lua-Tabellen in `LevelTimerStatsDB`. Alles in einer SavedVariable wird beim **Login** geparst und beim **Logout** serialisiert, egal ob du je die Historie öffnest. Für ein Feature, das die meisten Spieler selten öffnen, ist das ein schlechter Tausch.
+Das SavedVariables-Design macht bei Charakteren Ärger, die lange gespielt werden. So ein Charakter sammelt ein Journal aus Kills, Toden, Beute und Quests, das zehntausende Einträge erreichen kann (der Code begrenzt Kills auf 250.000), und ohne Archiv sind alle davon Lua-Tabellen in `LevelTimerStatsDB`. Alles in einer SavedVariable wird beim **Login** geparst und beim **Logout** serialisiert, egal ob du je die Historie öffnest. Für ein Feature, das die meisten Spieler selten öffnen, ist das ein schlechter Tausch.
 
 WoW hat dafür genau ein Feature: **Load-on-Demand-Addons**. Eine TOC mit `## LoadOnDemand: 1` wird beim Login nicht geladen. Ihre Dateien **und ihre SavedVariables** werden erst gelesen, wenn anderer Code `LoadAddOn` aufruft ([`C_AddOns.LoadAddOn`](https://warcraft.wiki.gg/wiki/API_C_AddOns.LoadAddOn)). Der Client schreibt die Datei außerdem nur in Sitzungen zurück, in denen das Addon geladen war. Level Time liefert deshalb ein zweites, winziges Addon mit:
 
@@ -299,11 +299,11 @@ Das Ergebnis: Login und Logout kosten gleich viel, egal wie groß die Historie w
 
 ## Ein Download, vier Clients
 
-Retail, Classic Era, TBC Anniversary und WoW Forever unterscheiden sich in der API-Verfügbarkeit, in UI-Vorlagen und sogar darin, welche Werte Addons lesen dürfen. Level Time liefert **nicht** vier Builds aus, sondern nutzt drei Mechanismen.
+Retail, Classic Era, TBC Anniversary und WoW Forever unterscheiden sich in der API-Verfügbarkeit, in UI-Vorlagen und sogar darin, welche Werte Addons lesen dürfen. Level Time liefert trotzdem **einen** Build aus und fängt die Unterschiede mit drei Mechanismen ab.
 
 **1. Eine TOC mit mehreren Interface-Versionen.** Die Zeile `## Interface: 120105, 11509, 20506, 16001` nennt je Client eine Interface-Nummer; der Client lädt das Addon, wenn seine eigene Nummer in der Liste steht. Die Dateiliste ist für alle gleich. Die Interface-Nummern kommen aus [`GetBuildInfo`](https://warcraft.wiki.gg/wiki/API_GetBuildInfo), dessen vierter Rückgabewert dieselbe Nummer ist.
 
-**2. Client-Erkennung aus dieser Nummer.** `Core/Client.lua` hat gut fünfzig Zeilen:
+**2. Client-Erkennung aus dieser Nummer.** `Core/Client.lua` hat rund fünfzig Zeilen:
 
 ```lua
 -- simplified from Core/Client.lua
@@ -323,7 +323,7 @@ end
 
 Das braucht man für Features, die es nur in einem Client gibt. Die Timer für Lagerfeuer und Schlafsack sind zum Beispiel WoW-Forever-Features: Ihre Optionen erscheinen in den anderen Clients gar nicht. Die Paketierung nutzt dieselbe Zuordnung, sodass Code und Release übereinstimmen.
 
-**3. Feature-Erkennung für alles andere.** Die meisten Unterschiede lauten nicht „welcher Client ist das“, sondern „existiert diese Funktion“. Der Code fragt die API statt der Version:
+**3. Feature-Erkennung für alles andere.** Bei den meisten Unterschieden ist die nützliche Frage „existiert diese Funktion?“, also fragt der Code die API, statt die Version zu prüfen:
 
 ```lua
 -- simplified from Tracking/Experience.lua
@@ -338,7 +338,7 @@ local function isAtMaxLevel()
 end
 ```
 
-Drei Clients, drei Wege, dieselbe Frage zu stellen, eine Funktion. Dieselbe Idee deckt Events ab (`RegisterEvent` gibt `false` zurück), Unit-Events (`RegisterUnitEvent` nutzen, wenn der Frame es hat, sonst manuell filtern) und Secret Values (`issecretvalue` wird geprüft, bevor ein Wert verglichen wird). Reparaturen über die Gildenbank prüfen die API (`CanGuildBankRepair`) **und** den Client.
+Eine Funktion deckt die drei Wege ab, auf denen die Clients dieselbe Frage beantworten. Dieselbe Idee deckt Events ab (`RegisterEvent` gibt `false` zurück), Unit-Events (`RegisterUnitEvent` nutzen, wenn der Frame es hat, sonst manuell filtern) und Secret Values (`issecretvalue` wird geprüft, bevor ein Wert verglichen wird). Reparaturen über die Gildenbank prüfen die API (`CanGuildBankRepair`) **und** den Client.
 
 Die ehrliche Kehrseite: Nichts prüft das automatisch für mich. Mein Test-Harness (Thema von [Teil 2](/de/blog/level-time-2-testing-lua-with-go/)) fälscht die API und kann das Addon als verschiedene Clients laden, aber er prüft Logik, nicht ob eine Funktion in einem Client wirklich existiert. Tests im Spiel auf jedem Client bleiben nötig, und das Projekt führt dafür eine manuelle Checkliste.
 
@@ -385,7 +385,7 @@ Die Daten liegen an drei Orten: `LevelTimerDB` (Account-Einstellungen und Profil
 
 ## Performance-Regeln, die ich auf die harte Tour gelernt habe
 
-Ein Addon teilt sich das Frame-Budget mit dem Spiel und mit jedem anderen Addon. Die Regeln in den Entwicklernotizen von Level Time stammen alle aus echten Profilen, nicht aus Theorie:
+Ein Addon teilt sich das Frame-Budget mit dem Spiel und mit jedem anderen Addon. Die Regeln in den Entwicklernotizen von Level Time stammen alle aus echten Profiling-Sitzungen:
 
 - **Kein eigenes `OnUpdate` je Modul.** `ns.Every` bündelt alle Hintergrundaufgaben auf einem Frame, und eine Aufgabe kann ein `enabled`-Prädikat tragen, damit ein ausgeschaltetes Feature nichts kostet.
 - **Schmale Event-Abonnements.** `UNIT_*`-Events laufen über `RegisterUnitEvent` nur für den Spieler. Sehr häufige Events (das Kampflog) bekommen einen eigenen Frame mit der billigsten Vorabprüfung zuerst.
@@ -403,6 +403,6 @@ Benchmark-Zahlen habe ich hier bewusst nicht veröffentlicht; der Profiler exist
 
 ## Wie es weitergeht
 
-Ein Addon mit so vielen beweglichen Teilen und vier Client-Varianten lässt sich nicht durch Herumklicken testen. In [Teil 2](/de/blog/level-time-2-testing-lua-with-go/) zeige ich, wie ich das ganze Addon samt TOC-Reihenfolge in einem Go-Test mit gopher-lua und einer nachgebauten WoW-API laufen lasse, einschließlich Layout-Tests in vier Sprachen.
+Ein Addon mit so vielen beweglichen Teilen und vier Client-Varianten lässt sich nicht durch Herumklicken testen. In [Teil 2](/de/blog/level-time-2-testing-lua-with-go/) zeige ich, wie ich das ganze Addon samt TOC-Reihenfolge in einem Go-Test mit gopher-lua und einer nachgebauten WoW-API laufen lasse, einschließlich Tests, ob die Layouts in allen vier Sprachen passen.
 
 Wenn du das Addon einfach ausprobieren willst: Die [Level-Time-Seite](/de/page/level-time/) hat Screenshots und Installationslinks, und der Code liegt auf [GitHub](https://github.com/Noobygames/wow-statistics).

@@ -27,7 +27,7 @@ toc: true
 
 In [Teil 1](/de/blog/neuroclip-1-architecture/) habe ich die Form von Neuroclip beschrieben: ein Go-Server, ein React-Dashboard und ein paar kleine Python-Helfer. Dieser Teil begleitet ein Stück Material durch diese Maschinerie: Eine mehrstündige Twitch-Aufnahme geht hinein, ein kurzes Hochformat-Video mit eingebrannten Wort-für-Wort-Untertiteln kommt heraus.
 
-Neuroclip ist ein kommerzielles Produkt, deshalb bleibt dieser Beitrag auf Konzeptebene: die Ideen, die Abwägungen und die allgemeinen Techniken, keine Bauanleitung. [ffmpeg](https://ffmpeg.org/documentation.html) und [Whisper](https://github.com/openai/whisper) erledigen die schwere Arbeit. Die Ingenieursarbeit steckt darin, wie ein Go-Programm sie steuert: lang laufende Kindprozesse abbrechbar halten, keine halbfertigen Dateien hinterlassen und dem Spiel, das auf derselben Maschine läuft, nicht im Weg stehen.
+Neuroclip ist ein kommerzielles Produkt, deshalb bleibt dieser Beitrag auf Konzeptebene: die Ideen, die Abwägungen und die allgemeinen Techniken. Eine Bauanleitung ist es nicht. [ffmpeg](https://ffmpeg.org/documentation.html) und [Whisper](https://github.com/openai/whisper) erledigen die schwere Arbeit, und meine Arbeit steckt darin, wie ein Go-Programm sie steuert: lang laufende Kindprozesse abbrechbar halten, keine halbfertigen Dateien hinterlassen und dem Spiel, das auf derselben Maschine läuft, nicht im Weg stehen.
 
 ![Der Neuroclip-Projekt-Editor mit der Timeline eines Stream-Clips](/img/neuroclip/editor-1440.jpg)
 
@@ -44,7 +44,7 @@ Ein Twitch-VOD ist eine HLS-Playlist: eine Liste kurzer Mediensegmente, spezifiz
 - sind alle Segmente da, setzt ffmpeg sie **ohne Neukodierung** zusammen,
 - eine kleine Metadatei wird zuletzt geschrieben, und ohne sie gilt das Video nicht als heruntergeladen.
 
-Dieser Trick mit der zuletzt geschriebenen Metadatei ist ein billiger Commit-Marker. Jeder Code, der fragt „liegt dieses VOD lokal vor?“, schaut nach dem Marker und nie nach der großen Datei. Ein Absturz mittendrin kann also kein Video hinterlassen, das vollständig aussieht, es aber nicht ist. Das Chatlog des Streams wird daneben geholt, weil die Vorauswahl es später braucht.
+Weil die Metadatei zuletzt geschrieben wird, ist sie ein billiger Commit-Marker. Jeder Code, der fragt „liegt dieses VOD lokal vor?“, schaut nach dem Marker und nie nach der großen Datei. Ein Absturz mittendrin kann also kein Video hinterlassen, das nur vollständig aussieht. Das Chatlog des Streams wird daneben geholt, weil die Vorauswahl es später braucht.
 
 Vor dem Download schätzt der Code die Größe und prüft den freien Speicherplatz mit einem Sicherheitspuffer. Ein volles Laufwerk in der dritten Stunde eines Downloads ist ein Fehler, den du lieber als Meldung vor dem ersten Byte bekommst.
 
@@ -52,7 +52,7 @@ Vor dem Download schätzt der Code die Größe und prüft den freien Speicherpla
 
 Die wertvollste Entscheidung für die Qualität der Transkription fällt in OBS, noch bevor Neuroclip ins Spiel kommt. Ich nehme mehrere Audiospuren auf: die Gesamtmischung, wie im Stream zu hören (als **erste** Spur, weil die meisten Clip-Werkzeuge standardmäßig den ersten Audiostream nehmen), das Mikrofon allein und das Spiel allein.
 
-Warum ist das wichtig? Ein Spracherkennungsmodell, das Spielexplosionen, Alert-Sounds und einen Freund im Call gleichzeitig hört, rät schlechter. Ihm nur das Mikrofon zu geben, ist der billigste Genauigkeitsgewinn, den es gibt. Hat die Quelle mehr als eine Audiospur, wird die Mikrospur in eine temporäre WAV-Datei (16 kHz, mono) extrahiert; sonst bleibt es bei der Mischung. Das ist schlichtes ffmpeg, und du kannst es an deiner eigenen Aufnahme ausprobieren:
+Ein Spracherkennungsmodell, das Spielexplosionen, Alert-Sounds und einen Freund im Call gleichzeitig hört, rät schlechter. Ihm nur das Mikrofon zu geben, ist deshalb der billigste Genauigkeitsgewinn, den es gibt. Hat die Quelle mehr als eine Audiospur, wird die Mikrospur in eine temporäre WAV-Datei (16 kHz, mono) extrahiert; sonst bleibt es bei der Mischung. Das ist schlichtes ffmpeg, und du kannst es an deiner eigenen Aufnahme ausprobieren:
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -114,11 +114,11 @@ winget install --id Gyan.FFmpeg -e
 
 ## Stufe 3: Spracherkennung mit faster-whisper
 
-Die Erkennung ist ein kleiner Python-Helfer, den der Go-Server als Kindprozess startet. Ich hätte ein Go-Binding für Whisper nehmen können, aber das Python-Ökosystem rund um [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (eine CTranslate2-Neuimplementierung von Whisper) liefert mir CUDA-Unterstützung und Wort-Zeitstempel mit dem wenigsten Code. Er läuft auf der GPU und fällt auf ein langsameres, ungenaueres CPU-Modell zurück, wenn kein nutzbarer GPU-Stack da ist: Es soll überall laufen und dort gut sein, wo es kann.
+Die Erkennung ist ein kleiner Python-Helfer, den der Go-Server als Kindprozess startet. Ich hätte ein Go-Binding für Whisper nehmen können, aber das Python-Ökosystem rund um [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (eine CTranslate2-Neuimplementierung von Whisper) liefert mir CUDA-Unterstützung und Wort-Zeitstempel mit dem wenigsten Code. Er läuft auf der GPU und fällt auf ein langsameres, ungenaueres CPU-Modell zurück, wenn kein nutzbarer GPU-Stack da ist. Ich will, dass er überall läuft und dort gut ist, wo die Hardware es erlaubt.
 
-Drei Ideen tragen den Großteil der Qualität:
+Der Großteil der Qualität kommt aus drei Dingen:
 
-- **Wort-Zeitstempel** sind der ganze Grund für diesen Weg. Die Wort-für-Wort-Hervorhebung im fertigen Video braucht Start und Ende pro Wort, nicht pro Satz.
+- **Wort-Zeitstempel** sind der ganze Grund für diesen Weg. Die Wort-für-Wort-Hervorhebung im fertigen Video braucht Start und Ende für jedes einzelne Wort; Satz-Zeitstempel sind zu grob.
 - **Sprachaktivitätserkennung** läuft zuerst, damit aus Stille und Spielgeräuschen keine erfundenen Wörter werden.
 - **Ein Vokabel-Prompt** aus Figurennamen und Fachjargon des Spiels. Whisper ist ein Sprachmodell; ihm zu sagen, welche ungewöhnlichen Wörter kommen, hilft mehr als jede Nachbearbeitung. Eine Liste manueller Korrekturen fängt Namen ab, die es trotzdem falsch schreibt.
 
@@ -136,13 +136,13 @@ Deshalb ist die Vorauswahl schlichtes, deterministisches Go. Sie führt voneinan
 - Momente, die ich beim Streamen selbst markiert habe (siehe [Teil 3](/de/blog/neuroclip-3-obs-regie/)),
 - Clips, die Zuschauer auf Twitch gemacht haben.
 
-Jedes Signal geht mit eigenem Gewicht ein. Signale, die zeitlich dicht beieinanderliegen, zählen als ein Moment, und ein Moment, den mehrere verschiedene Signalarten bestätigen, steht höher als einer mit nur einem starken Signal. Die Gewichte sind benannte Konstanten im Code, Feinabstimmung ist also eine reviewbare Änderung und kein Prompt-Experiment.
+Jedes Signal geht mit eigenem Gewicht ein. Signale, die zeitlich dicht beieinanderliegen, zählen als ein Moment, und ein Moment, den mehrere verschiedene Signalarten bestätigen, steht höher als einer mit nur einem starken Signal. Die Gewichte sind benannte Konstanten im Code. Wer sie abstimmt, macht eine Änderung, die jemand im Pull Request reviewen kann, und muss nicht mit Prompts experimentieren.
 
-Das Chat-Signal ist das spannende. Der Chat reagiert ein paar Sekunden *nach* dem Ereignis, deshalb werden die Nachrichtenzeiten zurückgeschoben. Ein Ausbruch wird am **lokalen** Niveau der Chat-Aktivität gemessen, nicht an einem globalen Schwellwert. So wird ein ruhiger Stream mit plötzlichem Ausbruch genauso erkannt wie ein belebter. Wenn du etwas Ähnliches baust, stimme die Zahlen auf dein eigenes Publikum ab.
+Das Chat-Signal ist das spannendste davon. Der Chat reagiert ein paar Sekunden *nach* dem Ereignis, deshalb werden die Nachrichtenzeiten zurückgeschoben. Ein Ausbruch wird am **lokalen** Niveau der Chat-Aktivität gemessen statt an einem globalen Schwellwert. So wird ein ruhiger Stream mit plötzlichem Ausbruch genauso erkannt wie ein belebter. Wenn du etwas Ähnliches baust, stimme die Zahlen auf dein eigenes Publikum ab.
 
 Auch die Vorschlagsschwelle ist nicht fest. Sie startet bei einem Standardwert und passt sich an das an, was ich tatsächlich fertigstelle und was ich verwerfe. Was ein Mensch von Hand gewählt hat, ein Marker oder ein Zuschauer-Clip, wird immer vorgeschlagen, unabhängig von der Wertung.
 
-**Claude ist eine optionale Schicht obendrauf.** Mit Claude hängt die Vorauswahl nur ihre Begründungen an die Kandidaten, und Claude bewertet; ohne Claude zeigt der Editor direkt die regelbasierte Liste. Beide Wege enden im selben Editor, und die Begründungen sind einfache Sätze, die Liste erklärt sich also selbst.
+**Claude ist eine optionale Schicht obendrauf.** Ist Claude aktiviert, hängt die Vorauswahl nur ihre Begründungen an die Kandidaten, und Claude bewertet; ohne Claude zeigt der Editor direkt die regelbasierte Liste. Beide Wege enden im selben Editor, und die Begründungen sind einfache Sätze, die sagen, warum ein Moment auf der Liste steht.
 
 ## Stufe 5: Von 16:9 auf 9:16
 
@@ -179,30 +179,30 @@ ffmpeg -ss 600 -t 30 -i vod.mp4 -filter_complex `
 
 (608 + 1312 = 1920. Ersetze `libx264` durch `h264_nvenc`, wenn du eine NVIDIA-GPU hast.)
 
-Zwei Verfeinerungen sind wissenswert:
+Der Renderer ergänzt zwei Verfeinerungen:
 
-- **Toleranz beim Seitenverhältnis.** Hat der Spielrahmen ungefähr die Form seines Streifens, wird er einfach zugeschnitten und skaliert. Hat er eine ganz andere Form, wird er **verzerrungsfrei eingepasst** in die Mitte des Streifens, und der Rest des Streifens zeigt dasselbe Bild vergrößert, weichgezeichnet (`boxblur`) und abgedunkelt. Das ist der bekannte Look mit unscharfem Hintergrund, gebaut aus demselben Filter-Vokabular.
-- **Lange Graphen landen in einer Datei.** Mit Effekten und Overlays kann der String lang werden. Dann ist es besser, ihn in eine Datei zu legen und die an ffmpeg zu übergeben, als an Kommandozeilen-Grenzen zu stoßen. Seit ffmpeg 7.0 geht das über die allgemeine Syntax `-/option datei`, hier also `-/filter_complex graph.txt`; das ältere `-filter_complex_script` funktioniert noch, ist aber [veraltet](https://ffmpeg.org/ffmpeg.html#Main-options).
+- **Toleranz beim Seitenverhältnis.** Hat der Spielrahmen ungefähr die Form seines Streifens, wird er einfach zugeschnitten und skaliert. Hat er eine ganz andere Form, wird er **verzerrungsfrei** in die Mitte des Streifens **eingepasst**, und der Rest des Streifens zeigt dasselbe Bild vergrößert, weichgezeichnet (`boxblur`) und abgedunkelt. Das ist der bekannte Look mit unscharfem Hintergrund, gebaut aus demselben Filter-Vokabular.
+- **Lange Graphen landen in einer Datei.** Mit Effekten und Overlays kann der String lang werden. Dann ist es besser, ihn in eine Datei zu legen und diese an ffmpeg zu übergeben, als an Kommandozeilen-Grenzen zu stoßen. Seit ffmpeg 7.0 geht das über die allgemeine Syntax `-/option datei`, hier also `-/filter_complex graph.txt`; das ältere `-filter_complex_script` funktioniert noch, ist aber [veraltet](https://ffmpeg.org/ffmpeg.html#Main-options).
 
-Weil der Prozess mit einer Argumentliste statt über eine Shell startet und der Graph aus Zahlen und festen Bausteinen entsteht, gibt es nichts, wo eine bösartige Eingabe etwas einschleusen könnte. Benutzertext, der in der Untertiteldatei landet, wird mit derselben Sorgfalt behandelt, womit wir bei den Untertiteln sind.
+Weil der Prozess mit einer Argumentliste statt über eine Shell startet und der Graph aus Zahlen und festen Bausteinen entsteht, gibt es keine Stelle, an der eine bösartige Eingabe etwas einschleusen könnte. Benutzertext, der in der Untertiteldatei landet, wird mit derselben Sorgfalt behandelt, womit wir bei den Untertiteln sind.
 
 ### Wortgenaue Untertitel in ASS
 
-Die eingebrannten Untertitel sind ein [Advanced-SubStation-Alpha-Skript (ASS)](https://www.aegisub.org/), das der ffmpeg-Filter `ass` rendert. Ich habe ASS statt SRT gewählt, weil ASS einzelne Ereignisse gestalten, Text frei positionieren und eine Box hinter ein Wort zeichnen kann, SRT nicht. Der Builder schreibt ein Ereignis pro gesprochenem Wort: Der Textblock steht für die Dauer seiner Zeile, und in der Zeitspanne jedes Wortes bekommt genau dieses Wort die Hervorhebung. Hervorhebungsstil, Schrift und Farben sind einstellbar.
+Die eingebrannten Untertitel sind ein [Advanced-SubStation-Alpha-Skript (ASS)](https://www.aegisub.org/), das der ffmpeg-Filter `ass` rendert. Ich habe ASS statt SRT gewählt, weil ASS einzelne Ereignisse gestalten, Text frei positionieren und eine Box hinter ein Wort zeichnen kann; SRT kann das alles nicht. Der Builder schreibt ein Ereignis pro gesprochenem Wort: Der Textblock steht für die Dauer seiner Zeile, und in der Zeitspanne jedes Wortes bekommt genau dieses Wort die Hervorhebung. Hervorhebungsstil, Schrift und Farben sind einstellbar.
 
-Alles, was ein Nutzer tippen kann, landet in diesem Skript, und ASS hat eine eigene Steuersyntax: `{` startet Override-Tags und ein Backslash leitet eine Escape-Sequenz ein. Deshalb wird Text bereinigt, bevor er in ein Ereignis gelangt, und Stil-Overrides werden geprüft. Das ist Eingabe-Bereinigung für ein Format, das niemand als Angriffsfläche betrachtet, bis die Chat-Nachricht eines Zuschauers darin landet.
+Alles, was ein Nutzer tippen kann, landet in diesem Skript, und ASS hat eine eigene Steuersyntax: `{` startet Override-Tags und ein Backslash leitet eine Escape-Sequenz ein. Deshalb wird Text bereinigt, bevor er in ein Ereignis gelangt, und Stil-Overrides werden geprüft. Niemand betrachtet ein Untertitelformat als Angriffsfläche, bis die Chat-Nachricht eines Zuschauers darin landet.
 
-### Die Sichere Zone
+### Die sichere Zone
 
-Vertikale Plattformen verdecken Teile des Bildes mit ihrer eigenen Oberfläche: oben eine Kopfzeile, seitlich Buttons, unten Bedienelemente. Eingebrannter Text muss diese Bereiche freihalten, deshalb zeichnet der Editor ein Overlay mit der sicheren Zone. Die Ränder sind meine eigenen Arbeitswerte für die Plattformen, auf denen ich poste, keine offizielle Spezifikation. Prüfe also die aktuellen Richtlinien deiner Plattform.
+Vertikale Plattformen verdecken Teile des Bildes mit ihrer eigenen Oberfläche: oben eine Kopfzeile, seitlich Buttons, unten Bedienelemente. Eingebrannter Text muss diese Bereiche freihalten, deshalb zeichnet der Editor ein Overlay mit der sicheren Zone. Die Ränder sind meine eigenen Arbeitswerte für die Plattformen, auf denen ich poste, und stammen aus keiner offiziellen Spezifikation. Prüfe also die aktuellen Richtlinien deiner Plattform.
 
 ## Stufe 6: Hardware-Kodierung, und was bei Fehlern passiert
 
 [NVENC](https://developer.nvidia.com/video-codec-sdk) ist der Hardware-Encoder auf NVIDIA-GPUs; er nimmt die Kodierlast von einer CPU, die ohnehin ein Spiel betreibt. Der Renderer probiert zuerst den GPU-Encoder und hat einen passenden x264-Rückfall.
 
-Die Robustheit steckt in der Wiederholungsregel. Schlägt NVENC fehl, versucht der Renderer es mit x264 erneut, aber nur, wenn die GPU plausibel schuld ist: Die Fehlerausgabe von ffmpeg erwähnt den Encoder, CUDA oder den Treiber, oder es gibt gar keine Meldung, was meist heißt, dass der Prozess beendet wurde. Geht es im Fehler um den Filtergraphen oder eine fehlende Datei, würde ein zweiter Versuch mit x264 identisch scheitern, nach Minuten an Arbeit, also bricht er sofort ab. Auch ein abgebrochener Job wird nicht wiederholt: Das ist keine fehlende GPU. Eine billige Prüfung, die ein paar Bilder eines erzeugten Testbilds kodiert, sagt dem Programm einmalig, ob Hardware-Kodierung überhaupt verfügbar ist.
+Die Zuverlässigkeit kommt vor allem aus der Wiederholungsregel. Schlägt NVENC fehl, versucht der Renderer es mit x264 erneut, aber nur, wenn die GPU plausibel schuld ist: Die Fehlerausgabe von ffmpeg erwähnt den Encoder, CUDA oder den Treiber, oder es gibt gar keine Meldung, was meist heißt, dass der Prozess beendet wurde. Geht es im Fehler um den Filtergraphen oder eine fehlende Datei, würde ein zweiter Versuch mit x264 identisch scheitern, nach Minuten an Arbeit, also bricht er sofort ab. Auch ein abgebrochener Job wird nicht wiederholt, denn ein Abbruch sagt nichts über die GPU. Eine billige Prüfung, die ein paar Bilder eines erzeugten Testbilds kodiert, sagt dem Programm einmalig, ob Hardware-Kodierung überhaupt verfügbar ist.
 
-Nach dem Rendern misst ein zweiter Durchgang die Lautheit des Shorts und wendet, wenn sie deutlich vom Ziel abweicht, eine einzige lineare Verstärkung an, während das Bild ohne Neukodierung kopiert wird. Dieser Durchgang darf scheitern: Ein Fehler wird zu einem Hinweis, nicht zu einem Fehler des Renders.
+Nach dem Rendern misst ein zweiter Durchgang die Lautheit des Shorts und wendet, wenn sie deutlich vom Ziel abweicht, eine einzige lineare Verstärkung an, während das Bild ohne Neukodierung kopiert wird. Dieser Durchgang darf scheitern, und ein Fehler dort erzeugt nur einen Hinweis.
 
 ## Wie Go externe Prozesse robust steuert
 
@@ -210,7 +210,7 @@ All das nützt nichts, wenn ein Render ewig hängen, eine kaputte Datei hinterla
 
 **1. Context-Abbruch überall.** Nutze [`exec.CommandContext`](https://pkg.go.dev/os/exec#CommandContext), dann beendet der Abbruch des Contexts ffmpeg. Gib für einen abgebrochenen Lauf immer einen bekannten Fehler zurück, damit Aufrufer „der Nutzer hat abgebrochen“ nicht mit „der Encoder ist kaputt“ verwechseln.
 
-**2. Part-Dateien und atomares Umbenennen.** Schreibe unter einem temporären Namen und benenne erst auf den echten Namen um, nachdem ffmpeg mit 0 beendet wurde. Bei jedem Fehler oder Abbruch wird die Part-Datei gelöscht und die vorherige Ausgabe bleibt. Nichts weiter hinten kann eine halb kodierte Datei für eine fertige halten. Behalte die ursprüngliche Endung im temporären Namen, denn ffmpeg wählt den Muxer anhand der Endung.
+**2. Part-Dateien und atomares Umbenennen.** Schreibe unter einem temporären Namen und benenne erst auf den echten Namen um, nachdem ffmpeg mit 0 beendet wurde. Bei jedem Fehler oder Abbruch wird die Part-Datei gelöscht und die vorherige Ausgabe bleibt, sodass nichts weiter hinten eine halb kodierte Datei für eine fertige halten kann. Behalte die ursprüngliche Endung im temporären Namen, denn ffmpeg wählt den Muxer anhand der Endung.
 
 **3. Fortschritt ohne stderr-Scraping.** ffmpeg kann maschinenlesbaren Fortschritt mit `-progress <datei> -nostats` in eine Datei schreiben. Lies diese Key=Value-Datei regelmäßig und teile die Ausgabezeit durch die erwartete Länge, dann hast du einen Anteil von 0 bis 1 für die Oberfläche.
 
@@ -222,7 +222,7 @@ progress=continue
 
 (`out_time_ms` ist trotz des Namens ebenfalls in Mikrosekunden.)
 
-**4. Hintergrundpriorität.** Läuft das Werkzeug auf dem Streaming-PC selbst, sollen Renders OBS und dem Spiel weichen. Kinder erben die Priorität ihres Elternprozesses, wer sie für die gestarteten Prozesse senkt, erwischt also auch einen Python-Helfer, der ffmpeg startet. Unter Windows ist das ein Flag beim Prozessstart; unter Linux kannst du den Befehl in `nice` packen. Auch ffmpegs eigene Thread-Begrenzungen helfen.
+**4. Hintergrundpriorität.** Läuft das Werkzeug auf dem Streaming-PC selbst, sollen Renders OBS und dem Spiel weichen. Kinder erben die Priorität ihres Elternprozesses. Wer sie für die gestarteten Prozesse senkt, erwischt also auch einen Python-Helfer, der ffmpeg startet. Unter Windows ist das ein Flag beim Prozessstart; unter Linux kannst du den Befehl in `nice` packen. Auch ffmpegs eigene Thread-Begrenzungen helfen.
 
 **5. Prozesse ohne Shell.** Starte Werkzeuge mit `exec.Command(name, args...)`, nie über eine Shell, und leite ihre Ausgabe in ein Log, dem deine Oberfläche folgen kann. Beende beim Herunterfahren alle Kinder und warte auf sie, damit kein Helfer den Server überlebt und weiter Dateien schreibt. Unter Windows beendest du den ganzen Prozessbaum.
 
@@ -232,11 +232,11 @@ Die Standardbibliothek erledigt das meiste: [`os/exec`](https://pkg.go.dev/os/ex
 
 ## Stufe 7: Abnahme und Prüfungen
 
-Ein Render ist nicht fertig, wenn ffmpeg endet. Nach dem Entstehen eines Shorts schauen automatische Qualitätsprüfungen auf den Schnitt, den fertigen Render, den Kamera-Ausschnitt und die Lautheit. Jede liefert ok, Warnung, Problem oder „konnte nicht laufen“, und das Dashboard verdichtet sie zu einer Ampel.
+Wenn ffmpeg endet, muss der Short noch durch die Abnahme. Sobald er existiert, schauen automatische Qualitätsprüfungen auf den Schnitt, den fertigen Render, den Kamera-Ausschnitt und die Lautheit. Jede liefert ok, Warnung, Problem oder „konnte nicht laufen“, und das Dashboard verdichtet sie zu einer Ampel.
 
-Die Kernregel im Design: **Eine Prüfung ist ein weicher Schritt.** Eine fehlschlagende oder fehlende Prüfung lässt den Job nie scheitern. Ein kaputter Prüfer soll mich nicht daran hindern, das Video zu sehen.
+Die Designregel dazu: **Eine Prüfung ist ein weicher Schritt.** Eine fehlschlagende oder fehlende Prüfung lässt den Job nie scheitern, weil ein kaputter Prüfer mich nicht daran hindern soll, das Video zu sehen.
 
-Shorts sind nur das erste von zwei Produkten. Dieselben Bausteine speisen eine Pipeline für längere YouTube-Episoden, und eine Entscheidung dort zeigt die Haltung: Shorts brennen die Untertitel ein, Episoden liefern eine Untertitel-*Spur*, weil eingebrannter Text bei langen Videos stört und YouTube Untertitelspuren indexiert.
+Shorts sind nur das erste von zwei Produkten. Dieselben Bausteine speisen eine Pipeline für längere YouTube-Episoden, und beide gehen unterschiedlich mit Untertiteln um: Shorts brennen die Untertitel ein, Episoden liefern eine Untertitel-*Spur*, weil eingebrannter Text bei langen Videos stört und YouTube Untertitelspuren indexiert.
 
 ## Was noch holprig ist
 
@@ -246,4 +246,4 @@ Shorts sind nur das erste von zwei Produkten. Dieselben Bausteine speisen eine P
 
 ## Wie es weitergeht
 
-Als Nächstes geht es um den Teil, der den Stream selbst zu Daten macht: [Teil 3 behandelt die OBS-Regie](/de/blog/neuroclip-3-obs-regie/), die Schaltzentrale, die mit OBS spricht, Alarme auslöst und die Marker schreibt, die diese Pipeline so hoch bewertet. Wenn du das Ganze lieber sehen als lesen willst, findest du Details und die Early-Access-Warteliste auf der [Neuroclip-Seite](/de/page/neuroclip/).
+Als Nächstes wird der Stream selbst zu Daten: [Teil 3 behandelt die OBS-Regie](/de/blog/neuroclip-3-obs-regie/), die Schaltzentrale, die mit OBS spricht, Alarme auslöst und die Marker schreibt, die diese Pipeline so hoch bewertet. Wenn du das Ganze lieber sehen als lesen willst, findest du Details und die Early-Access-Warteliste auf der [Neuroclip-Seite](/de/page/neuroclip/).

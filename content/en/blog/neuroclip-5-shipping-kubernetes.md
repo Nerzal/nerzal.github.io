@@ -37,7 +37,7 @@ Neuroclip is a commercial product in early access, so this post stays on the lev
 
 The pipeline runs on [GitHub Actions](https://docs.github.com/en/actions/writing-workflows/about-workflows) and has a simple shape: **test, build, scan, sign, open a GitOps pull request, cluster**. The stages form a chain on purpose. A red test never produces an image, a red scan never produces a signature, and without a signed image there is no deploy pull request.
 
-A confession about the first stage: CI runs on Linux only. Neuroclip's real home is a Windows streaming PC, and tests that need Windows, a GPU, OBS or a browser skip themselves on a plain Linux runner. The full suite runs locally. So the honest summary is "Linux in CI, Windows on my machine", not a matrix. If you build something similar, make such skips visible, otherwise a green CI run quietly means less than you think. Also pin anything environment-dependent, such as locale and time zone, in tests: a test that depends on the runner's defaults is a flaky test waiting for a runner image update.
+A confession about the first stage: CI runs on Linux only. Neuroclip's real home is a Windows streaming PC, and tests that need Windows, a GPU, OBS or a browser skip themselves on a plain Linux runner. The full suite runs locally. So the honest summary is "Linux in CI, Windows on my machine", without an OS matrix. If you build something similar, make such skips visible, otherwise a green CI run means less than you think. Also pin anything environment-dependent, such as locale and time zone, in tests: a test that depends on the runner's defaults is a flaky test waiting for a runner image update.
 
 ## License checks without a third-party tool
 
@@ -45,7 +45,7 @@ I want Neuroclip to stay sellable, which means **no copyleft code in the binary 
 
 The idea is small: ask the toolchain which dependencies actually end up in the artifact (for Go, `go list -deps`; for npm, the production dependency tree), read each dependency's license, and fail the build on strong-copyleft families such as AGPL, GPL or SSPL. File-level copyleft like MPL-2.0 can be allowed. I wrote two short scripts for this instead of adding a scanner.
 
-The trade-off is obvious: classifying license texts is a heuristic, so anything unrecognisable is printed for manual review instead of being guessed. For a one-person project I prefer a short script I can read over a dependency I have to trust. That fits the zero-dependency habit from [Part 1](/blog/neuroclip-1-architecture/). If you need a vetted, general solution, dedicated license scanners exist; mine only answers one question.
+The trade-off: classifying license texts is a heuristic, so anything unrecognisable is printed for manual review instead of being guessed. For a one-person project I prefer a short script I can read over a dependency I have to trust. That fits the zero-dependency habit from [Part 1](/blog/neuroclip-1-architecture/). If you need a vetted, general solution, dedicated license scanners exist; mine only answers one question.
 
 ## Building the image
 
@@ -75,7 +75,7 @@ The signature is **keyless**. There is no private signing key in the repository 
 2. cosign exchanges that token with Sigstore's certificate authority for a certificate that lives for minutes and contains this identity.
 3. The signature and the certificate are recorded in a public transparency log and stored next to the image in the registry.
 
-Verification then does not ask "do you have my public key?" but "was this signed by *this repository's workflow*, issued by GitHub's OIDC provider?". That is the right question for CI-built artifacts. The [Sigstore documentation](https://docs.sigstore.dev/cosign/signing/overview/) describes the full flow.
+Instead of "do you have my public key?", verification then asks "was this signed by *this repository's workflow*, issued by GitHub's OIDC provider?". For CI-built artifacts, that identity is what you actually want to check. The [Sigstore documentation](https://docs.sigstore.dev/cosign/signing/overview/) describes the full flow.
 
 ### Install cosign and verify an image
 
@@ -145,7 +145,7 @@ The static marketing site is stateless and rolls out without downtime, so a revi
 
 ## SSO in front of the app: Keycloak, not custom login
 
-Here is the part I find most satisfying: the Go server cannot do OIDC and does not need to. A reverse proxy in front of it does.
+The Go server cannot do OIDC and does not need to, because a reverse proxy in front of it does. Of the whole setup, this is the piece I am happiest with.
 
 {{< diagram src="neuroclip-5-auth-path.svg" caption="The request path: the browser never talks to the app directly; an authenticating proxy checks the login against Keycloak and vouches for the request." >}}
 
@@ -153,7 +153,7 @@ Here is the part I find most satisfying: the Go server cannot do OIDC and does n
 2. Traffic goes to an authenticating proxy, [oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/), which runs the OpenID Connect authorization-code flow with PKCE against [Keycloak](https://www.keycloak.org/documentation) and only lets users through who hold a specific role.
 3. For authenticated requests the proxy forwards to the app and proves to it that the request is legitimate. The app is never reachable without going through the proxy.
 
-The design choices that matter, without the configuration details:
+The design choices, without the configuration details:
 
 - The Keycloak client is **confidential**, uses only the authorization-code flow with PKCE, and has exactly one redirect URI with no wildcard.
 - Access is granted by a role, and a second factor is mandatory in the realm, because the app holds access to platform accounts.

@@ -12,21 +12,21 @@ toc: true
 
 Windows 11 is a modern operating system. Its terminal, however, defaults to a shell from 2016.
 
-When you open PowerShell on a fresh Windows 11 install, you get **Windows PowerShell 5.1** — a version released in August 2016, built on the old .NET Framework 4.x and permanently frozen in time. When PowerShell Core 6.0 went GA in January 2018, Microsoft [announced](https://devblogs.microsoft.com/powershell/powershell-core-6-0-generally-available-ga-and-supported/) that Windows PowerShell would only receive critical fixes from then on — no new features. It is serviced through the [Windows lifecycle](https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-support-lifecycle), not developed.
+When you open PowerShell on a fresh Windows 11 install, you get **Windows PowerShell 5.1**, a version released in August 2016, built on the old .NET Framework 4.x and permanently frozen in time. When PowerShell Core 6.0 went GA in January 2018, Microsoft [announced](https://devblogs.microsoft.com/powershell/powershell-core-6-0-generally-available-ga-and-supported/) that Windows PowerShell would only receive critical fixes from then on, with no new features. It still gets serviced through the [Windows lifecycle](https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-support-lifecycle), but nobody develops it anymore.
 
-I ran into this the hard way when setting up [Oh My Posh](https://ohmyposh.dev) on a fresh machine — a prompt customization framework that promises beautiful, informative terminal prompts. On PowerShell 5.1, it either threw errors or rendered garbled symbols:
+I ran into this the hard way when setting up [Oh My Posh](https://ohmyposh.dev) on a fresh machine. Oh My Posh is a prompt customization framework that promises beautiful, informative terminal prompts. On PowerShell 5.1, it either threw errors or rendered garbled symbols:
 
 {{< image image="img/oh-my-posh-error-5.1.png" imageAlt="Oh My Posh rendering broken icons on PowerShell 5.1" >}}
 
-The fix was not tweaking Oh My Posh settings. The fix was switching to **PowerShell 7**.
+Tweaking the Oh My Posh settings did not help. Switching to **PowerShell 7** did.
 
 {{< skip-to anchor="installing-powershell-7" label="Skip to installation" >}}
 
 ---
 
-## Windows PowerShell vs. PowerShell — Two Different Products
+## Windows PowerShell vs. PowerShell: Two Different Products
 
-Before going further, the naming is genuinely confusing. Microsoft ships two distinct products:
+First a word on the naming, because it is genuinely confusing. Microsoft ships two distinct products:
 
 | | Windows PowerShell | PowerShell |
 |---|---|---|
@@ -37,7 +37,7 @@ Before going further, the naming is genuinely confusing. Microsoft ships two dis
 | **Status** | Maintenance only | Active development, LTS releases |
 | **Location** | `C:\Windows\System32\WindowsPowerShell\v1.0\` | `C:\Program Files\PowerShell\7\` |
 
-**Windows PowerShell** (blue icon, `powershell.exe`) is a Windows system component and will never be updated beyond 5.1. **PowerShell** (black icon, `pwsh.exe`) is the successor — a ground-up rewrite released in 2016 as PowerShell Core 6, renamed to PowerShell 7 when it reached feature parity.
+**Windows PowerShell** (blue icon, `powershell.exe`) is a Windows system component and will never be updated beyond 5.1. **PowerShell** (black icon, `pwsh.exe`) is the successor: a ground-up rewrite released in 2016 as PowerShell Core 6, renamed to PowerShell 7 when it reached feature parity.
 
 They coexist without conflict. Installing PowerShell 7 does not remove Windows PowerShell 5.1.
 
@@ -45,11 +45,11 @@ They coexist without conflict. Installing PowerShell 7 does not remove Windows P
 
 ## What You Actually Get with PowerShell 7
 
-These are the concrete differences you will notice day-to-day.
+These are the concrete differences you will notice day to day.
 
 ### Pipeline chain operators
 
-PowerShell 7.0 introduced `&&` and `||` — the operators every developer expects from a shell:
+PowerShell 7.0 introduced `&&` and `||`, the operators every developer expects from a shell:
 
 ```powershell
 # Run build, then only deploy if it succeeded
@@ -95,11 +95,11 @@ The null-coalescing operators `??` and `??=` arrived in PowerShell 7.0, the null
 
 ### Better error handling
 
-PowerShell 7.0 added `Get-Error`, which displays full exception detail with a structured view — far more useful than the truncated stack traces in 5.1.
+PowerShell 7.0 added `Get-Error`, which displays full exception detail with a structured view. That is far more useful than the truncated stack traces in 5.1.
 
 ### Modern .NET access
 
-PowerShell 7 runs on modern .NET — the current LTS release, PowerShell 7.6, is built on .NET 10. Every API and type of that runtime is directly accessible:
+PowerShell 7 runs on modern .NET. The current LTS release, PowerShell 7.6, is built on .NET 10. Every API and type of that runtime is directly accessible:
 
 ```powershell
 # JSON with JsonNode — not available on 5.1's .NET Framework 4.x
@@ -112,7 +112,7 @@ PowerShell 5.1 remoting requires WinRM (Windows Remote Management), which needs 
 
 ### Built-in ANSI color support and `$PSStyle`
 
-PowerShell 7.2 introduced `$PSStyle` — a built-in object that controls all ANSI terminal output. Writing colored output in 5.1 meant manually embedding escape sequences — and since the `` `e `` escape only exists from PowerShell 6 on, you even had to build the escape character yourself with `[char]27`. In PowerShell 7 that is a first-class language feature:
+PowerShell 7.2 introduced `$PSStyle`, a built-in object that controls all ANSI terminal output. Writing colored output in 5.1 meant manually embedding escape sequences, and since the `` `e `` escape only exists from PowerShell 6 on, you even had to build the escape character yourself with `[char]27`. In PowerShell 7 that is a first-class language feature:
 
 ```powershell
 # 5.1 — manually constructing ANSI escape sequences
@@ -127,7 +127,7 @@ $header = $PSStyle.Bold + $PSStyle.Foreground.Cyan
 Write-Host "${header}Deployment complete$($PSStyle.Reset)"
 ```
 
-`$PSStyle` also controls how PowerShell itself renders output — list views, errors, and file system entries all use it, and you can customize them:
+`$PSStyle` also controls how PowerShell itself renders output: list views, errors, and file system entries all use it, and you can customize them:
 
 ```powershell
 # Suppress color entirely for CI pipelines
@@ -155,7 +155,7 @@ At line:1 char:1
 Get-Item: Cannot find path 'C:\does\not\exist' because it does not exist.
 ```
 
-When you need the full detail, `Get-Error` gives you a structured, navigable view of the last exception — including inner exceptions, type information, and the full stack trace — without the noise of 5.1's truncated output.
+When you need the full detail, `Get-Error` gives you a structured, navigable view of the last exception (inner exceptions, type information, and the full stack trace) without the noise of 5.1's truncated output.
 
 ```powershell
 Get-Item C:\does\not\exist
@@ -198,7 +198,7 @@ $data = '{"status": "ok"}' | ConvertFrom-Json -AsHashtable
 $data["status"]   # works for any key, including dynamic ones
 ```
 
-### `Join-String` — a missing cmdlet that finally exists
+### `Join-String`: a missing cmdlet that finally exists
 
 PowerShell 5.1 had no built-in way to join pipeline output into a single string. The workaround was `($array -join ", ")` or collecting into a variable first. PowerShell 7 ships `Join-String`:
 
@@ -216,7 +216,7 @@ Get-ChildItem *.ps1 | Join-String -Property Name -Separator "`n" -OutputPrefix "
 
 ### Syntax highlighting and predictive IntelliSense
 
-Both shells color your input as you type — Windows 10 and 11 ship Windows PowerShell 5.1 with [PSReadLine](https://github.com/PowerShell/PSReadLine) 2.0, which already does syntax highlighting. PowerShell 7 bundles a current PSReadLine 2.x, which adds [predictive IntelliSense](https://learn.microsoft.com/en-us/powershell/scripting/learn/shell/using-predictors): suggestions from your history and from plugins, shown inline or as a list:
+Both shells color your input as you type. Windows 10 and 11 ship Windows PowerShell 5.1 with [PSReadLine](https://github.com/PowerShell/PSReadLine) 2.0, which already does syntax highlighting. PowerShell 7 bundles a current PSReadLine 2.x, which adds [predictive IntelliSense](https://learn.microsoft.com/en-us/powershell/scripting/learn/shell/using-predictors): suggestions from your history and from plugins, shown inline or as a list:
 
 ```powershell
 # PSReadLine version — check what you have
@@ -241,19 +241,19 @@ Measure-Command { pwsh -NoProfile -Command "exit" }
 Measure-Command { powershell -NoProfile -Command "exit" }
 ```
 
-Run each line a few times — the first (cold) start is usually far slower than the following ones. If your CI pipeline calls `pwsh -File script.ps1` dozens of times, `-NoProfile` is the biggest lever you have.
+Run each line a few times, because the first (cold) start is usually far slower than the following ones. If your CI pipeline calls `pwsh -File script.ps1` dozens of times, `-NoProfile` is the biggest lever you have.
 
 ---
 
 ## Installing PowerShell 7
 
-### Option 1 — winget (recommended)
+### Option 1: winget (recommended)
 
 ```powershell
 winget install --id Microsoft.PowerShell --source winget
 ```
 
-This installs the latest stable release — at the time of writing PowerShell 7.6, the current LTS release (March 2026, built on .NET 10). PowerShell 7.4 LTS and 7.5 reached end of support on 10 November 2026, so upgrade if you are still on one of them. The `--id` is stable across 7.x releases, so you can also use:
+This installs the latest stable release. At the time of writing that is PowerShell 7.6, the current LTS release (March 2026, built on .NET 10). PowerShell 7.4 LTS and 7.5 reached end of support on 10 November 2026, so upgrade if you are still on one of them. The `--id` is stable across 7.x releases, so you can also use:
 
 ```powershell
 winget upgrade --id Microsoft.PowerShell --source winget
@@ -261,11 +261,11 @@ winget upgrade --id Microsoft.PowerShell --source winget
 
 to stay current. The installer adds `pwsh` to `PATH` automatically.
 
-### Option 2 — Microsoft Store
+### Option 2: Microsoft Store
 
 Search for **PowerShell** in the Microsoft Store. The Store version auto-updates and requires no elevation.
 
-### Option 3 — GitHub releases
+### Option 3: GitHub releases
 
 Download the MSI installer from the [official releases page](https://github.com/PowerShell/PowerShell/releases). Choose `PowerShell-7.x.x-win-x64.msi` for 64-bit systems.
 
@@ -286,7 +286,7 @@ With PowerShell 7 installed, Oh My Posh works correctly. Install it via winget:
 winget install JanDeDobbeleer.OhMyPosh --source winget
 ```
 
-Then install a [Nerd Font](https://www.nerdfonts.com/) — Oh My Posh uses font ligatures and icons that require a patched font. [Cascadia Code NF](https://github.com/microsoft/cascadia-code) is a solid choice that Microsoft also ships:
+Then install a [Nerd Font](https://www.nerdfonts.com/), because Oh My Posh uses font ligatures and icons that require a patched font. [Cascadia Code NF](https://github.com/microsoft/cascadia-code) is a solid choice that Microsoft also ships:
 
 ```powershell
 winget install Microsoft.CascadiaCode
@@ -311,7 +311,7 @@ Add the following line to the profile:
 oh-my-posh init pwsh | Invoke-Expression
 ```
 
-To use a specific theme — Oh My Posh ships over 100 built-in themes, stored in:
+If you want a specific theme: Oh My Posh ships over 100 built-in themes, stored in:
 
 ```text
 $env:POSH_THEMES_PATH
@@ -371,17 +371,17 @@ If you have customizations in your Windows PowerShell 5.1 profile (`$HOME\Docume
 
 The main sources of incompatibility:
 
-**Module availability** — some older Windows-specific modules only exist for 5.1. Check if a module works in 7 before copying `Import-Module` lines:
+**Module availability:** some older Windows-specific modules only exist for 5.1. Check if a module works in 7 before copying `Import-Module` lines:
 
 ```powershell
 pwsh -Command "Import-Module YourModule -ErrorAction Stop"
 ```
 
-**`#Requires -PSEdition Desktop`** — scripts with this header refuse to run in PowerShell 7, which is the `Core` edition. A plain `#Requires -Version 5` is harmless: it means "5.0 or newer", so PowerShell 7 satisfies it. Remove the edition requirement once the script works in 7.
+**`#Requires -PSEdition Desktop`:** scripts with this header refuse to run in PowerShell 7, which is the `Core` edition. A plain `#Requires -Version 5` is harmless: it means "5.0 or newer", so PowerShell 7 satisfies it. Remove the edition requirement once the script works in 7.
 
-**Windows-only cmdlets** — modules like `ActiveDirectory`, `Hyper-V`, or `GroupPolicy` may not be available for PowerShell 7. Microsoft has been [adding compatibility shims](https://learn.microsoft.com/en-us/powershell/scripting/whats-new/module-compatibility), but check individually.
+**Windows-only cmdlets:** modules like `ActiveDirectory`, `Hyper-V`, or `GroupPolicy` may not be available for PowerShell 7. Microsoft has been [adding compatibility shims](https://learn.microsoft.com/en-us/powershell/scripting/whats-new/module-compatibility), but check individually.
 
-**COM objects and WMI** — `[wmiclass]` and some COM automation is Windows Framework-specific. Prefer `Get-CimInstance` over `Get-WmiObject`; CIM works in both versions.
+**COM objects and WMI:** `[wmiclass]` and some COM automation is Windows Framework-specific. Prefer `Get-CimInstance` over `Get-WmiObject`; CIM works in both versions.
 
 ---
 
@@ -396,7 +396,7 @@ The migration path is straightforward:
 3. Set PowerShell 7 as the default in Windows Terminal
 4. Copy and verify your existing profile
 
-Windows PowerShell 5.1 stays installed as a system component — it is not going anywhere. But your terminal sessions do not have to run on a shell that was released in 2016 and has not gained a feature since 2018.
+Windows PowerShell 5.1 stays installed as a system component and is not going anywhere. Your terminal sessions, however, do not have to run on a shell that was released in 2016 and has not gained a feature since 2018.
 
 ---
 

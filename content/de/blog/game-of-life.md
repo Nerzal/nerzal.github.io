@@ -11,7 +11,7 @@ tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]
 show_reading_time: true
 ---
 
-[Conways Game of Life](https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens) ist ein berühmter zellulärer Automat, den der britische Mathematiker John Horton Conway 1970 erdacht hat. Es ist ein Nullspieler-Spiel: Du legst einen Ausgangszustand fest und beobachtest, wie er sich nach festen Regeln weiterentwickelt — ohne weitere Eingaben. Trotz seiner einfachen Regeln erzeugt es überraschend komplexe, lebensähnliche Muster.
+[Conways Game of Life](https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens) ist ein berühmter zellulärer Automat, den der britische Mathematiker John Horton Conway 1970 erdacht hat. Es ist ein Nullspieler-Spiel: Du legst einen Ausgangszustand fest und beobachtest, wie er sich nach festen Regeln weiterentwickelt, ohne weitere Eingaben. Die Regeln sind einfach und erzeugen trotzdem überraschend komplexe, lebensähnliche Muster.
 
 In diesem Post implementieren wir Game of Life in Go von Grund auf, Schritt für Schritt. Am Ende hast du eine funktionierende Terminal-Simulation, die einen **Gleiter** und ein **Leichtes Raumschiff (LWSS)** in Echtzeit rendert.
 
@@ -19,7 +19,7 @@ In diesem Post implementieren wir Game of Life in Go von Grund auf, Schritt für
 
 ## Voraussetzungen
 
-Du brauchst [Go](https://go.dev/dl/) auf deinem Rechner. Die Standardbibliothek reicht vollständig aus — keine Drittanbieter-Pakete benötigt.
+Du brauchst [Go](https://go.dev/dl/) auf deinem Rechner. Die Standardbibliothek reicht aus, Drittanbieter-Pakete brauchst du für dieses Tutorial nicht.
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -48,20 +48,20 @@ Erstelle eine neue Datei namens `main.go` in einem leeren Verzeichnis und folge 
 
 Das Game of Life folgt vier Regeln, die für jeden Schritt gleichzeitig auf alle Zellen des Gitters angewendet werden:
 
-1. Eine **lebende Zelle** mit weniger als zwei lebenden Nachbarn stirbt — _Unterbevölkerung_.
+1. Eine **lebende Zelle** mit weniger als zwei lebenden Nachbarn stirbt (_Unterbevölkerung_).
 2. Eine **lebende Zelle** mit zwei oder drei lebenden Nachbarn überlebt.
-3. Eine **lebende Zelle** mit mehr als drei lebenden Nachbarn stirbt — _Überbevölkerung_.
-4. Eine **tote Zelle** mit genau drei lebenden Nachbarn wird lebendig — _Reproduktion_.
+3. Eine **lebende Zelle** mit mehr als drei lebenden Nachbarn stirbt (_Überbevölkerung_).
+4. Eine **tote Zelle** mit genau drei lebenden Nachbarn wird lebendig (_Reproduktion_).
 
-Mehr braucht es nicht. Der Rest ergibt sich aus dem Ausgangszustand.
+Alles Weitere ergibt sich aus dem Ausgangszustand.
 
 ## Implementierung
 
-Wir unterteilen die Implementierung in fünf überschaubare Schritte.
+Wir bauen das Ganze in fünf Schritten.
 
 ### 1. Datenstrukturen definieren
 
-`Cell` ist ein einfacher Boolean — lebendig oder tot. `Grid` hält die Dimensionen und ein zweidimensionales Slice von Zellen.
+`Cell` ist ein einfacher Boolean: lebendig oder tot. `Grid` hält die Dimensionen und ein zweidimensionales Slice von Zellen.
 
 ```go
 type Cell bool
@@ -95,7 +95,7 @@ func NewGrid(width, height int, initialLiveCells [][2]int) Grid {
 
 ### 3. Die Spiellogik implementieren
 
-`NextState` berechnet die nächste Generation. Wir allokieren ein neues Slice, damit wir nie denselben Zustand gleichzeitig lesen und schreiben. Das Grid direkt zu aktualisieren ist ein klassischer Game-of-Life-Fehler: Bereits geänderte Zellen fließen mit ihrem _neuen_ Zustand in die Nachbarzählung ein, sodass die halbe Fläche aus der nächsten statt aus der aktuellen Generation berechnet wird.
+`NextState` berechnet die nächste Generation. Wir allokieren ein neues Slice, damit wir nie denselben Zustand gleichzeitig lesen und schreiben. Das Gitter direkt zu aktualisieren, ist ein klassischer Game-of-Life-Fehler: Bereits geänderte Zellen fließen mit ihrem _neuen_ Zustand in die Nachbarzählung ein, sodass die halbe Fläche aus der nächsten statt aus der aktuellen Generation berechnet wird.
 
 ```go
 func (g *Grid) NextState() {
@@ -120,7 +120,7 @@ func (g *Grid) NextState() {
 }
 ```
 
-`countLiveNeighbors` prüft die acht umgebenden Zellen. Der `%`-Operator erzeugt ein **toroidales Gitter** — Zellen, die eine Kante verlassen, erscheinen auf der gegenüberliegenden Seite wieder, sodass die Simulation keine Randeffekte hat.
+`countLiveNeighbors` prüft die acht umgebenden Zellen. Der `%`-Operator erzeugt ein **toroidales Gitter**: Zellen, die eine Kante verlassen, erscheinen auf der gegenüberliegenden Seite wieder, sodass die Simulation keine Randeffekte hat.
 
 ```go
 func (g *Grid) countLiveNeighbors(x, y int) int {
@@ -146,7 +146,7 @@ func (g *Grid) countLiveNeighbors(x, y int) int {
 
 ### 4. Das Gitter rendern
 
-`Render` gibt das Gitter im Terminal aus. Lebende Zellen erscheinen als `█`, tote als Leerzeichen. Die ANSI-Escape-Sequenz `\033[H` bewegt den Cursor vor jedem Frame in die obere linke Ecke — das verhindert, dass die Ausgabe scrollt, und erzeugt einen flüssigen Animationseffekt.
+`Render` gibt das Gitter im Terminal aus. Lebende Zellen erscheinen als `█`, tote als Leerzeichen. Die ANSI-Escape-Sequenz `\033[H` bewegt den Cursor vor jedem Frame in die obere linke Ecke. Weil die Ausgabe nicht scrollt, ersetzen sich die Frames gegenseitig, und die Animation läuft flüssig.
 
 ```go
 func (g *Grid) Render() {
@@ -165,9 +165,9 @@ func (g *Grid) Render() {
 }
 ```
 
-### 5. Die Haupt-Schleife aufsetzen
+### 5. Die Hauptschleife aufsetzen
 
-Wir befüllen das Gitter mit zwei bekannten Mustern — einem **Gleiter** (bewegt sich diagonal) und einem **Leichten Raumschiff (LWSS)** (bewegt sich horizontal) — und lassen die Simulation endlos laufen.
+Wir befüllen das Gitter mit zwei bekannten Mustern, einem **Gleiter** (bewegt sich diagonal) und einem **Leichten Raumschiff (LWSS)** (bewegt sich horizontal), und lassen die Simulation endlos laufen.
 
 ```go
 func main() {
@@ -196,7 +196,7 @@ func main() {
 
 ## Vollständiger Code
 
-Speichere dies als `main.go`:
+Speichere den Code als `main.go`:
 
 ```go
 package main
@@ -316,6 +316,6 @@ Mit `Ctrl+C` beendest du die Simulation. Du solltest den Gleiter und das LWSS-Mu
 
 ## Wie es weitergeht
 
-- Probiere andere Startmuster — die [LifeWiki](https://conwaylife.com/wiki/) katalogisiert tausende davon.
+- Probiere andere Startmuster. Die [LifeWiki](https://conwaylife.com/wiki/) katalogisiert tausende davon.
 - Ersetze `fmt.Print` durch eine Terminal-Bibliothek wie [tcell](https://github.com/gdamore/tcell) oder [bubbletea](https://github.com/charmbracelet/bubbletea) für Farben und Tastatureingaben.
 - Wenn dich das Containerisieren von Go-Anwendungen interessiert, schau in meinen Artikel über [Go und Docker](/de/blog/go-docker/).

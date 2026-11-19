@@ -22,11 +22,11 @@ featured_image: "img/level-time/goal-bingo.png"
 toc: true
 ---
 
-> **Level Time bauen** — Teil 4 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · [Teil 3: die Release-Pipeline](/de/blog/level-time-3-release-pipeline/) · Teil 4 (dieser Artikel). Produktseite: [Level Time](/de/page/level-time/).
+> **Level Time bauen**, Teil 4 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · [Teil 3: die Release-Pipeline](/de/blog/level-time-3-release-pipeline/) · Teil 4 (dieser Artikel). Produktseite: [Level Time](/de/page/level-time/).
 
 In den ersten drei Teilen habe ich beschrieben, wie Level Time aufgebaut ist, wie ich sein Lua mit Go teste und wie es veröffentlicht wird. In diesem Teil geht es darum, was passiert, wenn ein zweites Addon auf den Schultern des ersten stehen soll: **Level Time Goals**, ein Schwester-Addon für Streamer, das im selben Repository liegt (`StreamGoal/`) und als eigenes CurseForge-Projekt erscheint.
 
-Es ist auch die Geschichte einer API, die ich anfangs gar nicht als API entworfen habe. Das sage ich offen, denn die interessanten Lehren stecken in der Lücke zwischen dem, was ein Kommentar verspricht, und dem, was der Code tatsächlich garantiert. Level Time und Level Time Goals sind junge Projekte, öffentlich auf [GitHub](https://github.com/Noobygames/wow-statistics) gebaut, und die Rad-Animation am Ende ist im Spielclient noch nicht vollständig geprüft (dazu unten mehr).
+Es ist auch die Geschichte einer API, die ich anfangs gar nicht als API entworfen habe. Die Lehren stecken in der Lücke zwischen dem, was ein Kommentar verspricht, und dem, was der Code tatsächlich garantiert. Level Time und Level Time Goals sind junge Projekte, öffentlich auf [GitHub](https://github.com/Noobygames/wow-statistics) gebaut, und die Rad-Animation am Ende ist im Spielclient noch nicht vollständig geprüft (dazu unten mehr).
 
 ## Was Level Time Goals kann
 
@@ -37,7 +37,7 @@ Mit Level Time Goals setzt ein Streamer Ziele und zeigt sie als Karten auf dem B
 - Regeln, an denen man scheitern kann („kein Tod bis Level 30“, „kein Auktionshaus“)
 - Checklisten mit Unterzielen und Freitext-Ziele, die man per Klick abhakt
 
-Zusätzlich zu einzelnen Zielen gibt es **Bingo-Karten** (3×3 oder 5×5, die Felder haken sich selbst ab) und ein **Glücksrad**, das dein nächstes Ziel aus einem Pool zieht – mit begrenzten Neuwürfen und optional bei jedem Level-Up.
+Zusätzlich zu einzelnen Zielen gibt es **Bingo-Karten** (3×3 oder 5×5, die Felder haken sich selbst ab) und ein **Glücksrad**, das dein nächstes Ziel aus einem Pool zieht, mit begrenzten Neuwürfen und optional bei jedem Level-Up.
 
 ![Eine 3×3-Bingo-Karte in Level Time Goals mit zwei erledigten Feldern](/img/level-time/goal-bingo.png)
 
@@ -48,7 +48,7 @@ Zusätzlich zu einzelnen Zielen gibt es **Bingo-Karten** (3×3 oder 5×5, die Fe
 Goals hätte auch ein Reiter in Level Time sein können. Ich habe mich aus drei Gründen dagegen entschieden.
 
 1. **Optional für Nutzer.** Die meisten Level-Time-Nutzer wollen Statistiken, Timer und Tabellen, keine Streamer-Overlays. Ein eigenes Addon heißt: Sie laden den Code nie, sehen die Einstellungen nie und zahlen weder Speicher noch Update-Kosten dafür.
-2. **Eigener Release-Rhythmus.** Goals ändert sich schnell: neue Zielarten, Pack-Inhalte, Rad-Feinheiten. Level Time soll keinen Release (und keine neue Runde Prüfung im Spiel) brauchen, nur weil ein Bingo-Feldtext sich ändert. In [Teil 3](/de/blog/level-time-3-release-pipeline/) habe ich beschrieben, wie ein Tag ein Addon veröffentlicht; Goals hat ein eigenes CurseForge-Projekt (ID `1744370` in der `.toc`) und ein eigenes Zip.
+2. **Eigener Release-Rhythmus.** Goals ändert sich schnell: neue Zielarten, Pack-Inhalte, Rad-Feinheiten. Level Time soll kein Release (und keine neue Runde Prüfung im Spiel) brauchen, nur weil sich ein Bingo-Feldtext ändert. In [Teil 3](/de/blog/level-time-3-release-pipeline/) habe ich beschrieben, wie ein Tag ein Addon veröffentlicht; Goals hat ein eigenes CurseForge-Projekt (ID `1744370` in der `.toc`) und ein eigenes Zip.
 3. **Der Kern bleibt schlank und ehrlich.** Wenn ein Schwester-Addon auf dem Kern aufbauen kann, ohne etwas zu kopieren, ist das ein ordentlicher Beleg, dass die Bausteine des Kerns wirklich wiederverwendbar sind. Hätte ich ein Modul in Goals kopieren müssen, gehörte es woanders hin.
 
 Die Kopplung steht in `StreamGoal/StreamGoal.toc`:
@@ -64,7 +64,7 @@ Die Kopplung steht in `StreamGoal/StreamGoal.toc`:
 
 ## Die öffentliche API von Level Time
 
-Jetzt der ehrliche Teil. Als ich das Schwester-Addon geschrieben habe, bestand die „API“ aus einer Zeile in `Core/LevelTimer.lua`:
+Als ich das Schwester-Addon geschrieben habe, bestand die „API“ aus einer Zeile in `Core/LevelTimer.lua`:
 
 ```lua
 -- Interface for sister addons: the namespace with all building blocks
@@ -73,7 +73,7 @@ Jetzt der ehrliche Teil. Als ich das Schwester-Addon geschrieben habe, bestand d
 LevelTimerAPI = ns
 ```
 
-Das ist der ganze Export: **Die private Namespace-Tabelle `ns` des Addons wird als Global namens `LevelTimerAPI` veröffentlicht.** Jedes Addon bekommt beim Laden seiner Dateien `(addonName, ns)` als Varargs, und diese Tabelle ist normalerweise der private Treffpunkt der eigenen Dateien. Indem ich sie einem Global zuweise, ist die ganze Tabelle für andere Addons erreichbar. Weil Goals die Abhängigkeit deklariert, sind die Dateien von Level Time vollständig geladen, wenn die erste Datei von Goals läuft – die Tabelle ist also komplett.
+Das ist der ganze Export: **Die private Namespace-Tabelle `ns` des Addons wird als Global namens `LevelTimerAPI` veröffentlicht.** Jedes Addon bekommt beim Laden seiner Dateien `(addonName, ns)` als Varargs, und diese Tabelle ist normalerweise der private Treffpunkt der eigenen Dateien. Indem ich sie einer globalen Variable zuweise, ist die ganze Tabelle für andere Addons erreichbar. Weil Goals die Abhängigkeit deklariert, sind die Dateien von Level Time vollständig geladen, wenn die erste Datei von Goals läuft. Die Tabelle ist also komplett.
 
 Goals bindet sie einmal ganz oben in seiner `Core.lua`:
 
@@ -85,7 +85,7 @@ ns.LT = LT
 ns.L = LT.L                -- localisation shared with Level Time
 ```
 
-Danach läuft in Goals alles über `ns.LT`. Eine kurze, vereinfachte Tour durch die Fläche, die tatsächlich genutzt wird:
+Danach läuft in Goals alles über `ns.LT`. Eine kurze, vereinfachte Tour durch den Teil der API, den Goals tatsächlich nutzt:
 
 ```lua
 -- lifecycle
@@ -106,7 +106,7 @@ LT.Theme.RGB("accent")          -- theme tokens, so a theme switch recolours Goa
 
 ### Wie Callbacks sicher bleiben
 
-Die wichtigste Entwurfsentscheidung in dieser Fläche ist nicht das Global, sondern wie Ereignisse zugestellt werden. Level Time führt Level-Ups in zwei Phasen aus (`OnLevelCompleted` mit dem alten Level, dann `OnLevelStarted` mit dem neuen) und lässt jeden Callback durch `ns.RunCallbacks` laufen:
+Die wichtigste Entwurfsentscheidung in diesem Teil der API ist, wie Ereignisse zugestellt werden. Level Time führt Level-Ups in zwei Phasen aus (`OnLevelCompleted` mit dem alten Level, dann `OnLevelStarted` mit dem neuen) und lässt jeden Callback durch `ns.RunCallbacks` laufen:
 
 ```lua
 -- Simplified from Lib/Lifecycle.lua
@@ -117,25 +117,25 @@ local function runAll(callbacks, ...)
 end
 ```
 
-Jeder Callback ist per [`xpcall`](https://www.lua.org/manual/5.1/manual.html#pdf-xpcall) geschützt: Ein Fehler im Level-Up-Handler von Goals kann den Handler von Level Time nicht aufhalten – und umgekehrt. Das ist die wertvollste Eigenschaft der API für ein Plugin-Ökosystem: **Der Fehler eines Konsumenten bleibt der Fehler des Konsumenten.**
+Jeder Callback ist per [`xpcall`](https://www.lua.org/manual/5.1/manual.html#pdf-xpcall) geschützt: Ein Fehler im Level-Up-Handler von Goals kann den Handler von Level Time nicht aufhalten, und umgekehrt. Das ist die wertvollste Eigenschaft der API für ein Plugin-Ökosystem: **Der Fehler eines Konsumenten bleibt der Fehler des Konsumenten.**
 
 ### Was die API nicht ist
 
-Mit kritischem Blick auf meinen eigenen Code: Das hat die „öffentliche API“ **nicht**:
+Mit kritischem Blick auf meinen eigenen Code fehlen der „öffentlichen API“ drei Dinge:
 
 - **Keine Versionsnummer.** Es gibt kein `LevelTimerAPI.version` und keine Kompatibilitätsprüfung. Beide Addons kommen aus einem Repository, ich verlasse mich also darauf, dass sie immer zusammen aktualisiert werden.
 - **Keine Trennung stabil/intern.** Alles in `ns` ist erreichbar, auch Dinge, die nie für andere Addons gedacht waren.
 - **Kein dokumentierter Vertrag.** Der Vertrag besteht aus einem Kommentar und der `CLAUDE.md` des Projekts. Dort steht: Nutze diese Bausteine, kopiere sie nicht, und *wenn etwas fehlt, ergänze es in Level Time*.
 
-Diese letzte Regel hat tatsächlich funktioniert. Sie macht aus der API-Fläche etwas, das nach Bedarf wächst, getrieben von einem echten Konsumenten statt von Spekulation.
+Diese letzte Regel hat tatsächlich funktioniert. Durch sie wächst die API nach Bedarf, getrieben von einem echten Konsumenten statt von Spekulation.
 
 ## Lehren für das API-Design
 
-Auch wenn die Fläche informell ist: Goals darauf zu bauen hat mir gezeigt, was ich zuerst formalisieren würde.
+Auch wenn die API informell ist: Goals darauf zu bauen hat mir gezeigt, was ich zuerst formalisieren würde.
 
 **1. Entscheide, was stabil ist, und sag es.** Den ganzen Namespace zu veröffentlichen ist die billigste API und die teuerste in der Pflege: Jede umbenannte Hilfsfunktion ist ein möglicher Breaking Change für einen Konsumenten. Mit einem Konsumenten unter eigener Kontrolle ist das erträglich, mit einem Drittanbieter nicht. Der nächste Schritt wäre eine kleine, explizite Tabelle wie `LevelTimerAPI.v1`, die nur Funktionen enthält, auf die ich mich festlege.
 
-**2. Features erkennen, nicht Versionen.** Die Konventionen von Level Time sagen schon: Jede Client-API, die nicht in jedem Spiel-Flavor existiert, wird abgesichert (`if GetPVPSessionStats then ...`), und dem Client unbekannte Events sind harmlos, weil `ns.RegisterEvent` `false` zurückgibt statt einen Fehler zu werfen. Dieselbe Haltung gilt zwischen Addons. Ein defensiver Konsument sähe so aus (das Muster, das ich für ein Drittanbieter-Addon nutzen würde – nicht das, was Goals heute tut):
+**2. Features erkennen, nicht Versionen.** Die Konventionen von Level Time sagen schon: Jede Client-API, die nicht in jedem Spiel-Flavor existiert, wird abgesichert (`if GetPVPSessionStats then ...`), und dem Client unbekannte Events sind harmlos, weil `ns.RegisterEvent` `false` zurückgibt statt einen Fehler zu werfen. Dieselbe Haltung gilt zwischen Addons. Ein defensiver Konsument sähe so aus (das Muster, das ich für ein Drittanbieter-Addon nutzen würde; Goals macht das heute nicht):
 
 ```lua
 local LT = LevelTimerAPI
@@ -228,7 +228,7 @@ end
 
 {{< diagram src="level-time-4-ease.svg" caption="Die kubische Ease-out-Kurve der Drehung: Mehr als die Hälfte der Rotation passiert im ersten Viertel der vier Sekunden, und das Rad kommt mit Geschwindigkeit null am Ziel an." >}}
 
-Weil die Rotation aus der *vergangenen Zeit* berechnet wird und nicht durch einen festen Schritt pro Frame, dauert die Drehung vier Sekunden – egal ob das Spiel mit 30 oder 144 Bildern pro Sekunde läuft. Ein langsamer Frame erzeugt einen größeren Sprung, keine längere Animation.
+Weil die Rotation aus der *vergangenen Zeit* berechnet wird und nicht durch einen festen Schritt pro Frame, dauert die Drehung vier Sekunden, egal ob das Spiel mit 30 oder 144 Bildern pro Sekunde läuft. Ein langsamer Frame erzeugt einen größeren Sprung, keine längere Animation.
 
 ### Frame-Budget
 
@@ -236,17 +236,17 @@ Ein `OnUpdate`-Handler, der ewig läuft, ist eine klassische Performance-Falle, 
 
 - das Skript läuft nur, solange der Rad-Rahmen sichtbar ist, und ohne laufende Drehung kehrt der Handler schon in der ersten Zeile zurück
 - es wird über `LT.SetUpdateScript(frame, "StreamGoalWheel", update)` registriert, einen Helfer von Level Time, der den Handler so umhüllt, dass der eingebaute Profiler ihn unter seinem Namen messen kann
-- Text dreht sich nicht mit den Stücken (FontStrings lassen sich nicht in jedem Client drehen), deshalb wird die Zeile unter dem Rad nur aktualisiert, wenn das Stück unter dem Zeiger wechselt, über einen Text-nur-bei-Änderung-Helfer
+- Text dreht sich nicht mit den Stücken (FontStrings lassen sich nicht in jedem Client drehen), deshalb wird die Zeile unter dem Rad nur aktualisiert, wenn das Stück unter dem Zeiger wechselt, über einen Helfer, der Text nur bei einer Änderung setzt
 
 Der Tick-Ton beim Vorbeidrehen der Stücke nutzt dieselbe Prüfung „Stück unter dem Zeiger hat gewechselt“ und kostet zwischen den Ticks nichts.
 
 ### Was noch offen ist
 
-Ich sage es offen: Die `ROADMAP.md` führt das Rad als umgesetzt, mit dem Hinweis, dass es noch im echten Spiel geprüft werden muss (ein Punkt auf meiner manuellen Prüfliste). Die Tests beweisen die Logik, nicht die Darstellung. Ob `SetRotation` auf Texturen in allen vier unterstützten Clients richtig aussieht, kann mir nur ein Login sagen; im Repository gibt es sogar einen Debug-Check (`/lt debug check`), der den Client fragt, ob er diese Texturen drehen kann. Die Idee der Zuschauer-Abstimmung aus der Roadmap ist aus einem schlichten Grund offen: Addons können den Twitch-Chat nicht lesen.
+Die `ROADMAP.md` führt das Rad als umgesetzt, mit dem Hinweis, dass es noch im echten Spiel geprüft werden muss (ein Punkt auf meiner manuellen Prüfliste). Die Tests beweisen die Logik, nicht die Darstellung. Ob `SetRotation` auf Texturen in allen vier unterstützten Clients richtig aussieht, kann mir nur ein Login sagen; im Repository gibt es sogar einen Debug-Check (`/lt debug check`), der den Client fragt, ob er diese Texturen drehen kann. Die Idee der Zuschauer-Abstimmung aus der Roadmap ist aus einem schlichten Grund offen: Addons können den Twitch-Chat nicht lesen.
 
 ## Das Rad mit dem Go-Harness testen
 
-All das ist testbar, weil die Mathematik aus reinen Funktionen besteht und die Animation von `elapsed` getrieben wird. In [Teil 2](/de/blog/level-time-2-testing-lua-with-go/) habe ich das Harness beschrieben: ein Go-Programm mit [gopher-lua](https://github.com/yuin/gopher-lua), das das Addon in `.toc`-Reihenfolge gegen eine nachgebaute WoW-API lädt. Für das Schwester-Addon macht der Stub dasselbe mit der `.toc` von Goals, wenn ein Szenarioname mit `streamgoal_` beginnt: Er lädt zuerst Level Time, dann Goals in einen eigenen Namespace – genau wie der Client.
+All das ist testbar, weil die Mathematik aus reinen Funktionen besteht und die Animation von `elapsed` getrieben wird. In [Teil 2](/de/blog/level-time-2-testing-lua-with-go/) habe ich das Harness beschrieben: ein Go-Programm mit [gopher-lua](https://github.com/yuin/gopher-lua), das das Addon in `.toc`-Reihenfolge gegen eine nachgebaute WoW-API lädt. Für das Schwester-Addon macht der Stub dasselbe mit der `.toc` von Goals, wenn ein Szenarioname mit `streamgoal_` beginnt: Er lädt zuerst Level Time, dann Goals in einen eigenen Namespace, genau wie der Client.
 
 Das Rad-Szenario (`tests/streamgoal_wheel_test.lua`, gekürzt) sieht so aus:
 
@@ -305,7 +305,7 @@ Go installierst du über [go.dev/doc/install](https://go.dev/doc/install). Die P
 - Ein zweiter Konsument ist das beste API-Review, das man bekommen kann. Jedes Mal, wenn Goals etwas brauchte, hatte die Frage „gehört das in den Kern?“ eine konkrete Antwort.
 - Den ganzen Namespace zu veröffentlichen ist schnell und in Ordnung, solange man beide Seiten kontrolliert. Schreib auf, ab wann es das nicht mehr ist.
 - Erst das Ergebnis festlegen, dann animieren. So bleibt der Zufall testbar und die Animation optional.
-- Zeitbasierte Animation, ein früher Rücksprung im Leerlauf und ein Profiler-Haken machen `OnUpdate`-Code billig genug zum Ausliefern.
+- Zeitbasierte Animation, ein früher Rücksprung im Leerlauf und ein Profiler-Hook machen `OnUpdate`-Code billig genug zum Ausliefern.
 
 ## Wie geht es weiter?
 

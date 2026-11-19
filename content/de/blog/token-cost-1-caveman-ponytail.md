@@ -53,7 +53,7 @@ Daraus folgen zwei Dinge, die fast jeden Benchmark in dieser Serie erklären:
 - **Ausgabe ist pro Token teuer, aber mengenmäßig klein.** In Agenten-Sessions besteht der Großteil der Tokens aus Eingabe und Cache Reads. Ein Caveman-Nutzer hat über 662 Claude-Code-Sessions einen Ausgabe-Anteil von **0,3 % aller Tokens** gemessen (berichtet in Cavemans [HONEST-NUMBERS.md](https://github.com/JuliusBrussee/caveman/blob/main/docs/HONEST-NUMBERS.md)). Ein Werkzeug, das nur Antworten kürzt, kann die Ausgabe stark senken und die Rechnung trotzdem kaum bewegen.
 - **Alles, was man dem Prompt hinzufügt, kostet in jedem Turn.** Ein Skill mit 1.000 Tokens, der pro Antwort 300 Ausgabe-Tokens spart, lohnt sich nur bei ausreichend langen Antworten. Eine kürzere Antwort spart dafür später auch Eingabe, weil sie in jedem folgenden Turn als Verlauf erneut gelesen wird.
 
-Dieses Modell sollte man im Kopf behalten. Die ehrliche Frage an jedes Werkzeug lautet nicht „Wie viele Tokens entfernt es?“, sondern „**Sinkt die Rechnung des Anbieters für dieselbe Aufgabe?**“
+Dieses Modell sollte man im Kopf behalten. Die Zahl entfernter Tokens sagt wenig; bei jedem Werkzeug frage ich: „**Sinkt die Rechnung des Anbieters für dieselbe Aufgabe?**“
 
 ## Caveman: weniger sagen, weniger lesen
 
@@ -149,7 +149,7 @@ Cavemans eigenes README ist ungewöhnlich offen, und die Seite [HONEST-NUMBERS.m
 
 Ein Vorbehalt zur JetBrains-Zeile: Der [Beitrag im JetBrains-AI-Blog](https://blog.jetbrains.com/ai/2026/07/speak-to-ai-agents-like-cavemen-tosave-tokens/) hat während meiner Recherche automatisierte Zugriffe abgelehnt. Die Zahlen stammen daher aus Cavemans eigener Zusammenfassung und aus der Presseberichterstattung über den Beitrag ([InfoWorld](https://www.infoworld.com/article/4193775/talk-like-a-caveman-prompts-save-tokens-but-far-less-than-promised.html), [The New Stack](https://thenewstack.io/caveman-mode-token-savings/)). Dort heißt es außerdem, JetBrains habe etwa 10 % erwartete Kostenersparnis gesehen, oft überlagert von der Streuung einzelner Läufe.
 
-Das Muster ist eindeutig: **Die Stimme kürzt Antworten zuverlässig, aber Antworten sind ein kleiner Teil der Agenten-Rechnung.** Moderne Modelle antworten bereits recht knapp, wenn man „be concise“ sagt; gegen diese Basis bringt die Standardstufe `/caveman` nur noch 3 %. Der Hersteller schreibt selbst, dass Agenten-Sessions „mostly code and tool calls, which the voice leaves alone“ sind. Genau deshalb komprimiert v4 inzwischen die Eingabe.
+**Die Stimme kürzt Antworten zuverlässig, aber Antworten sind ein kleiner Teil der Agenten-Rechnung.** Moderne Modelle antworten bereits recht knapp, wenn man „be concise“ sagt; gegen diese Basis bringt die Standardstufe `/caveman` nur noch 3 %. Der Hersteller schreibt selbst, dass Agenten-Sessions „mostly code and tool calls, which the voice leaves alone“ sind. Genau deshalb komprimiert v4 inzwischen die Eingabe.
 
 ### Kosten und wann es nicht hilft
 
@@ -167,7 +167,7 @@ Die Faustregel des Herstellers ist die richtige: Die vom Anbieter abgerechneten 
 
 ### Wie es Tokens spart
 
-Ponytail komprimiert nichts. Es ändert, *was* der Agent zu bauen beschließt. Bevor er Code schreibt, steigt er eine Leiter hinauf und bleibt auf der ersten Sprosse stehen, die trägt:
+Ponytail komprimiert nichts; es ändert, *was* der Agent zu bauen beschließt. Bevor er Code schreibt, steigt er eine Leiter hinauf und bleibt auf der ersten Sprosse stehen, die trägt:
 
 1. Muss das überhaupt existieren?
 2. Gibt es das schon in dieser Codebasis?
@@ -244,7 +244,7 @@ Die Lücke zwischen −26 % und −10 % Kosten hat dieselbe Ursache wie bei Cave
 - **Die Regeln kosten Eingabe.** Jeder Request trägt den Skill mit. Bei winzigen Aufgaben kann der Overhead die Ersparnis übersteigen; ein GitHub-Issue ([#121](https://github.com/DietrichGebert/ponytail/issues/121)) fand je nach Modell Kostenänderungen von −13 % bis +55 % für eine einzelne Aufgabe.
 - **„Weniger Code“ ist eine Ermessensfrage.** Manchmal *ist* die 120-Zeilen-Klasse genau das Richtige. Man diskutiert gelegentlich mit ihm. Für Scaffolding, bei dem man Breite will, `/ponytail lite` oder `off` nutzen.
 - **Debugging ist nicht gemessen.** Der Hersteller-Benchmark hat die Shell deaktiviert; für lange Debugging-Sessions gibt es keine Zahlen.
-- **Es ist ein Regelwerk, keine Garantie.** Die versteckten Prüfungen zeigen, dass Code damit nicht *unsicherer* wird; sie zeigen nicht, dass er *sicherer* wird.
+- **Es garantiert nichts.** Die versteckten Prüfungen zeigen, dass Code damit nicht *unsicherer* wird; sie zeigen nicht, dass er *sicherer* wird.
 
 ## Caveman und Ponytail zusammen
 

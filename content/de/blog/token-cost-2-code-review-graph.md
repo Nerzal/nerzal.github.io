@@ -24,7 +24,7 @@ toc: true
 
 > **Serie: Token-Kosten in agentischer KI senken.** [Teil 1: Wohin die Tokens fließen, Caveman und Ponytail](/de/blog/token-cost-1-caveman-ponytail/) · Teil 2: code-review-graph und Hooks (du bist hier) · [Teil 3: Headroom, Auto-Updates und das kombinierte Setup](/de/blog/token-cost-3-headroom-stack/)
 
-In [Teil 1](/de/blog/token-cost-1-caveman-ponytail/) haben wir gesehen, dass der größte Teil der Token-Rechnung eines Agenten **Eingabe** ist: alles, was der Agent liest, in jedem Turn als Verlauf erneut gesendet. Die häufigste Eingabe in einer Coding-Session ist Quellcode. Um „Was geht kaputt, wenn ich diese Funktion umbenenne?“ zu beantworten, greppt ein Agent typischerweise nach dem Namen, öffnet die drei oder vier besten Treffer komplett und folgt vielleicht noch ein paar Imports. Jede dieser Dateien bleibt danach für den Rest der Session im Kontext.
+In [Teil 1](/de/blog/token-cost-1-caveman-ponytail/) haben wir gesehen, dass der größte Teil der Token-Rechnung eines Agenten **Eingabe** ist: alles, was der Agent liest und was in jedem Turn als Verlauf erneut gesendet wird. Die häufigste Eingabe in einer Coding-Session ist Quellcode. Um „Was geht kaputt, wenn ich diese Funktion umbenenne?“ zu beantworten, greppt ein Agent typischerweise nach dem Namen, öffnet die drei oder vier besten Treffer komplett und folgt vielleicht noch ein paar Imports. Jede dieser Dateien bleibt danach für den Rest der Session im Kontext.
 
 [code-review-graph](https://github.com/tirth8205/code-review-graph) (MIT, aktuelles Release **v2.4.0** vom 11.11.2026) ersetzt einen großen Teil dieses Lesens durch eine Abfrage gegen einen lokalen Codegraphen.
 
@@ -205,7 +205,7 @@ fi
 # <<< code-review-graph sync hook <<<
 ```
 
-Zwei Details sind wichtig. Alle Hooks enden mit `|| true`: **Der Graph blockiert nie einen Commit.** Und sie überspringen verknüpfte [Git-Worktrees](https://git-scm.com/docs/git-worktree), solange `CRG_HOOK_WORKTREES=1` nicht gesetzt ist, weil jeder Worktree einen eigenen Graphen bräuchte. Wer mehrere Agenten parallel in Worktrees laufen lässt, sollte die Variable setzen, sonst fragen die Agenten in den Worktrees einen Graphen des Haupt-Checkouts ab.
+Alle Hooks enden mit `|| true`, also **blockiert der Graph nie einen Commit.** Außerdem überspringen sie verknüpfte [Git-Worktrees](https://git-scm.com/docs/git-worktree), solange `CRG_HOOK_WORKTREES=1` nicht gesetzt ist, weil jeder Worktree einen eigenen Graphen bräuchte. Wer mehrere Agenten parallel in Worktrees laufen lässt, sollte die Variable setzen, sonst fragen die Agenten in den Worktrees einen Graphen des Haupt-Checkouts ab.
 
 Verwaltet dein Team Hooks mit [pre-commit](https://pre-commit.com/), [Husky](https://typicode.github.io/husky/) oder [Lefthook](https://lefthook.dev/), gehört `.git/hooks/` möglicherweise diesem Werkzeug. Dann denselben Aufruf `code-review-graph update --quiet` dort als lokalen Hook eintragen.
 
@@ -261,7 +261,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Der optionale Input `fail-on-risk` macht daraus ein Merge-Gate. Das ist der richtige Ort für eine harte Sperre, nicht der lokale `pre-commit`-Hook.
+Der optionale Input `fail-on-risk` macht daraus ein Merge-Gate. Wer eine harte Sperre will, setzt sie hier und nicht im lokalen `pre-commit`-Hook.
 
 ### Komfort: Make-Targets
 

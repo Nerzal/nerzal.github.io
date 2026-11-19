@@ -11,27 +11,25 @@ toc: true
 
 ## What is Hugo?
 
-Hugo is a static site generator that offers several benefits for building fast and secure websites.
+Hugo is a static site generator for building fast and secure websites.
 
-It has a fast build time, making it ideal for generating large sites quickly. Its intuitive interface and straightforward directory structure make it easy for users to get started with Hugo.
+Builds are fast, so even large sites are generated quickly. The directory structure is straightforward and the interface is intuitive, which makes it easy to get started. Templates, shortcodes and custom output formats give you flexibility, and the result can be deployed to many hosting platforms.
 
-Additionally, Hugo provides flexibility through templates, shortcodes, and custom output formats, and can be easily deployed to a variety of hosting platforms.
-
-It is also well-suited for handling large sites and is more secure than dynamic sites because it generates static HTML files. Overall, Hugo is a popular choice for developers and content creators looking to build efficient and secure websites.
+Hugo handles large sites well, and because it generates static HTML files, the result is more secure than a dynamic site. It is a popular choice for developers and content creators who want efficient, secure websites.
 
 ## Why should u use Hugo?
 
-1. **Speed**: Hugo is designed to be fast, with a build time of milliseconds for sites with thousands of pages. This makes it ideal for generating large sites quickly. Also having static HTML files often lead to blazingly fast loading times, which lead to good [PageSpeedInsights](https://pagespeed.web.dev/) scores.
+1. Speed: Hugo builds sites with thousands of pages in milliseconds, so large sites are generated quickly. Static HTML files also tend to load blazingly fast, which leads to good [PageSpeedInsights](https://pagespeed.web.dev/) scores.
 
-2. **Ease of use**: Hugo has a simple and intuitive interface, with a straightforward directory structure and Markdown-based content files. This makes it easy for new users to get started with Hugo.
+2. Ease of use: Hugo has a simple, intuitive interface, a straightforward directory structure and Markdown-based content files, so new users get started quickly.
 
-3. **Flexibility**: Hugo allows you to customize your site with templates, shortcodes, and custom output formats. This makes it easy to build a site that fits your specific needs.
+3. Flexibility: You can customize your site with templates, shortcodes, and custom output formats, and build a site that fits your specific needs.
 
-4. **Portability**: Hugo sites can be easily deployed to a variety of hosting platforms, including GitHub Pages, Amazon S3, and Netlify. This makes it easy to host your site wherever you prefer.
+4. Portability: Hugo sites can be deployed to many hosting platforms, including GitHub Pages, Amazon S3, and Netlify, so you can host your site wherever you prefer.
 
-5. **Scalability**: Hugo is designed to handle large sites with ease, making it easy to scale your site as it grows.
+5. Scalability: Hugo handles large sites without trouble, so your site can keep growing.
 
-6. **Security**: Hugo generates static HTML files, which means that there are no dynamic elements or database queries. This makes Hugo sites more secure and less vulnerable to attacks.
+6. Security: Hugo generates static HTML files, so there are no dynamic elements or database queries. That leaves attackers much less to work with.
 
 ## Install Hugo
 
@@ -51,7 +49,7 @@ The easiest way to install Hugo on Windows is using **Winget** (Windows Package 
     winget install Hugo.Hugo
     ```
 
-3.  Restart your terminal to ensure the new PATH is loaded.
+3.  Restart your terminal so the new PATH is loaded.
 
 If you installed `Hugo.Hugo.Extended` earlier, switch packages with `winget uninstall Hugo.Hugo.Extended`, then run the install command above. Later updates: `winget upgrade Hugo.Hugo`.
 
@@ -186,7 +184,7 @@ The command is identical in Bash and PowerShell. Your site is now available at [
 
 ## Create a new website
 
-To create a new website, you simply need to run the following command:
+To create a new website, run the following command:
 
 ```bash
 hugo new site example.com
@@ -252,7 +250,7 @@ As a first step, we replace the content of the **home.html** file that is locate
 {{ end }}
 ```
 
-`{{ .Content }}` is a template action that simply renders the Markdown content of a file into HTML. There is much more to explain about templates, shortcodes etc., but for now it is only important that this is going to put your Markdown file content into HTML.
+`{{ .Content }}` is a template action that simply renders the Markdown content of a file into HTML. There is much more to explain about templates, shortcodes etc., but for now all that matters is that your Markdown content ends up in the HTML.
 
 Now we need a content file to render. Use the following command:
 
@@ -290,7 +288,7 @@ title = 'My first page'
 It's **very nice** to meet you!
 ```
 
-We have finally reached the last step. Now we can start a Hugo server to see what we have achieved. Use the following command:
+In the last step we start a Hugo server to see the result. Use the following command:
 
 ```bash
 hugo server -D

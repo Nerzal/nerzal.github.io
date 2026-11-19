@@ -13,13 +13,13 @@ toc: true
 
 [Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/) behandelte die drei Grundlagen, die jeder öffentliche Server benötigt: UFW, Fail2ban und automatische Sicherheitsupdates. Damit sind die häufigsten automatisierten Angriffe bereits abgewehrt.
 
-Dieser Teil konzentriert sich auf die Reduzierung der Angriffsfläche — sowohl auf Kernel-Ebene als auch im Privilege-Modell. Die Maßnahmen hier erfordern etwas mehr Überlegung als Teil 1, aber keine davon setzt zusätzliche Software voraus.
+Dieser Teil verkleinert die Angriffsfläche, sowohl auf Kernel-Ebene als auch im Privilege-Modell. Die Maßnahmen brauchen etwas mehr Überlegung als Teil 1, keine davon setzt aber zusätzliche Software voraus.
 
 > **Voraussetzungen:** Teil 1 abgeschlossen, SSH abgesichert, Nicht-Root-Sudo-Benutzer.
 
 ---
 
-## 1 — Kernel-Hardening mit sysctl
+## 1. Kernel-Hardening mit sysctl
 
 Der Linux-Kernel stellt Laufzeitparameter über `/proc/sys/` bereit. Viele Standardwerte priorisieren Kompatibilität vor Sicherheit. Der Befehl `sysctl` schreibt diese Parameter; eine Konfiguration in `/etc/sysctl.d/` macht sie über Neustarts hinaus persistent.
 
@@ -89,7 +89,7 @@ sysctl net.ipv4.tcp_syncookies
 
 ### Prozesse anderer Benutzer verbergen
 
-In vielen Hardening-Anleitungen taucht `kernel.hidepid` auf. **Das ist kein sysctl** — `sysctl --system` würde den Schlüssel als unbekannt melden. `hidepid` ist eine Mount-Option des `proc`-Dateisystems ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). Mit `hidepid=invisible` (ältere numerische Schreibweise: `hidepid=2`) können Nicht-Root-Benutzer die `/proc/[pid]`-Verzeichnisse anderer Benutzer weder lesen noch auflisten — `ps` und `htop` zeigen nur noch die eigenen Prozesse.
+In vielen Hardening-Anleitungen taucht `kernel.hidepid` auf. **Das ist kein sysctl**, und `sysctl --system` würde den Schlüssel als unbekannt melden. `hidepid` ist eine Mount-Option des `proc`-Dateisystems ([proc(5)](https://man7.org/linux/man-pages/man5/proc.5.html)). Mit `hidepid=invisible` (ältere numerische Schreibweise: `hidepid=2`) können Nicht-Root-Benutzer die `/proc/[pid]`-Verzeichnisse anderer Benutzer weder lesen noch auflisten. `ps` und `htop` zeigen dann nur noch die eigenen Prozesse.
 
 Diese Zeile in `/etc/fstab` eintragen:
 
@@ -115,17 +115,17 @@ sudo usermod -aG procview monitoring
 
 ---
 
-## 2 — Unnötige Dienste deaktivieren
+## 2. Unnötige Dienste deaktivieren
 
-Jeder laufende Dienst ist eine potenzielle Angriffsfläche. Auf einem minimalen VPS laufen standardmäßig mehrere Dienste, die auf einem Desktop sinnvoll sind, auf einem Server aber keinen Zweck erfüllen.
+Jeder laufende Dienst vergrößert die Angriffsfläche. Auf einem minimalen VPS laufen standardmäßig mehrere Dienste, die auf einem Desktop sinnvoll sind, auf einem Server aber keinen Zweck erfüllen.
 
-Was aktiv ist auflisten:
+Auflisten, was aktiv ist:
 
 ```bash
 sudo systemctl list-units --type=service --state=running
 ```
 
-Häufige Kandidaten zum Deaktivieren auf einem headless Server — sofern vorhanden. Eine minimale Ubuntu-Server-Installation bringt Avahi, CUPS und BlueZ gar nicht erst mit; sie tauchen meist auf, wenn ein Desktop-Image verwendet wurde oder ein Paket sie nachgezogen hat. `Unit … not found` heißt schlicht: nichts zu tun.
+Das sind häufige Kandidaten zum Deaktivieren auf einem headless Server, sofern vorhanden. Eine minimale Ubuntu-Server-Installation bringt Avahi, CUPS und BlueZ gar nicht erst mit; sie tauchen meist auf, wenn ein Desktop-Image verwendet wurde oder ein Paket sie nachgezogen hat. `Unit … not found` heißt schlicht: nichts zu tun.
 
 ```bash
 # mDNS — Geräteerkennung, auf einem Server nicht relevant
@@ -138,21 +138,21 @@ sudo systemctl disable --now cups
 sudo systemctl disable --now bluetooth
 ```
 
-Danach prüfen, welche Ports noch offen sind und sie den Prozessen zuordnen:
+Danach prüfen, welche Ports noch offen sind, und sie den Prozessen zuordnen:
 
 ```bash
 sudo ss -tlnp
 ```
 
-Jede Zeile in der Ausgabe sollte einem Dienst entsprechen, den man bewusst exponiert hat. Falls ein unbekannter Port erscheint: erst nachforschen, dann schließen — `systemd-resolved` auf `127.0.0.53:53` ist beispielsweise erwartet.
+Jede Zeile in der Ausgabe sollte einem Dienst entsprechen, den man bewusst nach außen freigegeben hat. Falls ein unbekannter Port erscheint, erst nachforschen und dann schließen. `systemd-resolved` auf `127.0.0.53:53` ist zum Beispiel erwartet.
 
 ---
 
-## 3 — Sudo-Hardening
+## 3. Sudo-Hardening
 
 Die Standard-`sudo`-Gruppe gewährt uneingeschränkten Root-Zugriff. Für die meisten Aufgaben ist das weiter als nötig.
 
-sudoers ausschließlich über `visudo` bearbeiten — es prüft die Syntax vor dem Speichern und verhindert, dass man sich aus sudo aussperrt:
+sudoers nur über `visudo` bearbeiten. Es prüft die Syntax vor dem Speichern, sodass man sich mit einem Tippfehler nicht aus sudo aussperrt:
 
 ```bash
 sudo visudo
@@ -168,9 +168,9 @@ Defaults timestamp_timeout=5
 Defaults logfile=/var/log/sudo.log
 ```
 
-> **Zu `log_input` / `log_output`:** Viele Anleitungen ergänzen `Defaults log_input, log_output` für eine vollständige Sitzungsaufzeichnung nach `/var/log/sudo-io`. Vorsicht: `log_input` zeichnet **jeden Tastendruck** in einer sudo-Sitzung auf — auch Passwörter, die in Programme wie `sudo passwd` oder `sudo mysql -p` eingegeben werden — und `log_output` speichert alles Ausgegebene inklusive Secrets. Nur aktivieren, wenn `/var/log/sudo-io` entsprechend geschützt und rotiert wird ([sudoers(5)](https://www.sudo.ws/docs/man/sudoers.man/)).
+> **Zu `log_input` / `log_output`:** Viele Anleitungen ergänzen `Defaults log_input, log_output` für eine vollständige Sitzungsaufzeichnung nach `/var/log/sudo-io`. Vorsicht: `log_input` zeichnet **jeden Tastendruck** in einer sudo-Sitzung auf, auch Passwörter, die in Programme wie `sudo passwd` oder `sudo mysql -p` eingegeben werden, und `log_output` speichert alles Ausgegebene inklusive Secrets. Nur aktivieren, wenn `/var/log/sudo-io` entsprechend geschützt und rotiert wird ([sudoers(5)](https://www.sudo.ws/docs/man/sudoers.man/)).
 
-Falls ein Benutzer nur einen bestimmten Dienst verwalten muss, ihn auf genau das beschränken. Die Regel kommt in eine eigene Drop-in-Datei:
+Falls ein Benutzer nur einen bestimmten Dienst verwalten muss, ihn auf genau diesen Dienst beschränken. Die Regel kommt in eine eigene Drop-in-Datei:
 
 ```bash
 sudo visudo -f /etc/sudoers.d/deploy
@@ -182,7 +182,7 @@ deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart nginx
 deploy ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
 ```
 
-Diese Regel schränkt nur dann etwas ein, wenn `deploy` **nicht** zusätzlich Mitglied der `sudo`-Gruppe ist — sonst gewährt die Zeile `%sudo ALL=(ALL:ALL) ALL` weiterhin vollen Root-Zugriff. Bevor die Mitgliedschaft entfernt wird, sicherstellen, dass ein anderes Konto noch funktionierenden Admin-Zugriff hat (zweite SSH-Sitzung als dieser Benutzer öffnen und `sudo -v` ausführen), dann:
+Diese Regel schränkt nur dann etwas ein, wenn `deploy` **nicht** zusätzlich Mitglied der `sudo`-Gruppe ist. Sonst gewährt die Zeile `%sudo ALL=(ALL:ALL) ALL` weiterhin vollen Root-Zugriff. Bevor die Mitgliedschaft entfernt wird, sicherstellen, dass ein anderes Konto noch funktionierenden Admin-Zugriff hat (zweite SSH-Sitzung als dieser Benutzer öffnen und `sudo -v` ausführen), dann:
 
 ```bash
 sudo gpasswd -d deploy sudo
@@ -191,7 +191,7 @@ sudo gpasswd -d deploy sudo
 sudo -l -U deploy
 ```
 
-Auf bestehende zu weitreichende Wildcard-Berechtigungen in `/etc/sudoers.d/` prüfen:
+Prüfen, ob in `/etc/sudoers.d/` bereits zu weitreichende Wildcard-Berechtigungen stehen:
 
 ```bash
 sudo ls -la /etc/sudoers.d/
@@ -200,22 +200,22 @@ sudo cat /etc/sudoers.d/*
 
 ---
 
-## 4 — Login- und Passwort-Richtlinien
+## 4. Login- und Passwort-Richtlinien
 
 Auch mit schlüsselbasiertem SSH können lokale Konten über die physische Konsole oder Out-of-Band-Management-Schnittstellen authentifiziert werden. Eine Passwort-Richtlinie begrenzt die Auswirkungen schwacher lokaler Anmeldedaten.
 
-Was eine _gute_ Richtlinie ausmacht, hat sich geändert. [NIST SP 800-63B (Revision 4)](https://pages.nist.gov/800-63-4/sp800-63b.html), die Referenz, an der sich die meisten Compliance-Frameworks orientieren, schreibt vor:
+Was eine _gute_ Richtlinie ausmacht, hat sich geändert. [NIST SP 800-63B (Revision 4)](https://pages.nist.gov/800-63-4/sp800-63b.html), die Referenz, an der sich die meisten Compliance-Frameworks orientieren, schreibt für prüfende Systeme inzwischen vor:
 
-- **Mindestlänge verlangen** — 15 Zeichen für Passwörter, die der einzige Faktor sind,
-- **neue Passwörter gegen eine Blockliste prüfen** — häufig verwendete, erwartbare oder kompromittierte Werte,
-- **keine Zusammensetzungsregeln** ("mindestens eine Ziffer, ein Großbuchstabe, ein Sonderzeichen"),
-- **keine erzwungenen periodischen Wechsel** — nur bei Hinweisen auf eine Kompromittierung.
+- **eine Mindestlänge verlangen**: 15 Zeichen für Passwörter, die der einzige Faktor sind,
+- **neue Passwörter gegen eine Blockliste prüfen**, die häufig verwendete, erwartbare oder kompromittierte Werte enthält,
+- **keine Zusammensetzungsregeln vorschreiben** ("mindestens eine Ziffer, ein Großbuchstabe, ein Sonderzeichen"),
+- **keine periodischen Wechsel erzwingen**, sondern nur bei Hinweisen auf eine Kompromittierung.
 
 Erzwungene Rotation und Zusammensetzungsregeln treiben Benutzer zu vorhersehbaren Mustern wie `Sommer2026!` → `Herbst2026!`. Länge plus Blockliste ist sowohl stärker als auch alltagstauglicher.
 
 ### Passwort-Alterung in `/etc/login.defs`
 
-Ubuntus Standard `PASS_MAX_DAYS 99999` (kein Ablauf) entspricht bereits NIST — also so lassen. Wichtig: `login.defs` unterstützt keine Kommentare am Ende einer Wertzeile — ein angehängtes `# …` wird Teil des Werts und die Einstellung wird verworfen. Kommentare gehören immer in eine eigene Zeile:
+Ubuntus Standard `PASS_MAX_DAYS 99999` (kein Ablauf) entspricht bereits NIST, also so lassen. Wichtig: `login.defs` unterstützt keine Kommentare am Ende einer Wertzeile. Ein angehängtes `# …` wird Teil des Werts, und die Einstellung wird verworfen. Kommentare gehören immer in eine eigene Zeile:
 
 ```bash
 sudo nano /etc/login.defs
@@ -241,7 +241,7 @@ sudo chage --maxdays 99999 --mindays 1 alice
 
 ### Länge und Blockliste mit pwquality
 
-`libpam-pwquality` installieren — es klinkt sich über PAM ein, sobald ein Passwort mit `passwd` geändert wird:
+`libpam-pwquality` installieren. Es klinkt sich über PAM ein, sobald ein Passwort mit `passwd` geändert wird:
 
 ```bash
 sudo apt install libpam-pwquality -y
@@ -264,7 +264,7 @@ usercheck = 1
 enforce_for_root
 ```
 
-`dictcheck` nutzt die lokale cracklib-Wortliste. Sie fängt gängige und wörterbuchbasierte Passwörter ab, ist aber keine Liste _geleakter_ Passwörter. Wer das braucht, prüft Kandidaten gegen einen Breach-Datenbestand wie [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords) — dessen Range-API nutzt k-Anonymität, sodass nur die ersten fünf Zeichen des SHA-1-Hashs die Maschine verlassen.
+`dictcheck` nutzt die lokale cracklib-Wortliste. Sie fängt gängige und wörterbuchbasierte Passwörter ab, ist aber keine Liste _geleakter_ Passwörter. Wer das braucht, prüft Kandidaten gegen einen Breach-Datenbestand wie [Have I Been Pwned's Pwned Passwords](https://haveibeenpwned.com/Passwords). Dessen Range-API nutzt k-Anonymität, sodass nur die ersten fünf Zeichen des SHA-1-Hashs des Passworts die Maschine verlassen.
 
 ---
 
@@ -273,10 +273,10 @@ enforce_for_root
 | Maßnahme             | Wirkung                                                 |
 | -------------------- | ------------------------------------------------------- |
 | sysctl-Hardening     | Schließt Netzwerk-Angriffsvektoren auf Kernel-Ebene     |
-| Deaktivierte Dienste | Reduziert die Anzahl der Eintrittspunkte                |
+| Deaktivierte Dienste | Reduziert die Zahl der Eintrittspunkte, die man absichern muss |
 | Sudo-Einschränkungen | Begrenzt den Schaden bei einem kompromittierten Konto   |
 | Passwort-Richtlinie  | Erhöht den Aufwand für Brute-Force lokaler Anmeldedaten |
 
-Diese vier Maßnahmen erfordern keine externen Tools und erzeugen keinen Netzwerkverkehr — es sind reine Konfigurationsänderungen am bereits Vorhandenen.
+Diese vier Maßnahmen erfordern keine externen Tools und erzeugen keinen Netzwerkverkehr. Alle ändern nur die Konfiguration von Software, die bereits installiert ist.
 
 **Teil 3** behandelt die tiefere Schicht: Mandatory Access Control mit AppArmor, Kernel-Level-Audit-Logging mit `auditd` und Datei-Integritätsüberwachung mit AIDE.

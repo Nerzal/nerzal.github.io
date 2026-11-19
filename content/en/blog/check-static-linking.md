@@ -12,30 +12,28 @@ toc: true
 
 ## What is the difference between statically and dynamically linked binaries?
 
-Statically linked binaries and dynamically linked binaries refer to two different ways of linking software libraries to an executable program.
+Static and dynamic linking are two ways of attaching software libraries to an executable program.
 
 A statically linked binary **includes all necessary libraries** within the binary executable file itself. This means that when the program is executed, it does not rely on any external libraries, as all required libraries are already included in the binary. Static linking produces larger binary files, but they can be more portable and self-contained.
 
 A dynamically linked binary, on the other hand, links to external libraries at runtime, rather than including them within the binary itself. When a dynamically linked binary is executed, it relies on shared libraries installed on the system to provide necessary functionality. This can result in smaller binary files, but requires the system to have the necessary shared libraries installed to run the program.
 
-In summary, statically linked binaries are larger and self-contained, while dynamically linked binaries are smaller but rely on external libraries to provide functionality. The choice between static and dynamic linking depends on the specific requirements of the program and the target environment.
+Which one you pick depends on what the program needs and where it will run.
 
 ## When to use statically linked libraries?
 
-1. Command-line tools: Many command-line tools, such as file compression utilities or network monitoring tools, can be distributed as statically linked binaries. This allows users to quickly and easily download and run the tool without having to install additional dependencies.
-2. Embedded systems: When developing software for embedded systems, statically linking the necessary libraries can be important to ensure that the program will run correctly on the device, as the target environment may have limited resources or lack the required libraries.
-3. Cross-platform software: Programs that need to run on multiple platforms, such as games or productivity software, may be distributed as statically linked binaries to ensure compatibility across different operating systems and architectures.
+1. Command-line tools: Many command-line tools, such as file compression utilities or network monitoring tools, can be distributed as statically linked binaries. Users download the tool and run it without installing additional dependencies.
+2. Embedded systems: When developing software for embedded systems, statically linking the necessary libraries helps the program run correctly on the device, because the target environment may have limited resources or lack the required libraries.
+3. Cross-platform software: Programs that need to run on multiple platforms, such as games or productivity software, may be distributed as statically linked binaries so they work the same across different operating systems and architectures.
 4. Security-focused software: Security-focused software, such as encryption tools or password managers, is sometimes distributed as statically linked binaries, because it cannot be tricked into loading a manipulated shared library at runtime (for example via `LD_PRELOAD`). This comes with a trade-off though: a statically linked library does **not** receive the security patches your Linux distribution ships. If a vulnerability is found in an embedded library, the binary has to be rebuilt and redeployed. Security scanners also have a harder time finding vulnerable library versions inside a static binary. Static linking moves the responsibility for patching from the operating system to you.
 
 ## Check if a binary has been statically or dynamically linked
 
-We have a golang cli tool called swag. And we want to integrate it into our CI pipeline. So it would be helpful to statically link the binary.
+We have a golang cli tool called swag and want to integrate it into our CI pipeline, so it would be helpful to statically link the binary.
 
 Lets see, what the go compiler produces with default parameters.
 
-The -o flag just tells the compiler how to name the output file.
-
-And the path is the path to the main.go file.
+The -o flag just tells the compiler how to name the output file, and the path points to the main.go file.
 
 ```bash
 go build -o swag cmd/swag/main.go
@@ -53,7 +51,7 @@ The command outputs:
 swag: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, Go BuildID=gfj1RxRs_HuaewolHit9/HmUS_HdD_89W_XqAu3ee/wf7S14q1IwrJ5uuIdWJA/pmDUv61yXYXhrSKw7FtO, with debug_info, not stripped
 ```
 
-And we can see that the binary has been dynamically linked. The reason is [cgo](https://pkg.go.dev/cmd/cgo): packages like `net` or `os/user` use the C library of the system when cgo is enabled, which is the default on Linux if a C compiler is installed.
+The binary has been dynamically linked. The reason is [cgo](https://pkg.go.dev/cmd/cgo): packages like `net` or `os/user` use the C library of the system when cgo is enabled, which is the default on Linux if a C compiler is installed.
 
 Now we build the same Go program without cgo, which should result in a statically linked binary.
 
@@ -89,7 +87,7 @@ That command produces this output:
 swag-static: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=7mPpucO9Ncafg5_JKWjE/DZbvRKfuHP9vWS79aEaM/3KcHlAJg9L4fvQnb8AL9/FxPS7iMjUAmw_Pc4KTaM, with debug_info, not stripped
 ```
 
-And we can see that we do now have a statically linked binary.
+Now the binary is statically linked.
 
 ## Alternatives to the file command
 

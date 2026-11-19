@@ -13,19 +13,19 @@ toc: true
 
 [Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/) behandelte die grundlegenden Maßnahmen: UFW, Fail2ban und automatische Updates. [Teil 2](/de/blog/ubuntu-server-hardening-2-system/) verschärfte die Systemkonfiguration: sysctl, unnötige Dienste, sudo und Login-Richtlinien.
 
-Dieser Teil hat einen anderen Charakter. Während die ersten beiden Posts auf das _Verhindern_ von Kompromittierungen ausgerichtet waren, gehen die Maßnahmen hier davon aus, dass ein ausreichend motivierter Angreifer irgendwann eindringen könnte — und konzentrieren sich darauf, es zu **erkennen**, zu **begrenzen** und **Beweise** zu haben wenn es passiert.
+Dieser Teil funktioniert anders. Die ersten beiden Posts zielten auf das _Verhindern_ von Kompromittierungen. Die Maßnahmen hier gehen davon aus, dass ein ausreichend motivierter Angreifer irgendwann eindringen könnte. Deshalb geht es darum, den Einbruch zu **erkennen**, zu **begrenzen** und **Beweise** zu haben, wenn es passiert.
 
 > **Voraussetzungen:** Teile 1 und 2 abgeschlossen, SSH abgesichert, Nicht-Root-Sudo-Benutzer.
 
 ---
 
-## 1 — AppArmor: Mandatory Access Control
+## 1. AppArmor: Mandatory Access Control
 
-[AppArmor](https://apparmor.net/) ist ein Mandatory-Access-Control-Framework (MAC), das in den Linux-Kernel eingebaut ist. Es erzwingt per-Programm-Sicherheitsrichtlinien: Ein Profil definiert genau, welche Dateien ein Prozess lesen, schreiben oder ausführen darf und welche Netzwerkverbindungen er aufbauen darf. Die Richtlinien werden vom Kernel durchgesetzt — ein Prozess kann sich nicht dagegen entscheiden.
+[AppArmor](https://apparmor.net/) ist ein Mandatory-Access-Control-Framework (MAC), das in den Linux-Kernel eingebaut ist. Es arbeitet mit Sicherheitsrichtlinien pro Programm: Ein Profil definiert genau, welche Dateien ein Prozess lesen, schreiben oder ausführen darf und welche Netzwerkverbindungen er aufbauen darf. Der Kernel setzt die Richtlinien durch, ein Prozess kann sich also nicht dagegen entscheiden.
 
-Die praktische Konsequenz: Wenn ein Angreifer eine Schwachstelle in nginx ausnutzt und Code-Ausführung unter dem nginx-Prozess erlangt, hält AppArmor ihn auf das beschränkt, was nginx legitim braucht. Er kann `/etc/shadow` nicht lesen, nicht in `/var/spool/cron` schreiben und keine Shells starten.
+In der Praxis heißt das: Wenn ein Angreifer eine Schwachstelle in nginx ausnutzt und Code-Ausführung unter dem nginx-Prozess erlangt, hält AppArmor ihn auf das beschränkt, was nginx legitim braucht. Er kann `/etc/shadow` nicht lesen, nicht in `/var/spool/cron` schreiben und keine Shells starten.
 
-### Ubuntu liefert AppArmor aktiviert
+### Ubuntu liefert AppArmor aktiviert aus
 
 Aktuellen Status prüfen:
 
@@ -35,8 +35,8 @@ sudo apparmor_status
 
 Profile erscheinen in zwei Modi:
 
-- **enforce** — Verstöße werden blockiert und protokolliert
-- **complain** — Verstöße werden protokolliert, aber erlaubt (für die Entwicklung neuer Profile)
+- **enforce**: Verstöße werden blockiert und protokolliert
+- **complain**: Verstöße werden protokolliert, aber erlaubt (für die Entwicklung neuer Profile)
 
 Das community-gepflegte Profil-Set und die Verwaltungswerkzeuge installieren:
 
@@ -95,13 +95,13 @@ sudo apt install apparmor-notify -y
 sudo aa-notify -s 1 -v
 ```
 
-`aa-logprof` ist das Werkzeug für den nächsten Schritt: Es geht die protokollierten Verweigerungen interaktiv durch und bietet an, die **Profile zu erweitern**, damit sie erlaubt werden. Nur Regeln annehmen, die man versteht — jedes "Allow" lockert die Einschränkung.
+`aa-logprof` ist das Werkzeug für den nächsten Schritt: Es geht die protokollierten Verweigerungen interaktiv durch und bietet an, die **Profile zu erweitern**, damit sie erlaubt werden. Nur Regeln annehmen, die man versteht, denn jedes "Allow" lockert die Einschränkung.
 
 ---
 
-## 2 — auditd: Kernel-Level-Audit-Logging
+## 2. auditd: Kernel-Level-Audit-Logging
 
-Das Linux Audit System zeichnet sicherheitsrelevante Ereignisse auf Syscall-Ebene auf. Es besteht aus zwei Teilen: Das **Audit-Subsystem im Kernel** erzeugt die Ereignisse anhand der geladenen Regeln, und der Userspace-Daemon [auditd](https://man7.org/linux/man-pages/man8/auditd.8.html) nimmt sie entgegen und schreibt sie nach `/var/log/audit/audit.log`. Anders als Anwendungslogs kann ein unprivilegierter kompromittierter Prozess es nicht zum Schweigen bringen — die Ereignisse entstehen im Kernel, nicht im Prozess. Ein Angreifer mit Root-Rechten kann den Daemon zwar stoppen, aber genau das wird protokolliert (`DAEMON_END`), und mit gesperrten Regeln (`-e 2`, siehe unten) lassen sich die Regeln ohne Neustart nicht ändern. Damit ist es die primäre Evidenzquelle in der Post-Incident-Forensik.
+Das Linux Audit System zeichnet sicherheitsrelevante Ereignisse auf Syscall-Ebene auf. Es besteht aus zwei Teilen: Das **Audit-Subsystem im Kernel** erzeugt die Ereignisse anhand der geladenen Regeln, und der Userspace-Daemon [auditd](https://man7.org/linux/man-pages/man8/auditd.8.html) nimmt sie entgegen und schreibt sie nach `/var/log/audit/audit.log`. Anders als Anwendungslogs kann ein unprivilegierter kompromittierter Prozess es nicht zum Schweigen bringen, weil die Ereignisse im Kernel entstehen und der Prozess darauf keinen Einfluss hat. Ein Angreifer mit Root-Rechten kann den Daemon zwar stoppen, aber genau das wird protokolliert (`DAEMON_END`), und mit gesperrten Regeln (`-e 2`, siehe unten) lassen sich die Regeln ohne Neustart nicht ändern. Damit ist das Audit-Log die wichtigste Beweisquelle in der Forensik nach einem Vorfall.
 
 ```bash
 sudo apt install auditd audispd-plugins -y
@@ -146,7 +146,7 @@ sudo nano /etc/audit/rules.d/99-hardening.rules
 -w /etc/security/faillock.conf  -p wa -k pam
 ```
 
-Ältere Anleitungen überwachen auch `/var/log/faillog` und `/var/log/lastlog`. Die kann man weglassen: `faillog` wurde von den ausgemusterten Modulen `pam_tally`/`pam_tally2` geschrieben und fehlt auf aktuellem Ubuntu meist (`pam_faillock` hält seine Zähler in `/var/run/faillock/`), und ab Ubuntu 25.04 ist `lastlog` durch `lastlog2` mit einer SQLite-Datenbank ersetzt — diese Watches würden schlicht nie auslösen. Man braucht sie ohnehin nicht: PAM meldet jede Anmeldung bereits als `USER_AUTH`-, `USER_LOGIN`- und `USER_START`-Ereignis an das Audit-Subsystem (siehe Abfragen unten).
+Ältere Anleitungen überwachen auch `/var/log/faillog` und `/var/log/lastlog`. Die kann man weglassen: `faillog` wurde von den ausgemusterten Modulen `pam_tally`/`pam_tally2` geschrieben und fehlt auf aktuellem Ubuntu meist (`pam_faillock` hält seine Zähler in `/var/run/faillock/`), und ab Ubuntu 25.04 ist `lastlog` durch `lastlog2` mit einer SQLite-Datenbank ersetzt, diese Watches würden also schlicht nie auslösen. Man braucht sie ohnehin nicht: PAM meldet jede Anmeldung bereits als `USER_AUTH`-, `USER_LOGIN`- und `USER_START`-Ereignis an das Audit-Subsystem (siehe Abfragen unten).
 
 Regeln laden:
 
@@ -184,11 +184,11 @@ sudo aureport --comm --start today
 
 ---
 
-## 3 — AIDE: Datei-Integritätsüberwachung
+## 3. AIDE: Datei-Integritätsüberwachung
 
-[AIDE](https://aide.github.io/) (Advanced Intrusion Detection Environment) erstellt einen kryptografischen Snapshot des Dateisystems in einem bekannt-guten Zustand. Bei nachfolgenden Durchläufen vergleicht es das Live-Dateisystem mit diesem Snapshot und meldet alle Unterschiede: neue Dateien, gelöschte Dateien, geänderte Berechtigungen, geänderter Inhalt.
+[AIDE](https://aide.github.io/) (Advanced Intrusion Detection Environment) erstellt einen kryptografischen Snapshot des Dateisystems in einem Zustand, der als sauber bekannt ist. Bei nachfolgenden Durchläufen vergleicht es das Live-Dateisystem mit diesem Snapshot und meldet alle Unterschiede: neue Dateien, gelöschte Dateien, geänderte Berechtigungen, geänderter Inhalt.
 
-Wenn ein Angreifer eine Backdoor installiert, eine System-Binary ersetzt oder eine Konfigurationsdatei modifiziert, erkennt AIDE es — auch wenn der Angreifer seine Spuren in Anwendungslogs verwischt.
+Wenn ein Angreifer eine Backdoor installiert, eine System-Binary ersetzt oder eine Konfigurationsdatei modifiziert, erkennt AIDE das, auch wenn der Angreifer seine Spuren in Anwendungslogs verwischt.
 
 ```bash
 sudo apt install aide aide-common -y
@@ -204,15 +204,15 @@ Die Standards decken bereits `/usr`, `/bin`, `/sbin`, `/etc` und verwandte Verze
 
 ### Datenbank initialisieren
 
-Das dauert beim ersten Durchlauf einige Minuten — AIDE hasht jede überwachte Datei:
+Der erste Durchlauf dauert einige Minuten, weil AIDE jede überwachte Datei hasht:
 
 ```bash
 sudo aideinit
 ```
 
-Unter Debian und Ubuntu schreibt `aideinit` `/var/lib/aide/aide.db.new` und kopiert sie anschließend selbst nach `/var/lib/aide/aide.db` — ein manuelles `mv` ist nicht nötig.
+Unter Debian und Ubuntu schreibt `aideinit` `/var/lib/aide/aide.db.new` und kopiert sie anschließend selbst nach `/var/lib/aide/aide.db`, ein manuelles `mv` ist also nicht nötig.
 
-Eine Prüfung ausführen um zu bestätigen dass es keine unerwarteten Unterschiede gibt:
+Eine Prüfung ausführen, um zu bestätigen, dass es keine unerwarteten Unterschiede gibt:
 
 ```bash
 sudo aide --check
@@ -228,7 +228,7 @@ sudo systemctl enable --now dailyaidecheck.timer
 systemctl list-timers dailyaidecheck.timer
 ```
 
-Der Bericht geht per Mail an die Adresse in `MAILTO` in `/etc/default/aide` (Standard: `root`). Mails verlassen die Maschine nur, wenn ein Mail Transfer Agent installiert und konfiguriert ist — etwa `postfix` als Satellitensystem, das über den eigenen Mailprovider zustellt. Ohne MTA das Ergebnis mit `sudo journalctl -u dailyaidecheck.service` lesen.
+Der Bericht geht per Mail an die Adresse in `MAILTO` in `/etc/default/aide` (Standard: `root`). Mails verlassen die Maschine nur, wenn ein Mail Transfer Agent installiert und konfiguriert ist, etwa `postfix` als Satellitensystem, das über den eigenen Mailprovider zustellt. Ohne MTA das Ergebnis mit `sudo journalctl -u dailyaidecheck.service` lesen.
 
 Nach System-Updates die Datenbank neu initialisieren, um den neuen Zustand als Baseline zu akzeptieren. `-y` und `-f` beantworten die Überschreib-Rückfragen für eine bestehende Datenbank:
 
@@ -256,15 +256,15 @@ sudo aideinit -y -f
 | auditd               | Teil 3                                     | Unerkannte Post-Compromise-Aktivität            |
 | AIDE                 | Teil 3                                     | Binary- und Konfigurations-Manipulation         |
 
-Keine einzelne Schicht bietet vollständige Sicherheit. Zusammen zwingen sie einen Angreifer dazu, jede unabhängig zu überwinden — und machen dauerhaften Zugang ohne Entdeckung extrem schwierig.
+Keine einzelne Schicht bietet vollständige Sicherheit. Zusammen zwingen sie einen Angreifer, jede einzeln zu überwinden. Das macht es extrem schwierig, sich dauerhaft und unentdeckt auf dem Server zu halten.
 
 ---
 
 ## Weiter vertiefen
 
-- **[Lynis](https://cisofy.com/lynis/)** — führt ein bewertetes Audit der Hardening-Posture des Servers durch und generiert eine priorisierte To-do-Liste. `sudo lynis audit system` ist eine nützliche Baseline-Prüfung.
-- **[Wazuh](https://wazuh.com/)** — ein SIEM-Agent der auditd, Fail2ban, AppArmor und Anwendungslogs in ein durchsuchbares Dashboard mit Alerting-Regeln zusammenführt.
-- **[CIS Ubuntu Benchmarks](https://www.cisecurity.org/cis-benchmarks)** — bewertete Compliance-Benchmarks mit Hunderten von Hardening-Prüfungen. Die kostenlose PDF ist eine Referenz für das, was "vollständig gehärtet" in regulierten Umgebungen bedeutet.
+- **[Lynis](https://cisofy.com/lynis/)**: Führt ein bewertetes Audit des Hardening-Stands eines Servers durch und generiert eine priorisierte To-do-Liste. `sudo lynis audit system` ist eine nützliche Baseline-Prüfung.
+- **[Wazuh](https://wazuh.com/)**: Ein SIEM-Agent, der auditd, Fail2ban, AppArmor und Anwendungslogs in ein durchsuchbares Dashboard mit Alerting-Regeln zusammenführt.
+- **[CIS Ubuntu Benchmarks](https://www.cisecurity.org/cis-benchmarks)**: Bewertete Compliance-Benchmarks mit Hunderten von Hardening-Prüfungen. Das kostenlose PDF ist eine Referenz für das, was "vollständig gehärtet" in regulierten Umgebungen bedeutet.
 
 ---
 

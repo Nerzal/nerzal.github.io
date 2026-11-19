@@ -37,15 +37,15 @@ Neuroclip ist ein kommerzielles Produkt im Early Access, deshalb bleibt dieser B
 
 Die Pipeline läuft auf [GitHub Actions](https://docs.github.com/de/actions/writing-workflows/about-workflows) und hat eine einfache Form: **testen, bauen, scannen, signieren, GitOps-Pull-Request öffnen, Cluster**. Die Stufen sind bewusst eine Kette. Ein roter Test erzeugt kein Image, ein roter Scan keine Signatur, und ohne signiertes Image gibt es keinen Deploy-Pull-Request.
 
-Ein Geständnis zur ersten Stufe: Die CI läuft nur unter Linux. Neuroclips eigentliche Heimat ist ein Windows-Streaming-PC, und Tests, die Windows, eine GPU, OBS oder einen Browser brauchen, überspringen sich auf einem normalen Linux-Runner selbst. Die volle Suite läuft lokal. Die ehrliche Zusammenfassung lautet also „Linux in der CI, Windows auf meinem Rechner“, keine Matrix. Wenn du etwas Ähnliches baust, mach solche Skips sichtbar, sonst bedeutet ein grüner CI-Lauf leise weniger, als du denkst. Pinne außerdem alles Umgebungsabhängige wie Locale und Zeitzone in den Tests: Ein Test, der von den Defaults des Runners abhängt, ist ein flaky Test, der auf das nächste Runner-Image-Update wartet.
+Ein Geständnis zur ersten Stufe: Die CI läuft nur unter Linux. Neuroclips eigentliche Heimat ist ein Windows-Streaming-PC, und Tests, die Windows, eine GPU, OBS oder einen Browser brauchen, überspringen sich auf einem normalen Linux-Runner selbst. Die volle Suite läuft lokal. Die ehrliche Zusammenfassung lautet also „Linux in der CI, Windows auf meinem Rechner“, ohne Betriebssystem-Matrix. Wenn du etwas Ähnliches baust, mach solche Skips sichtbar, sonst bedeutet ein grüner CI-Lauf weniger, als du denkst. Pinne außerdem alles Umgebungsabhängige wie Locale und Zeitzone in den Tests: Ein Test, der von den Defaults des Runners abhängt, ist ein flaky Test, der auf das nächste Runner-Image-Update wartet.
 
 ## Lizenzprüfung ohne Fremdtool
 
 Neuroclip soll verkäuflich bleiben, das heißt: **kein Copyleft-Code im Binary oder im Frontend-Bundle**. Go linkt statisch und ein Bundler packt das ganze Dashboard in wenige Dateien, deshalb würde selbst eine LGPL-Abhängigkeit praktisch in das gelinkt, was ich ausliefere.
 
-Die Idee ist klein: Das Toolchain fragen, welche Abhängigkeiten tatsächlich im Artefakt landen (bei Go `go list -deps`, bei npm der Produktions-Abhängigkeitsbaum), die Lizenz jeder Abhängigkeit lesen und den Build bei starkem Copyleft wie AGPL, GPL oder SSPL scheitern lassen. Copyleft auf Dateiebene wie MPL-2.0 kann erlaubt sein. Dafür habe ich zwei kurze Skripte geschrieben, statt einen Scanner einzubauen.
+Die Idee ist klein: die Toolchain fragen, welche Abhängigkeiten tatsächlich im Artefakt landen (bei Go `go list -deps`, bei npm der Produktions-Abhängigkeitsbaum), die Lizenz jeder Abhängigkeit lesen und den Build bei starkem Copyleft wie AGPL, GPL oder SSPL scheitern lassen. Copyleft auf Dateiebene wie MPL-2.0 kann erlaubt sein. Dafür habe ich zwei kurze Skripte geschrieben, statt einen Scanner einzubauen.
 
-Der Preis ist offensichtlich: Lizenztexte zu klassifizieren ist eine Heuristik, deshalb wird alles Unerkennbare zur manuellen Prüfung ausgegeben, statt geraten zu werden. Für ein Ein-Personen-Projekt nehme ich lieber ein kurzes Skript, das ich lesen kann, als eine Abhängigkeit, der ich vertrauen muss. Das passt zur Zero-Dependency-Gewohnheit aus [Teil 1](/de/blog/neuroclip-1-architecture/). Wenn du eine geprüfte, allgemeine Lösung brauchst, gibt es dedizierte Lizenz-Scanner; meins beantwortet nur eine Frage.
+Der Preis: Lizenztexte zu klassifizieren ist eine Heuristik, deshalb wird alles Unerkennbare zur manuellen Prüfung ausgegeben, statt geraten zu werden. Für ein Ein-Personen-Projekt nehme ich lieber ein kurzes Skript, das ich lesen kann, als eine Abhängigkeit, der ich vertrauen muss. Das passt zur Zero-Dependency-Gewohnheit aus [Teil 1](/de/blog/neuroclip-1-architecture/). Wenn du eine geprüfte, allgemeine Lösung brauchst, gibt es dedizierte Lizenz-Scanner; meins beantwortet nur eine Frage.
 
 ## Das Image bauen
 
@@ -62,7 +62,7 @@ Der Build pusht nur ein unveränderliches Tag (den vollen Commit-SHA). Die freun
 
 1. **SBOM:** eine Software-Stückliste, ans Image gehängt, mit den enthaltenen Paketen.
 2. **Provenance:** eine Attestierung, *wie* das Image gebaut wurde, im Format von [SLSA Provenance](https://slsa.dev/spec/v1.0/provenance). BuildKit kann beides erzeugen; siehe die [Docker-Doku zu Attestations](https://docs.docker.com/build/metadata/attestations/).
-3. **[Trivy](https://trivy.dev/)** scannt das gepushte Image auf bekannte Schwachstellen. Ich lasse nur **behebbare kritische** Funde scheitern. Bei allem zu scheitern würde die Pipeline wegen Dingen rot färben, die ich nicht beheben kann, und eine Pipeline, die man zu ignorieren lernt, ist schlechter als keine. Fremde Actions sind per Commit-SHA gepinnt, nicht per Tag, weil ein Tag verschoben werden kann.
+3. **[Trivy](https://trivy.dev/)** scannt das gepushte Image auf bekannte Schwachstellen. Ich lasse nur **behebbare kritische** Funde scheitern. Würde jeder Fund den Build scheitern lassen, wäre die Pipeline ständig rot wegen Dingen, die ich nicht beheben kann, und eine Pipeline, die man zu ignorieren lernt, ist schlechter als keine. Fremde Actions sind per Commit-SHA gepinnt, nicht per Tag, weil ein Tag verschoben werden kann.
 4. **[cosign](https://docs.sigstore.dev/cosign/signing/overview/)** signiert den *Digest* des Images, nicht ein bewegliches Tag.
 
 Beachte die Reihenfolge: Eine Signatur bedeutet „dieses Image hat den Scan bestanden“. Scheitert der Scan, liegt das Image zwar unter seinem SHA-Tag in der Registry, ist aber unsigniert, und kein späterer Schritt befördert es.
@@ -75,7 +75,7 @@ Die Signatur ist **keyless**. In den Repository-Secrets liegt kein privater Sign
 2. cosign tauscht dieses Token bei Sigstores Zertifizierungsstelle gegen ein Zertifikat, das nur Minuten gilt und diese Identität enthält.
 3. Signatur und Zertifikat werden in einem öffentlichen Transparenzlog festgehalten und neben dem Image in der Registry abgelegt.
 
-Die Verifikation fragt dann nicht „hast du meinen öffentlichen Schlüssel?“, sondern „wurde das vom Workflow *dieses Repositorys* signiert, ausgestellt vom OIDC-Provider von GitHub?“. Das ist die richtige Frage für CI-gebaute Artefakte. Den ganzen Ablauf beschreibt die [Sigstore-Dokumentation](https://docs.sigstore.dev/cosign/signing/overview/).
+Statt „hast du meinen öffentlichen Schlüssel?“ fragt die Verifikation dann „wurde das vom Workflow *dieses Repositorys* signiert, ausgestellt vom OIDC-Provider von GitHub?“. Bei CI-gebauten Artefakten ist genau diese Identität das, was du prüfen willst. Den ganzen Ablauf beschreibt die [Sigstore-Dokumentation](https://docs.sigstore.dev/cosign/signing/overview/).
 
 ### cosign installieren und ein Image prüfen
 
@@ -131,21 +131,21 @@ cosign verify ghcr.io/OWNER/IMAGE:TAG `
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Der Identitäts-Regexp oben ist absichtlich locker (jeder Workflow dieses Repositorys). Zieh ihn auf den exakten Workflow-Pfad und Branch fest, wenn nur diese Kombination zählen soll. Bei Erfolg bekommst du JSON mit den Zertifikatsdetails; bei jeder Abweichung beendet sich cosign mit einem Fehlercode ungleich null, so lässt es sich in Skripten als Schranke nutzen. Meine eigenen Images liegen in einer privaten Registry, du kannst den Befehl also nicht dagegen laufen lassen.
+Der Identitäts-Regexp oben ist absichtlich locker (jeder Workflow dieses Repositorys). Zieh ihn auf den exakten Workflow-Pfad und Branch fest, wenn nur diese Kombination zählen soll. Bei Erfolg bekommst du JSON mit den Zertifikatsdetails; bei jeder Abweichung beendet sich cosign mit einem Fehlercode ungleich null, sodass es sich in Skripten als Gate nutzen lässt. Meine eigenen Images liegen in einer privaten Registry, du kannst den Befehl also nicht dagegen laufen lassen.
 
 ## GitOps: Die CI öffnet einen Pull Request, sie deployt nicht
 
-Die CI spricht nie mit dem Cluster. Sobald ein signiertes Image existiert, öffnet die Pipeline in einem privaten Infrastruktur-Repository einen Pull Request, der genau eine Sache ändert: die Image-Referenz, festgenagelt auf den Commit-SHA. Der Pull Request verlinkt den CI-Lauf und nennt das signierte Image, das Review hat also eine Spur. Der Cluster fährt immer einen gepinnten SHA, nie `latest`. Ein üblicher Weg, so eine Änderung auszudrücken, steht in der [Kustomize-Dokumentation](https://kubectl.docs.kubernetes.io/references/kustomize/).
+Die CI spricht nie mit dem Cluster. Sobald ein signiertes Image existiert, öffnet die Pipeline in einem privaten Infrastruktur-Repository einen Pull Request, der genau eine Sache ändert: die Image-Referenz, festgenagelt auf den Commit-SHA. Der Pull Request verlinkt den CI-Lauf und nennt das signierte Image, so bleibt für das Review eine nachvollziehbare Spur. Der Cluster fährt immer einen gepinnten SHA, nie `latest`. Ein üblicher Weg, so eine Änderung auszudrücken, steht in der [Kustomize-Dokumentation](https://kubectl.docs.kubernetes.io/references/kustomize/).
 
 Warum ein Pull Request für die App? Sie hält Nutzerdaten, Sitzungszustand und Zugriff auf Plattform-Konten, und eine neue Version bedeutet einen kurzen Ausfall. Ich will jede Version ansehen, bevor sie live geht, deshalb bleiben **Merge und Apply manuell**. Die Zugangsdaten der CI sind ein Token, das auf genau dieses eine Repository beschränkt ist.
 
 ### Die Website ist das Gegenteil
 
-Die statische Marketing-Seite hat keinen Zustand und wird ohne Ausfall ausgerollt, ein Review pro Änderung wäre nur Reibung. Nach Build, Scan und Signatur verschiebt die CI ein Tag, und ein Image-Updater im Cluster ([Keel](https://keel.sh/)) bemerkt den neuen Digest und rollt ihn aus. Zwei Deploy-Stile für zwei Risikoprofile: geprüft für die App mit Zustand, automatisch für die statische Seite. Nur ein gescanntes und signiertes Image kann dieses Tag je bekommen.
+Die statische Marketing-Seite hat keinen Zustand und wird ohne Ausfall ausgerollt; ein Review pro Änderung wäre nur Reibung. Nach Build, Scan und Signatur verschiebt die CI ein Tag, und ein Image-Updater im Cluster ([Keel](https://keel.sh/)) bemerkt den neuen Digest und rollt ihn aus. Zwei Deploy-Stile für zwei Risikoprofile: geprüft für die App mit Zustand, automatisch für die statische Seite. Nur ein gescanntes und signiertes Image kann dieses Tag je bekommen.
 
 ## SSO vor der App: Keycloak statt eigenem Login
 
-Das ist der Teil, den ich am befriedigendsten finde: Der Go-Server kann kein OIDC und muss es auch nicht können. Ein Reverse Proxy davor übernimmt das.
+Der Go-Server kann kein OIDC und muss es auch nicht können, weil ein Reverse Proxy davor das übernimmt. Von dem ganzen Setup gefällt mir dieses Stück am besten.
 
 {{< diagram src="neuroclip-5-auth-path.svg" caption="Der Request-Pfad: Der Browser spricht nie direkt mit der App; ein authentifizierender Proxy prüft den Login gegen Keycloak und bürgt für die Anfrage." >}}
 
@@ -153,22 +153,22 @@ Das ist der Teil, den ich am befriedigendsten finde: Der Go-Server kann kein OID
 2. Der Verkehr geht an einen authentifizierenden Proxy, [oauth2-proxy](https://oauth2-proxy.github.io/oauth2-proxy/), der den OpenID-Connect-Authorization-Code-Flow mit PKCE gegen [Keycloak](https://www.keycloak.org/documentation) fährt und nur Nutzer durchlässt, die eine bestimmte Rolle haben.
 3. Bei authentifizierten Anfragen leitet der Proxy an die App weiter und weist ihr nach, dass die Anfrage legitim ist. Die App ist nie erreichbar, ohne durch den Proxy zu gehen.
 
-Die Entwurfsentscheidungen, die zählen, ohne Konfigurationsdetails:
+Die Entwurfsentscheidungen, ohne Konfigurationsdetails:
 
 - Der Keycloak-Client ist **vertraulich**, nutzt nur den Authorization-Code-Flow mit PKCE und hat genau eine Redirect-URI ohne Wildcard.
-- Zugriff gibt eine Rolle, und im Realm ist ein zweiter Faktor Pflicht, weil die App Zugriff auf Plattform-Konten hält.
+- Zugriff gewährt eine Rolle, und im Realm ist ein zweiter Faktor Pflicht, weil die App Zugriff auf Plattform-Konten hat.
 - Sitzungs-Cookies sind `Secure`, `HttpOnly` und `SameSite`.
 - Alles, womit ein Client seine Identität belegen will, muss der Proxy überschreiben und darf es nie durchreichen.
 - Die App prüft `Host` und `Origin` als zweite Verteidigungslinie gegen CSRF.
 - Der Container läuft ohne root, mit schreibgeschütztem Root-Dateisystem und ohne Kubernetes-API-Zugangsdaten, weil er sie nie braucht.
 
-Ich pflege [Gocloak](/de/page/open-source/), einen Go-Client für die Keycloak-REST-API, Keycloak ist also vertrautes Terrain. Standard-OIDC vor die App zu setzen, statt Login einzubauen, war trotzdem die bessere Entscheidung: Authentifizierung außerhalb der App hält den Go-Code klein, und die sicherheitskritische Logik pflegen Leute, deren Vollzeitjob das ist. Wenn du den Host darunter härtest, ist meine [Ubuntu-Server-Härtung-Serie](/de/blog/ubuntu-server-hardening-1-essentials/) die passende Ergänzung.
+Ich pflege [Gocloak](/de/page/open-source/), einen Go-Client für die Keycloak-REST-API. Keycloak ist für mich also vertrautes Terrain. Standard-OIDC vor die App zu setzen, statt Login einzubauen, war trotzdem die bessere Entscheidung: Authentifizierung außerhalb der App hält den Go-Code klein, und die sicherheitskritische Logik pflegen Leute, deren Vollzeitjob das ist. Wenn du den Host darunter härtest, ist meine [Ubuntu-Server-Härtung-Serie](/de/blog/ubuntu-server-hardening-1-essentials/) die passende Ergänzung.
 
-Eine ehrliche Statusnotiz: Dieses Setup ist das vereinbarte Design, wurde aber zum Zeitpunkt des Schreibens **noch nicht Ende-zu-Ende erprobt**. Lies diesen Abschnitt als Design, und Early Access als das Etikett, das es verdient.
+Eine ehrliche Statusnotiz: Dieses Setup ist das vereinbarte Design, wurde aber zum Zeitpunkt des Schreibens **noch nicht Ende-zu-Ende erprobt**. Lies diesen Abschnitt also als Entwurf; das Etikett Early Access ist hier verdient.
 
 ## Die statische Website: kleine Angriffsfläche per Design
 
-Die Marketing-Seite ist reines HTML und CSS, ausgeliefert von einem unprivilegierten Webserver-Container. Sie setzt auf jeder Antwort strenge Security-Header: HSTS, eine restriktive Content-Security-Policy, die Skripte auf den Hauptseiten verbietet, `nosniff` und eine strenge Referrer-Policy. Sie setzt keine Cookies, macht keine Drittanbieter-Anfragen und nutzt selbst gehostete Schriften, also gibt es nichts für ein Cookie-Banner. Ein klassischer Stolperstein: In nginx werden `add_header`-Direktiven nicht in eine Location vererbt, die eigene definiert, gemeinsame Header müssen also in jede Location eingebunden werden. Was jeder Header tut, steht bei [MDN zu CSP](https://developer.mozilla.org/de/docs/Web/HTTP/CSP) und in [RFC 6797 (HSTS)](https://www.rfc-editor.org/rfc/rfc6797).
+Die Marketing-Seite ist reines HTML und CSS, ausgeliefert von einem unprivilegierten Webserver-Container. Sie setzt auf jeder Antwort strenge Security-Header: HSTS, eine restriktive Content-Security-Policy, die Skripte auf den Hauptseiten verbietet, `nosniff` und eine strenge Referrer-Policy. Sie setzt keine Cookies, macht keine Drittanbieter-Anfragen und nutzt selbst gehostete Schriften, also gibt es nichts, was in ein Cookie-Banner gehört. Ein klassischer Stolperstein: In nginx werden `add_header`-Direktiven nicht in eine Location vererbt, die eigene definiert, gemeinsame Header müssen also in jede Location eingebunden werden. Was jeder Header tut, steht bei [MDN zu CSP](https://developer.mozilla.org/de/docs/Web/HTTP/CSP) und in [RFC 6797 (HSTS)](https://www.rfc-editor.org/rfc/rfc6797).
 
 ## Was ich ändern würde
 

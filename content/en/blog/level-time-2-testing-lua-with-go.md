@@ -23,7 +23,7 @@ featured_image: "img/level-time/logo.png"
 toc: true
 ---
 
-> **Building Level Time — Part 2 of 4.** [Level Time](/page/level-time/) is my World of Warcraft addon for tracking leveling time. This series is the engineering story behind it. Part 1: [Addon architecture](/blog/level-time-1-addon-architecture/). **Part 2 (this post): testing Lua from Go.** Part 3: [The release pipeline](/blog/level-time-3-release-pipeline/). Part 4: [Goals and the public API](/blog/level-time-4-goals-public-api/).
+> **Building Level Time, part 2 of 4.** [Level Time](/page/level-time/) is my World of Warcraft addon for tracking leveling time. This series is the engineering story behind it. Part 1: [Addon architecture](/blog/level-time-1-addon-architecture/). **Part 2 (this post): testing Lua from Go.** Part 3: [The release pipeline](/blog/level-time-3-release-pipeline/). Part 4: [Goals and the public API](/blog/level-time-4-goals-public-api/).
 
 A World of Warcraft addon runs inside a game client. There is no `npm test`, no `go test`, no `pytest`, and no way to start the addon's Lua code on its own. The only built-in feedback loop is: edit a file, type `/reload`, click around, read the chat window.
 
@@ -41,7 +41,7 @@ Three problems pushed me there.
 2. **Slow, manual reload cycles.** Every check means a reload, a login state that matches the situation (the right level, XP, combat state) and manual clicking. Reproducing "what happens at the exact moment I level up with a pending timer" by hand is tedious and unreliable.
 3. **Regressions in code nobody looks at.** Level Time is localized (German, English, French, Spanish) and runs on several game versions. A change to one module can break a window in a language I did not have open.
 
-The goal of the harness is not to replace playing the game. It is to catch the large class of bugs that are pure logic (counters, state machines, migrations, event handling, layout arithmetic) in about the time it takes to run `go test`.
+The harness catches the large class of bugs that are pure logic (counters, state machines, migrations, event handling, layout arithmetic) in about the time it takes to run `go test`. I still play the game to check everything else.
 
 ---
 
@@ -199,7 +199,7 @@ function wow.runTimers() -- run everything scheduled so far, delay ignored
 end
 ```
 
-Time is the key to testability: nothing sleeps. `C_Timer.After` callbacks are only queued, and `wow.runTimers()` executes them on demand. A scenario about "income appears after the repair bill is paid" runs in microseconds and is fully deterministic. `wow.update(seconds)` does the same for `OnUpdate` handlers, which is how repeating tasks and the timer window tick.
+Controlling time is what makes this testable: nothing sleeps. `C_Timer.After` callbacks are only queued, and `wow.runTimers()` executes them on demand. A scenario about "income appears after the repair bill is paid" runs in microseconds and is fully deterministic. `wow.update(seconds)` does the same for `OnUpdate` handlers, which is how repeating tasks and the timer window tick.
 
 The game state itself is one table, `wow.state` (name, level, XP, money, buffs, combat flag, zone and more), which API functions such as `UnitLevel` and `GetTime` read from. A scenario changes the state and then fires the event the client would have fired.
 
@@ -273,7 +273,7 @@ The practical rule: if a gopher-lua quirk bites, I fix it in the test or write c
 
 ## Layout tests in four languages
 
-This is the part that catches more than I expected. Level Time ships in German, English, French and Spanish (`deDE`, `enUS`, `frFR`, `esES`). French and Spanish strings are noticeably longer, and an options window that fits in English can push a checkbox label into its neighbor in French.
+The layout tests catch more bugs than I expected. Level Time ships in German, English, French and Spanish (`deDE`, `enUS`, `frFR`, `esES`). French and Spanish strings are noticeably longer, and an options window that fits in English can push a checkbox label into its neighbor in French.
 
 {{< diagram src="level-time-2-layout-flow.svg" caption="The layout test switches the language, builds the real window, reads the recorded anchors and measured text widths from the stub and asserts that nothing overlaps or leaves the window." >}}
 
@@ -310,7 +310,7 @@ The same file covers the history window (sub-tabs must wrap into extra rows inst
 
 ### How text width is measured, honestly
 
-It is tempting to call this "pixel-accurate layout testing". It is not, and it is worth being precise. The stub does not know any font. Its text measurement is:
+This is not pixel-accurate layout testing, because the stub does not know any font. Its text measurement is:
 
 ```lua
 GetStringWidth = function(self) return #self._text * 6 end,
@@ -318,7 +318,7 @@ GetStringWidth = function(self) return #self._text * 6 end,
 
 Width equals the string length in **bytes** times 6. That is a crude approximation: a real font has proportional glyphs (an "i" is narrower than an "m"), the font and size are configurable in Level Time, and UTF-8 umlauts count as two bytes here although they render as one glyph.
 
-So why does it still catch real bugs? Because the *relative* behavior is right. French and Spanish strings are longer, so they get wider in the stub too, and a layout that hard-codes a width for the English text fails the test. The addon's own layout code helps: the widths of the options columns are computed from the measured label widths (`fitWidth`) instead of being fixed, so the test verifies that the *rule* holds for every language. It does not prove that the result looks good with the real font.
+It still catches real bugs because the *relative* behavior is right. French and Spanish strings are longer, so they get wider in the stub too, and a layout that hard-codes a width for the English text fails the test. The addon's own layout code helps: the widths of the options columns are computed from the measured label widths (`fitWidth`) instead of being fixed, so the test verifies that the *rule* holds for every language. It does not prove that the result looks good with the real font.
 
 What it can never tell me is "this text is clipped by two pixels in French with the default font". That still takes a look in the game.
 
@@ -444,7 +444,7 @@ A green suite means the logic does what the scenarios say. It does not mean the 
 - **Performance.** See above: it proves the accounting, not the speed.
 - **My own wrong assumptions.** If I misunderstand what an event delivers, I will write the same misunderstanding into both the addon and the stub, and the test will agree with the bug.
 
-That last one is the real cost of any hand-written fake. The countermeasure is a manual checklist in the repository (`ManualToCheck.md`) of things that still need to be tried in the game, plus the discipline to treat "tested in the stub" and "verified in the game" as two different statuses.
+Wrong assumptions are the main cost of any hand-written fake. The countermeasure is a manual checklist in the repository (`ManualToCheck.md`) of things that still need to be tried in the game, plus the discipline to treat "tested in the stub" and "verified in the game" as two different statuses.
 
 ---
 

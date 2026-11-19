@@ -53,7 +53,7 @@ Two consequences follow, and they explain almost every benchmark in this series:
 - **Output is expensive per token but small in volume.** In agent sessions, the bulk of tokens is input and cache reads. One Caveman user measured output at **0.3 % of all tokens** across 662 Claude Code sessions (reported in Caveman's [HONEST-NUMBERS.md](https://github.com/JuliusBrussee/caveman/blob/main/docs/HONEST-NUMBERS.md)). A tool that only shortens replies can cut output by a lot and still barely move the bill.
 - **Everything you add to the prompt costs on every turn.** A 1,000-token skill that saves 300 output tokens per reply only pays off if the replies are long enough. A shorter reply, on the other hand, also saves input later, because it is re-read as history on every following turn.
 
-Keep this model in mind. The honest question for every tool is not "how many tokens does it remove?" but "**does the provider bill for the same task go down?**"
+Keep this model in mind. Counting removed tokens says little; for every tool I ask "**does the provider bill for the same task go down?**"
 
 ## Caveman: say less, read less
 
@@ -149,7 +149,7 @@ Caveman's own README is unusually candid, and its [HONEST-NUMBERS.md](https://gi
 
 A caveat on the JetBrains row: the [JetBrains AI blog post](https://blog.jetbrains.com/ai/2026/07/speak-to-ai-agents-like-cavemen-tosave-tokens/) refused automated access when I researched this article, so the figures come from Caveman's own summary and from press coverage of the post ([InfoWorld](https://www.infoworld.com/article/4193775/talk-like-a-caveman-prompts-save-tokens-but-far-less-than-promised.html), [The New Stack](https://thenewstack.io/caveman-mode-token-savings/)). The coverage also reports that JetBrains saw roughly 10 % expected cost savings, often swamped by single-run variance.
 
-The pattern is clear: **the voice reliably shortens replies, but replies are a small part of an agent bill.** Modern models already answer fairly briefly when told "be concise"; against that baseline the default `/caveman` level adds only 3 %. The vendor itself writes that agent sessions are "mostly code and tool calls, which the voice leaves alone", and that is why v4 moved on to compressing input.
+**The voice reliably shortens replies, but replies are a small part of an agent bill.** Modern models already answer fairly briefly when told "be concise"; against that baseline the default `/caveman` level adds only 3 %. The vendor itself writes that agent sessions are "mostly code and tool calls, which the voice leaves alone", and that is why v4 moved on to compressing input.
 
 ### Costs and when it does not help
 
@@ -167,7 +167,7 @@ The vendor's own rule of thumb is the right one: compare the provider-billed tot
 
 ### How it saves tokens
 
-Ponytail does not compress anything. It changes *what* the agent decides to build. Before writing code, the agent climbs a ladder and stops at the first rung that holds:
+Ponytail compresses nothing; it changes *what* the agent decides to build. Before writing code, the agent climbs a ladder and stops at the first rung that holds:
 
 1. Does this need to exist at all?
 2. Is it already in this codebase?
@@ -244,7 +244,7 @@ The gap between −26 % and −10 % cost has the same root as with Caveman: Pony
 - **The rules cost input.** Every request carries the skill. On tiny tasks the overhead can exceed the savings; a GitHub issue ([#121](https://github.com/DietrichGebert/ponytail/issues/121)) found single-task cost changes from −13 % to +55 % depending on the model.
 - **"Less code" is a judgment call.** Sometimes the 120-line class *is* what you need. You will occasionally argue with it. Use `/ponytail lite` or `off` for scaffolding work where you want breadth.
 - **Debugging is not measured.** The vendor benchmark disabled the shell, so there are no numbers for long debugging sessions.
-- **It is a ruleset, not a guarantee.** The hidden-check results show it does not make code *less* safe; they do not show it makes code *more* safe.
+- **It guarantees nothing.** The hidden-check results show it does not make code *less* safe; they do not show it makes code *more* safe.
 
 ## Caveman and Ponytail together
 

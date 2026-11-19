@@ -21,11 +21,11 @@ featured_image: "img/gcp-load-balancing.png"
 toc: true
 ---
 
-Dies ist der erste Teil einer Serie, in der ich mich in die Google Cloud Platform einarbeite und das Gelernte dokumentiere — Learning in Public. Falls hier etwas falsch oder veraltet ist: sag Bescheid, ich korrigiere es.
+Dies ist der erste Teil einer Serie, in der ich mich in die Google Cloud Platform einarbeite und das Gelernte dokumentiere, also Learning in Public. Falls hier etwas falsch oder veraltet ist: sag Bescheid, ich korrigiere es.
 
-Wir starten mit **Load Balancing**, weil genau dort die meisten GCP-Einsteiger gegen die erste Vokabelwand laufen: Target Pools, URL Maps, Forwarding Rules, Backend Services, Target Proxies. Fünf Begriffe, von denen sich keiner selbst erklärt.
+Wir starten mit **Load Balancing**, weil genau dort die meisten GCP-Einsteiger gegen die erste Vokabelwand laufen: Target Pools, URL Maps, Forwarding Rules, Backend Services, Target Proxies. Keiner dieser fünf Begriffe erklärt sich selbst.
 
-Am Ende dieses Artikels hast du zwei verschiedene Load Balancer mit der `gcloud`-CLI gebaut und — wichtiger — du weißt, welche Kiste wofür zuständig ist.
+Am Ende dieses Artikels hast du zwei verschiedene Load Balancer mit der `gcloud`-CLI gebaut und, was wichtiger ist, du weißt, welche Kiste wofür zuständig ist.
 
 > **Kostenwarnung:** Die Ressourcen aus diesem Artikel sind **nicht** vom [Google Cloud Free Tier](https://cloud.google.com/free) abgedeckt. Zwei `e2-medium`-VMs, drei `e2-small`-VMs, eine globale IP-Adresse und zwei Forwarding Rules kosten echtes Geld pro Stunde. Der [Aufräum-Abschnitt](#aufräumen--nicht-überspringen) am Ende löscht alles wieder. Nicht überspringen.
 
@@ -76,7 +76,7 @@ Falls `winget` nicht verfügbar ist: Installer aus der [gcloud-CLI-Installations
 
 ### Authentifizieren und Projekt wählen
 
-Die `gcloud`-Syntax ist auf jeder Plattform identisch. Nur shell-spezifische Dinge — Zeilenumbrüche, Schleifen, Variablen — unterscheiden sich. Ein Befehl steht deshalb nur einmal da, außer die beiden Shells brauchen wirklich unterschiedlichen Code. Dann folgen beide Varianten direkt aufeinander.
+Die `gcloud`-Syntax ist auf jeder Plattform identisch. Nur shell-spezifische Dinge (Zeilenumbrüche, Schleifen, Variablen) unterscheiden sich. Ein Befehl steht deshalb nur einmal da, außer die beiden Shells brauchen wirklich unterschiedlichen Code. Dann folgen beide Varianten direkt aufeinander.
 
 ```bash
 gcloud init
@@ -113,17 +113,17 @@ Wir bauen von jedem einen. Googles vollständige [Load-Balancing-Übersicht](htt
 
 ## Standardwerte setzen
 
-Bevor wir irgendetwas erstellen, sagen wir `gcloud`, wo gearbeitet wird. Das spart `--region` und `--zone` an jedem Befehl.
+Bevor wir irgendetwas erstellen, sagen wir `gcloud`, wo wir arbeiten. Das spart `--region` und `--zone` an jedem Befehl.
 
 ```bash
 gcloud config set compute/region us-east1
 gcloud config set compute/zone us-east1-d
 ```
 
-- **Region (`us-east1`)** — ein geografisches Gebiet, grob "US-Ostküste".
-- **Zone (`us-east1-d`)** — ein isoliertes Rechenzentrum innerhalb dieser Region.
+- **Region (`us-east1`)**: ein geografisches Gebiet, grob "US-Ostküste".
+- **Zone (`us-east1-d`)**: ein isoliertes Rechenzentrum innerhalb dieser Region.
 
-Eine Zone ist eine Fehlerdomäne: Fällt sie aus, fällt alles darin mit aus. Instanzen über mehrere Zonen zu verteilen ist die Antwort darauf. Siehe [Regionen und Zonen](https://cloud.google.com/compute/docs/regions-zones).
+Eine Zone ist eine Fehlerdomäne: Fällt sie aus, fällt alles darin mit aus. Dagegen hilft es, Instanzen über mehrere Zonen zu verteilen. Siehe [Regionen und Zonen](https://cloud.google.com/compute/docs/regions-zones).
 
 In den Befehlen unten stehen die `--zone`- und `--region`-Flags trotzdem explizit drin, damit jeder einzeln kopierbar bleibt.
 
@@ -131,9 +131,9 @@ In den Befehlen unten stehen die `--zone`- und `--region`-Flags trotzdem explizi
 
 ## Teil 1: Ein regionaler Network Load Balancer
 
-Der [externe Passthrough Network Load Balancer](https://cloud.google.com/load-balancing/docs/network) nimmt Traffic auf einer öffentlichen IP an und leitet ihn an Backends weiter, **ohne ihn zu verändern**. Dein Webserver sieht die Original-IP des Clients, nicht die des Balancers — genau das bedeutet "Passthrough".
+Der [externe Passthrough Network Load Balancer](https://cloud.google.com/load-balancing/docs/network) nimmt Traffic auf einer öffentlichen IP an und leitet ihn an Backends weiter, **ohne ihn zu verändern**. Dein Webserver sieht die Original-IP des Clients statt der des Balancers. Genau das bedeutet "Passthrough".
 
-### Schritt 1 — Drei Webserver erstellen
+### Schritt 1: Drei Webserver erstellen
 
 ```bash
 gcloud compute instances create web1 \
@@ -149,16 +149,16 @@ gcloud compute instances create web1 \
       echo "<h3>Web Server: web1</h3>" | tee /var/www/html/index.html'
 ```
 
-Für `web2` und `web3` wiederholen — Instanzname im Befehl **und** in der `echo`-Zeile anpassen.
+Für `web2` und `web3` wiederholen und dabei den Instanznamen im Befehl **und** in der `echo`-Zeile anpassen.
 
 **Was die Flags bedeuten:**
 
-- `--machine-type=e2-small` — ein kleiner, günstiger [Maschinentyp](https://cloud.google.com/compute/docs/machine-resource). Zwei (geteilte) vCPUs, 2 GB RAM. Reichlich für einen Apache mit einer HTML-Datei.
-- `--image-family=debian-13` — das Betriebssystem. Eine *Family* statt eines konkreten Image-Namens liefert immer den aktuellsten gepatchten Debian-13-Build. Siehe [Public Images](https://cloud.google.com/compute/docs/images/os-details).
-- `--tags=network-lb-tag` — ein [Netzwerk-Tag](https://cloud.google.com/vpc/docs/add-remove-network-tags). Stell es dir als Post-it auf der VM vor. Firewall-Regeln zielen auf Tags statt auf einzelne Maschinen — "Port 80 für alles mit diesem Post-it erlauben" funktioniert damit auch noch, wenn Instanzen dazukommen oder verschwinden.
-- `--metadata=startup-script=...` — das Skript, das Compute Engine beim ersten Boot als Root ausführt. So musst du dich nie per SSH auf die Maschine verbinden, um sie zu konfigurieren. Siehe [Startup-Skripte](https://cloud.google.com/compute/docs/instances/startup-scripts/linux).
+- `--machine-type=e2-small`: ein kleiner, günstiger [Maschinentyp](https://cloud.google.com/compute/docs/machine-resource). Zwei (geteilte) vCPUs, 2 GB RAM. Reichlich für einen Apache mit einer HTML-Datei.
+- `--image-family=debian-13`: das Betriebssystem. Eine *Family* statt eines konkreten Image-Namens liefert immer den aktuellsten gepatchten Debian-13-Build. Siehe [Public Images](https://cloud.google.com/compute/docs/images/os-details).
+- `--tags=network-lb-tag`: ein [Netzwerk-Tag](https://cloud.google.com/vpc/docs/add-remove-network-tags). Stell es dir als Post-it auf der VM vor. Firewall-Regeln zielen auf Tags statt auf einzelne Maschinen. "Port 80 für alles mit diesem Post-it erlauben" funktioniert damit auch noch, wenn Instanzen dazukommen oder verschwinden.
+- `--metadata=startup-script=...`: das Skript, das Compute Engine beim ersten Boot als Root ausführt. So musst du dich nie per SSH auf die Maschine verbinden, um sie zu konfigurieren. Siehe [Startup-Skripte](https://cloud.google.com/compute/docs/instances/startup-scripts/linux).
 
-**Unter Windows:** Mehrzeilige einfach-gequotete Strings überleben PowerShell nicht. Skript stattdessen in eine Datei legen und mit `--metadata-from-file` übergeben — was auf Linux ebenfalls der sauberere Weg ist, sobald das Skript länger als drei Zeilen wird.
+**Unter Windows:** Mehrzeilige Strings in einfachen Anführungszeichen überleben PowerShell nicht. Skript stattdessen in eine Datei legen und mit `--metadata-from-file` übergeben. Das ist auf Linux ebenfalls der sauberere Weg, sobald das Skript länger als drei Zeilen wird.
 
 ```powershell
 # startup.sh (LF-Zeilenenden! CRLF zerstört die Shebang-Zeile)
@@ -181,9 +181,9 @@ gcloud compute instances create web1 `
 
 Das Backtick `` ` `` ist PowerShells Zeilenfortsetzungszeichen, das Äquivalent zu `\` in Bash.
 
-### Schritt 2 — HTTP-Traffic erlauben
+### Schritt 2: HTTP-Traffic erlauben
 
-Die VMs existieren, aber niemand kommt an sie ran. Das `default`-VPC bringt nur eine Handvoll Ingress-Regeln mit — SSH (22), RDP (3389), ICMP und Traffic zwischen Instanzen innerhalb des Netzwerks. Alles andere, HTTP eingeschlossen, landet bei der impliziten Deny-Ingress-Regel. Port 80 für die getaggten Instanzen öffnen:
+Die VMs existieren, aber niemand kommt an sie ran. Die `default`-VPC bringt nur eine Handvoll Ingress-Regeln mit: SSH (22), RDP (3389), ICMP und Traffic zwischen Instanzen innerhalb des Netzwerks. Alles andere, HTTP eingeschlossen, landet bei der impliziten Deny-Ingress-Regel. Port 80 für die getaggten Instanzen öffnen:
 
 ```bash
 gcloud compute firewall-rules create www-firewall-network-lb \
@@ -191,7 +191,7 @@ gcloud compute firewall-rules create www-firewall-network-lb \
     --allow tcp:80
 ```
 
-Das ist dasselbe Default-Deny-Prinzip wie in [Ubuntu Server Hardening — Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/), nur eine Schicht höher durchgesetzt: in der [VPC-Firewall](https://cloud.google.com/firewall/docs/firewalls) statt auf dem Host.
+Das ist dasselbe Default-Deny-Prinzip wie in [Teil 1 von Ubuntu Server Hardening](/de/blog/ubuntu-server-hardening-1-essentials/), nur eine Schicht höher durchgesetzt: in der [VPC-Firewall](https://cloud.google.com/firewall/docs/firewalls) statt auf dem Host.
 
 Prüfen, ob die Instanzen laufen, und externe IPs notieren:
 
@@ -218,7 +218,7 @@ Invoke-RestMethod -Uri "http://EXTERNE_IP_VON_WEB1"
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-### Schritt 3 — Den Load Balancer bauen
+### Schritt 3: Den Load Balancer bauen
 
 Fünf Ressourcen, in Abhängigkeitsreihenfolge erstellt:
 
@@ -250,11 +250,11 @@ gcloud compute forwarding-rules create www-rule \
 
 {{< diagram src="network-lb.svg" caption="Fünf Ressourcen, eine Kette. Der Health Check entscheidet, welche Instanzen im Pool bleiben; die Firewall-Regel erreicht die Instanzen über ihren Netzwerk-Tag, nicht über ihren Namen." >}}
 
-Der **Health Check** ist der Teil, den man weglässt und danach bereut. Der Balancer prüft jedes Backend in festem Intervall. Ein Backend, das den Check nicht besteht, bekommt keinen Traffic mehr, bis es sich erholt — automatisch, ohne dass nachts um drei ein Alarm losgeht. Details: [Health-Check-Konzepte](https://cloud.google.com/load-balancing/docs/health-check-concepts).
+Den **Health Check** lässt man gern weg und bereut es danach. Der Balancer prüft jedes Backend in festem Intervall. Ein Backend, das den Check nicht besteht, bekommt keinen Traffic mehr, bis es sich erholt, und zwar automatisch, ohne dass nachts um drei ein Alarm losgeht. Details: [Health-Check-Konzepte](https://cloud.google.com/load-balancing/docs/health-check-concepts).
 
-Ein **Target Pool** ist der Legacy-Backend-Typ für diesen Balancer. Er funktioniert weiterhin und steht in fast jedem Tutorial, aber Google empfiehlt für neue Deployments inzwischen [Backend-Service-basierte Network Load Balancer](https://cloud.google.com/load-balancing/docs/network/networklb-backend-service) — die unterstützen mehr Protokolle und teilen sich das Konfigurationsmodell mit dem Application Load Balancer, den wir gleich bauen. Gut zu wissen, bevor ein Target Pool in Produktion landet.
+Ein **Target Pool** ist der Legacy-Backend-Typ für diesen Balancer. Er funktioniert weiterhin und steht in fast jedem Tutorial, aber Google empfiehlt für neue Deployments inzwischen [Backend-Service-basierte Network Load Balancer](https://cloud.google.com/load-balancing/docs/network/networklb-backend-service). Die unterstützen mehr Protokolle und teilen sich das Konfigurationsmodell mit dem Application Load Balancer, den wir gleich bauen. Gut zu wissen, bevor ein Target Pool in Produktion landet.
 
-### Schritt 4 — Verteilung beobachten
+### Schritt 4: Verteilung beobachten
 
 {{< os-tabs >}}
 {{< os-tab "Linux / macOS" >}}
@@ -284,7 +284,7 @@ while ($true) {
 
 Die Ausgabe wechselt zwischen `web1`, `web2` und `web3`. Abbrechen mit `Strg+C`.
 
-Übrigens kein striktes Round Robin: Dieser Balancer bildet einen Hash über ein 5-Tupel aus Quell-IP, Quell-Port, Ziel-IP, Ziel-Port und Protokoll, um ein Backend zu wählen. Gleiche Verbindung, gleiches Backend. Deshalb bleibt ein Browser-Reload oft auf einem Server hängen, während `curl` — jedes Mal neuer Quell-Port — durchrotiert.
+Übrigens kein striktes Round Robin: Dieser Balancer bildet einen Hash über ein 5-Tupel aus Quell-IP, Quell-Port, Ziel-IP, Ziel-Port und Protokoll, um ein Backend zu wählen. Gleiche Verbindung, gleiches Backend. Deshalb bleibt ein Browser-Reload oft auf einem Server hängen, während `curl` (jedes Mal neuer Quell-Port) durchrotiert.
 
 ---
 
@@ -292,7 +292,7 @@ Die Ausgabe wechselt zwischen `web1`, `web2` und `web3`. Abbrechen mit `Strg+C`.
 
 Jetzt die Layer-7-Variante. Der [globale externe Application Load Balancer](https://cloud.google.com/load-balancing/docs/https) läuft auf Googles Edge-Netzwerk: eine IP-Adresse, weltweit per Anycast angekündigt, und Nutzer werden vom nächstgelegenen Point of Presence bedient.
 
-### Schritt 1 — Ein Instance Template
+### Schritt 1: Ein Instance Template
 
 Statt VMs einzeln zu bauen, definieren wir eine Blaupause.
 
@@ -313,9 +313,9 @@ gcloud compute instance-templates create lb-backend-template \
       systemctl restart apache2'
 ```
 
-Beachte, wie der Hostname geholt wird: `169.254.169.254` ist der [Metadata-Server](https://cloud.google.com/compute/docs/metadata/overview), eine Link-Local-Adresse ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)), erreichbar aus jeder GCE-Instanz heraus. Er beantwortet Fragen über die VM, auf der er läuft — Name, Zone, Projekt, Service-Account-Tokens. Der Header `Metadata-Flavor: Google` ist Pflicht; er existiert, um den Endpunkt gegen Server-Side Request Forgery (SSRF) zu schützen: Eine Anwendung, die man dazu bringt, eine vom Angreifer gelieferte URL abzurufen, schickt einen schlichten `GET` ohne diesen Header — und der Metadata-Server verweigert die Antwort.
+Beachte, wie der Hostname geholt wird: `169.254.169.254` ist der [Metadata-Server](https://cloud.google.com/compute/docs/metadata/overview), eine Link-Local-Adresse ([RFC 3927](https://www.rfc-editor.org/rfc/rfc3927)), erreichbar aus jeder GCE-Instanz heraus. Er beantwortet Fragen über die VM, auf der er läuft: Name, Zone, Projekt, Service-Account-Tokens. Der Header `Metadata-Flavor: Google` ist Pflicht; er existiert, um den Endpunkt gegen Server-Side Request Forgery (SSRF) zu schützen: Eine Anwendung, die man dazu bringt, eine vom Angreifer gelieferte URL abzurufen, schickt einen schlichten `GET` ohne diesen Header, und der Metadata-Server verweigert die Antwort.
 
-Ein [Instance Template](https://cloud.google.com/compute/docs/instance-templates) ist unveränderlich. Zum Ändern erstellst du ein neues — was für reproduzierbare Infrastruktur genau das gewünschte Verhalten ist.
+Ein [Instance Template](https://cloud.google.com/compute/docs/instance-templates) ist unveränderlich. Zum Ändern erstellst du ein neues, was für reproduzierbare Infrastruktur genau das gewünschte Verhalten ist.
 
 Jetzt eine **Managed Instance Group** (MIG) daraus erstellen:
 
@@ -332,9 +332,9 @@ gcloud compute instance-groups set-named-ports lb-backend-group \
 
 Eine [MIG](https://cloud.google.com/compute/docs/instance-groups) hält die gewünschte Instanzanzahl aufrecht. Löschst du eine VM von Hand, erstellt die Gruppe sie neu. Setzt du `--size=50`, baut sie 48 weitere. Mit angehängtem Autoscaler passt sie die Anzahl selbstständig an die Last an.
 
-Der zweite Befehl gibt Port 80 den Namen `http`. Der Backend Service in Schritt 3 referenziert seinen Port über diesen Namen (`--port-name=http`), nicht über die Nummer — ohne `set-named-ports` weiß der Balancer nicht, wohin er den Traffic schicken soll.
+Der zweite Befehl gibt Port 80 den Namen `http`. Der Backend Service in Schritt 3 referenziert seinen Port über diesen Namen (`--port-name=http`) statt über die Nummer. Ohne `set-named-ports` weiß der Balancer nicht, wohin er den Traffic schicken soll.
 
-### Schritt 2 — Firewall für Googles Health Checker
+### Schritt 2: Firewall für Googles Health Checker
 
 ```bash
 gcloud compute firewall-rules create fw-allow-health-check \
@@ -346,11 +346,11 @@ gcloud compute firewall-rules create fw-allow-health-check \
     --rules=tcp:80
 ```
 
-Diese beiden CIDR-Bereiche gehören Googles Health-Check-Probern. Sie sind dokumentiert, fest und in jedem Projekt identisch — siehe [Probe-IP-Bereiche und Firewall-Regeln](https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges). Auch der Traffic vom globalen Application Load Balancer zu deinen Backends kommt aus diesen Bereichen, diese eine Regel deckt also beides ab.
+Diese beiden CIDR-Bereiche gehören Googles Health-Check-Probern. Sie sind dokumentiert, fest und in jedem Projekt identisch, siehe [Probe-IP-Bereiche und Firewall-Regeln](https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges). Auch der Traffic vom globalen Application Load Balancer zu deinen Backends kommt aus diesen Bereichen, diese eine Regel deckt also beides ab.
 
-Diese Regel zu vergessen ist der mit Abstand häufigste Grund, warum ein frisch gebauter Application Load Balancer `502 Server Error` liefert: Die Backends sind gesund, aber jede Health-Probe wird verworfen — also hält der Balancer alle für tot.
+Diese Regel zu vergessen ist der mit Abstand häufigste Grund, warum ein frisch gebauter Application Load Balancer `502 Server Error` liefert: Die Backends sind gesund, aber jede Health-Probe wird verworfen, also hält der Balancer alle für tot.
 
-### Schritt 3 — Den Balancer zusammensetzen
+### Schritt 3: Den Balancer zusammensetzen
 
 Sieben Ressourcen, jede zeigt auf die vorherige:
 
@@ -395,13 +395,13 @@ gcloud compute forwarding-rules create http-content-rule \
     --ports=80
 ```
 
-`--load-balancing-scheme=EXTERNAL_MANAGED` auf Backend Service und Forwarding Rule macht daraus den *globalen externen* Application Load Balancer. Fehlt das Flag, fällt `gcloud` stillschweigend auf `EXTERNAL` zurück — den [klassischen Application Load Balancer](https://cloud.google.com/load-balancing/docs/https), dem die neueren Traffic-Management-Features fehlen. Beide Ressourcen müssen dasselbe Schema verwenden.
+`--load-balancing-scheme=EXTERNAL_MANAGED` auf Backend Service und Forwarding Rule macht daraus den *globalen externen* Application Load Balancer. Fehlt das Flag, fällt `gcloud` stillschweigend auf `EXTERNAL` zurück, also auf den [klassischen Application Load Balancer](https://cloud.google.com/load-balancing/docs/https), dem die neueren Traffic-Management-Features fehlen. Beide Ressourcen müssen dasselbe Schema verwenden.
 
 ### Der Weg einer Anfrage
 
-{{< diagram src="application-lb.svg" caption="Die vollständige Layer-7-Kette. Durchgezogene Pfeile sind der Request-Pfad; gestrichelte zeigen, welche Ressource welche konfiguriert — das Template baut die Gruppe, Health Check und Firewall-Regel halten sie im Dienst." >}}
+{{< diagram src="application-lb.svg" caption="Die vollständige Layer-7-Kette. Durchgezogene Pfeile sind der Request-Pfad; gestrichelte zeigen, welche Ressource welche konfiguriert. Das Template baut die Gruppe, Health Check und Firewall-Regel halten sie im Dienst." >}}
 
-Jede Kiste hat genau eine Aufgabe, und jede ist unabhängig austauschbar. Das ist das ganze Design:
+Jede Kiste hat genau eine Aufgabe, und jede lässt sich unabhängig austauschen:
 
 1. Die **Forwarding Rule** besitzt IP und Port.
 2. Der **Target Proxy** terminiert die Client-Verbindung und parst HTTP.
@@ -413,7 +413,7 @@ HTTPS statt HTTP gewünscht? Schritt 6 gegen einen `target-https-proxies` mit an
 
 ### Testen
 
-Die IP zu bekommen geht sofort. Dass der Balancer funktioniert, nicht: Eine globale Forwarding Rule über Googles Edge zu propagieren dauert **mehrere Minuten**, und `404`- oder `502`-Antworten in diesem Zeitfenster sind normal.
+Die IP hast du sofort. Der Balancer braucht länger: Bis eine globale Forwarding Rule über Googles Edge propagiert ist, vergehen **mehrere Minuten**, und `404`- oder `502`-Antworten in diesem Zeitfenster sind normal.
 
 ```bash
 gcloud compute forwarding-rules describe http-content-rule --global --format="value(IPAddress)"
@@ -425,7 +425,7 @@ gcloud compute forwarding-rules describe http-content-rule --global --format="va
 
 ## Aufräumen — nicht überspringen
 
-Load Balancer, statische IPs und VMs werden stündlich abgerechnet, egal ob du sie nutzt. In umgekehrter Abhängigkeitsreihenfolge löschen — GCP weigert sich, eine Ressource zu löschen, auf die noch etwas zeigt.
+Load Balancer, statische IPs und VMs werden stündlich abgerechnet, egal ob du sie nutzt. In umgekehrter Abhängigkeitsreihenfolge löschen, denn GCP weigert sich, eine Ressource zu löschen, auf die noch etwas zeigt.
 
 ```bash
 # Globaler Application Load Balancer
@@ -456,29 +456,29 @@ gcloud compute forwarding-rules list
 gcloud compute addresses list
 ```
 
-Eine reservierte statische IP, die an nichts hängt, kostet *mehr* als eine angehängte — Google berechnet das Horten knapper Adressen. Nach jedem Experiment `gcloud compute addresses list` prüfen.
+Eine reservierte statische IP, die an nichts hängt, kostet *mehr* als eine angehängte, weil Google das Horten knapper Adressen berechnet. Nach jedem Experiment `gcloud compute addresses list` prüfen.
 
 ---
 
 ## Fazit
 
 - **Layer 4 leitet weiter, Layer 7 versteht.** Network Load Balancer für rohen TCP/UDP-Durchsatz und Erhalt der Client-IP; Application Load Balancer, wenn das Routing vom Request selbst abhängt.
-- **Die Kette ist immer dieselbe:** IP → Forwarding Rule → (Proxy → URL Map) → Backend → Instanzen. Wer diese Kette einmal sieht, ordnet jeden `gcloud compute`-Befehl sofort ein.
+- **Die Kette ist immer dieselbe:** IP → Forwarding Rule → (Proxy → URL Map) → Backend → Instanzen. Wer diese Kette einmal gesehen hat, ordnet jeden `gcloud compute`-Befehl sofort ein.
 - **Health Checks sind nicht optional.** Ohne die passende Firewall-Regel für `130.211.0.0/22` und `35.191.0.0/16` sieht jedes Backend tot aus und du bekommst `502`.
 - **Löschen, was du baust.** Vergessene Load Balancer sind einer der zuverlässigsten Wege zu einer überraschenden Cloud-Rechnung.
 
-Das alles von Hand zu machen ist der richtige Weg, es zu lernen. Es ist der falsche Weg, es zu betreiben — die nächsten Schritte heißen Terraform oder [Config Connector](https://cloud.google.com/config-connector/docs/overview), damit Infrastruktur in der Versionskontrolle liegt statt in der Shell-History.
+Das alles von Hand zu machen ist der richtige Weg, es zu lernen. Es ist der falsche Weg, es zu betreiben. Die nächsten Schritte heißen Terraform oder [Config Connector](https://cloud.google.com/config-connector/docs/overview), damit Infrastruktur in der Versionskontrolle liegt statt in der Shell-History.
 
-Als Nächstes in dieser Serie: was passiert, wenn zwei VMs nicht mehr reichen — Autoscaling und health-basierter Instanzaustausch in Managed Instance Groups.
+Im nächsten Teil geht es darum, was passiert, wenn zwei VMs nicht mehr reichen: Autoscaling und health-basierter Instanzaustausch in Managed Instance Groups.
 
 ## Quellen
 
-- [Cloud Load Balancing Übersicht](https://cloud.google.com/load-balancing/docs/load-balancing-overview) — Google Cloud Docs
-- [Externer Passthrough Network Load Balancer](https://cloud.google.com/load-balancing/docs/network) — Google Cloud Docs
-- [Globaler externer Application Load Balancer](https://cloud.google.com/load-balancing/docs/https) — Google Cloud Docs
-- [Health-Check-Konzepte](https://cloud.google.com/load-balancing/docs/health-check-concepts) — Google Cloud Docs
-- [Instance Groups](https://cloud.google.com/compute/docs/instance-groups) — Google Cloud Docs
-- [gcloud compute Referenz](https://cloud.google.com/sdk/gcloud/reference/compute) — Google Cloud Docs
-- [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110)
-- [RFC 9293 — Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc9293)
-- [RFC 3927 — Dynamic Configuration of IPv4 Link-Local Addresses](https://www.rfc-editor.org/rfc/rfc3927)
+- [Cloud Load Balancing Übersicht](https://cloud.google.com/load-balancing/docs/load-balancing-overview) (Google Cloud Docs)
+- [Externer Passthrough Network Load Balancer](https://cloud.google.com/load-balancing/docs/network) (Google Cloud Docs)
+- [Globaler externer Application Load Balancer](https://cloud.google.com/load-balancing/docs/https) (Google Cloud Docs)
+- [Health-Check-Konzepte](https://cloud.google.com/load-balancing/docs/health-check-concepts) (Google Cloud Docs)
+- [Instance Groups](https://cloud.google.com/compute/docs/instance-groups) (Google Cloud Docs)
+- [gcloud compute Referenz](https://cloud.google.com/sdk/gcloud/reference/compute) (Google Cloud Docs)
+- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110)
+- [RFC 9293: Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc9293)
+- [RFC 3927: Dynamic Configuration of IPv4 Link-Local Addresses](https://www.rfc-editor.org/rfc/rfc3927)
