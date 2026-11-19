@@ -20,7 +20,7 @@ pre code {
 }
 
 pre {
-    background: #14161f;
+    background: var(--code-bg);
     border: 1px solid rgba(var(--text-rgb), 0.08);
     border-radius: 8px;
     hyphens: none;
@@ -29,7 +29,7 @@ pre {
 
 /* ── Chroma Syntax Highlighting ─────────────────────────────── */
 
-.chroma { background: #14161f; color: #e4f1fe; }
+.chroma { background: var(--code-bg); color: var(--text-color); }
 
 /* Line numbers */
 .chroma .lnt { color: rgba(var(--text-rgb),0.25); padding: 0 0.75em; user-select: none; }
@@ -48,7 +48,7 @@ pre {
 .chroma .kt { color: #c792ea; }
 
 /* Names */
-.chroma .n  { color: #e4f1fe; }
+.chroma .n  { color: var(--text-color); }
 .chroma .na { color: #82b1ff; }
 .chroma .nb { color: #82aaff; }
 .chroma .nc { color: #ffcb6b; }
@@ -93,7 +93,7 @@ pre {
 .chroma .ow { color: #89ddff; }
 
 /* Punctuation */
-.chroma .p { color: #e4f1fe; }
+.chroma .p { color: var(--text-color); }
 
 /* Comments */
 .chroma .c,
@@ -102,25 +102,25 @@ pre {
 .chroma .cm,
 .chroma .cp,
 .chroma .cpf,
-.chroma .cs { color: rgba(var(--text-rgb),0.38); font-style: italic; }
+.chroma .cs { color: var(--text-muted); font-style: italic; }
 
 /* Generic */
 .chroma .gd { color: #f07178; }
 .chroma .ge { font-style: italic; }
 .chroma .gh { color: #00ff7f; font-weight: bold; }
 .chroma .gi { color: #a8e6cf; }
-.chroma .go { color: rgba(var(--text-rgb),0.5); }
+.chroma .go { color: var(--text-muted); }
 .chroma .gp { color: #00ff7f; font-weight: bold; }
 .chroma .gs { font-weight: bold; }
 .chroma .gu { color: #89ddff; }
-.chroma .hl { background: rgba(0,255,127,0.08); display: block; }
+.chroma .hl { background: rgba(var(--highlight-rgb),0.08); display: block; }
 
 /* ── Light mode overrides ────────────────────────────────────── */
 
 /* ── Light mode — ALL tokens ─────────────────────────────────── */
 
 [data-theme="light"] pre,
-[data-theme="light"] .chroma             { background: #f0f2f8; border-color: rgba(30,33,51,0.12); color: #1e2133; }
+[data-theme="light"] .chroma             { border-color: rgba(var(--text-rgb), 0.12); color: var(--text-color); }
 
 /* Keywords */
 [data-theme="light"] .chroma .k,
@@ -136,10 +136,10 @@ pre {
 [data-theme="light"] .chroma .nv,
 [data-theme="light"] .chroma .vc,
 [data-theme="light"] .chroma .vg,
-[data-theme="light"] .chroma .vi         { color: #1e2133; }
+[data-theme="light"] .chroma .vi         { color: var(--text-color); }
 [data-theme="light"] .chroma .na,
 [data-theme="light"] .chroma .nx         { color: #1565c0; }
-[data-theme="light"] .chroma .nb         { color: #0277bd; }
+[data-theme="light"] .chroma .nb         { color: #01579b; }
 [data-theme="light"] .chroma .nc         { color: #b45309; }
 [data-theme="light"] .chroma .nd         { color: #084; }
 [data-theme="light"] .chroma .nf,
@@ -160,8 +160,8 @@ pre {
 [data-theme="light"] .chroma .sh,
 [data-theme="light"] .chroma .si,
 [data-theme="light"] .chroma .sx,
-[data-theme="light"] .chroma .ss         { color: #2e7d32; }
-[data-theme="light"] .chroma .sr         { color: #0277bd; }
+[data-theme="light"] .chroma .ss         { color: #1b5e20; }
+[data-theme="light"] .chroma .sr         { color: #01579b; }
 
 /* Numbers */
 [data-theme="light"] .chroma .m,
@@ -174,34 +174,23 @@ pre {
 
 /* Operators & Punctuation */
 [data-theme="light"] .chroma .o,
-[data-theme="light"] .chroma .ow         { color: #0277bd; }
-[data-theme="light"] .chroma .p          { color: #1e2133; }
-
-/* Comments */
-[data-theme="light"] .chroma .c,
-[data-theme="light"] .chroma .c1,
-[data-theme="light"] .chroma .ch,
-[data-theme="light"] .chroma .cm,
-[data-theme="light"] .chroma .cp,
-[data-theme="light"] .chroma .cpf,
-[data-theme="light"] .chroma .cs         { color: rgba(30,33,51,0.42); font-style: italic; }
+[data-theme="light"] .chroma .ow         { color: #01579b; }
 
 /* Generic diff */
 [data-theme="light"] .chroma .gd         { color: #c62828; }
 [data-theme="light"] .chroma .ge         { font-style: italic; }
 [data-theme="light"] .chroma .gh         { color: #084; font-weight: bold; }
-[data-theme="light"] .chroma .gi         { color: #2e7d32; }
-[data-theme="light"] .chroma .go         { color: rgba(30,33,51,0.5); }
+[data-theme="light"] .chroma .gi         { color: #1b5e20; }
 [data-theme="light"] .chroma .gp         { color: #084; font-weight: bold; }
 [data-theme="light"] .chroma .gs         { font-weight: bold; }
-[data-theme="light"] .chroma .gu         { color: #0277bd; }
+[data-theme="light"] .chroma .gu         { color: #01579b; }
 
 /* Errors */
 [data-theme="light"] .chroma .err        { color: #c62828; }
 
 /* Line numbers */
 [data-theme="light"] .chroma .lnt,
-[data-theme="light"] .chroma .ln         { color: rgba(30,33,51,0.3); }
+[data-theme="light"] .chroma .ln         { color: rgba(var(--text-rgb), 0.3); }
 
 /* Highlighted line */
-[data-theme="light"] .chroma .hl         { background: rgba(0,136,68,0.1); }
+[data-theme="light"] .chroma .hl         { background: rgba(var(--highlight-rgb), 0.1); }

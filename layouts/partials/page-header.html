@@ -7,10 +7,16 @@
 {{ $heroRes := resources.Get $path }}
 <div class="post-hero-banner">
     {{ if $heroRes }}
-    {{ $hasSize := not (in (slice ".svg" ".gif") (path.Ext $path)) }}
-    <img src="{{ $heroRes.RelPermalink }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager" decoding="async"{{ if $hasSize }} width="{{ $heroRes.Width }}" height="{{ $heroRes.Height }}"{{ end }}>
+    {{ if in (slice ".svg" ".gif") (path.Ext $path) }}
+    <img src="{{ $heroRes.RelPermalink }}" alt="" class="post-hero-banner-img" loading="eager" decoding="async">
     {{ else }}
-    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="post-hero-banner-img" loading="eager" decoding="async">
+    {{/* Same 1200w WebP that baseof.html preloads, so the preload is the image actually shown */}}
+    {{ $large := $heroRes.Process "resize 1200x webp" }}
+    {{ $small := $heroRes.Process "resize 600x webp" }}
+    <img src="{{ $large.RelPermalink }}" srcset="{{ $small.RelPermalink }} 600w, {{ $large.RelPermalink }} 1200w" sizes="100vw" alt="" class="post-hero-banner-img" loading="eager" decoding="async" width="{{ $large.Width }}" height="{{ $large.Height }}">
+    {{ end }}
+    {{ else }}
+    <img src="{{ . | relURL }}" alt="" class="post-hero-banner-img" loading="eager" decoding="async">
     {{ end }}
     <div class="post-hero-banner-overlay"></div>
 </div>

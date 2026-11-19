@@ -2,6 +2,8 @@
 [data-theme="dark"] {
     --highlight-color: #00ff7f;
     --highlight-rgb: 0, 255, 127;
+    /* Quieter accent for labels and links; a color, never opacity, so light mode keeps AA */
+    --highlight-muted: rgba(var(--highlight-rgb), 0.8);
     --background-color: #222635;
     --background-color-light: #262833;
     --text-color: #e4f1fe;
@@ -9,20 +11,23 @@
     /* Secondary text: 0.7 keeps WCAG AA (>=4.5:1) on both theme backgrounds */
     --text-muted: rgba(var(--text-rgb), 0.7);
     --nav-bg: rgba(38, 40, 51, 0.98);
+    --overlay-bg: rgba(22, 25, 37, 0.99);
     --blockquote-border: rgba(var(--text-rgb), 0.25);
     --code-bg: #14161f;
     --diagram-surface: #1b2030;
-    --diagram-line: rgba(228, 241, 254, 0.32);
+    --diagram-line: rgba(var(--text-rgb), 0.32);
 }
 
 [data-theme="light"] {
     --highlight-color: #00783c;
     --highlight-rgb: 0, 120, 60;
+    --highlight-muted: var(--highlight-color);
     --background-color: #f5f7fa;
     --background-color-light: #fff;
     --text-color: #1e2133;
     --text-rgb: 30, 33, 51;
     --nav-bg: rgba(245, 247, 250, 0.98);
+    --overlay-bg: rgba(245, 247, 250, 0.99);
     --blockquote-border: rgba(30, 33, 51, 0.25);
     --code-bg: #f0f2f8;
     --diagram-surface: #fff;
@@ -243,13 +248,16 @@ li a:hover {
     font-size: 1.4rem;
     line-height: 1;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s, background 0.2s, color 0.2s;
+    /* visibility keeps the hidden button out of the tab order; it flips after the fade */
+    transition: opacity 0.3s, visibility 0.3s, background 0.2s, color 0.2s;
     z-index: 100;
 }
 
 #scroll-to-top.visible {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
 }
 
@@ -297,6 +305,13 @@ pre:hover .copy-btn {
     opacity: 1;
 }
 
+/* Invisible 24px+ hit area around the small visible button */
+.copy-btn::after {
+    content: '';
+    position: absolute;
+    inset: -0.25rem;
+}
+
 .copy-btn.copied {
     color: var(--highlight-color);
 }
@@ -317,8 +332,11 @@ pre:hover .copy-btn {
     letter-spacing: 0.05em;
     text-decoration: none;
     color: var(--text-color);
-    opacity: 0.45;
+    opacity: 0.7;
     transition: opacity 0.2s, color 0.2s;
+    /* 24px hit area (WCAG 2.5.8); the negative margin keeps the visual spacing */
+    padding: 0.35rem 0.2rem;
+    margin: -0.35rem -0.2rem;
 }
 
 .lang-btn:hover {
@@ -400,7 +418,7 @@ pre:hover .copy-btn {
     .pub-overview-header, .pub-category-grid,
     .contact-badge-wrap, .contact-headline, .contact-subline,
     .contact-mailto-btn, .contact-response-time, .contact-methods-grid,
-    .contact-badge-dot {
+    body.is-idle {
         animation: none;
     }
 
@@ -513,6 +531,9 @@ pre:hover .copy-btn {
 }
 
 .post-article-share #sharing a {
+    display: inline-flex;
+    padding: 0.2rem;
+    margin: -0.2rem;
     opacity: 0.6;
     transition: opacity 0.2s, color 0.2s;
     color: var(--text-color);
@@ -561,8 +582,9 @@ pre:hover .copy-btn {
 }
 
 /* Blog post content — h2/h3 like publications */
+/* em so headings scale above the f4 (1.25rem) body text they sit in */
 .post-article-content h2 {
-    font-size: 1.35rem;
+    font-size: 1.4em;
     font-weight: 700;
     color: var(--highlight-color);
     border-left: 3px solid var(--highlight-color);
@@ -572,7 +594,7 @@ pre:hover .copy-btn {
 }
 
 .post-article-content h3 {
-    font-size: 1.05rem;
+    font-size: 1.15em;
     font-weight: 600;
     color: rgba(var(--text-rgb), 0.85);
     margin-top: 1.75rem;
@@ -580,7 +602,7 @@ pre:hover .copy-btn {
 }
 
 .post-article-content h4 {
-    font-size: 0.95rem;
+    font-size: 1em;
     font-weight: 600;
     color: var(--text-muted);
     margin-top: 1.25rem;
@@ -705,31 +727,29 @@ pre:hover .copy-btn {
 }
 
 .blog-tag {
-    font-size: 0.65rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.15rem 0.5rem;
     border: 1px solid rgba(var(--highlight-rgb), 0.3);
     border-radius: 3px;
-    color: var(--highlight-color);
-    opacity: 0.75;
+    color: var(--highlight-muted);
 }
 
 .blog-card-read-more {
     display: inline-block;
     margin-top: 1rem;
-    color: var(--highlight-color);
+    color: var(--highlight-muted);
     text-decoration: none;
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.04em;
-    opacity: 0.8;
-    transition: opacity 0.2s;
+    transition: color 0.2s;
 }
 
 .blog-card-read-more:hover {
-    opacity: 1;
+    color: var(--highlight-color);
 }
 
 
@@ -854,9 +874,10 @@ pre:hover .copy-btn {
     align-items: center;
     opacity: 0.55;
     transition: opacity 0.2s;
-    /* override Tachyons pt3/mr1 without !important via higher specificity */
-    padding: 0;
-    margin: 0 0.1rem;
+    /* override Tachyons pt3/mr1 without !important via higher specificity;
+       padding grows the hit area to 26px, negative margin keeps the spacing */
+    padding: 0.2rem;
+    margin: -0.2rem -0.1rem;
     line-height: 0;
 }
 
@@ -964,8 +985,7 @@ pre:hover .copy-btn {
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.12em;
-    color: var(--highlight-color);
-    opacity: 0.7;
+    color: var(--highlight-muted);
     margin: 0 0 0.75rem;
 }
 
@@ -1058,9 +1078,13 @@ pre:hover .copy-btn {
     }
 
     .post-article-title {
-        font-size: clamp(1.35rem, 6vw, 1.9rem);
+        font-size: clamp(1.6rem, 7vw, 1.9rem);
         margin-bottom: 0.65rem;
     }
+
+    /* Keep title > h2 > h3 > body on narrow screens */
+    .post-article-content h2 { font-size: 1.2em; }
+    .post-article-content h3 { font-size: 1.1em; }
 
     .post-article-meta {
         flex-wrap: wrap;
@@ -1072,7 +1096,7 @@ pre:hover .copy-btn {
     /* Copy button always visible on touch devices */
     .copy-btn {
         opacity: 1;
-        font-size: 0.65rem;
+        font-size: 0.6875rem;
         padding: 0.15rem 0.4rem;
     }
 }
@@ -1095,9 +1119,8 @@ pre:hover .copy-btn {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--highlight-color);
+    color: var(--highlight-muted);
     margin: 0 0 0.85rem;
-    opacity: 0.8;
 }
 
 .sidebar-toc {
@@ -1184,13 +1207,12 @@ pre:hover .copy-btn {
     padding: 0.25rem 0.65rem;
     border: 1px solid rgba(var(--highlight-rgb), 0.35);
     border-radius: 4px;
-    color: var(--highlight-color);
-    opacity: 0.8;
-    transition: opacity 0.2s, background 0.2s, color 0.2s;
+    color: var(--highlight-muted);
+    transition: color 0.2s, background 0.2s, color 0.2s;
 }
 
 .post-tag:hover {
-    opacity: 1;
+    color: var(--highlight-color);
     background: rgba(var(--highlight-rgb), 0.1);
 }
 
@@ -1216,7 +1238,7 @@ pre:hover .copy-btn {
     inset: 0;
     background:
         radial-gradient(ellipse 70% 60% at 50% 40%, rgba(var(--highlight-rgb), 0.05) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0, 200, 100, 0.04) 0%, transparent 60%);
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(var(--highlight-rgb), 0.04) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -1344,7 +1366,6 @@ pre:hover .copy-btn {
 }
 
 .site-btn--primary:hover {
-    background: #00e673;
     box-shadow: 0 6px 24px rgba(var(--highlight-rgb), 0.4);
     color: var(--background-color);
 }
@@ -1480,14 +1501,13 @@ pre:hover .copy-btn {
 /* Better link colors in article body */
 .post-article-content a,
 .nested-links a {
-    color: var(--highlight-color);
-    opacity: 0.9;
-    transition: opacity 0.2s;
+    color: var(--highlight-muted);
+    transition: color 0.2s;
 }
 
 .post-article-content a:hover,
 .nested-links a:hover {
-    opacity: 1;
+    color: var(--highlight-color);
 }
 
 /* Inline code */
@@ -1786,7 +1806,6 @@ main.pb7 {
 }
 
 .contact-mailto-btn:hover {
-    background: #00e673;
     transform: translateY(-3px);
     box-shadow: 0 8px 32px rgba(var(--highlight-rgb), 0.45);
 }
@@ -1834,13 +1853,8 @@ main.pb7 {
     border-radius: 50%;
     background: var(--highlight-color);
     flex-shrink: 0;
-    animation: badgePulse 2.5s ease-in-out infinite;
 }
 
-@keyframes badgePulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(var(--highlight-rgb), 0.4); }
-    50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(var(--highlight-rgb), 0); }
-}
 
 /* Contact methods */
 .contact-methods {
@@ -1898,7 +1912,7 @@ a.contact-method:hover .contact-method-icon {
 }
 
 .contact-method-label {
-    font-size: 0.68rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1915,8 +1929,7 @@ a.contact-method:hover .contact-method-icon {
 }
 
 .contact-method-value--link {
-    color: var(--highlight-color);
-    opacity: 0.85;
+    color: var(--highlight-muted);
 }
 
 .contact-method-sub {
@@ -1931,149 +1944,6 @@ a.contact-method:hover .contact-method-icon {
     margin: 0;
 }
 
-/* Form panel */
-.contact-form-panel {
-    background: var(--background-color-light);
-    border: 1px solid rgba(var(--text-rgb), 0.08);
-    border-radius: 12px;
-    padding: 2rem 2.25rem;
-}
-
-.contact-form-new {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-}
-
-.contact-form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-@media (max-width: 37em) {
-    .contact-form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-form-panel {
-        padding: 1.5rem;
-    }
-}
-
-.contact-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.contact-field--grow {
-    flex: 1;
-}
-
-.contact-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-.contact-input {
-    background: var(--background-color);
-    border: 1px solid rgba(var(--text-rgb), 0.12);
-    border-radius: 7px;
-    padding: 0.7rem 0.9rem;
-    font-size: 0.925rem;
-    color: var(--text-color);
-    font-family: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.contact-input:focus {
-    outline: none;
-    border-color: var(--highlight-color);
-    box-shadow: 0 0 0 3px rgba(var(--highlight-rgb), 0.1);
-}
-
-.contact-textarea {
-    resize: vertical;
-    min-height: 9rem;
-    line-height: 1.6;
-}
-
-.contact-form-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-top: 0.5rem;
-}
-
-.contact-privacy {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-    margin: 0;
-    flex: 1;
-    min-width: 10rem;
-}
-
-.contact-submit {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--highlight-color);
-    color: var(--background-color);
-    border: none;
-    border-radius: 7px;
-    padding: 0.7rem 1.5rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-    box-shadow: 0 4px 16px rgba(var(--highlight-rgb), 0.2);
-}
-
-.contact-submit:hover {
-    background: #00e673;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(var(--highlight-rgb), 0.35);
-}
-
-.contact-submit-arrow {
-    transition: transform 0.2s;
-}
-
-.contact-submit:hover .contact-submit-arrow {
-    transform: translateX(3px);
-}
-
-/* Legacy contact form (shortcode, kept for fallback) */
-.contact-form { max-width: 36rem; margin-top: 2rem; }
-.contact-form-field { margin-bottom: 1.25rem; }
-.contact-form-label {
-    display: block; font-size: 0.8rem; font-weight: 700;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--text-muted); margin-bottom: 0.45rem;
-}
-.contact-form-input {
-    display: block; width: 100%;
-    background: var(--background-color-light);
-    border: 1px solid rgba(var(--text-rgb), 0.12);
-    border-radius: 6px; padding: 0.7rem 0.9rem;
-    font-size: 0.95rem; color: var(--text-color);
-    font-family: inherit; transition: border-color 0.2s; box-sizing: border-box;
-}
-.contact-form-input:focus { outline: none; border-color: var(--highlight-color); }
-.contact-form-textarea { min-height: 10rem; resize: vertical; }
-.contact-form-hint { font-size: 0.75rem; color: var(--text-muted); margin: 0.3rem 0 0; }
-.contact-form-submit { margin-top: 0.5rem; width: 100%; justify-content: center; }
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2117,32 +1987,14 @@ a.contact-method:hover .contact-method-icon {
    LIGHT MODE — comprehensive contrast-safe overrides
    ═══════════════════════════════════════════════════════════════ */
 
-/* Base */
-[data-theme="light"] body,
-[data-theme="light"] html { background-color: var(--background-color); color: var(--text-color); }
-[data-theme="light"] main,
+/* Only what tokens cannot express: tachyons background classes,
+   slightly stronger light-mode borders, and light-only accents. */
 [data-theme="light"] .background-dark,
 [data-theme="light"] .background-dark-light { background-color: var(--background-color); }
 
-/* Theme toggle button */
-[data-theme="light"] .theme-toggle {
-    color: rgba(30, 33, 51, 0.65);
-    border-color: rgba(30, 33, 51, 0.25);
-}
-[data-theme="light"] .theme-toggle:hover {
-    color: var(--highlight-color);
-    border-color: var(--highlight-color);
-}
-
 /* Nav */
-[data-theme="light"] .lang-divider          { color: rgba(30,33,51,0.3); }
-[data-theme="light"] .hamburger-line        { background: var(--text-color); }
-[data-theme="light"] .mobile-nav {
-    background: rgba(245,247,250,0.99);
-    border-color: rgba(30,33,51,0.12);
-}
-[data-theme="light"] .site-nav-sub         { background: rgba(245,247,250,0.99); border-color: rgba(30,33,51,0.12); }
-[data-theme="light"] .site-nav-caret       { color: rgba(30,33,51,0.5); }
+[data-theme="light"] .mobile-nav,
+[data-theme="light"] .site-nav-sub { border-color: rgba(var(--text-rgb), 0.12); }
 
 /* Cards */
 [data-theme="light"] .blog-card,
@@ -2151,98 +2003,29 @@ a.contact-method:hover .contact-method-icon {
 [data-theme="light"] .resume-profile-card,
 [data-theme="light"] .skill-group,
 [data-theme="light"] .contact-method,
-[data-theme="light"] .contact-form-panel,
 [data-theme="light"] .timeline-content,
-[data-theme="light"] .pub-podcast-card,
-[data-theme="light"] .term-card {
-    background: var(--background-color-light);
-    border-color: rgba(30,33,51,0.1);
-}
-[data-theme="light"] .blog-card-img-placeholder { background: #e8eaf0; }
-[data-theme="light"] .blog-card-placeholder-icon { color: rgba(30,33,51,0.2); }
-
-/* Blog card text */
-[data-theme="light"] .blog-tag             { color: var(--highlight-color); border-color: rgba(0,136,68,0.35); }
-
-/* Blog list */
-[data-theme="light"] .blog-page-btn     { color: var(--highlight-color); border-color: rgba(0,136,68,0.35); }
+[data-theme="light"] .pub-podcast-card { border-color: rgba(var(--text-rgb), 0.1); }
+[data-theme="light"] .blog-card-img-placeholder  { background: rgba(var(--text-rgb), 0.08); }
+[data-theme="light"] .blog-card-placeholder-icon { color: rgba(var(--text-rgb), 0.2); }
 
 /* Post article */
-[data-theme="light"] .post-article-section-label    { color: var(--highlight-color); opacity: 0.8; }
-[data-theme="light"] .post-article-title            { color: var(--text-color); }
-[data-theme="light"] .post-article-content          { color: var(--text-color); }
-[data-theme="light"] .post-article-content h2       { color: var(--highlight-color); }
-[data-theme="light"] .post-article-content a        { color: var(--highlight-color); }
-[data-theme="light"] .post-tags                     { border-top-color: rgba(30,33,51,0.1); }
-[data-theme="light"] .post-tag { color: var(--highlight-color); border-color: rgba(0,136,68,0.35); }
-[data-theme="light"] .post-tag:hover                { background: rgba(0,136,68,0.08); }
-
-/* Sidebar */
-[data-theme="light"] .sidebar-card-title    { color: var(--highlight-color); opacity: 0.8; }
-[data-theme="light"] .sidebar-related-item  { border-color: rgba(30,33,51,0.08); }
-[data-theme="light"] .sidebar-toc #TableOfContents ul ul    { border-color: rgba(30,33,51,0.12); }
-
-/* TOC sidebar (publications) */
-[data-theme="light"] .toc-nav { border-left-color: var(--highlight-color); }
-[data-theme="light"] #TableOfContents ul ul { border-left-color: rgba(30,33,51,0.12); }
+[data-theme="light"] .post-article-title { color: var(--text-color); }
 
 /* Footer */
-[data-theme="light"] .site-footer          { background: var(--background-color-light); border-top-color: rgba(0,136,68,0.15); }
-[data-theme="light"] .site-footer-bottom   { border-top-color: rgba(30,33,51,0.08); }
+[data-theme="light"] .site-footer { border-top-color: rgba(var(--highlight-rgb), 0.15); }
 
 /* Resume */
-[data-theme="light"] .skill-chip            { background: rgba(30,33,51,0.05); border-color: rgba(30,33,51,0.15); color: rgba(30,33,51,0.75); }
-[data-theme="light"] .skill-chip--highlight { background: rgba(0,136,68,0.08); border-color: rgba(0,136,68,0.35); color: var(--highlight-color); }
-[data-theme="light"] .resume-page h2       { color: rgba(30,33,51,0.5); border-bottom-color: rgba(30,33,51,0.1); }
-
-/* Timeline */
-[data-theme="light"] .timeline-date    { color: var(--highlight-color); }
-[data-theme="light"] .timeline-role    { color: var(--text-color); }
-[data-theme="light"] .timeline-org     { color: rgba(30,33,51,0.5); }
-[data-theme="light"] .timeline-content p { color: rgba(30,33,51,0.65); }
-[data-theme="light"] .timeline::before { background: linear-gradient(to bottom, var(--highlight-color), rgba(0,136,68,0.1)); }
-[data-theme="light"] .timeline-item::before { background: var(--highlight-color); box-shadow: 0 0 0 3px rgba(0,136,68,0.15); }
-
-/* Publications */
-[data-theme="light"] .pub-overview-header { border-bottom-color: rgba(30,33,51,0.08); }
-[data-theme="light"] .pub-podcast-card     { border-color: rgba(30,33,51,0.1); }
-[data-theme="light"] .page-publications h2 { color: var(--highlight-color); border-left-color: var(--highlight-color); }
-
-/* Contact */
-[data-theme="light"] .contact-input        { background: #f0f2f8; color: var(--text-color); border-color: rgba(30,33,51,0.2); }
-
-/* Terms/Taxonomy */
-[data-theme="light"] .term-card       { border-color: rgba(30,33,51,0.1); }
-
-/* 404 */
-
-/* Inline code in light mode */
-[data-theme="light"] .post-article-content code,
-[data-theme="light"] .lh-copy code {
-    background: rgba(0,136,68,0.08);
-    border-color: rgba(0,136,68,0.2);
-    color: #063;
-}
-
-/* Hero */
-[data-theme="light"] .home-hero::before {
-    background:
-        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(0,136,68,0.06) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0,100,50,0.04) 0%, transparent 60%);
+[data-theme="light"] .skill-chip {
+    background: rgba(var(--text-rgb), 0.05);
+    border-color: rgba(var(--text-rgb), 0.15);
+    color: rgba(var(--text-rgb), 0.75);
 }
 
 /* Headings and strong */
 [data-theme="light"] strong { color: var(--highlight-color); }
 
 /* Scroll-to-top */
-[data-theme="light"] #scroll-to-top {
-    background: var(--background-color-light);
-    border-color: var(--highlight-color);
-    color: var(--highlight-color);
-}
-
-/* Read progress */
-[data-theme="light"] .read-progress-bar { background: var(--highlight-color); }
+[data-theme="light"] #scroll-to-top { background: var(--background-color-light); }
 
 /* ═══════════════════════════════════════════════════════════════
    MOBILE — HAMBURGER NAV
@@ -2304,7 +2087,7 @@ a.contact-method:hover .contact-method-icon {
     left: 50%;
     transform: translateX(-50%);
     min-width: 170px;
-    background: rgba(28, 31, 44, 0.99);
+    background: var(--overlay-bg);
     border: 1px solid rgba(var(--highlight-rgb), 0.15);
     border-radius: 8px;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
@@ -2341,7 +2124,7 @@ a.contact-method:hover .contact-method-icon {
     top: 3.5rem;
     left: 0;
     right: 0;
-    background: rgba(22, 25, 37, 0.99);
+    background: var(--overlay-bg);
     border-bottom: 1px solid rgba(var(--highlight-rgb), 0.12);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
     padding: 0.75rem 1.5rem 1.5rem;
@@ -2701,12 +2484,11 @@ pre {
 }
 
 .pub-podcast-label {
-    font-size: 0.68rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--highlight-color);
-    opacity: 0.7;
+    color: var(--highlight-muted);
     margin: 0 0 0.85rem;
 }
 
@@ -2746,16 +2528,15 @@ pre {
     padding: 0.25rem 0.75rem;
     border: 1px solid rgba(var(--highlight-rgb), 0.3);
     border-radius: 4px;
-    color: var(--highlight-color);
+    color: var(--highlight-muted);
     text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.2s, background 0.2s;
+    transition: color 0.2s, background 0.2s;
     margin-top: 0.25rem;
 }
 
 .page-publications a[href*="itch.io"]:hover,
 .page-publications\.de a[href*="itch.io"]:hover {
-    opacity: 1;
+    color: var(--highlight-color);
     background: rgba(var(--highlight-rgb), 0.08);
 }
 
@@ -2858,16 +2639,15 @@ pre {
 .resume-link {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--highlight-color);
+    color: var(--highlight-muted);
     text-decoration: none;
-    opacity: 0.75;
-    transition: opacity 0.2s;
+    transition: color 0.2s;
     border-bottom: 1px solid rgba(var(--highlight-rgb), 0.25);
     padding-bottom: 1px;
 }
 
 .resume-link:hover {
-    opacity: 1;
+    color: var(--highlight-color);
 }
 
 .resume-print-btn {
@@ -2893,7 +2673,7 @@ pre {
 }
 
 .skill-group-label {
-    font-size: 0.68rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -3057,8 +2837,7 @@ body.is-idle {
     font-family: monospace;
     font-size: 0.85rem;
     line-height: 1.4;
-    color: var(--highlight-color);
-    opacity: 0.7;
+    color: var(--highlight-muted);
     white-space: pre;
     display: inline-block;
     margin: 2rem 0;
@@ -3566,6 +3345,20 @@ body.is-restoring {
 @media print {
     .no-print { display: none !important; }
 
+    /* Paper is white in both themes: without this, dark-theme light text prints near-invisible */
+    :root,
+    [data-theme] {
+        --highlight-color: #00783c;
+        --highlight-rgb: 0, 120, 60;
+        --highlight-muted: var(--highlight-color);
+        --background-color: #fff;
+        --background-color-light: #fff;
+        --text-color: #111;
+        --text-rgb: 17, 17, 17;
+        --code-bg: #f0f2f8;
+        --diagram-surface: #fff;
+    }
+
     .diagram-canvas { overflow: visible; }
     .diagram-canvas svg { min-width: 0; }
 
@@ -3579,11 +3372,11 @@ body.is-restoring {
     .resume-profile-card { border: 1px solid #ddd; }
     .skill-group { border: 1px solid #ddd; }
     .skill-chip { border: 1px solid #ccc; color: #333; background: #f5f5f5; }
-    .skill-chip--highlight { border-color: #0a5; color: #0a5; }
+    .skill-chip--highlight { border-color: #00783c; color: #00783c; }
     .timeline-content { border: 1px solid #ddd; }
-    .timeline-date { color: #0a5; }
-    .timeline::before { background: #0a5; }
-    .timeline-item::before { background: #0a5; }
+    .timeline-date { color: #00783c; }
+    .timeline::before { background: #00783c; }
+    .timeline-item::before { background: #00783c; }
     .site-footer, .site-plain-header { display: none !important; }
     #scroll-to-top { display: none !important; }
 }

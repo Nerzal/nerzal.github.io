@@ -262,6 +262,14 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileNav.setAttribute("aria-hidden", "true");
       });
     });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape" || !mobileNav.classList.contains("is-open"))
+        return;
+      mobileNav.classList.remove("is-open");
+      hamburger.setAttribute("aria-expanded", "false");
+      mobileNav.setAttribute("aria-hidden", "true");
+      hamburger.focus();
+    });
   }
 
   // Reading progress bar

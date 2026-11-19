@@ -7,11 +7,11 @@
     {{ with resources.Get $path }}
         {{ $img = .RelPermalink }}
         {{ if not (in (slice ".gif" ".svg") (path.Ext $path)) }}
-            {{ $imgWebP = (.Process "convert webp").RelPermalink }}
-        {{ end }}
-        {{ if not (in (slice ".gif" ".svg") (path.Ext $path)) }}
-            {{ $imgW = .Width }}
-            {{ $imgH = .Height }}
+            {{ $card := .Process "resize 720x webp" }}
+            {{ $cardSmall := .Process "resize 360x webp" }}
+            {{ $imgWebP = printf "%s 360w, %s 720w" $cardSmall.RelPermalink $card.RelPermalink }}
+            {{ $imgW = $card.Width }}
+            {{ $imgH = $card.Height }}
         {{ end }}
     {{ else }}
         {{ $img = $path | absURL }}
@@ -25,7 +25,7 @@
     <a href="{{ .RelPermalink }}" class="blog-card-img-wrap" tabindex="-1" aria-hidden="true">
         {{ if $img }}
         <picture>
-            {{ if $imgWebP }}<source srcset="{{ $imgWebP }}" type="image/webp">{{ end }}
+            {{ if $imgWebP }}<source srcset="{{ $imgWebP }}" sizes="(max-width: 37em) 100vw, (max-width: 60em) 50vw, 26rem" type="image/webp">{{ end }}
             <img src="{{ $img }}" alt="{{ .Title }}" class="blog-card-img" loading="lazy" decoding="async"{{ if $imgW }} width="{{ $imgW }}" height="{{ $imgH }}"{{ end }}>
         </picture>
         {{ else }}

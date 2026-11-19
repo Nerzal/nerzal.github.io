@@ -37,7 +37,8 @@
       {{ if not (in (slice ".svg" ".gif") (path.Ext $imgPath)) }}
         {{ with resources.Get $imgPath }}
           {{ $lcp := .Process "resize 1200x webp" }}
-          <link rel="preload" as="image" href="{{ $lcp.RelPermalink }}" type="image/webp">
+          {{ $lcpSmall := .Process "resize 600x webp" }}
+          <link rel="preload" as="image" href="{{ $lcp.RelPermalink }}" imagesrcset="{{ $lcpSmall.RelPermalink }} 600w, {{ $lcp.RelPermalink }} 1200w" imagesizes="100vw" type="image/webp">
         {{ end }}
       {{ end }}
     {{ end }}

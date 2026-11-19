@@ -16,7 +16,7 @@
     background: linear-gradient(
         to bottom,
         var(--highlight-color) 0%,
-        rgba(0, 255, 127, 0.15) 100%
+        rgba(var(--highlight-rgb), 0.15) 100%
     );
     border-radius: 1px;
 }
@@ -37,12 +37,12 @@
     height: 0.75rem;
     border-radius: 50%;
     background: var(--highlight-color);
-    box-shadow: 0 0 0 3px rgba(0, 255, 127, 0.15);
+    box-shadow: 0 0 0 3px rgba(var(--highlight-rgb), 0.15);
     transition: box-shadow 0.25s;
 }
 
 .timeline-item:hover::before {
-    box-shadow: 0 0 0 5px rgba(0, 255, 127, 0.2);
+    box-shadow: 0 0 0 5px rgba(var(--highlight-rgb), 0.2);
 }
 
 .timeline-content {
@@ -54,7 +54,7 @@
 }
 
 .timeline-item:hover .timeline-content {
-    border-color: rgba(0, 255, 127, 0.25);
+    border-color: rgba(var(--highlight-rgb), 0.25);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -64,8 +64,7 @@
     font-weight: 700;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: var(--highlight-color);
-    opacity: 0.75;
+    color: var(--highlight-muted);
     margin-bottom: 0.35rem;
 }
 
@@ -79,7 +78,7 @@
 
 .timeline-org {
     font-size: 0.83rem;
-    color: rgba(var(--text-rgb), 0.5);
+    color: var(--text-muted);
     margin: 0 0 0.65rem;
     font-style: italic;
 }
