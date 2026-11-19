@@ -15,7 +15,7 @@ menu:
   </div>
   <div class="resume-profile-info">
     <div class="resume-profile-meta">
-      <span class="resume-meta-item">Kassel, Germany &middot; UTC+1/UTC+2</span>
+      <span class="resume-meta-item">Fritzlar, Germany &middot; UTC+1/UTC+2</span>
       <span class="resume-meta-item">100% Remote</span>
       <span class="resume-meta-item">Available for Speaking</span>
     </div>

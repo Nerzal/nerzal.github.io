@@ -44,9 +44,9 @@
     {{ block "head" . }}{{ partial "head-additions.html" . }}{{ end }}
 </head>
 
-<body class="ma0 {{ $.Param "body_classes" | default "avenir background-dark" }}{{ with getenv "HUGO_ENV" }} {{ . }}{{ end }}">
+<body class="ma0 {{ $.Param "body_classes" | default "avenir background-dark" }}{{ with getenv "HUGO_ENV" }} {{ . }}{{ end }}" data-label-copy="{{ i18n "copyCode" }}" data-label-copied="{{ i18n "copiedCode" }}" data-label-copy-failed="{{ i18n "copyFailed" }}" data-label-close="{{ i18n "close" }}" data-label-image-viewer="{{ i18n "imageViewer" }}">
 
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link">{{ i18n "skipToContent" }}</a>
 
     {{ block "header" . }}
         {{ partial "site-header.html" .}}
@@ -84,7 +84,7 @@
         {{ partial "site-footer.html" .}}
     {{ end }}
 
-    <button id="scroll-to-top" aria-label="Scroll to top">&#8679;</button>
+    <button id="scroll-to-top" aria-label="{{ i18n "backToTop" }}">&#8679;</button>
 
     {{ partialCached "site-scripts.html" . "global" }}
 </body>

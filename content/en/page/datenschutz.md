@@ -11,7 +11,7 @@ menu:
 <h2 id="m14">Introduction</h2>
 <p>With this privacy policy we would like to inform you about the types of your personal data (hereinafter also referred to as "data") that we process, for what purposes and to what extent. The privacy policy applies to all processing of personal data carried out by us, both in the context of providing our services and in particular on our websites, in mobile applications and within external online presences, such as our social media profiles (hereinafter collectively referred to as the "online offering").</p>
 <p>The terms used are not gender-specific.</p>
-<p>Last updated: April 16, 2026</p>
+<p>Last updated: November 19, 2026</p>
 
 <h2>Table of Contents</h2>
 <ul class="index">
@@ -32,7 +32,7 @@ menu:
 </ul>
 
 <h2 id="m3">Controller</h2>
-<p>Tobias Theel / Noobygames<br>Henkelstr. 6<br>34127 Kassel</p>
+<p>Tobias Theel / Noobygames<br>Gregorstraße 2<br>34560 Fritzlar</p>
 <p>Authorized representative: Tobias Theel</p>
 <p>E-mail address: <a href="mailto:info@noobygames.de">info@noobygames.de</a></p>
 

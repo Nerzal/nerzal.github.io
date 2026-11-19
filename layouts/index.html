@@ -4,8 +4,8 @@
 <section class="home-hero">
     <div class="home-hero-inner home-hero-split">
         <div class="home-hero-text">
-            <p class="home-hero-eyebrow">Senior Software Engineer</p>
-            <h1 class="home-hero-name">Tobias Theel</h1>
+            <h1 class="home-hero-name">{{ site.Params.author }}</h1>
+            <p class="home-hero-role">{{ site.Params.tagline }}</p>
             <p class="home-hero-tagline">Go · Cloud-Native · Open Source · Game Dev · Author · Speaker</p>
             <div class="home-hero-cta">
                 {{ with $blogPage }}

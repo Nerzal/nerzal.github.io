@@ -1,9 +1,10 @@
+{{ define "header" }}{{ partial "page-header.html" . }}{{ end }}
 {{ define "main" }}
 {{ $term := .Title }}
 {{ $pages := .Pages }}
 <div class="blog-list-page mw9 center ph3 ph4-l pv4 pv5-l">
     <header class="blog-list-header">
-        <p class="blog-list-eyebrow">{{ .Data.Singular | humanize }}</p>
+        {{ with .Parent }}<nav class="post-breadcrumb" aria-label="{{ i18n "breadcrumb" }}"><a href="{{ .RelPermalink }}" class="post-breadcrumb-link">← {{ .Title }}</a></nav>{{ end }}
         <h1 class="blog-list-title">{{ $term }}</h1>
         <p class="blog-list-count">{{ len $pages }} {{ i18n "articlesLabel" | default "articles" }}</p>
     </header>

@@ -2,7 +2,6 @@
 {{ define "main" }}
 <div class="pub-overview mw8 center ph3 ph4-l pv4 pv5-l">
     <header class="pub-overview-header">
-        <p class="blog-list-eyebrow">Portfolio</p>
         <h1 class="blog-list-title">{{ .Title }}</h1>
         {{ with .Content }}<div class="pub-overview-intro lh-copy f5 foreground-dark">{{ . }}</div>{{ end }}
     </header>
@@ -12,11 +11,15 @@
         {{ $page := site.GetPage .path }}
         {{ with $page }}
         <a href="{{ .RelPermalink }}" class="pub-cat-card">
-            <p class="pub-cat-label">{{ i18n $cat.label_key }}</p>
             <h2 class="pub-cat-title">{{ .Title }}</h2>
             <p class="pub-cat-desc">{{ .Description }}</p>
-            {{ with .Params.metric }}<p class="pub-cat-metric">{{ . }}</p>{{ end }}
-            <span class="pub-cat-cta">{{ i18n "explore" | default "Explore" }} →</span>
+            {{/* The category only adds information when the title does not already say it (e.g. "Product") */}}
+            {{ $category := i18n $cat.label_key }}
+            {{ $facts := slice }}
+            {{ if not (strings.Contains (lower .Title) (lower $category)) }}{{ $facts = $facts | append $category }}{{ end }}
+            {{ with .Params.metric }}{{ $facts = $facts | append . }}{{ end }}
+            {{ with $facts }}<p class="pub-cat-metric">{{ delimit . " · " }}</p>{{ end }}
+            <span class="pub-cat-cta">{{ i18n "explore" }} <span aria-hidden="true">→</span></span>
         </a>
         {{ end }}
         {{ end }}

@@ -19,7 +19,7 @@
     {{/* mailto CTA */}}
     <a href="mailto:{{ $p.cta_email }}" class="contact-mailto-btn">
         {{ $p.cta_label }}
-        <span class="contact-mailto-arrow">→</span>
+        <span class="contact-mailto-arrow" aria-hidden="true">→</span>
     </a>
 
     <p class="contact-response-time">{{ $p.response_time }}</p>
@@ -28,7 +28,7 @@
     <div class="contact-methods-grid">
 
         {{/* Email */}}
-        <a href="mailto:{{ $p.cta_email }}" class="contact-method" aria-label="Send email to {{ $p.cta_email }}">
+        <a href="mailto:{{ $p.cta_email }}" class="contact-method" aria-label="{{ i18n "sendEmailTo" (dict "Email" $p.cta_email) }}">
             <span class="contact-method-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -36,7 +36,7 @@
                 </svg>
             </span>
             <span class="contact-method-body">
-                <span class="contact-method-label">Email</span>
+                <span class="contact-method-label">{{ i18n "contactEmail" }}</span>
                 <span class="contact-method-value">{{ $p.cta_email }}</span>
             </span>
         </a>
@@ -45,7 +45,7 @@
         {{ range $socials }}
         {{ if .follow }}
         {{ $icon := resources.Get (printf "socials/%s.svg" .name) }}
-        <a href="{{ .url }}" target="_blank" rel="noopener" class="contact-method" aria-label="{{ .name | title }} (opens in new tab)">
+        <a href="{{ .url }}" target="_blank" rel="noopener" class="contact-method" aria-label="{{ .name | title }} ({{ i18n "opensInNewTab" }})">
             <span class="contact-method-icon" aria-hidden="true">
                 {{ with $icon }}{{ .Content | safeHTML }}{{ end }}
             </span>
@@ -68,9 +68,9 @@
                 </svg>
             </span>
             <span class="contact-method-body">
-                <span class="contact-method-label">Location</span>
+                <span class="contact-method-label">{{ i18n "contactLocation" }}</span>
                 <span class="contact-method-value">{{ site.Params.location }}</span>
-                <span class="contact-method-sub">{{ site.Params.location_tz }} &middot; 100% Remote</span>
+                <span class="contact-method-sub">{{ site.Params.location_tz }} &middot; {{ i18n "remoteWork" }}</span>
             </span>
         </div>
 

@@ -9,9 +9,9 @@
     {{ range $page.Translations }}
       {{ if eq .Lang "en" }}{{ $href = .RelPermalink }}{{ end }}
     {{ end }}
-    <a href="{{ $href }}" class="lang-btn" title="English">EN</a>
+    <a href="{{ $href }}" class="lang-btn" lang="en" hreflang="en" title="English">EN</a>
   {{ end }}
-  <span class="lang-divider">|</span>
+  <span class="lang-divider" aria-hidden="true">|</span>
   {{/* Deutsch */}}
   {{ if eq $currentLang "de" }}
     <span class="lang-btn lang-btn--current">DE</span>
@@ -20,6 +20,6 @@
     {{ range $page.Translations }}
       {{ if eq .Lang "de" }}{{ $href = .RelPermalink }}{{ end }}
     {{ end }}
-    <a href="{{ $href }}" class="lang-btn" title="Deutsch">DE</a>
+    <a href="{{ $href }}" class="lang-btn" lang="de" hreflang="de" title="Deutsch">DE</a>
   {{ end }}
 </div>

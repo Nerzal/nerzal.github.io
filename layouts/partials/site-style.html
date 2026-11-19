@@ -1,5 +1,5 @@
-{{/* Apply saved theme before first paint — prevents flash of wrong theme */}}
-<script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')</script>
+{{/* Apply theme before first paint to prevent a flash: stored choice wins, otherwise the OS preference */}}
+<script>(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}document.documentElement.setAttribute('data-theme',t||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'))})()</script>
 
 {{/* CSS pipeline — Ananke base files + project-specific overrides, concatenated in dependency order */}}
 {{ $tachyons     := resources.Get "ananke/css/_tachyons.css" }}

@@ -27,7 +27,7 @@ Umsatzsteuer-ID:
 Keine (sofern nicht vorhanden, ansonsten hier eintragen)
 
 Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:
-Tobias Theel, Henkelstr. 6, 34127 Kassel
+Tobias Theel, Gregorstraße 2, 34560 Fritzlar
 
 Hinweis auf EU-Streitschlichtung
 Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: [https://ec.europa.eu/consumers/odr](https://ec.europa.eu/consumers/odr).

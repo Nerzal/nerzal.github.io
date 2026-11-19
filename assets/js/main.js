@@ -19,6 +19,8 @@
 })();
 
 document.addEventListener("DOMContentLoaded", function () {
+  // UI strings are rendered per language into <body data-label-*> by baseof.html
+  var labels = document.body.dataset;
   // OS tabs: show one platform variant of a code example at a time
   (function () {
     var groups = Array.prototype.slice.call(
@@ -146,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     overlay.className = "lightbox";
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
-    overlay.setAttribute("aria-label", "Image viewer");
+    overlay.setAttribute("aria-label", labels.labelImageViewer);
     overlay.hidden = true;
 
     var lbImg = document.createElement("img");
@@ -157,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var lbClose = document.createElement("button");
     lbClose.className = "lightbox-close";
-    lbClose.setAttribute("aria-label", "Close");
+    lbClose.setAttribute("aria-label", labels.labelClose);
     lbClose.innerHTML = "&times;";
 
     overlay.appendChild(lbClose);
@@ -203,7 +205,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Theme toggle — all buttons share the same handler
   function applyTheme(next) {
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Storage blocked (private mode): the choice still applies to this page view.
+    }
   }
   document.querySelectorAll(".theme-toggle").forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -294,15 +300,15 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("pre").forEach(function (pre) {
     var button = document.createElement("button");
     button.className = "copy-btn";
-    button.textContent = "Copy";
+    button.textContent = labels.labelCopy;
     button.addEventListener("click", function () {
       var code = pre.querySelector("code");
       var text = code ? code.innerText : pre.innerText;
       function onSuccess() {
-        button.textContent = "Copied!";
+        button.textContent = labels.labelCopied;
         button.classList.add("copied");
         setTimeout(function () {
-          button.textContent = "Copy";
+          button.textContent = labels.labelCopy;
           button.classList.remove("copied");
         }, 2000);
       }
@@ -311,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .writeText(text)
           .then(onSuccess)
           .catch(function () {
-            button.textContent = "Error";
+            button.textContent = labels.labelCopyFailed;
           });
       } else {
         var ta = document.createElement("textarea");
@@ -323,7 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
           document.execCommand("copy");
           onSuccess();
         } catch {
-          button.textContent = "Error";
+          button.textContent = labels.labelCopyFailed;
         }
         document.body.removeChild(ta);
       }

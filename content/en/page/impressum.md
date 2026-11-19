@@ -27,7 +27,7 @@ VAT ID:
 None
 
 Responsible for content according to § 18 para. 2 MStV:
-Tobias Theel, Henkelstr. 6, 34127 Kassel
+Tobias Theel, Gregorstraße 2, 34560 Fritzlar
 
 **Note on EU dispute resolution**
 The European Commission provides a platform for online dispute resolution (ODR): [https://ec.europa.eu/consumers/odr](https://ec.europa.eu/consumers/odr).

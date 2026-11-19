@@ -1,41 +1,11 @@
-[more]
-other = "Mehr"
-
-[allTitle]
-other = "Alle {{.Title }}"
-
-[recentTitle]
-other = "Neueste {{.Title }}"
-
 [readMore]
 other = "weiterlesen"
 
 [by]
 other = "Von"
 
-[whatsInThis]
-other = "Was ist in dieser {{ .Type }}"
-
 [related]
 other = "Ähnliches"
-
-[yourName]
-other = "Dein Name"
-
-[emailAddress]
-other = "Email Adresse"
-
-[message]
-other = "Nachricht"
-
-[emailRequiredNote]
-other = "Eine Email Adresse wird benötigt."
-
-[send]
-other = "Senden"
-
-[taxonomyPageList]
-other = "Beiträge zum Thema “{{ .Title }}”"
 
 [readingTime]
 one = "Eine Minute"
@@ -45,14 +15,8 @@ other = "{{ .Count }} Minuten"
 one = "Ein Wort"
 other = "{{ .Count }} Wörter"
 
-[pageTitle]
-other = "{{ .Name }} Seite"
-
 [explore]
 other = "Entdecken"
-
-[browse]
-other = "Stöbern"
 
 [catBook]
 other = "Buch"
@@ -71,9 +35,6 @@ other = "Produkt"
 
 [onThisPage]
 other = "Inhalt"
-
-[writingLabel]
-other = "Artikel"
 
 [articlesLabel]
 other = "Artikel"
@@ -113,3 +74,75 @@ other = "zurück zum Blog"
 
 [dogsKonamiHint]
 other = "Tipp: Konami-Code auf jeder Seite probieren (hoch hoch runter runter...)"
+
+[skipToContent]
+other = "Zum Hauptinhalt springen"
+
+[switchTheme]
+other = "Zwischen hellem und dunklem Design wechseln"
+
+[menu]
+other = "Menü"
+
+[backToTop]
+other = "Nach oben"
+
+[footerNavigation]
+other = "Navigation"
+
+[footerConnect]
+other = "Vernetzen"
+
+[openTerminal]
+other = "Terminal öffnen"
+
+[copyCode]
+other = "Kopieren"
+
+[copiedCode]
+other = "Kopiert"
+
+[copyFailed]
+other = "Kopieren fehlgeschlagen"
+
+[close]
+other = "Schließen"
+
+[imageViewer]
+other = "Bildansicht"
+
+[notFoundTitle]
+other = "Seite nicht gefunden"
+
+[notFoundText]
+other = "Diese Seite wurde verschoben, gelöscht oder hat nie existiert. Starte auf der Startseite oder stöbere im Blog."
+
+[backToHome]
+other = "Zur Startseite"
+
+[contactEmail]
+other = "E-Mail"
+
+[contactLocation]
+other = "Standort"
+
+[remoteWork]
+other = "100 % remote"
+
+[sendEmailTo]
+other = "E-Mail an {{ .Email }} senden"
+
+[opensInNewTab]
+other = "öffnet in neuem Tab"
+
+[pagination]
+other = "Seitennavigation"
+
+[breadcrumb]
+other = "Pfadnavigation"
+
+[podcastEpisode]
+other = "Podcast-Folge"
+
+[listenOn]
+other = "Anhören auf"

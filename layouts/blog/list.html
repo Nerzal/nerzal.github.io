@@ -4,7 +4,6 @@
 <div class="blog-list-page mw9 center ph3 ph4-l pv4 pv5-l">
 
     <header class="blog-list-header">
-        <p class="blog-list-eyebrow">{{ i18n "writingLabel" | default "Writing" }}</p>
         <h1 class="blog-list-title">{{ .Title }}</h1>
         <p class="blog-list-count">{{ $postCount }} {{ i18n "articlesLabel" | default "articles" }}</p>
     </header>
@@ -16,7 +15,7 @@
     </div>
 
     {{ if gt .Paginator.TotalPages 1 }}
-    <nav class="blog-pagination" aria-label="Pagination">
+    <nav class="blog-pagination" aria-label="{{ i18n "pagination" }}">
         {{ if .Paginator.HasPrev }}
         <a href="{{ .Paginator.Prev.URL }}" class="blog-page-btn">← {{ i18n "newer" | default "Newer" }}</a>
         {{ end }}
