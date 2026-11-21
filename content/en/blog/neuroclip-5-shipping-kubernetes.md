@@ -27,6 +27,14 @@ toc: true
 
 > **Building Neuroclip** is a series about a tool I write for streamers: a Go server, a React dashboard and a few Python helpers. [Part 1: architecture](/blog/neuroclip-1-architecture/) · [Part 2: VOD to short](/blog/neuroclip-2-vod-to-short-pipeline/) · [Part 3: the OBS Regie](/blog/neuroclip-3-obs-regie/) · [Part 4: facecam upscaling](/blog/neuroclip-4-facecam-upscaling/) · **Part 5: shipping it (this post)**. The product itself is on the [Neuroclip page](/page/neuroclip/). Status: early access, single-user beta.
 
+{{< tldr >}}
+- Neuroclip's GitHub Actions pipeline is a strict chain of test, build, scan, sign and GitOps pull request; a red test never produces an image and a red scan never produces a signature.
+- Two short scripts fail the Neuroclip build on strong copyleft (AGPL, GPL, SSPL) in the Go binary or the frontend bundle, using `go list -deps` and the npm production tree.
+- Trivy fails the Neuroclip build only on fixable critical findings, and cosign signs the image digest keyless via GitHub's OIDC token and Sigstore, so no private signing key exists.
+- CI never deploys the Neuroclip app: it opens a pull request that pins the image to the commit SHA, and merge and apply stay manual, while Keel rolls out the static website automatically.
+- Neuroclip's Go server has no OIDC code; oauth2-proxy runs the authorization-code flow with PKCE against Keycloak in front of it, a design not yet tested end to end.
+{{< /tldr >}}
+
 A tool that only runs on my streaming PC is a hobby. A tool that also runs as a hosted dashboard needs a delivery pipeline I can trust at 2 a.m. This post covers the shape of that pipeline: what CI checks, how images are scanned and **signed**, why a deploy is a pull request instead of a `kubectl apply`, and how the app ends up behind Keycloak even though the Go server knows nothing about OIDC.
 
 Neuroclip is a commercial product in early access, so this post stays on the level of ideas and general techniques. Workflow files, manifests and cluster internals are deliberately left out. The examples below are generic and work for any project.

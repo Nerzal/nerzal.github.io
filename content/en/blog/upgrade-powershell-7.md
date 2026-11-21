@@ -2,6 +2,7 @@
 draft: false
 title: "Windows 11 Still Defaults to PowerShell 5.1 — And Why That's a Problem"
 date: 2026-05-10T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "windows", "windows11", "powershell", "oh-my-posh", "terminal", "devex"]
 seo_title: "Upgrade from PowerShell 5.1 to 7 on Windows 11"
 description: "Windows 11 still ships PowerShell 5.1 by default, a 2016-era shell on .NET Framework. Learn why that matters and how to upgrade to PowerShell 7."
@@ -9,6 +10,14 @@ images: ["img/powershell-51-vs-70.png"]
 featured_image: "img/powershell-51-vs-70.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Windows 11 still opens Windows PowerShell 5.1 by default, a 2016 release on .NET Framework 4.x that has received no new features since 2018.
+- PowerShell 7 (`pwsh.exe`) installs next to 5.1 without conflict, and the current LTS release, PowerShell 7.6, runs on .NET 10.
+- Install PowerShell 7 with `winget install --id Microsoft.PowerShell --source winget`; PowerShell 7.4 LTS and 7.5 reached end of support on 10 November 2026.
+- PowerShell 7 adds `&&` and `||`, the ternary operator, `??`, `ForEach-Object -Parallel`, `$PSStyle` and `Get-Error`, none of which exist in 5.1.
+- Oh My Posh rendered errors and broken icons on PowerShell 5.1 for me and works correctly once Windows Terminal uses PowerShell 7 as its default profile.
+{{< /tldr >}}
 
 Windows 11 is a modern operating system. Its terminal, however, defaults to a shell from 2016.
 

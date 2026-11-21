@@ -25,6 +25,14 @@ toc: true
 
 > **Serie: Das gocloak-Universum.** [Teil 1: gocloak-mcp](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) · [Teil 2: gocloak-auth-proxy](/de/blog/gocloak-auth-proxy-keycloak/) · Teil 3: gocloak-Performance (du bist hier) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · [Teil 5: pprof](/de/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- Die json/v2-Engine dekodiert Keycloak-Payloads ohne Codeänderung in gocloak 26 bis 74 % schneller, kodiert kleine Structs aber 39 bis 51 % langsamer.
+- fasthttp ist in den meisten Mikrobenchmarks der schnellste Stack, spart gegen ein echtes Keycloak aber nur 6 bis 10 % bei kleinen Calls, nichts bei großen, und kann kein HTTP/2.
+- Unter paralleler Last bremst restys Default `MaxIdleConnsPerHost` von `GOMAXPROCS + 1`; mit einem Pool von 256 war gocloak im verschränkten A/B-Lauf 2,6-mal so schnell.
+- gocloak v15.1.0 setzt Go 1.27 voraus, wo json/v2 die Default-Engine ist, hebt beide Idle-Limits auf 100 und bringt das Opt-in `SetDirectBodyRead()`, das die Bytes pro Call bei 1.000 Usern um 39 % senkt.
+- Jede Alt-gegen-neu-Zahl in diesem Post stammt aus einem verschränkten A/B-Lauf, weil getrennte Läufe auf meiner ausgelasteten Maschine Effekte von bis zu ±40 % vorgetäuscht haben.
+{{< /tldr >}}
+
 Lässt sich in der Kommunikation zwischen gocloak, dem Go-Client für die Keycloak REST API, und Keycloak noch "massiv" Performance holen? Darauf wollte ich eine Zahl statt eines Bauchgefühls, also habe ich drei Dinge geprüft:
 
 1. Bringt das neue [`encoding/json/v2`](https://pkg.go.dev/encoding/json/v2) etwas bei üblichen Keycloak-Payloads?

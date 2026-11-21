@@ -10,6 +10,14 @@ featured_image: "img/talkfrontend.svg"
 toc: true
 ---
 
+{{< tldr >}}
+- talkfrontend is an open-source, MIT-licensed React web app I built that shows conference talks written in Markdown as fullscreen slide decks.
+- talkfrontend loads talks over HTTP at runtime from a directory with `index.json`, `default-slides.md` and one `<id>/talk.md` per talk, so a new talk needs no rebuild or redeploy.
+- talkfrontend supports eight slide layouts, including animated code walkthroughs with Shiki Magic Move and speaker slides with QR codes generated without any third-party CDN.
+- The Docker image `ghcr.io/nerzal/talkfrontend` ships without my talk data; bind-mount your own talks over `/app/dist/talks` to self-host it.
+- My own talk archive back to 2021 runs on talkfrontend at talks.noobygames.de.
+{{< /tldr >}}
+
 Every time I prepare a conference talk, the same annoyance comes back: PowerPoint and Keynote are built for office documents, not for developer content. Code snippets get mangled by autocorrect, syntax highlighting is a manual chore, and every deck lives as an opaque binary file that is painful to diff, review, or version in Git.
 
 So I built **[talkfrontend](https://github.com/Nerzal/talkfrontend)**, a lightweight web viewer for talk slides. It works like a presentation, but it is a React web app instead of an Office document. Slides are authored as plain Markdown and loaded at runtime, so publishing a new talk never requires a rebuild or redeploy of the app itself.

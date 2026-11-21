@@ -2,6 +2,7 @@
 title: "Containerisierung und Go: Eine starke Kombination"
 seo_title: "Go und Docker: Multi-Stage-Builds"
 date: 2023-03-16
+lastmod: 2026-11-13T17:36:59+01:00
 draft: false
 description: "Erfahre, warum Go ideal für Containerisierung ist und wie du Multi-Stage-Docker-Builds einsetzt, um minimale, sichere Produktions-Images zu erstellen."
 images: ["img/go-docker.png"]
@@ -9,6 +10,14 @@ tags: ["go", "docker"]
 featured_image: "img/go-docker.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Go passt gut zu Containern, weil es kleine, statisch gelinkte Binaries erzeugt, sich einfach für andere Plattformen und Architekturen cross-kompilieren lässt und Goroutinen und Channels eingebaut hat.
+- Das Beispiel-Multi-Stage-Dockerfile baut mit `golang:1.27-alpine` und `CGO_ENABLED=0` und kopiert nur das Binary in `gcr.io/distroless/static-debian13:nonroot`.
+- Das Distroless-Runtime-Image enthält nur CA-Zertifikate, Zeitzonendaten und ein paar Dateien wie `/etc/passwd`, ohne Shell und ohne Paketmanager.
+- `USER nonroot:nonroot` führt die Go-Anwendung als UID 65532 statt als root aus; sie lauscht deshalb auf Port 8080, weil dieser User keine Ports unter 1024 binden kann.
+- Container teilen sich den Host-Kernel und isolieren schwächer als virtuelle Maschinen, haben aber eine kleinere Angriffsfläche und werden durch ein neu gebautes Image gepatcht.
+{{< /tldr >}}
 
 ## Einführung
 

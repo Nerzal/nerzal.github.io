@@ -24,6 +24,14 @@ toc: true
 
 > **Level Time bauen**, Teil 4 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · [Teil 3: die Release-Pipeline](/de/blog/level-time-3-release-pipeline/) · Teil 4 (dieser Artikel). Produktseite: [Level Time](/de/page/level-time/).
 
+{{< tldr >}}
+- Level Time Goals ist ein eigenes Streamer-Addon im Ordner `StreamGoal/`, das `## Dependencies: LevelTimer` deklariert und als eigenes CurseForge-Projekt (ID 1744370) erscheint.
+- Die gesamte öffentliche API von Level Time ist eine Zeile, `LevelTimerAPI = ns`, die die private Namespace-Tabelle des Addons als Global veröffentlicht.
+- Jeder Callback läuft über `ns.SafeCall` mit `xpcall`, sodass ein Fehler im Level-Up-Handler von Goals den Handler von Level Time nicht aufhalten kann.
+- Der API von Level Time fehlen Versionsnummer, Trennung zwischen stabil und intern sowie ein dokumentierter Vertrag; der nächste Schritt wäre eine kleine, explizite Tabelle wie `LevelTimerAPI.v1`.
+- Das Glücksrad in Level Time Goals wählt das Ergebnis, bevor es sich dreht, und animiert dann 12 Stücke vier Sekunden lang mit einem kubischen Ease-out, das in `OnUpdate` aus der vergangenen Zeit berechnet wird.
+{{< /tldr >}}
+
 In den ersten drei Teilen habe ich beschrieben, wie Level Time aufgebaut ist, wie ich sein Lua mit Go teste und wie es veröffentlicht wird. In diesem Teil geht es darum, was passiert, wenn ein zweites Addon auf den Schultern des ersten stehen soll: **Level Time Goals**, ein Schwester-Addon für Streamer, das im selben Repository liegt (`StreamGoal/`) und als eigenes CurseForge-Projekt erscheint.
 
 Es ist auch die Geschichte einer API, die ich anfangs gar nicht als API entworfen habe. Die Lehren stecken in der Lücke zwischen dem, was ein Kommentar verspricht, und dem, was der Code tatsächlich garantiert. Level Time und Level Time Goals sind junge Projekte, öffentlich auf [GitHub](https://github.com/Noobygames/wow-statistics) gebaut, und die Rad-Animation am Ende ist im Spielclient noch nicht vollständig geprüft (dazu unten mehr).

@@ -2,12 +2,21 @@
 draft: false
 title: "How to Secure SSH Access on Linux (Ubuntu)"
 date: 2026-05-09T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "linux", "ubuntu", "ssh", "security", "devops"]
 description: "Harden your Ubuntu server's SSH access step by step: create and deploy an SSH key pair, add a sudo user, disable password authentication, and lock out root."
 images: ["img/ssh_certificates.png"]
 featured_image: "img/ssh_certificates.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Securing SSH on Ubuntu 22.04, 24.04 or 26.04 takes four steps: create an Ed25519 key pair, add a sudo user, deploy the public key and harden `sshd`.
+- Put `PasswordAuthentication no`, `PermitRootLogin no` and `AllowUsers deploy` into `/etc/ssh/sshd_config.d/00-hardening.conf`, because the first value `sshd` reads wins.
+- On many cloud images, cloud-init's `50-cloud-init.conf` sets `PasswordAuthentication yes` and silently overrides an edit to the main `sshd_config`.
+- Check the syntax with `sudo sshd -t`, apply with `sudo systemctl reload ssh`, and confirm the effective values with `sudo sshd -T`.
+- OpenSSH 10.0 uses the hybrid post-quantum key exchange `mlkem768x25519-sha256` by default; for authentication keys, use Ed25519.
+{{< /tldr >}}
 
 Every publicly reachable Linux server is under constant brute-force pressure. If you leave SSH open with password authentication and the `root` account enabled, it is not a question of _if_ an attacker gets in, only of _when_. This guide walks you through four concrete steps that eliminate the most common attack surface:
 

@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Token-Kosten in agentischer KI senken.** [Teil 1: Wohin die Tokens fließen, Caveman und Ponytail](/de/blog/token-cost-1-caveman-ponytail/) · [Teil 2: code-review-graph und Hooks](/de/blog/token-cost-2-code-review-graph/) · Teil 3: Headroom, Auto-Updates und das kombinierte Setup (du bist hier)
 
+{{< tldr >}}
+- Headroom v0.44.0 ist ein lokaler Proxy auf `http://127.0.0.1:8787`, der Logs, JSON und Testausgaben komprimiert, bevor der Request des Coding-Agenten die Modell-API erreicht.
+- `headroom wrap claude` leitet eine einzelne Session über Headroom, `headroom install apply --preset persistent-service` richtet jeden erkannten Agenten rechnerweit ein.
+- Im globalen Headroom-Setup hängt jede Claude-Code-Session am Proxy, deshalb prüft ein geplantes Update-Skript `/health` und schickt eine Desktop-Benachrichtigung, wenn er nicht antwortet.
+- Die Hersteller-Benchmarks von Headroom zeigen 21 % bis 57 % Ersparnis in vier synthetischen Szenarien; einen unabhängigen Benchmark von Headroom habe ich nicht gefunden.
+- Mein empfohlenes Setup: Ponytail, code-review-graph in Code-Repositories, Headroom bei viel Log und JSON und einmal `/caveman-compress` für eine große `CLAUDE.md`.
+{{< /tldr >}}
+
 [Teil 1](/de/blog/token-cost-1-caveman-ponytail/) hat verkleinert, was der Agent schreibt, [Teil 2](/de/blog/token-cost-2-code-review-graph/), was er an Quellcode liest. Übrig bleibt der laute Rest: 400 Zeilen Testausgabe, eine 2 MB große JSON-Antwort einer API, ein Log-Dump mit genau einer interessanten Zeile. Solche Tool-Ergebnisse kommen einmal in den Kontext und werden danach mit jedem weiteren Turn erneut gesendet.
 
 [Headroom](https://github.com/headroomlabs-ai/headroom) (Apache-2.0, `headroom-ai` auf PyPI, aktuelles Release **v0.44.0** vom 10.11.2026) zielt genau darauf. Dieser Teil zeigt, wie es funktioniert, wie man es für ein Projekt oder für jeden Agenten auf dem Rechner einrichtet, wie es sich automatisch mit Desktop-Benachrichtigungen aktuell hält und wie die vier Werkzeuge dieser Serie zusammenpassen.

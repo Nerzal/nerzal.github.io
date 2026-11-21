@@ -3,6 +3,7 @@ draft: false
 title: "Ubuntu Server Hardening — Teil 1: Die Grundlagen"
 seo_title: "Ubuntu Hardening Teil 1: Die Grundlagen"
 date: 2026-05-11T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Drei Maßnahmen, die jeder öffentliche Ubuntu-Server sofort braucht: UFW-Firewall, Fail2ban-Schutz und automatische Sicherheitsupdates."
@@ -10,6 +11,14 @@ images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Teil 1 der Ubuntu-Hardening-Serie sichert einen öffentlichen Ubuntu-Server (22.04, 24.04 oder 26.04) mit drei Maßnahmen ab: UFW-Firewall mit Default-Deny, Fail2ban und automatischen Sicherheitsupdates, zusammen in unter fünfzehn Minuten.
+- Vor `sudo ufw enable` immer erst `sudo ufw allow OpenSSH` ausführen, sonst sperrt man sich beim Aktivieren von UFW selbst aus.
+- Ports, die Docker mit `-p` oder `ports:` in Compose veröffentlicht, umgehen UFW, deshalb private Container-Ports an `127.0.0.1` binden.
+- Die `jail.local` für Fail2ban aus diesem Beitrag sperrt eine IP für eine Stunde nach fünf Fehlversuchen in zehn Minuten und enthält nur die geänderten Einstellungen.
+- Unattended Upgrades installieren nur Sicherheitsupdates, und `sudo unattended-upgrade --dry-run --debug` testet die Konfiguration, ohne etwas zu installieren.
+{{< /tldr >}}
 
 Dies ist der erste Teil einer dreiteiligen Serie zur Absicherung eines öffentlichen Ubuntu-Servers.
 

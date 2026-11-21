@@ -24,6 +24,14 @@ toc: true
 
 > **Building Neuroclip, a series.** Part 1: Architecture (you are here) · [Part 2: VOD to short pipeline](/blog/neuroclip-2-vod-to-short-pipeline/) · [Part 3: OBS Regie](/blog/neuroclip-3-obs-regie/) · [Part 4: Facecam upscaling](/blog/neuroclip-4-facecam-upscaling/) · [Part 5: Shipping to Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). The product page is [Neuroclip](/page/neuroclip/). Status: **early access, single-user beta**.
 
+{{< tldr >}}
+- Neuroclip is one Go process (the cockpit) that runs ffmpeg, Whisper, Python helpers and the `claude` CLI as child processes, so a crashing helper fails one job and the server keeps running.
+- Every Claude path in Neuroclip has a rule-based fallback, Claude jobs have no posting tools, and nothing is uploaded without a human confirming in the dashboard.
+- While OBS is streaming, live saver mode lowers child process priority, uses fewer ffmpeg threads and shrinks `GOMAXPROCS`, because `GOMAXPROCS` does not limit child processes.
+- Since Go 1.25, any explicit `runtime.GOMAXPROCS(n)` call disables automatic updates for good; `runtime.SetDefaultGOMAXPROCS()` restores the default and re-enables them.
+- `exec.CommandContext` only kills the direct child; a custom `Cmd.Cancel` plus `WaitDelay` (Go 1.20) is needed to kill a whole process tree.
+{{< /tldr >}}
+
 Neuroclip is a tool I am building for streamers. This series covers the engineering behind it: a long-running Go process that wrestles ffmpeg, OBS, speech recognition and a couple of LLM calls into something that does not fall over in the middle of a stream. There is very little gaming in it.
 
 Neuroclip is a commercial product in early access, so this series stays on the level of ideas: component roles, design decisions, trade-offs and the general techniques behind them. You will not find a build plan here, and the code you see is generic.

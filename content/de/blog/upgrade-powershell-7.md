@@ -2,6 +2,7 @@
 draft: false
 title: "Windows 11 nutzt standardmäßig noch PowerShell 5.1 — und warum das ein Problem ist"
 date: 2026-05-10T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "windows", "windows11", "powershell", "oh-my-posh", "terminal", "devex"]
 seo_title: "PowerShell 5.1 auf 7 upgraden unter Windows 11"
 description: "Windows 11 setzt standardmäßig noch PowerShell 5.1 ein, eine 2016er-Version auf altem .NET Framework. So upgradest du auf PowerShell 7 als Standard."
@@ -9,6 +10,14 @@ images: ["img/powershell-51-vs-70.png"]
 featured_image: "img/powershell-51-vs-70.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Windows 11 öffnet standardmäßig noch Windows PowerShell 5.1, eine Version von 2016 auf .NET Framework 4.x, die seit 2018 keine neuen Features mehr bekommt.
+- PowerShell 7 (`pwsh.exe`) lässt sich problemlos neben 5.1 installieren, und das aktuelle LTS-Release PowerShell 7.6 basiert auf .NET 10.
+- PowerShell 7 installierst du mit `winget install --id Microsoft.PowerShell --source winget`; PowerShell 7.4 LTS und 7.5 haben am 10. November 2026 das Support-Ende erreicht.
+- PowerShell 7 bringt `&&` und `||`, den ternären Operator, `??`, `ForEach-Object -Parallel`, `$PSStyle` und `Get-Error` mit, die es in 5.1 alle nicht gibt.
+- Oh My Posh zeigte bei mir auf PowerShell 5.1 Fehler und kaputte Symbole und funktioniert korrekt, sobald Windows Terminal PowerShell 7 als Standardprofil nutzt.
+{{< /tldr >}}
 
 Windows 11 ist ein modernes Betriebssystem. Das Standard-Terminal setzt jedoch auf eine Shell von 2016.
 

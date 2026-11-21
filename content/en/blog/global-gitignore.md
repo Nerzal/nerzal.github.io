@@ -2,12 +2,21 @@
 draft: false
 title: "How to add a global .gitignore"
 date: 2026-05-09T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "git", "developer-tooling"]
 description: "Stop committing .DS_Store, Thumbs.db, and IDE folders into every project. Learn how to configure a global .gitignore that applies across all your repositories."
 images: ["img/global_gitignore.png"]
 featured_image: "img/global_gitignore.png"
 toc: true
 ---
+
+{{< tldr >}}
+- A global `.gitignore` is a single file that Git applies to every repository on your machine, registered via the `core.excludesFile` config key.
+- Run `git config --global core.excludesFile ~/.gitignore_global` to register the file; without that setting Git already reads `~/.config/git/ignore`.
+- The global file belongs to OS, editor, and tool artifacts like `.DS_Store`, `Thumbs.db`, and `*.swp`; project-specific rules stay in the repository's `.gitignore`.
+- Repository `.gitignore` files beat `.git/info/exclude`, which beats `core.excludesFile`, so a `!negation` in a project can re-include a globally ignored file.
+- Already-tracked files stay tracked after you ignore them; run `git rm --cached <file>` first.
+{{< /tldr >}}
 
 Every developer has done it at least once: accidentally committed a `.DS_Store` file, a `.idea/` folder, or some other machine-specific artifact into a shared repository. A per-project `.gitignore` helps, but you have to repeat yourself in every repo. A **global `.gitignore`** fixes that: it is a single file that Git applies to every repository on your machine.
 

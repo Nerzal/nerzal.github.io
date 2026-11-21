@@ -23,6 +23,13 @@ toc: true
 
 > **Building Neuroclip, Part 4 of 5.** Previous: [Part 3: the OBS Regie](/blog/neuroclip-3-obs-regie/). Others: [Part 1: architecture](/blog/neuroclip-1-architecture/), [Part 2: the VOD-to-short pipeline](/blog/neuroclip-2-vod-to-short-pipeline/), [Part 5: shipping on Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). The product page is [Neuroclip](/page/neuroclip/) (early access, single-user beta).
 
+{{< tldr >}}
+- Neuroclip upscales only the small facecam crop of a 1920x1080 stream for the 1080-pixel-wide strip of a vertical short, never the game or the full frame.
+- Neuroclip's upscaler is Real-ESRGAN's portable ncnn executable for Vulkan-capable GPUs, started from Go via `exec.CommandContext` behind a small `Upscaler` interface, with no Python or CUDA toolchain.
+- Every failure in the facecam upscaler (missing tool, failed run, full disk) falls back to a normal render, the feature is off by default, and a cache makes re-renders quick.
+- I chose Real-ESRGAN (permissive licenses) over the CodeFormer face restoration model because, as I understand its license, CodeFormer is for non-commercial use only.
+{{< /tldr >}}
+
 A Twitch stream is 1920x1080 and the facecam in the corner is small, a few hundred pixels wide. A vertical short is 1080 pixels wide, and the layout shows the cam as a strip across the full width. That is a magnification of more than 2x, and it looks exactly like you think: soft, blocky, a bit sad.
 
 This post is about the feature I built to fix that, and about three engineering decisions that I find more interesting than the AI model itself:

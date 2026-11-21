@@ -3,6 +3,7 @@ draft: false
 title: "Ubuntu Server Hardening — Teil 2: Das System verbessern"
 seo_title: "Ubuntu Hardening Teil 2: System härten"
 date: 2026-05-12T00:00:00+00:00
+lastmod: 2026-11-13T21:21:38+01:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Der zweite Hardening-Durchgang: Kernel-Parameter mit sysctl anpassen, unnötige Dienste deaktivieren und sudo sowie Login-Richtlinien einschränken."
@@ -10,6 +11,14 @@ images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Teil 2 der Ubuntu-Hardening-Serie verbessert das System mit vier Maßnahmen ohne zusätzliche Software: sysctl-Kernel-Parameter, deaktivierte Dienste, sudo-Einschränkungen und eine Passwort-Richtlinie.
+- Die Kernel-Einstellungen landen in `/etc/sysctl.d/99-hardening.conf` und greifen mit `sudo sysctl --system`, darunter ICMP-Weiterleitungen, SYN-Cookies, `kptr_restrict` und `ptrace_scope`.
+- `hidepid` ist eine Mount-Option des `proc`-Dateisystems in `/etc/fstab` und kein sysctl, und auf manchen Systemen bricht es polkit oder Benutzersitzungen.
+- Eine sudoers-Regel, die `deploy` auf nginx-Neustarts beschränkt, wirkt nur, wenn `deploy` nicht mehr in der `sudo`-Gruppe ist, weil `%sudo ALL=(ALL:ALL) ALL` sonst vollen Root-Zugriff gewährt.
+- Nach NIST SP 800-63B Rev. 4 verlangt die pwquality-Konfiguration mit `minlen = 15` mindestens 15 Zeichen, ohne Zusammensetzungsregeln und ohne erzwungene Passwort-Rotation.
+{{< /tldr >}}
 
 [Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/) behandelte die drei Grundlagen, die jeder öffentliche Server benötigt: UFW, Fail2ban und automatische Sicherheitsupdates. Damit sind die häufigsten automatisierten Angriffe bereits abgewehrt.
 

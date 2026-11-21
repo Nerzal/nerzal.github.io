@@ -3,6 +3,7 @@ draft: false
 title: "Ubuntu Server Hardening — Teil 3: Defense in Depth"
 seo_title: "Ubuntu Hardening Teil 3: Defense in Depth"
 date: 2026-07-30T00:00:00+00:00
+lastmod: 2026-11-13T21:21:38+01:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Die letzte Hardening-Schicht: Mandatory Access Control mit AppArmor, Audit-Logging mit auditd und Datei-Integritätsüberwachung mit AIDE."
@@ -10,6 +11,14 @@ images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Teil 3 der Ubuntu-Hardening-Serie geht davon aus, dass ein Angreifer eindringen könnte, und ergänzt Erkennung und Begrenzung mit AppArmor, auditd und AIDE.
+- Ab Ubuntu 24.04 nicht `aa-enforce /etc/apparmor.d/*` ausführen, weil das auch `unconfined`- und experimentelle Profile in den Enforce-Modus zwingt; nur Profile für tatsächlich genutzte Software erzwingen.
+- Das auditd-Regelwerk in `/etc/audit/rules.d/99-hardening.rules` überwacht Identitätsdateien, sudoers, SSH- und PAM-Konfiguration, und `-e 2` sperrt die Regeln bis zum nächsten Neustart.
+- AIDE legt seine Baseline mit `sudo aideinit` an, und Ubuntus Paket `aide-common` bringt bereits `dailyaidecheck.timer` mit, der täglich zwischen 02:00 und 04:00 prüft.
+- Nach System-Updates initialisiert `sudo aideinit -y -f` die AIDE-Datenbank neu, damit der neue Zustand zur Baseline wird.
+{{< /tldr >}}
 
 [Teil 1](/de/blog/ubuntu-server-hardening-1-essentials/) behandelte die grundlegenden Maßnahmen: UFW, Fail2ban und automatische Updates. [Teil 2](/de/blog/ubuntu-server-hardening-2-system/) verschärfte die Systemkonfiguration: sysctl, unnötige Dienste, sudo und Login-Richtlinien.
 

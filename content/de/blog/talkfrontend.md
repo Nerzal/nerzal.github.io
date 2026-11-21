@@ -10,6 +10,14 @@ featured_image: "img/talkfrontend.svg"
 toc: true
 ---
 
+{{< tldr >}}
+- talkfrontend ist eine von mir gebaute, MIT-lizenzierte Open-Source-React-Web-App, die in Markdown geschriebene Konferenzvorträge als Fullscreen-Foliensätze zeigt.
+- talkfrontend lädt Vorträge zur Laufzeit per HTTP aus einem Verzeichnis mit `index.json`, `default-slides.md` und einer `<id>/talk.md` pro Vortrag, ein neuer Vortrag braucht also keinen Rebuild oder Redeploy.
+- talkfrontend kennt acht Folien-Layouts, darunter animierte Code-Walkthroughs mit Shiki Magic Move und Speaker-Folien mit QR-Codes, ganz ohne Drittanbieter-CDN.
+- Das Docker-Image `ghcr.io/nerzal/talkfrontend` kommt ohne meine Vortragsdaten; für Self-Hosting bindest du deine eigenen Vorträge über `/app/dist/talks` ein.
+- Mein eigenes Vortragsarchiv bis zurück ins Jahr 2021 läuft mit talkfrontend unter talks.noobygames.de.
+{{< /tldr >}}
+
 Jedes Mal, wenn ich einen Konferenzvortrag vorbereite, nervt mich dasselbe: PowerPoint und Keynote sind für Office-Dokumente gebaut, nicht für Entwickler-Content. Code-Snippets werden von der Autokorrektur verhunzt, Syntax-Highlighting ist manuelle Fleißarbeit, und jede Folie liegt als undurchsichtige Binärdatei vor, die sich kaum diffen, reviewen oder in Git versionieren lässt.
 
 Deshalb habe ich **[talkfrontend](https://github.com/Nerzal/talkfrontend)** gebaut, einen schlanken Web-Viewer für Vortragsfolien. Er funktioniert wie eine Präsentation, ist aber eine React-Web-App statt eines Office-Dokuments. Folien werden als reines Markdown geschrieben und zur Laufzeit geladen, sodass das Veröffentlichen eines neuen Vortrags nie einen Rebuild oder Redeploy der App selbst erfordert.

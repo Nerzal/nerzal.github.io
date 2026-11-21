@@ -3,6 +3,7 @@ draft: false
 title: "GCP Basics — Part 1: Understanding Load Balancing in Google Cloud"
 seo_title: "GCP Load Balancing Explained: Network LB vs. Application LB"
 date: 2026-08-04T19:30:00+02:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags:
   [
     "gcp",
@@ -20,6 +21,14 @@ images: ["img/gcp-load-balancing.png"]
 featured_image: "img/gcp-load-balancing.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Google Cloud's Network Load Balancer works on Layer 4 and passes TCP/UDP traffic through unchanged, while the Application Load Balancer works on Layer 7 and terminates and parses HTTP.
+- This post builds a regional passthrough Network Load Balancer from five `gcloud` resources: static IP, health check, target pool, three instances and a forwarding rule.
+- The global external Application Load Balancer chain is forwarding rule, target HTTP proxy, URL map, backend service and managed instance group, with `--load-balancing-scheme=EXTERNAL_MANAGED`.
+- Without a firewall rule allowing Google's health check ranges `130.211.0.0/22` and `35.191.0.0/16`, every backend looks dead and the Application Load Balancer returns `502`.
+- None of these resources are covered by the Google Cloud Free Tier, so delete them in reverse dependency order after the experiment.
+{{< /tldr >}}
 
 This is the first post in a series where I work my way into the Google Cloud Platform and document it as I go, learning in public. If something here is wrong or outdated, tell me and I will fix it.
 

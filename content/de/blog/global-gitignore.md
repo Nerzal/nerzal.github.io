@@ -2,12 +2,21 @@
 draft: false
 title: "Eine globale .gitignore einrichten"
 date: 2026-05-09T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "git", "developer-tooling"]
 description: "Schluss mit versehentlich committeten .DS_Store-, Thumbs.db- und IDE-Ordnern. So konfigurierst du eine globale .gitignore für alle Repositories."
 images: ["img/global_gitignore.png"]
 featured_image: "img/global_gitignore.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Eine globale `.gitignore` ist eine einzige Datei, die Git auf jedes Repository auf deinem Rechner anwendet; registriert wird sie über den Konfigurationsschlüssel `core.excludesFile`.
+- `git config --global core.excludesFile ~/.gitignore_global` registriert die Datei; ohne diese Einstellung liest Git bereits `~/.config/git/ignore`.
+- In die globale Datei gehören Artefakte von Betriebssystem, Editor und Tools wie `.DS_Store`, `Thumbs.db` und `*.swp`; projektspezifische Regeln bleiben in der `.gitignore` des Repositorys.
+- Die `.gitignore`-Dateien eines Repositorys schlagen `.git/info/exclude`, das wiederum `core.excludesFile` schlägt, sodass eine `!Negation` im Projekt eine global ignorierte Datei zurückholt.
+- Bereits getrackte Dateien bleiben getrackt, auch wenn du sie ignorierst; dazu ist zuerst `git rm --cached <datei>` nötig.
+{{< /tldr >}}
 
 Jeder Entwickler hat es mindestens einmal erlebt: Eine `.DS_Store`-Datei, ein `.idea/`-Ordner oder ein anderes maschinenspezifisches Artefakt landet versehentlich in einem gemeinsam genutzten Repository. Eine projektbezogene `.gitignore` hilft, aber du musst sie in jedem Repo wiederholen. Abhilfe schafft eine **globale `.gitignore`**: eine einzige Datei, die Git auf jedes Repository auf deinem Rechner anwendet.
 

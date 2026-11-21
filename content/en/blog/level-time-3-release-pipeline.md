@@ -24,6 +24,14 @@ toc: true
 
 > **Series: Building Level Time**, part 3 of 4. [Part 1: Addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: Testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · **Part 3: Release pipeline** · [Part 4: Goals and the public API](/blog/level-time-4-goals-public-api/) · Product page: [Level Time](/page/level-time/)
 
+{{< tldr >}}
+- Pushing a `v*` git tag triggers Level Time's GitHub Actions release workflow, and `needs: test` blocks the release whenever the test job fails.
+- The `BigWigsMods/packager@v2` action zips the addon, generates the changelog from git history and uploads to CurseForge using the `.toc` project ID and the `CF_API_KEY` secret.
+- `.pkgmeta` is a deny-list, so every new non-addon file in the repository must be added to `ignore` or it ends up in the zip.
+- Level Time Goals ships from the same repository through a second packager run on a clone rewritten with `git filter-branch --subdirectory-filter StreamGoal`.
+- The Go installer in `tools/installer` copies only the files the `.toc` lists into each WoW flavor and refuses any path containing `WTF`, where SavedVariables live.
+{{< /tldr >}}
+
 Once an addon works, it still has to reach the players, and I did not want to click through several upload forms for every version. For [Level Time](/page/level-time/), a World of Warcraft addon that tracks time, XP and kills per level, I wanted one rule: **I push a git tag and everything else happens by itself.**
 
 In this post I walk through the whole path from `git tag` to a file on CurseForge: the GitHub Actions workflow, the [BigWigs packager](https://github.com/BigWigsMods/packager), the `.pkgmeta` file, the `.toc` files that serve several game clients, a trick for shipping a second addon from the same repository, and the small Go installer I use to test builds in my own WoW folders.

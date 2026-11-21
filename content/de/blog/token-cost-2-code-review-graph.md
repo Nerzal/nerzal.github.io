@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Token-Kosten in agentischer KI senken.** [Teil 1: Wohin die Tokens fließen, Caveman und Ponytail](/de/blog/token-cost-1-caveman-ponytail/) · Teil 2: code-review-graph und Hooks (du bist hier) · [Teil 3: Headroom, Auto-Updates und das kombinierte Setup](/de/blog/token-cost-3-headroom-stack/)
 
+{{< tldr >}}
+- code-review-graph v2.4.0 parst ein Repository mit Tree-sitter in einen lokalen SQLite-Graphen und beantwortet Fragen des Agenten per MCP, typischerweise mit 2.000 bis 4.000 Tokens.
+- Installiert wird code-review-graph mit `uv tool install code-review-graph`, danach im Wurzelverzeichnis des Repositorys `code-review-graph install` und `code-review-graph build` ausführen.
+- Ein `PostToolUse`-Hook in Claude Code und vier Git-Hooks (`pre-commit`, `post-checkout`, `post-merge`, `post-rewrite`) halten den Graphen aktuell, und alle enden mit `|| true`.
+- Die Schlagzeile „63×“ von code-review-graph vergleicht mit dem Lesen aller Dateien; gegen grep plus die drei besten Dateien liegt die vom Hersteller gemessene Reduktion im Median bei 6,65×.
+- Nach `uv tool upgrade code-review-graph` erneut `code-review-graph install` ausführen und mit `doctor` prüfen, weil ältere 2.3.x-Kopien das Schema von 2.4.0 beschädigen können.
+{{< /tldr >}}
+
 In [Teil 1](/de/blog/token-cost-1-caveman-ponytail/) haben wir gesehen, dass der größte Teil der Token-Rechnung eines Agenten **Eingabe** ist: alles, was der Agent liest und was in jedem Turn als Verlauf erneut gesendet wird. Die häufigste Eingabe in einer Coding-Session ist Quellcode. Um „Was geht kaputt, wenn ich diese Funktion umbenenne?“ zu beantworten, greppt ein Agent typischerweise nach dem Namen, öffnet die drei oder vier besten Treffer komplett und folgt vielleicht noch ein paar Imports. Jede dieser Dateien bleibt danach für den Rest der Session im Kontext.
 
 [code-review-graph](https://github.com/tirth8205/code-review-graph) (MIT, aktuelles Release **v2.4.0** vom 11.11.2026) ersetzt einen großen Teil dieses Lesens durch eine Abfrage gegen einen lokalen Codegraphen.

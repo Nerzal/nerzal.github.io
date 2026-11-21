@@ -24,6 +24,14 @@ toc: true
 
 > **Neuroclip bauen, eine Serie.** Teil 1: Architektur (du bist hier) · [Teil 2: VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/) · [Teil 3: OBS-Regie](/de/blog/neuroclip-3-obs-regie/) · [Teil 4: Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · [Teil 5: Auslieferung auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/). Status: **Early Access, Beta mit einem einzigen Nutzer**.
 
+{{< tldr >}}
+- Neuroclip ist ein einzelner Go-Prozess (das Cockpit), der ffmpeg, Whisper, Python-Helfer und die `claude`-CLI als Kindprozesse startet; stürzt ein Helfer ab, scheitert ein Job und der Server läuft weiter.
+- Jeder Claude-Pfad in Neuroclip hat einen regelbasierten Fallback, Claude-Jobs haben keine Posting-Werkzeuge, und nichts wird hochgeladen, ohne dass ein Mensch im Dashboard bestätigt.
+- Solange OBS streamt, senkt der Live-Sparmodus die Priorität der Kindprozesse, nutzt weniger ffmpeg-Threads und verkleinert `GOMAXPROCS`, weil `GOMAXPROCS` Kindprozesse nicht begrenzt.
+- Seit Go 1.25 schaltet jeder explizite Aufruf von `runtime.GOMAXPROCS(n)` die automatischen Anpassungen dauerhaft ab; `runtime.SetDefaultGOMAXPROCS()` stellt den Standard wieder her und aktiviert sie erneut.
+- `exec.CommandContext` beendet nur das direkte Kind; für einen ganzen Prozessbaum braucht es ein eigenes `Cmd.Cancel` plus `WaitDelay` (Go 1.20).
+{{< /tldr >}}
+
 Neuroclip ist ein Werkzeug, das ich für Streamer baue. In dieser Serie geht es um die Technik dahinter: einen langlebigen Go-Prozess, der ffmpeg, OBS, Spracherkennung und ein paar LLM-Aufrufe so zusammenbringt, dass nichts mitten im Stream umfällt. Mit Gaming hat das wenig zu tun.
 
 Neuroclip ist ein kommerzielles Produkt im Early Access. Deshalb bleibt diese Serie auf der Ebene der Ideen: Rollen der Komponenten, Designentscheidungen, Abwägungen und die allgemeinen Techniken dahinter. Einen Bauplan findest du hier nicht, und der Code ist generisch.

@@ -2,12 +2,21 @@
 draft: false
 title: "Einführung in Hugo #1"
 date: 2023-01-02T23:46:14+01:00
+lastmod: 2026-11-13T21:54:37+01:00
 tags: ["tutorial", "hugo"]
 description: "Starte mit Hugo, dem schnellsten Framework zum Erstellen von Websites. Lerne Installation, Theme-Erstellung und Deployment-Grundlagen."
 images: ["img/hugo-logo-wide.svg"]
 featured_image: "img/hugo-logo-wide.svg"
 toc: true
 ---
+
+{{< tldr >}}
+- Hugo ist ein Static-Site-Generator, und seit v0.170.0 gibt es nur noch eine Edition, weil die frühere Extended-Edition im Standard-Binary aufgegangen ist.
+- Unter Windows installierst du Hugo mit `winget install Hugo.Hugo`, unter macOS mit `brew install hugo` und unter Debian oder Ubuntu über die `.deb` von der Hugo-Releases-Seite.
+- Das offizielle Container-Image `ghcr.io/gohugoio/hugo` enthält bereits Hugo, Dart Sass, Git und Node.js, und `hugo server --bind 0.0.0.0` macht den Entwicklungsserver auf Port 1313 erreichbar.
+- In Produktion führt ein Multi-Stage-Docker-Build `hugo build --minify` aus und liefert den generierten Ordner `public/` mit `nginx:stable-alpine` aus.
+- Mit `hugo new site`, `hugo new theme`, einem `home.html`-Template mit `{{ .Content }}` und `hugo server -D` erscheint eine erste Hello-World-Seite unter `localhost:1313`.
+{{< /tldr >}}
 
 ## Was ist Hugo?
 

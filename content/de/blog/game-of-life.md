@@ -11,6 +11,14 @@ tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]
 show_reading_time: true
 ---
 
+{{< tldr >}}
+- Conways Game of Life ist ein Nullspieler-Zellularautomat von 1970 mit vier Regeln: Unterbevölkerung, Überleben mit zwei oder drei Nachbarn, Überbevölkerung und Reproduktion bei genau drei Nachbarn.
+- Diese Go-Implementierung braucht nur die Standardbibliothek: ein `Grid`-Struct mit einem zweidimensionalen `[]Cell`-Slice, wobei `Cell` ein `bool` ist.
+- `NextState` schreibt jede Generation in ein neu allokiertes Slice, weil ein direkt aktualisiertes Gitter neue Zellzustände in die Nachbarzählung einfließen lässt.
+- Der `%`-Operator in `countLiveNeighbors` erzeugt ein toroidales Gitter, sodass Zellen, die eine Kante verlassen, auf der gegenüberliegenden Seite wieder erscheinen.
+- Das Terminal-Rendering nutzt die ANSI-Escape-Sequenz `\033[H`, um jeden Frame an derselben Stelle neu zu zeichnen, und animiert einen Gleiter und ein Leichtes Raumschiff mit 100 ms pro Schritt.
+{{< /tldr >}}
+
 [Conways Game of Life](https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens) ist ein berühmter zellulärer Automat, den der britische Mathematiker John Horton Conway 1970 erdacht hat. Es ist ein Nullspieler-Spiel: Du legst einen Ausgangszustand fest und beobachtest, wie er sich nach festen Regeln weiterentwickelt, ohne weitere Eingaben. Die Regeln sind einfach und erzeugen trotzdem überraschend komplexe, lebensähnliche Muster.
 
 In diesem Post implementieren wir Game of Life in Go von Grund auf, Schritt für Schritt. Am Ende hast du eine funktionierende Terminal-Simulation, die einen **Gleiter** und ein **Leichtes Raumschiff (LWSS)** in Echtzeit rendert.

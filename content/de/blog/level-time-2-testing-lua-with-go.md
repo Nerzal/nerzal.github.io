@@ -25,6 +25,14 @@ toc: true
 
 > **Level Time bauen, Teil 2 von 4.** [Level Time](/de/page/level-time/) ist mein World-of-Warcraft-Addon, das die Levelzeit misst. Diese Serie erzählt die Technik dahinter. Teil 1: [Addon-Architektur](/de/blog/level-time-1-addon-architecture/). **Teil 2 (dieser Artikel): Lua mit Go testen.** Teil 3: [Die Release-Pipeline](/de/blog/level-time-3-release-pipeline/). Teil 4: [Ziele und die öffentliche API](/de/blog/level-time-4-goals-public-api/).
 
+{{< tldr >}}
+- Der Test-Harness von Level Time unter `tools/addontest` führt den Lua-Code des Addons mit `go test` in gopher-lua aus, einer Lua-5.1-VM in reinem Go, ohne Spielclient und ohne Lua-Installation.
+- Jede der 286 Szenario-Dateien bekommt ein frisches `lua.NewState()` und einen eigenen Go-Subtest, sodass `go test -run 'TestScenarios/session'` nur ein Szenario ausführt.
+- Der Harness unter `tools/addontest` lädt die Addon-Dateien in `.toc`-Reihenfolge und ersetzt die WoW-API durch eine Attrappe, in der unbekannte Frame-Methoden nichts tun.
+- Die Layout-Tests von Level Time prüfen Einstellungs- und Historienfenster auf Deutsch, Englisch, Französisch und Spanisch, mit einer groben Textbreite von 6 pro Byte.
+- `go test` immer mit `-count=1` aufrufen, weil der Test-Cache von Go nichts von den Lua-Dateien weiß, die gopher-lua lädt.
+{{< /tldr >}}
+
 Ein World-of-Warcraft-Addon läuft im Spielclient. Es gibt kein `npm test`, kein `go test`, kein `pytest` und keine Möglichkeit, den Lua-Code des Addons einfach so zu starten. Die einzige eingebaute Rückkopplung lautet: Datei ändern, `/reload` tippen, herumklicken, den Chat lesen.
 
 Für ein Addon mit 200 Zeilen reicht das. Level Time ist längst größer: Zeitfenster, Statistiken, eine Historie mit Tabellen und Diagrammen, ein Einstellungsfenster mit Suche, Speedrun-Vergleiche und ein Schwester-Addon. Ab dieser Größe ist „ich habe geklickt und es sah gut aus“ keine Teststrategie mehr.

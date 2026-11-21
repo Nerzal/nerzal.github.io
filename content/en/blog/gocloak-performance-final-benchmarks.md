@@ -25,6 +25,14 @@ toc: true
 
 > **Series: The gocloak universe.** [Part 1: gocloak-mcp](/blog/gocloak-mcp-first-mcp-server-homebrew/) · [Part 2: gocloak-auth-proxy](/blog/gocloak-auth-proxy-keycloak/) · [Part 3: gocloak performance](/blog/gocloak-performance-json-v2-http-clients/) · Part 4: final benchmark numbers (you are here) · [Part 5: pprof](/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- Against a real Keycloak 26.8.2 in Docker, all five HTTP stacks were equally fast for single calls, and fasthttp saved only 6 to 10 % on small calls.
+- With 16 parallel callers over TLS and HTTP/1.1, an idle pool of 256 made gocloak 2.6 times as fast and cut new connections by 98 % in an interleaved A/B run.
+- Through gocloak's full request path, json/v2 cuts allocations by 9 to 44 % on every call, but only the user lists got measurably faster (19 to 24 % offline).
+- gocloak v15.1.0 has no breaking API changes: it requires Go 1.27, keeps 100 idle connections per host and adds `SetDirectBodyRead()` as an opt-in.
+- A cold Keycloak JVM made 1,000 users take 153 to 185 ms in my first live run, against 39 ms in the final run with the same container and data.
+{{< /tldr >}}
+
 In [Part 3](/blog/gocloak-performance-json-v2-http-clients/) I described how I benchmarked gocloak against Keycloak: the questions, the setup, the things that broke and the conclusions. This post has the complete tables from the final run, for everyone who wants to check the conclusions against the numbers, and four lessons the final run added.
 
 ## Environment

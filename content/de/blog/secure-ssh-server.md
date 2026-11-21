@@ -2,12 +2,21 @@
 draft: false
 title: "SSH-Zugang unter Linux (Ubuntu) absichern"
 date: 2026-05-09T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "linux", "ubuntu", "ssh", "security", "devops"]
 description: "Härte den SSH-Zugang deines Ubuntu-Servers ab: SSH-Schlüsselpaar erstellen, Sudo-Nutzer anlegen, Passwort-Login deaktivieren und Root aussperren."
 images: ["img/ssh_certificates.png"]
 featured_image: "img/ssh_certificates.png"
 toc: true
 ---
+
+{{< tldr >}}
+- SSH unter Ubuntu 22.04, 24.04 oder 26.04 sicherst du in vier Schritten ab: Ed25519-Schlüsselpaar erstellen, Sudo-Benutzer anlegen, öffentlichen Schlüssel übertragen und `sshd` härten.
+- `PasswordAuthentication no`, `PermitRootLogin no` und `AllowUsers deploy` gehören in `/etc/ssh/sshd_config.d/00-hardening.conf`, weil bei `sshd` der zuerst gelesene Wert gilt.
+- Auf vielen Cloud-Images setzt cloud-init in `50-cloud-init.conf` den Wert `PasswordAuthentication yes` und überschreibt damit stillschweigend eine Änderung in der Haupt-`sshd_config`.
+- Mit `sudo sshd -t` prüfst du die Syntax, mit `sudo systemctl reload ssh` lädst du neu, und `sudo sshd -T` zeigt die tatsächlich wirksamen Werte.
+- OpenSSH 10.0 nutzt standardmäßig den hybriden Post-Quantum-Schlüsselaustausch `mlkem768x25519-sha256`; für Authentifizierungsschlüssel nimmst du Ed25519.
+{{< /tldr >}}
 
 Jeder öffentlich erreichbare Linux-Server steht unter konstantem Brute-Force-Druck. Lässt du SSH mit Passwort-Authentifizierung und aktiviertem `root`-Konto offen, ist nicht die Frage, _ob_ ein Angreifer eindringt, sondern nur _wann_. Diese Anleitung führt durch vier konkrete Schritte, die die häufigste Angriffsfläche beseitigen:
 

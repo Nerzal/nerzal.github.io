@@ -25,6 +25,14 @@ toc: true
 
 > **Building Neuroclip, Teil 2 von 5.** [Teil 1: die Architektur](/de/blog/neuroclip-1-architecture/) · **Teil 2: VOD zum Short (du bist hier)** · [Teil 3: die OBS-Regie](/de/blog/neuroclip-3-obs-regie/) · [Teil 4: KI-Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · [Teil 5: Auslieferung auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Das Produkt selbst findest du auf der [Neuroclip-Seite](/de/page/neuroclip/); es ist im Early Access und ich bin bisher der einzige Nutzer.
 
+{{< tldr >}}
+- Neuroclip lädt Twitch-VODs (HLS-Playlists, RFC 8216) segmentweise selbst in Go, setzt sie mit ffmpeg ohne Neukodierung zusammen und schreibt zuletzt eine Metadatei als Commit-Marker.
+- Die Transkription von Neuroclip nutzt faster-whisper auf einer eigenen Mikrospur (16 kHz, mono), mit Wort-Zeitstempeln, Sprachaktivitätserkennung und einem Vokabel-Prompt aus Namen des Spiels.
+- Neuroclip wählt Short-Kandidaten mit deterministischem Go aus Lautstärke, Schlagwörtern, Chat-Ausschlägen, live gesetzten Markern und Zuschauer-Clips; Claude ist eine optionale Bewertungsschicht obendrauf.
+- Das 9:16-Layout von Neuroclip ist ein ffmpeg-Filtergraph aus `split`, `crop`, `scale` und `vstack`, dazu kommen wortgenaue Untertitel, die aus einem ASS-Skript eingebrannt werden.
+- Schlägt NVENC fehl, versucht der Neuroclip-Renderer es nur dann mit x264 erneut, wenn der Fehler auf Encoder, CUDA oder Treiber zeigt, nie bei Filtergraph-Fehlern oder abgebrochenen Jobs.
+{{< /tldr >}}
+
 In [Teil 1](/de/blog/neuroclip-1-architecture/) habe ich die Form von Neuroclip beschrieben: ein Go-Server, ein React-Dashboard und ein paar kleine Python-Helfer. Dieser Teil begleitet ein Stück Material durch diese Maschinerie: Eine mehrstündige Twitch-Aufnahme geht hinein, ein kurzes Hochformat-Video mit eingebrannten Wort-für-Wort-Untertiteln kommt heraus.
 
 Neuroclip ist ein kommerzielles Produkt, deshalb bleibt dieser Beitrag auf Konzeptebene: die Ideen, die Abwägungen und die allgemeinen Techniken. Eine Bauanleitung ist es nicht. [ffmpeg](https://ffmpeg.org/documentation.html) und [Whisper](https://github.com/openai/whisper) erledigen die schwere Arbeit, und meine Arbeit steckt darin, wie ein Go-Programm sie steuert: lang laufende Kindprozesse abbrechbar halten, keine halbfertigen Dateien hinterlassen und dem Spiel, das auf derselben Maschine läuft, nicht im Weg stehen.

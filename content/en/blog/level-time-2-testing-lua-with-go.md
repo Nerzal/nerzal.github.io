@@ -25,6 +25,14 @@ toc: true
 
 > **Building Level Time, part 2 of 4.** [Level Time](/page/level-time/) is my World of Warcraft addon for tracking leveling time. This series is the engineering story behind it. Part 1: [Addon architecture](/blog/level-time-1-addon-architecture/). **Part 2 (this post): testing Lua from Go.** Part 3: [The release pipeline](/blog/level-time-3-release-pipeline/). Part 4: [Goals and the public API](/blog/level-time-4-goals-public-api/).
 
+{{< tldr >}}
+- Level Time's test harness in `tools/addontest` runs the addon's Lua code with `go test` inside gopher-lua, a pure-Go Lua 5.1 VM, with no game client and no Lua installation.
+- Each of the 286 scenario files gets a fresh `lua.NewState()` and its own Go subtest, so `go test -run 'TestScenarios/session'` runs a single scenario.
+- The `tools/addontest` harness loads the addon files in `.toc` order and fakes the WoW API with a stub whose unknown frame methods are no-ops.
+- Level Time's layout tests check the options and history windows in German, English, French and Spanish, using a crude text width of 6 per byte.
+- Always pass `-count=1` to `go test`, because Go's test cache knows nothing about the Lua files gopher-lua loads.
+{{< /tldr >}}
+
 A World of Warcraft addon runs inside a game client. There is no `npm test`, no `go test`, no `pytest`, and no way to start the addon's Lua code on its own. The only built-in feedback loop is: edit a file, type `/reload`, click around, read the chat window.
 
 That loop is fine for a 200-line addon. Level Time is not that anymore. It has a timer window, statistics, a history with tables and charts, an options window with search, speedrun comparisons and a sibling addon. At that size, "I clicked around and it looked fine" stops being a test strategy.

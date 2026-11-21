@@ -25,6 +25,14 @@ toc: true
 
 > **Building Neuroclip, part 2 of 5.** [Part 1: the architecture](/blog/neuroclip-1-architecture/) · **Part 2: VOD to short (you are here)** · [Part 3: the OBS Regie](/blog/neuroclip-3-obs-regie/) · [Part 4: AI facecam upscaling](/blog/neuroclip-4-facecam-upscaling/) · [Part 5: shipping to Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). The product itself is on the [Neuroclip page](/page/neuroclip/); it is in early access and I am its only user so far.
 
+{{< tldr >}}
+- Neuroclip downloads Twitch VODs (HLS playlists, RFC 8216) segment by segment in Go, joins them with ffmpeg without re-encoding, and writes a metadata file last as a commit marker.
+- Neuroclip's transcription uses faster-whisper on a separate 16 kHz mono microphone track, with word timestamps, voice activity detection and a vocabulary prompt built from game names.
+- Neuroclip picks short candidates with deterministic Go that merges loudness, hype words, chat spikes, live markers and viewer clips; Claude is an optional scoring layer on top.
+- Neuroclip's 9:16 layout is an ffmpeg `split`, `crop`, `scale` and `vstack` filter graph, with word-by-word subtitles burned in from an ASS script.
+- When NVENC fails, Neuroclip's renderer retries with x264 only if the error points at the encoder, CUDA or the driver, never for filter graph errors or cancelled jobs.
+{{< /tldr >}}
+
 In [part 1](/blog/neuroclip-1-architecture/) I described the shape of Neuroclip: a Go server, a React dashboard and a few small Python helpers. This part follows one piece of footage through that machinery: a multi-hour Twitch recording goes in, a short vertical video with burned-in word-by-word subtitles comes out.
 
 Neuroclip is a commercial product, so this post stays on the concept level: the ideas, the trade-offs and the general techniques. It is not a build plan. [ffmpeg](https://ffmpeg.org/documentation.html) and [Whisper](https://github.com/openai/whisper) do the heavy lifting, and my work went into how a Go program drives them: keeping long-running child processes cancellable, not leaving half-written files behind, and staying out of the way of a game that runs on the same machine.

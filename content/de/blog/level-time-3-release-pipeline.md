@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Level Time bauen**, Teil 3 von 4. [Teil 1: Addon-Architektur](/de/blog/level-time-1-addon-architecture/) · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · **Teil 3: Release-Pipeline** · [Teil 4: Goals und die öffentliche API](/de/blog/level-time-4-goals-public-api/) · Produktseite: [Level Time](/de/page/level-time/)
 
+{{< tldr >}}
+- Ein gepushter Git-Tag nach dem Muster `v*` startet den Release-Workflow von Level Time in GitHub Actions, und `needs: test` verhindert das Release, wenn der Test-Job rot ist.
+- Die Action `BigWigsMods/packager@v2` zippt das Addon, erzeugt das Changelog aus der Git-Historie und lädt mit der Projekt-ID aus der `.toc` und dem Secret `CF_API_KEY` zu CurseForge hoch.
+- `.pkgmeta` ist eine Deny-Liste: Jede neue Datei im Repository, die kein Addon-Code ist, muss in `ignore` stehen, sonst landet sie im Zip.
+- Level Time Goals wird aus demselben Repository über einen zweiten Packager-Lauf gegen einen Klon ausgeliefert, den `git filter-branch --subdirectory-filter StreamGoal` umschreibt.
+- Der Go-Installer unter `tools/installer` kopiert nur die Dateien aus der `.toc` in jede WoW-Spielversion und verweigert jeden Pfad mit `WTF`, wo die SavedVariables liegen.
+{{< /tldr >}}
+
 Wenn ein Addon funktioniert, muss es noch zu den Spielern kommen, und ich wollte mich nicht für jede Version durch mehrere Upload-Formulare klicken. Für [Level Time](/de/page/level-time/), ein World-of-Warcraft-Addon, das Zeit, XP und Kills pro Level misst, wollte ich eine einzige Regel: **Ich pushe einen Git-Tag, und alles andere passiert von selbst.**
 
 In diesem Artikel gehe ich den ganzen Weg von `git tag` bis zur Datei auf CurseForge durch: den GitHub-Actions-Workflow, den [BigWigs-Packager](https://github.com/BigWigsMods/packager), die `.pkgmeta`, die `.toc`-Dateien für mehrere Spielversionen, einen Trick, um ein zweites Addon aus demselben Repository auszuliefern, und den kleinen Go-Installer, mit dem ich Builds in meinen eigenen WoW-Ordnern teste.

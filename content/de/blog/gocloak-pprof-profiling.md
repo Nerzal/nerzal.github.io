@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Das gocloak-Universum.** [Teil 1: gocloak-mcp](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) · [Teil 2: gocloak-auth-proxy](/de/blog/gocloak-auth-proxy-keycloak/) · [Teil 3: gocloak-Performance](/de/blog/gocloak-performance-json-v2-http-clients/) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · Teil 5: pprof (du bist hier)
 
+{{< tldr >}}
+- Go-Benchmarks schreiben mit `-cpuprofile` und `-memprofile` CPU- und Heap-Profile, und `go tool pprof -sample_index=alloc_space` zeigt alle allozierten Bytes, die die GC-Arbeit treiben.
+- encoding/json v1 verbringt 20,9 % der CPU in `checkValid`, einem eigenen Validierungsdurchgang über die komplette Eingabe, die json/v2-Engine validiert und dekodiert in einem Durchgang.
+- Bei `gocloak.GetUsers` mit 1.000 Usern hat restys `readAllWithLimit` 61 bis 67 % aller Bytes alloziert, mehr als das JSON-Decoding, weil es den Body in 512-Byte-Häppchen liest.
+- Mit gocloaks altem Default-Pool nahmen TLS-Handshakes bei 16 parallelen Callern 27,4 % der CPU, das meiste auf der Serverseite; ein Idle-Pool von 256 senkte das auf 0,74 %.
+- Keycloak-User in ein eigenes Struct mit 8 Feldern statt in `gocloak.User` zu dekodieren spart 54 % Zeit, 72 % Bytes und 84 % Allokationen, ein Streaming-`json.NewDecoder` war dagegen langsamer.
+{{< /tldr >}}
+
 Benchmarks sagen, wie lange etwas dauert, aber nicht, warum. In [Teil 3](/de/blog/gocloak-performance-json-v2-http-clients/) und [Teil 4](/de/blog/gocloak-performance-final-benchmarks/) habe ich gocloak gegen Keycloak gemessen und drei Dinge gefunden, die eine Erklärung brauchen: json/v2 dekodiert schneller, gocloak alloziert rund 60 % mehr Bytes als reines resty, und ein kleiner Connection-Pool macht parallele Calls deutlich langsamer. Dieser Post öffnet die Profile hinter diesen Zahlen.
 
 Zwei der drei Befunde unten haben sich erst in den Profilen gezeigt: das Body-Limit als größte Allokationsquelle und die Handshake-CPU, die auf der Serverseite landet.

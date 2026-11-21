@@ -24,6 +24,14 @@ toc: true
 
 > **Series: Token Cost Minimization in Agentic AI.** [Part 1: where the tokens go, Caveman and Ponytail](/blog/token-cost-1-caveman-ponytail/) · Part 2: code-review-graph and hooks (you are here) · [Part 3: Headroom, auto-updates and the combined setup](/blog/token-cost-3-headroom-stack/)
 
+{{< tldr >}}
+- code-review-graph v2.4.0 parses a repository with Tree-sitter into a local SQLite graph and answers agent questions over MCP, typically in 2,000 to 4,000 tokens.
+- Install code-review-graph with `uv tool install code-review-graph`, then run `code-review-graph install` and `code-review-graph build` in the repository root.
+- A Claude Code `PostToolUse` hook and four git hooks (`pre-commit`, `post-checkout`, `post-merge`, `post-rewrite`) keep the graph fresh, and all of them end with `|| true`.
+- code-review-graph's headline 63× reduction compares against reading every file; against grep plus the top three files, the vendor's median reduction is 6.65×.
+- After `uv tool upgrade code-review-graph`, run `code-review-graph install` again and check with `doctor`, because older 2.3.x copies can break the 2.4.0 schema.
+{{< /tldr >}}
+
 In [Part 1](/blog/token-cost-1-caveman-ponytail/) we saw that the biggest share of an agent's token bill is **input**: everything the agent reads, re-sent on every turn as history. The most common input in a coding session is source code. To answer "what breaks if I rename this function?", an agent typically greps for the name, opens the three or four best-matching files in full and maybe follows a few imports. Every one of those files then stays in the context for the rest of the session.
 
 [code-review-graph](https://github.com/tirth8205/code-review-graph) (MIT, current release **v2.4.0** from 2026-11-11) replaces much of that reading with a query against a local code graph.

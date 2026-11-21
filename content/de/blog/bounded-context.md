@@ -9,6 +9,14 @@ featured_image: "img/event-storming.png"
 toc: true
 ---
 
+{{< tldr >}}
+* Ein Bounded Context im Domain-Driven Design (DDD) ist eine explizite Grenze innerhalb eines größeren Domänenmodells, in der ein Modell und seine Ubiquitous Language konsistent bleiben.
+* Derselbe Begriff kann in verschiedenen Bounded Contexts Verschiedenes bedeuten: Ein „Kunde“ ist für den Vertrieb ein Lead, für den Support jemand mit offenem Ticket und für die Buchhaltung eine Einheit mit offener Rechnung.
+* Bounded Contexts interagieren über klar definierte Schnittstellen wie Events oder APIs, statt eine einzige, monolithische Datenbank oder ein Domänenmodell zu teilen.
+* Event Storming findet Bounded Contexts, indem es Events, Commands und Aggregates mit gemeinsamer Sprache und gemeinsamem Zweck zu Clustern gruppiert und Swimlanes um jeden Cluster zieht.
+* Gängige Context-Map-Beziehungen zwischen Bounded Contexts sind Customer-Supplier, Shared Kernel, Anti-Corruption Layer und Published Language.
+{{< /tldr >}}
+
 ## Was ist ein Bounded Context?
 
 Bounded Contexts sind ein Kernkonzept im Domain-Driven Design (DDD). Ein Bounded Context ist eine explizite Grenze innerhalb eines größeren Domänenmodells: der Bereich, in dem ein bestimmtes Modell (und seine zugehörige Ubiquitous Language) konsistent und anwendbar ist. Außerhalb dieser Grenze können Begriffe und Konzepte unterschiedliche Bedeutungen haben oder sogar irrelevant sein.

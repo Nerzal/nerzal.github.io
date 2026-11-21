@@ -25,6 +25,14 @@ toc: true
 
 > **Building Neuroclip, part 3 of 5.** The series: [Part 1: Architecture](/blog/neuroclip-1-architecture/) · [Part 2: VOD to short pipeline](/blog/neuroclip-2-vod-to-short-pipeline/) · **Part 3: OBS Regie** · [Part 4: Facecam upscaling](/blog/neuroclip-4-facecam-upscaling/) · [Part 5: Shipping to Kubernetes](/blog/neuroclip-5-shipping-kubernetes/). More on the [Neuroclip product page](/page/neuroclip/). Neuroclip is in **early access** and a **single-user beta**, so everything below describes what runs on my machine today.
 
+{{< tldr >}}
+- Since OBS 28 the obs-websocket v5 server is built into OBS; the protocol is JSON over WebSocket with envelopes of the form `{"op": <int>, "d": {...}}`.
+- obs-websocket v5 authentication is `base64(sha256(password + salt))`, then `base64(sha256(secret + challenge))`, which Go computes with only `crypto/sha256` and `encoding/base64`.
+- OBS reports audio levels as linear multipliers, and silence arrives as `null` in JSON, so I convert to dBFS with `20 · log10(x)` and clamp silence to a floor.
+- Neuroclip's mute alarm watches the raw input peak, which OBS measures before fader and mute, and fires when a muted microphone has heard sound above the noise floor for a while.
+- Recording chapters via `CreateRecordChapter` need OBS 30.2 or newer and Hybrid MP4 recordings.
+{{< /tldr >}}
+
 The first two parts were about things that happen *after* a stream: cutting, subtitling, exporting. This part is about the live side, which I call the **Regie** (German for "direction" or "control room"). The Regie talks to OBS while the stream is running: it switches scenes, saves replays, sets markers, keeps an eye on encoder health, and (my favourite) warns me when I talk into a muted microphone.
 
 I am deliberately staying on the concept level here. Neuroclip is a commercial product, so you will not get a build plan. What I can give you is the public protocol it builds on, the audio maths that trips people up, and the design reasoning behind the alarm. If you only care about the protocol, jump to [the handshake](#the-obs-websocket-v5-handshake). For the alarm idea, go to [the mute alarm](#the-mute-alarm-hearing-speech-through-a-muted-microphone).

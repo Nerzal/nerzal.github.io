@@ -11,6 +11,14 @@ tags: ["go", "golang", "tutorial", "game-of-life", "beginner"]
 show_reading_time: true
 ---
 
+{{< tldr >}}
+- Conway's Game of Life is a zero-player cellular automaton from 1970 with four rules: underpopulation, survival with two or three neighbours, overpopulation, and reproduction with exactly three.
+- This Go implementation uses only the standard library: a `Grid` struct with a two-dimensional `[]Cell` slice, where `Cell` is a `bool`.
+- `NextState` writes each generation into a freshly allocated slice, because updating the grid in place feeds new cell states into the neighbour counts.
+- The `%` operator in `countLiveNeighbors` wraps coordinates into a toroidal grid, so cells leaving one edge reappear on the opposite side.
+- The terminal renderer uses the ANSI escape `\033[H` to redraw each frame in place and animates a Glider and a Lightweight Spaceship at 100 ms per step.
+{{< /tldr >}}
+
 [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) is a famous cellular automaton devised by British mathematician John Horton Conway in 1970. It is a zero-player game: you define an initial state and then watch it evolve according to a fixed set of rules, with no further input. The rules are simple, yet they produce surprisingly complex, lifelike patterns.
 
 In this post we implement Game of Life in Go from scratch, step by step. By the end you will have a working terminal simulation that renders a **Glider** and a **Lightweight Spaceship (LWSS)** in real time.

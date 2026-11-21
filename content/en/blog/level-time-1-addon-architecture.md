@@ -24,6 +24,14 @@ toc: true
 
 > **Series: Building Level Time.** Part 1 (this post): addon architecture · [Part 2: testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · [Part 3: the release pipeline](/blog/level-time-3-release-pipeline/) · [Part 4: Goals and the public API](/blog/level-time-4-goals-public-api/) · Product page: [Level Time](/page/level-time/)
 
+{{< tldr >}}
+- Level Time is a Lua World of Warcraft addon that ships one build for Retail, Classic Era, TBC Anniversary and WoW Forever via `## Interface: 120105, 11509, 20506, 16001`.
+- WoW addons have no module system: the file order in the `.toc` file is the dependency graph, and files share code through the addon namespace table.
+- Level Time routes all events through one event frame in `Lib/Lifecycle.lua`, wrapping every handler in `xpcall` so one broken module cannot stop the others.
+- Level Time's journal archive is a separate `## LoadOnDemand: 1` addon, so its SavedVariable is only parsed and written in sessions that actually open the history.
+- `Lib/Migrate.lua` adds a `schemaVersion` with migrations keyed by target version, because SavedVariables come with no schema or versioning.
+{{< /tldr >}}
+
 Level Time is a World of Warcraft addon I write in Lua and maintain with a bit of Go tooling. It is public on [CurseForge](https://www.curseforge.com/wow/addons/level-time) and on [GitHub](https://github.com/Noobygames/wow-statistics). This series is the engineering story behind it: how the addon is built, how I test Lua from Go, how a release gets out the door, and how a second addon plugs into the first one.
 
 This first part is about the shape of the thing. An addon is a program that runs inside somebody else's process, in a language version somebody else picked, on four different game clients, with a persistence mechanism that is just "the client dumps your global tables into a file". If you have never written one, this post is a guided tour. If you have, you may still find a few patterns worth stealing.

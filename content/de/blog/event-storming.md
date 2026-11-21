@@ -9,6 +9,14 @@ featured_image: "img/event-storming.png"
 toc: true
 ---
 
+{{< tldr >}}
+- Event Storming ist eine kollaborative Modellierungstechnik aus dem Domain-Driven Design (DDD), bei der Entwickler, Domänenexperten und Business-Analysten einen Geschäftsprozess als Events auf einer Zeitleiste abbilden.
+- Domänen-Events werden beim Event Storming in der Vergangenheitsform formuliert, etwa „Termin vereinbart“ oder „Zahlung erhalten“, und der Fokus liegt auf dem Verhalten, nicht auf den Werten.
+- Für die Gruppengröße beim Event Storming gilt die 2-Pizza-Regel von Jeff Bezos, und ein Facilitator leitet das Meeting und begleitet die Modellierung.
+- Event Storming vor Ort braucht ein großes Whiteboard, Marker und Haftnotizen, remote brauchst du ein schnelles Zeichen-Tool wie Excalidraw oder draw.io.
+- Nach einer Event-Storming-Sitzung solltest du die Bounded Contexts mit ihren Aggregates, die Benutzertypen im System und die Stellen kennen, an denen UX kritisch ist.
+{{< /tldr >}}
+
 ## Was ist Event Storming?
 
 Event Storming ist eine kollaborative Modellierungstechnik, die im Domain-Driven Design (DDD) verwendet wird, um komplexe Geschäftsbereiche zu erkunden und zu verstehen. Dabei bringt man eine gemischte Gruppe von Stakeholdern zusammen, etwa Entwickler, Domänenexperten und Business-Analysten, die gemeinsam eine visuelle Darstellung eines Geschäftsprozesses oder -systems erarbeiten.

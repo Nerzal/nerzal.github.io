@@ -24,6 +24,14 @@ toc: true
 
 > **Building Level Time**, part 4 of 4. [Part 1: addon architecture](/blog/level-time-1-addon-architecture/) · [Part 2: testing Lua with Go](/blog/level-time-2-testing-lua-with-go/) · [Part 3: the release pipeline](/blog/level-time-3-release-pipeline/) · Part 4 (this post). Product page: [Level Time](/page/level-time/).
 
+{{< tldr >}}
+- Level Time Goals is a separate streamer addon in the `StreamGoal/` folder that declares `## Dependencies: LevelTimer` and ships as its own CurseForge project (ID 1744370).
+- Level Time's whole public API is one line, `LevelTimerAPI = ns`, which publishes the addon's private namespace table as a global.
+- Every callback runs through `ns.SafeCall` with `xpcall`, so a bug in Goals' level-up handler cannot stop Level Time's own handler.
+- Level Time's API has no version number, no stable/internal split and no documented contract; a small explicit table like `LevelTimerAPI.v1` would be the next step.
+- The wheel of fortune in Level Time Goals picks the result before it spins, then animates 12 slices for four seconds with a cubic ease-out driven by elapsed time in `OnUpdate`.
+{{< /tldr >}}
+
 In the first three parts I described how Level Time is built, how I test its Lua from Go and how it gets released. This part is about what happens when a second addon wants to stand on the shoulders of the first one: **Level Time Goals**, a sister addon for streamers that lives in the same repository (`StreamGoal/`) and ships as its own CurseForge project.
 
 It is also a story about an API that I did not design as an API at first. The lessons are in the gap between what a comment promises and what the code actually guarantees. Level Time and Level Time Goals are early projects, built in public on [GitHub](https://github.com/Noobygames/wow-statistics), and the wheel animation at the end has not yet been fully verified in the game client (more on that below).

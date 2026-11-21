@@ -25,6 +25,14 @@ toc: true
 
 > **Series: The gocloak universe.** [Part 1: gocloak-mcp](/blog/gocloak-mcp-first-mcp-server-homebrew/) · [Part 2: gocloak-auth-proxy](/blog/gocloak-auth-proxy-keycloak/) · Part 3: gocloak performance (you are here) · [Part 4: final benchmark numbers](/blog/gocloak-performance-final-benchmarks/) · [Part 5: pprof](/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- The json/v2 engine decodes Keycloak payloads 26 to 74 % faster without a code change in gocloak, but encodes small structs 39 to 51 % more slowly.
+- fasthttp is the fastest stack in most micro-benchmarks, but against a real Keycloak it saves only 6 to 10 % on small calls, nothing on large ones, and it cannot speak HTTP/2.
+- resty's default `MaxIdleConnsPerHost` of `GOMAXPROCS + 1` is the bottleneck under parallel load; a pool of 256 made gocloak 2.6 times as fast in an interleaved A/B run.
+- gocloak v15.1.0 requires Go 1.27, where json/v2 is the default engine, sets both idle connection limits to 100 and adds the opt-in `SetDirectBodyRead()`, which cuts bytes per call for 1,000 users by 39 %.
+- Every old-against-new number in this post comes from an interleaved A/B run, because sequential runs on my loaded machine faked effects of up to ±40 %.
+{{< /tldr >}}
+
 Can gocloak, the Go client for the Keycloak REST API, get "massively" faster at talking to Keycloak? I wanted a number for that, not a gut feeling, so I checked three things:
 
 1. Does the new [`encoding/json/v2`](https://pkg.go.dev/encoding/json/v2) help with typical Keycloak payloads?

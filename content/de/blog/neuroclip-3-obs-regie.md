@@ -25,6 +25,14 @@ toc: true
 
 > **Neuroclip bauen, Teil 3 von 5.** Die Serie: [Teil 1: Architektur](/de/blog/neuroclip-1-architecture/) · [Teil 2: VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/) · **Teil 3: OBS-Regie** · [Teil 4: Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · [Teil 5: Auslieferung mit Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Mehr auf der [Neuroclip-Produktseite](/de/page/neuroclip/). Neuroclip ist im **Early Access** und eine **Single-User-Beta**, alles Folgende beschreibt also, was heute auf meinem Rechner läuft.
 
+{{< tldr >}}
+- Seit OBS 28 ist der obs-websocket-v5-Server in OBS eingebaut; das Protokoll ist JSON über WebSocket mit Umschlägen der Form `{"op": <int>, "d": {...}}`.
+- Die Authentifizierung bei obs-websocket v5 ist `base64(sha256(password + salt))` und danach `base64(sha256(secret + challenge))`; Go rechnet das nur mit `crypto/sha256` und `encoding/base64`.
+- OBS meldet Audiopegel als lineare Multiplikatoren, und Stille kommt in JSON als `null` an; deshalb rechne ich mit `20 · log10(x)` nach dBFS um und begrenze Stille auf einen Floor.
+- Der Stumm-Alarm von Neuroclip beobachtet den rohen Eingangs-Peak, den OBS vor Fader und Mute misst, und feuert, wenn ein stummes Mikro eine Weile Schall über dem Grundrauschen gehört hat.
+- Aufnahmekapitel über `CreateRecordChapter` brauchen OBS 30.2 oder neuer und Hybrid-MP4-Aufnahmen.
+{{< /tldr >}}
+
 Die ersten beiden Teile handelten von dem, was *nach* einem Stream passiert: schneiden, untertiteln, exportieren. Dieser Teil handelt von der Live-Seite, die ich die **Regie** nenne. Die Regie spricht mit OBS, solange der Stream läuft: Szenen wechseln, Replays speichern, Marker setzen, die Encoder-Gesundheit im Auge behalten und (mein Liebling) mich warnen, wenn ich in ein stummes Mikrofon rede.
 
 Ich bleibe hier bewusst auf Konzeptebene. Neuroclip ist ein kommerzielles Produkt, einen Bauplan bekommst du also nicht. Was ich dir geben kann: das öffentliche Protokoll, auf dem es aufbaut, die Audio-Mathematik, an der viele scheitern, und die Überlegungen hinter dem Alarm. Wenn dich nur das Protokoll interessiert, spring zum [Handshake](#der-obs-websocket-v5-handshake). Für die Alarm-Idee geht es weiter bei [Stumm-Alarm](#der-stumm-alarm-sprache-durch-ein-stummes-mikrofon-hören).

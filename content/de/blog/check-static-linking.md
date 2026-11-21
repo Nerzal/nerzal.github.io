@@ -3,12 +3,21 @@ draft: false
 title: "Wie man prüft, ob ein Binary statisch oder dynamisch gelinkt ist"
 seo_title: "Go Binary auf statisches Linking prüfen"
 date: 2023-01-02T23:46:14+01:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "golang", "linking"]
 description: "Lerne den Unterschied zwischen statischem und dynamischem Linking in Go und nutze Terminal-Tools, um die Portabilität deiner Anwendung zu prüfen."
 images: ["img/statically_linked.png"]
 featured_image: "img/statically_linked.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Mit `file <binary>` siehst du, ob ein Linux-Binary „statically linked“ oder „dynamically linked“ ist; `ldd` meldet bei einem statischen Binary „not a dynamic executable“.
+- Ein Standard-`go build` unter Linux ist dynamisch gelinkt, wenn cgo aktiviert ist, weil Pakete wie `net` und `os/user` dann die C-Bibliothek des Systems nutzen.
+- Mit `CGO_ENABLED=0` entsteht ein statisch gelinktes Go-Binary, und `go version -m <binary>` zeigt die in jedes Go-Binary eingebettete `CGO_ENABLED`-Einstellung.
+- Führe `ldd` nie auf Binaries aus, denen du nicht vertraust, denn je nach Implementierung kann es sie ausführen; `file` liest das Binary nur.
+- Ein statisch gelinktes Binary bekommt keine Sicherheitsupdates deiner Linux-Distribution und muss neu gebaut und neu deployt werden, wenn eine eingebettete Bibliothek einen Fix bekommt.
+{{< /tldr >}}
 
 ## Was ist der Unterschied zwischen statisch und dynamisch gelinkten Binaries?
 

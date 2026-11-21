@@ -23,6 +23,13 @@ toc: true
 
 > **Building Neuroclip, Teil 4 von 5.** Davor: [Teil 3: die OBS-Regie](/de/blog/neuroclip-3-obs-regie/). Weitere Teile: [Teil 1: Architektur](/de/blog/neuroclip-1-architecture/), [Teil 2: die VOD-zu-Short-Pipeline](/de/blog/neuroclip-2-vod-to-short-pipeline/), [Teil 5: Ausliefern auf Kubernetes](/de/blog/neuroclip-5-shipping-kubernetes/). Die Produktseite ist [Neuroclip](/de/page/neuroclip/) (Early Access, Single-User-Beta).
 
+{{< tldr >}}
+- Neuroclip skaliert nur den kleinen Facecam-Ausschnitt eines 1920x1080-Streams für den 1080 Pixel breiten Streifen eines Hochkant-Shorts hoch, nie das Spiel oder das ganze Bild.
+- Der Upscaler von Neuroclip ist das portable ncnn-Programm von Real-ESRGAN für Vulkan-fähige GPUs, aus Go per `exec.CommandContext` hinter einem kleinen `Upscaler`-Interface gestartet, ohne Python oder CUDA-Toolchain.
+- Jeder Fehler beim Facecam-Upscaling (fehlendes Programm, gescheiterter Lauf, volle Platte) fällt auf einen normalen Render zurück, das Feature ist standardmäßig aus, und ein Cache macht erneute Renders schnell.
+- Ich habe Real-ESRGAN (freizügige Lizenzen) statt des Gesichts-Restaurationsmodells CodeFormer gewählt, weil CodeFormer nach meinem Verständnis seiner Lizenz nur für nichtkommerzielle Nutzung gedacht ist.
+{{< /tldr >}}
+
 Ein Twitch-Stream hat 1920x1080 Pixel, und die Facecam in der Ecke ist klein, nur ein paar hundert Pixel breit. Ein Hochkant-Short ist 1080 Pixel breit, und das Layout zeigt die Cam als Streifen über die volle Breite. Das ist eine Vergrößerung um mehr als das Doppelte, und es sieht aus, wie du es dir vorstellst: weich, pixelig, ein bisschen traurig.
 
 In diesem Artikel geht es um das Feature, das ich dagegen gebaut habe, und um drei Engineering-Entscheidungen, die ich spannender finde als das KI-Modell selbst:

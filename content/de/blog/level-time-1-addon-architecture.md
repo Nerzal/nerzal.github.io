@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Level Time bauen.** Teil 1 (dieser Beitrag): Addon-Architektur · [Teil 2: Lua mit Go testen](/de/blog/level-time-2-testing-lua-with-go/) · [Teil 3: die Release-Pipeline](/de/blog/level-time-3-release-pipeline/) · [Teil 4: Goals und die öffentliche API](/de/blog/level-time-4-goals-public-api/) · Produktseite: [Level Time](/de/page/level-time/)
 
+{{< tldr >}}
+- Level Time ist ein World-of-Warcraft-Addon in Lua, das mit `## Interface: 120105, 11509, 20506, 16001` einen Build für Retail, Classic Era, TBC Anniversary und WoW Forever ausliefert.
+- WoW-Addons haben kein Modulsystem: Die Dateireihenfolge in der `.toc`-Datei ist der Abhängigkeitsgraph, und Code wird über die Namensraum-Tabelle des Addons geteilt.
+- Level Time leitet alle Events über einen einzigen Event-Frame in `Lib/Lifecycle.lua` und packt jeden Handler in `xpcall`, damit ein kaputtes Modul die anderen nicht aufhält.
+- Das Journalarchiv von Level Time ist ein eigenes Addon mit `## LoadOnDemand: 1`, dessen SavedVariable nur in Sitzungen geparst und geschrieben wird, in denen jemand die Historie öffnet.
+- `Lib/Migrate.lua` ergänzt eine `schemaVersion` mit Migrationen je Zielversion, weil SavedVariables weder Schema noch Versionierung mitbringen.
+{{< /tldr >}}
+
 Level Time ist ein World-of-Warcraft-Addon, das ich in Lua schreibe und mit etwas Go-Tooling pflege. Es ist öffentlich auf [CurseForge](https://www.curseforge.com/wow/addons/level-time) und auf [GitHub](https://github.com/Noobygames/wow-statistics). Diese Serie erzählt die Ingenieursgeschichte dahinter: wie das Addon aufgebaut ist, wie ich Lua aus Go heraus teste, wie ein Release entsteht und wie ein zweites Addon an das erste andockt.
 
 Der erste Teil dreht sich um die Form des Ganzen. Ein Addon ist ein Programm, das im Prozess eines anderen läuft, in einer Sprachversion, die jemand anderes gewählt hat, auf vier verschiedenen Spielclients, mit einer Persistenz, die nur aus „der Client schreibt deine globalen Tabellen in eine Datei“ besteht. Wenn du noch nie eins geschrieben hast, ist dieser Beitrag eine Führung. Wenn doch, findest du vielleicht trotzdem ein paar Muster zum Klauen.

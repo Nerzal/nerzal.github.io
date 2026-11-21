@@ -27,6 +27,14 @@ toc: true
 
 > **Serie: Das gocloak-Universum.** [Teil 1: gocloak-mcp](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) · Teil 2: gocloak-auth-proxy (du bist hier) · [Teil 3: gocloak-Performance](/de/blog/gocloak-performance-json-v2-http-clients/) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · [Teil 5: pprof](/de/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- gocloak-auth-proxy ist ein Authentifizierungs-Proxy nur für Keycloak, in Go auf Basis von gocloak v15, und läuft als Forward-Auth für Traefik und nginx, als Reverse-Proxy oder mit OIDC-Browser-SSO.
+- Die JWT-Prüfung in gocloak-auth-proxy läuft gegen einen JWKS-Snapshot im Speicher, deshalb wartet ein gültiger Request nie aufs Netzwerk.
+- Durch kommen nur asymmetrische Algorithmen (Standard `RS256,ES256`): Der Proxy lehnt `none` und `HS*` ab und entfernt Identity-Header vom Client in beiden Schreibweisen, mit Bindestrich und mit Unterstrich.
+- Im projekteigenen Benchmark beantwortete gocloak-auth-proxy v0.2.0 mit vollständiger Signaturprüfung bei jedem Request 15.002 Forward-Auth-Requests pro Sekunde, 2,5-mal so viele wie oauth2-proxy v7.15.6.
+- Eine Rust-Referenz (21.616 Requests pro Sekunde) ist schneller als gocloak-auth-proxy ohne Token-Cache; mit dem Cache aus v0.2.0 kommt gocloak-auth-proxy auf 25.169.
+{{< /tldr >}}
+
 **Update, 21. November 2026:** gocloak-auth-proxy v0.2.0 ist erschienen, mit schnellerem Token-Verifier, einem Cache für geprüfte Tokens und einer Benchmark-Suite im Repository. Ich habe seine Zahlen und Charts in den Benchmark-Teil aufgenommen und die Installationsbefehle aktualisiert; die Zahlen von v0.1.0 bleiben zum Vergleich stehen.
 
 In [Teil 1](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) habe ich über gocloak v15 und den darauf aufbauenden Keycloak MCP-Server geschrieben. Zur selben Zeit ging ein zweites Projekt online: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), ein Authentifizierungs-Proxy, der vor deinen Services sitzt und nur Requests mit gültigem Keycloak-Token durchlässt.

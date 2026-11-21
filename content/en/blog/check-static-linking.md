@@ -3,12 +3,21 @@ draft: false
 title: "How to check if a binary is statically or dynamically linked"
 seo_title: "Check if a Go Binary is Statically Linked"
 date: 2023-01-02T23:46:14+01:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags: ["tutorial", "golang", "linking"]
 description: "Learn how to differentiate between static and dynamic linking in Go and use terminal tools to verify your application's portability."
 images: ["img/statically_linked.png"]
 featured_image: "img/statically_linked.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Run `file <binary>` to see whether a Linux binary is "statically linked" or "dynamically linked"; `ldd` reports "not a dynamic executable" for a static one.
+- A default `go build` on Linux is dynamically linked when cgo is enabled, because packages like `net` and `os/user` then use the system C library.
+- Building with `CGO_ENABLED=0` produces a statically linked Go binary, and `go version -m <binary>` shows the `CGO_ENABLED` setting embedded in any Go binary.
+- Never run `ldd` on untrusted binaries, because depending on the implementation it may execute them; `file` only reads the binary.
+- A statically linked binary does not receive the security patches your Linux distribution ships, so it has to be rebuilt and redeployed when an embedded library is fixed.
+{{< /tldr >}}
 
 ## What is the difference between statically and dynamically linked binaries?
 

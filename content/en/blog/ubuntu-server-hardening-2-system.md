@@ -3,6 +3,7 @@ draft: false
 title: "Ubuntu Server Hardening — Part 2: Tightening the System"
 seo_title: "Ubuntu Hardening Part 2: System Tightening"
 date: 2026-05-12T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "The second hardening pass: tuning kernel parameters with sysctl, disabling attack surface you do not use, and restricting sudo and local login policies."
@@ -10,6 +11,14 @@ images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Part 2 of the Ubuntu server hardening series tightens the system with four measures that need no extra software: sysctl kernel parameters, disabled services, sudo restrictions and a password policy.
+- The kernel settings go into `/etc/sysctl.d/99-hardening.conf` and take effect with `sudo sysctl --system`, covering ICMP redirects, SYN cookies, `kptr_restrict` and `ptrace_scope`.
+- `hidepid` is a mount option of the `proc` filesystem set in `/etc/fstab`, not a sysctl, and it can break polkit or user sessions.
+- A sudoers rule limiting `deploy` to restarting nginx only works if `deploy` is removed from the `sudo` group, because `%sudo ALL=(ALL:ALL) ALL` still grants full root.
+- Following NIST SP 800-63B Rev. 4, the pwquality setup enforces a 15-character minimum with `minlen = 15`, no composition rules and no forced password rotation.
+{{< /tldr >}}
 
 [Part 1](/blog/ubuntu-server-hardening-1-essentials/) covered the three basics that every public server needs: UFW, Fail2ban, and automatic security updates. With those in place, the most common automated attacks are already mitigated.
 

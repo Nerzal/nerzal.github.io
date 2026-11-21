@@ -3,6 +3,7 @@ draft: false
 title: "Ubuntu Server Hardening — Part 1: The Essentials"
 seo_title: "Ubuntu Hardening Part 1: The Essentials"
 date: 2026-05-11T00:00:00+00:00
+lastmod: 2026-11-13T17:36:59+01:00
 tags:
   ["tutorial", "linux", "ubuntu", "security", "hardening", "devops", "server"]
 description: "Three measures every public Ubuntu server needs immediately: a default-deny UFW firewall, Fail2ban brute-force protection, and automatic security updates."
@@ -10,6 +11,14 @@ images: ["img/ubuntu-server-hardening.png"]
 featured_image: "img/ubuntu-server-hardening.png"
 toc: true
 ---
+
+{{< tldr >}}
+- Part 1 of the Ubuntu server hardening series adds three measures to a public Ubuntu 22.04, 24.04 or 26.04 server: a UFW default-deny firewall, Fail2ban and unattended security upgrades, in under fifteen minutes.
+- Run `sudo ufw allow OpenSSH` before `sudo ufw enable`, otherwise enabling UFW can lock you out of your own server.
+- Ports published by Docker with `-p` or Compose `ports:` bypass UFW, so bind private container ports to `127.0.0.1` instead.
+- The Fail2ban `jail.local` in this post bans an IP for one hour after five failed logins within ten minutes and contains only the changed settings.
+- Unattended upgrades install security updates only, and `sudo unattended-upgrade --dry-run --debug` tests the configuration without installing anything.
+{{< /tldr >}}
 
 This is the first post in a three-part series on hardening a public Ubuntu server.
 

@@ -9,6 +9,13 @@ images: ["img/react_site_projects.png"]
 toc: true
 ---
 
+{{< tldr >}}
+* My personal portfolio at portfolio.noobygames.de is built with React and collects my skills, experience and projects in one place as a dynamic resume.
+* Last War Calculators is a mobile-first React single-page application for players of the mobile game "Last War", hosted at noobygames.github.io/last-war-calculators.
+* Last War Calculators has four tools: a Speedup Calculator, a Resource Calculator, a Hero EXP Calculator and a Research Calculator.
+* In Last War Calculators, players enter their current resources and goals, and React handles the calculation logic and state management to show what the next upgrade needs.
+{{< /tldr >}}
+
 ## Introduction
 
 A lot of my professional work and previous posts focus on Go, Kubernetes, and backend architecture, but I've always had a soft spot for frontend development. In my free time I like to experiment with React and build tools and interfaces that work well and run fast.

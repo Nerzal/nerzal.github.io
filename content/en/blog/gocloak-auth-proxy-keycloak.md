@@ -27,6 +27,14 @@ toc: true
 
 > **Series: The gocloak universe.** [Part 1: gocloak-mcp](/blog/gocloak-mcp-first-mcp-server-homebrew/) · Part 2: gocloak-auth-proxy (you are here) · [Part 3: gocloak performance](/blog/gocloak-performance-json-v2-http-clients/) · [Part 4: final benchmark numbers](/blog/gocloak-performance-final-benchmarks/) · [Part 5: pprof](/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- gocloak-auth-proxy is a Keycloak-only authentication proxy in Go, built on gocloak v15, that runs as forward-auth for Traefik and nginx, as a reverse proxy, or with OIDC browser SSO.
+- JWT checks in gocloak-auth-proxy run against an in-memory JWKS snapshot, so a valid request never waits for the network.
+- Only asymmetric algorithms pass (default `RS256,ES256`): the proxy rejects `none` and `HS*` and strips client identity headers in both dash and underscore spellings.
+- In the project's benchmark, gocloak-auth-proxy v0.2.0 answered 15,002 forward-auth requests per second with a full signature check on every request, 2.5 times as many as oauth2-proxy v7.15.6.
+- A Rust reference proxy (21,616 requests per second) beats gocloak-auth-proxy without its token cache; with the v0.2.0 cache, gocloak-auth-proxy reaches 25,169.
+{{< /tldr >}}
+
 **Update, 21 November 2026:** gocloak-auth-proxy v0.2.0 is out, with a faster token verifier, a cache for verified tokens and a benchmark suite in the repository. I added its numbers and charts to the benchmark section and updated the install commands; the v0.1.0 numbers stay below for comparison.
 
 In [Part 1](/blog/gocloak-mcp-first-mcp-server-homebrew/) I wrote about gocloak v15 and the Keycloak MCP server built on it. At the same time a second project went public: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), an authentication proxy that sits in front of your services and lets only requests with a valid Keycloak token through.

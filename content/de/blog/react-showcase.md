@@ -10,6 +10,13 @@ images: ["img/react_site_projects.png"]
 toc: true
 ---
 
+{{< tldr >}}
+* Mein persönliches Portfolio unter portfolio.noobygames.de ist mit React gebaut und bündelt meine Fähigkeiten, Erfahrungen und Projekte an einem Ort als dynamischen Lebenslauf.
+* Last War Calculators ist eine React-Single-Page-Anwendung nach dem Mobile-First-Prinzip für Spieler des Mobile-Games „Last War“, erreichbar unter noobygames.github.io/last-war-calculators.
+* Last War Calculators hat vier Rechner: einen Speedup-Rechner, einen Ressourcen-Rechner, einen Helden-EXP-Rechner und einen Forschungs-Rechner.
+* In Last War Calculators geben Spieler ihre aktuellen Ressourcen und Ziele ein, und React übernimmt Rechenlogik und State-Management, um zu zeigen, was das nächste Upgrade braucht.
+{{< /tldr >}}
+
 ## Einführung
 
 Ein Großteil meiner beruflichen Arbeit und meiner bisherigen Beiträge dreht sich um Go, Kubernetes und Backend-Architektur, aber für Frontend-Entwicklung hatte ich schon immer eine Schwäche. In meiner Freizeit experimentiere ich gerne mit React und baue Tools und Oberflächen, die gut funktionieren und schnell laufen.

@@ -24,6 +24,14 @@ toc: true
 
 > **Serie: Token-Kosten in agentischer KI senken.** Teil 1: Wohin die Tokens fließen, Caveman und Ponytail (du bist hier) · [Teil 2: code-review-graph und Hooks](/de/blog/token-cost-2-code-review-graph/) · [Teil 3: Headroom, Auto-Updates und das kombinierte Setup](/de/blog/token-cost-3-headroom-stack/)
 
+{{< tldr >}}
+- Der Großteil der Tokens einer Coding-Agenten-Session ist Eingabe und Cache Reads; ein Caveman-Nutzer hat über 662 Claude-Code-Sessions einen Ausgabe-Anteil von 0,3 % gemessen.
+- Caveman v4.1.0 kürzt die Antworten des Agenten, doch im unabhängigen A/B-Test von LemonCrow sank die Ausgabe um 44,1 %, während die Gesamtkosten um 0,06 % stiegen.
+- Die Caveman-Regeln kosten etwa 1.160 Eingabe-Tokens pro Request, und `/caveman-compress` verkleinerte fünf Memory-Datei-Fixtures von 6.198 auf 4.138 Tokens (−33,2 %).
+- Ponytail v5.3.3 lässt den Agenten weniger Code schreiben: Der Benchmark des Autors zeigt −53 % Codezeilen und −26 % Kosten, JetBrains maß bei v4.8.4 −10,3 % Kosten.
+- Ponytail gehört als Claude-Code-Plugin installiert, denn laut JetBrains wurde eine nackte `SKILL.md` im Skills-Ordner in zehn Sessions kein einziges Mal benutzt.
+{{< /tldr >}}
+
 Coding-Agenten wie [Claude Code](https://code.claude.com/docs/en/overview), Codex oder Cursor werden pro Token abgerechnet oder verbrauchen pro Token das Nutzungslimit eines Abos. Eine lange Agenten-Session liest schnell Millionen Tokens. Inzwischen gibt es ein ganzes Ökosystem an Werkzeugen, die versprechen, diese Rechnung um „50 bis 90 Prozent“ zu senken.
 
 Diese Serie schaut sich vier der populärsten nacheinander an:

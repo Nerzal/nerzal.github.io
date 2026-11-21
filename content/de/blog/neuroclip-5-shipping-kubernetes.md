@@ -27,6 +27,14 @@ toc: true
 
 > **Neuroclip bauen** ist eine Serie über ein Tool, das ich für Streamer schreibe: ein Go-Server, ein React-Dashboard und ein paar Python-Helfer. [Teil 1: Architektur](/de/blog/neuroclip-1-architecture/) · [Teil 2: VOD zum Short](/de/blog/neuroclip-2-vod-to-short-pipeline/) · [Teil 3: die OBS-Regie](/de/blog/neuroclip-3-obs-regie/) · [Teil 4: Facecam-Upscaling](/de/blog/neuroclip-4-facecam-upscaling/) · **Teil 5: Ausliefern (dieser Beitrag)**. Das Produkt selbst steht auf der [Neuroclip-Seite](/de/page/neuroclip/). Status: Early Access, Single-User-Beta.
 
+{{< tldr >}}
+- Die GitHub-Actions-Pipeline von Neuroclip ist eine strikte Kette aus Testen, Bauen, Scannen, Signieren und GitOps-Pull-Request; ein roter Test erzeugt kein Image, ein roter Scan keine Signatur.
+- Zwei kurze Skripte lassen den Neuroclip-Build bei starkem Copyleft (AGPL, GPL, SSPL) im Go-Binary oder im Frontend-Bundle scheitern, auf Basis von `go list -deps` und dem npm-Produktionsbaum.
+- Trivy lässt den Neuroclip-Build nur bei behebbaren kritischen Funden scheitern, und cosign signiert den Image-Digest keyless über das OIDC-Token von GitHub und Sigstore, ganz ohne privaten Signaturschlüssel.
+- Die CI deployt die Neuroclip-App nie selbst: Sie öffnet einen Pull Request, der das Image auf den Commit-SHA pinnt, Merge und Apply bleiben manuell, und Keel rollt nur die statische Website automatisch aus.
+- Der Go-Server von Neuroclip enthält keinen OIDC-Code; davor fährt oauth2-proxy den Authorization-Code-Flow mit PKCE gegen Keycloak, ein Entwurf, der noch nicht Ende-zu-Ende erprobt ist.
+{{< /tldr >}}
+
 Ein Tool, das nur auf meinem Streaming-PC läuft, ist ein Hobby. Ein Tool, das zusätzlich als gehostetes Dashboard läuft, braucht eine Auslieferung, der ich nachts um 2 Uhr vertrauen kann. In diesem Beitrag geht es um die Form dieser Pipeline: was die CI prüft, wie Images gescannt und **signiert** werden, warum ein Deploy ein Pull Request ist und kein `kubectl apply`, und wie die App hinter Keycloak landet, obwohl der Go-Server von OIDC nichts weiß.
 
 Neuroclip ist ein kommerzielles Produkt im Early Access, deshalb bleibt dieser Beitrag auf der Ebene von Ideen und allgemeinen Techniken. Workflow-Dateien, Manifeste und Cluster-Interna lasse ich bewusst weg. Die Beispiele unten sind generisch und funktionieren für jedes Projekt.

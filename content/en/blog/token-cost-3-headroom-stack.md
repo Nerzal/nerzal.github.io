@@ -24,6 +24,14 @@ toc: true
 
 > **Series: Token Cost Minimization in Agentic AI.** [Part 1: where the tokens go, Caveman and Ponytail](/blog/token-cost-1-caveman-ponytail/) · [Part 2: code-review-graph and hooks](/blog/token-cost-2-code-review-graph/) · Part 3: Headroom, auto-updates and the combined setup (you are here)
 
+{{< tldr >}}
+- Headroom v0.44.0 is a local proxy on `http://127.0.0.1:8787` that compresses logs, JSON and test output before the coding agent's request reaches the model API.
+- `headroom wrap claude` routes a single session through Headroom, while `headroom install apply --preset persistent-service` configures every detected agent machine-wide.
+- In Headroom's global setup every Claude Code session depends on the proxy, so a scheduled update script checks `/health` and sends a desktop notification when it is down.
+- Headroom's vendor benchmarks show 21 % to 57 % savings on four synthetic scenarios; I found no independent benchmark of Headroom.
+- My recommended stack is Ponytail, code-review-graph in code repositories, Headroom for log- and JSON-heavy work, and `/caveman-compress` once for a large `CLAUDE.md`.
+{{< /tldr >}}
+
 [Part 1](/blog/token-cost-1-caveman-ponytail/) shrank what the agent writes, [Part 2](/blog/token-cost-2-code-review-graph/) what it reads from source code. What is left is the noisy rest: 400 lines of test output, a 2 MB JSON API response, a log dump with one interesting line in it. Those tool results enter the context once and are then re-sent with every following turn.
 
 [Headroom](https://github.com/headroomlabs-ai/headroom) (Apache-2.0, `headroom-ai` on PyPI, current release **v0.44.0** from 2026-11-10) targets exactly that. This part covers how it works, how to set it up for one project or for every agent on the machine, how to keep it updated automatically with desktop notifications, and finally how all four tools of this series fit together.

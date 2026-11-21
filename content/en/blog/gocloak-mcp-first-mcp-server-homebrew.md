@@ -26,6 +26,14 @@ toc: true
 
 > **Series: The gocloak universe.** Part 1: gocloak-mcp (you are here) · [Part 2: gocloak-auth-proxy](/blog/gocloak-auth-proxy-keycloak/) · [Part 3: gocloak performance](/blog/gocloak-performance-json-v2-http-clients/) · [Part 4: final benchmark numbers](/blog/gocloak-performance-final-benchmarks/) · [Part 5: pprof](/blog/gocloak-pprof-profiling/)
 
+{{< tldr >}}
+- gocloak-mcp is a Keycloak MCP server written in Go with the official MCP Go SDK and gocloak v15, and all 32 tools in v0.3.0 only read.
+- gocloak-mcp logs in to Keycloak as a least-privilege service account with the client credentials grant and checks every `realm` argument against an allowlist.
+- Every security control in gocloak-mcp maps to an item of the OWASP MCP Top 10, with at least one test per item named after the risk.
+- In the project's head-to-head benchmark over stdio, gocloak-mcp v0.3.0 started in 9.9 ms, used 16.2 MB and handled 1,227 requests per second.
+- GoReleaser pushes a Homebrew cask to Nerzal/homebrew-tap on every tag, so `brew install --cask nerzal/tap/gocloak-mcp` installs gocloak-mcp on macOS and Linux.
+{{< /tldr >}}
+
 **Update, 21 November 2026:** gocloak-mcp v0.3.0 is out. It moves to Go 1.27 and gocloak v15.1.0 and brings a head-to-head benchmark against four other Keycloak MCP servers. I updated the install instructions and added both to the performance section; my own measurements of v0.2.0 stay as they were.
 
 I started [gocloak](https://github.com/Nerzal/gocloak) in November 2018. Eight years later it has 1,254 stars, 316 forks and 114 contributors, and yesterday, on 2026-11-20, I tagged **v15.0.0**. The same day two new repositories appeared next to it: [gocloak-mcp](https://github.com/Nerzal/gocloak-mcp) and [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy).
