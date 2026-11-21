@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 268" width="720" height="268">
+<text x="20" y="28" class="d-t d-bold" font-size="15">16 parallel callers, TLS + HTTP/1.1, time per call (lower is better)</text>
+<text x="20" y="48" class="d-m" font-size="11.5">benchstat median, n=8, GOMAXPROCS=4. Label: new connections (dials) per 1,000 calls.</text>
+<line x1="190.0" y1="76" x2="190.0" y2="234" class="d-divider"/><text x="190.0" y="250" class="d-m" font-size="11" text-anchor="middle">0 µs</text>
+<line x1="316.7" y1="76" x2="316.7" y2="234" class="d-divider"/><text x="316.7" y="250" class="d-m" font-size="11" text-anchor="middle">20 µs</text>
+<line x1="443.3" y1="76" x2="443.3" y2="234" class="d-divider"/><text x="443.3" y="250" class="d-m" font-size="11" text-anchor="middle">40 µs</text>
+<line x1="570.0" y1="76" x2="570.0" y2="234" class="d-divider"/><text x="570.0" y="250" class="d-m" font-size="11" text-anchor="middle">60 µs</text>
+<text x="180" y="96" class="d-t" font-size="12" text-anchor="end">gocloak (default)</text>
+<path d="M190 84 H509.0 Q513.0 84 513.0 88 V96 Q513.0 100 509.0 100 H190 Z" fill="#d97706"/>
+<text x="519.0" y="96" class="d-t" font-size="11">51.0 µs <tspan class="d-m">30.4 dials/1k</tspan></text>
+<text x="180" y="126" class="d-t" font-size="12" text-anchor="end">gocloak, pool 256</text>
+<path d="M190 114 H364.6 Q368.6 114 368.6 118 V126 Q368.6 130 364.6 130 H190 Z" fill="#4285f4"/>
+<text x="374.6" y="126" class="d-t" font-size="11">28.2 µs <tspan class="d-m">1.09 dials/1k</tspan></text>
+<text x="180" y="156" class="d-t" font-size="12" text-anchor="end">plain resty</text>
+<path d="M190 144 H357.0 Q361.0 144 361.0 148 V156 Q361.0 160 357.0 160 H190 Z" fill="#4285f4"/>
+<text x="367.0" y="156" class="d-t" font-size="11">27.0 µs <tspan class="d-m">13.8 dials/1k</tspan></text>
+<text x="180" y="186" class="d-t" font-size="12" text-anchor="end">net/http (tuned)</text>
+<path d="M190 174 H307.6 Q311.6 174 311.6 178 V186 Q311.6 190 307.6 190 H190 Z" fill="#4285f4"/>
+<text x="317.6" y="186" class="d-t" font-size="11">19.2 µs <tspan class="d-m">0.77 dials/1k</tspan></text>
+<text x="180" y="216" class="d-t" font-size="12" text-anchor="end">fasthttp</text>
+<path d="M190 204 H277.2 Q281.2 204 281.2 208 V216 Q281.2 220 277.2 220 H190 Z" fill="#4285f4"/>
+<text x="287.2" y="216" class="d-t" font-size="11">14.4 µs <tspan class="d-m">0.14 dials/1k</tspan></text>
+</svg>

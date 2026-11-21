@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 452" width="720" height="452">
+<text x="20" y="28" class="d-t d-bold" font-size="15">Unmarshal time, encoding/json v1 API: v1 engine vs v2 engine</text>
+<text x="20" y="48" class="d-m" font-size="11.5">Interleaved A/B run, median of 10, GOMAXPROCS=4. Bars relative to the v1 engine (shorter is faster).</text>
+<rect x="20" y="62" width="12" height="12" rx="3" fill="#9aa0a6"/><text x="38" y="72" class="d-t" font-size="11.5">default build (v1 engine)</text>
+<rect x="222" y="62" width="12" height="12" rx="3" fill="#4285f4"/><text x="240" y="72" class="d-t" font-size="11.5">GOEXPERIMENT=jsonv2 (v2 engine)</text>
+<line x1="190.0" y1="84" x2="190.0" y2="412" class="d-divider"/><text x="190.0" y="428" class="d-m" font-size="11" text-anchor="middle">0%</text>
+<line x1="290.0" y1="84" x2="290.0" y2="412" class="d-divider"/><text x="290.0" y="428" class="d-m" font-size="11" text-anchor="middle">25%</text>
+<line x1="390.0" y1="84" x2="390.0" y2="412" class="d-divider"/><text x="390.0" y="428" class="d-m" font-size="11" text-anchor="middle">50%</text>
+<line x1="490.0" y1="84" x2="490.0" y2="412" class="d-divider"/><text x="490.0" y="428" class="d-m" font-size="11" text-anchor="middle">75%</text>
+<line x1="590.0" y1="84" x2="590.0" y2="412" class="d-divider"/><text x="590.0" y="428" class="d-m" font-size="11" text-anchor="middle">100%</text>
+<text x="180" y="111" class="d-t" font-size="12" text-anchor="end">Token response</text>
+<path d="M190 92 H587.0 Q590.0 92 590.0 95 V103 Q590.0 106 587.0 106 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="103" class="d-m" font-size="11">14.2 µs</text>
+<path d="M190 108 H291.2 Q294.2 108 294.2 111 V119 Q294.2 122 291.2 122 H190 Z" fill="#4285f4"/>
+<text x="300.2" y="119" class="d-t" font-size="11">3.7 µs <tspan class="d-m">-74%</tspan></text>
+<text x="180" y="151" class="d-t" font-size="12" text-anchor="end">Certs (JWKS)</text>
+<path d="M190 132 H587.0 Q590.0 132 590.0 135 V143 Q590.0 146 587.0 146 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="143" class="d-m" font-size="11">5.2 µs</text>
+<path d="M190 148 H333.2 Q336.2 148 336.2 151 V159 Q336.2 162 333.2 162 H190 Z" fill="#4285f4"/>
+<text x="342.2" y="159" class="d-t" font-size="11">1.9 µs <tspan class="d-m">-65%</tspan></text>
+<text x="180" y="191" class="d-t" font-size="12" text-anchor="end">One user</text>
+<path d="M190 172 H587.0 Q590.0 172 590.0 175 V183 Q590.0 186 587.0 186 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="183" class="d-m" font-size="11">4.1 µs</text>
+<path d="M190 188 H440.7 Q443.7 188 443.7 191 V199 Q443.7 202 440.7 202 H190 Z" fill="#4285f4"/>
+<text x="449.7" y="199" class="d-t" font-size="11">2.6 µs <tspan class="d-m">-36%</tspan></text>
+<text x="180" y="231" class="d-t" font-size="12" text-anchor="end">100 users</text>
+<path d="M190 212 H587.0 Q590.0 212 590.0 215 V223 Q590.0 226 587.0 226 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="223" class="d-m" font-size="11">413 µs</text>
+<path d="M190 228 H448.5 Q451.5 228 451.5 231 V239 Q451.5 242 448.5 242 H190 Z" fill="#4285f4"/>
+<text x="457.5" y="239" class="d-t" font-size="11">270 µs <tspan class="d-m">-35%</tspan></text>
+<text x="180" y="271" class="d-t" font-size="12" text-anchor="end">1000 users</text>
+<path d="M190 252 H587.0 Q590.0 252 590.0 255 V263 Q590.0 266 587.0 266 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="263" class="d-m" font-size="11">4.04 ms</text>
+<path d="M190 268 H458.3 Q461.3 268 461.3 271 V279 Q461.3 282 458.3 282 H190 Z" fill="#4285f4"/>
+<text x="467.3" y="279" class="d-t" font-size="11">2.74 ms <tspan class="d-m">-32%</tspan></text>
+<text x="180" y="311" class="d-t" font-size="12" text-anchor="end">Group tree</text>
+<path d="M190 292 H587.0 Q590.0 292 590.0 295 V303 Q590.0 306 587.0 306 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="303" class="d-m" font-size="11">102 µs</text>
+<path d="M190 308 H508.6 Q511.6 308 511.6 311 V319 Q511.6 322 508.6 322 H190 Z" fill="#4285f4"/>
+<text x="517.6" y="319" class="d-t" font-size="11">82 µs <tspan class="d-m">n.s.</tspan></text>
+<text x="180" y="351" class="d-t" font-size="12" text-anchor="end">Clients</text>
+<path d="M190 332 H587.0 Q590.0 332 590.0 335 V343 Q590.0 346 587.0 346 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="343" class="d-m" font-size="11">91 µs</text>
+<path d="M190 348 H420.0 Q423.0 348 423.0 351 V359 Q423.0 362 420.0 362 H190 Z" fill="#4285f4"/>
+<text x="429.0" y="359" class="d-t" font-size="11">53 µs <tspan class="d-m">-42%</tspan></text>
+<text x="180" y="391" class="d-t" font-size="12" text-anchor="end">Realm export</text>
+<path d="M190 372 H587.0 Q590.0 372 590.0 375 V383 Q590.0 386 587.0 386 H190 Z" fill="#9aa0a6"/>
+<text x="596" y="383" class="d-m" font-size="11">472 µs</text>
+<path d="M190 388 H483.6 Q486.6 388 486.6 391 V399 Q486.6 402 483.6 402 H190 Z" fill="#4285f4"/>
+<text x="492.6" y="399" class="d-t" font-size="11">350 µs <tspan class="d-m">-26%</tspan></text>
+</svg>

@@ -24,7 +24,7 @@ featured_image: "img/gocloak/gocloak-mcp-og.jpg"
 toc: true
 ---
 
-> **Serie: Das gocloak-Universum.** Teil 1: gocloak-mcp, mein erster MCP-Server (du bist hier) · [Teil 2: gocloak-auth-proxy, ein schneller Keycloak Auth-Proxy](/de/blog/gocloak-auth-proxy-keycloak/)
+> **Serie: Das gocloak-Universum.** Teil 1: gocloak-mcp (du bist hier) · [Teil 2: gocloak-auth-proxy](/de/blog/gocloak-auth-proxy-keycloak/) · [Teil 3: gocloak-Performance](/de/blog/gocloak-performance-json-v2-http-clients/) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · [Teil 5: pprof](/de/blog/gocloak-pprof-profiling/)
 
 Ich habe [gocloak](https://github.com/Nerzal/gocloak) im November 2018 angefangen. Acht Jahre später hat es 1.254 Stars, 316 Forks und 114 Contributors, und gestern, am 2026-11-20, habe ich **v15.0.0** getaggt. Am selben Tag sind daneben zwei neue Repositories entstanden: [gocloak-mcp](https://github.com/Nerzal/gocloak-mcp) und [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy).
 

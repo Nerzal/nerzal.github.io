@@ -2,7 +2,7 @@
 draft: false
 title: "gocloak-auth-proxy: a fast, Keycloak-native auth proxy in Go"
 seo_title: "gocloak-auth-proxy: Keycloak Forward-Auth for Traefik and nginx"
-date: 2026-11-23T06:30:00+01:00
+date: 2026-11-21T11:30:00+01:00
 tags:
   [
     "go",
@@ -25,7 +25,7 @@ featured_image: "img/gocloak/gocloak-auth-proxy-og.jpg"
 toc: true
 ---
 
-> **Series: The gocloak universe.** [Part 1: gocloak-mcp, my first MCP server](/blog/gocloak-mcp-first-mcp-server-homebrew/) · Part 2: gocloak-auth-proxy (you are here)
+> **Series: The gocloak universe.** [Part 1: gocloak-mcp](/blog/gocloak-mcp-first-mcp-server-homebrew/) · Part 2: gocloak-auth-proxy (you are here) · [Part 3: gocloak performance](/blog/gocloak-performance-json-v2-http-clients/) · [Part 4: final benchmark numbers](/blog/gocloak-performance-final-benchmarks/) · [Part 5: pprof](/blog/gocloak-pprof-profiling/)
 
 In [Part 1](/blog/gocloak-mcp-first-mcp-server-homebrew/) I wrote about gocloak v15 and the read-only MCP server built on it. At the same time a second project went public: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), an authentication proxy that sits in front of your services and lets only requests with a valid Keycloak token through.
 
