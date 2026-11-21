@@ -19,13 +19,15 @@ tags:
   ]
 categories: ["Software Engineering"]
 series: ["Das gocloak-Universum"]
-description: "gocloak-auth-proxy prüft Keycloak-JWTs lokal für Forward-Auth in Traefik und nginx, als Reverse-Proxy oder mit OIDC-Browser-SSO. Benchmarks gegen oauth2-proxy und gogatekeeper, das Sicherheitsmodell und eine Anleitung zur Einrichtung."
+description: "gocloak-auth-proxy prüft Keycloak-JWTs lokal für Forward-Auth in Traefik und nginx, als Reverse-Proxy oder mit OIDC-Browser-SSO. Benchmarks gegen oauth2-proxy, gogatekeeper und Referenz-Proxys in Rust, Java und Python, das Sicherheitsmodell und eine Anleitung zur Einrichtung."
 images: ["img/gocloak/gocloak-auth-proxy-og.jpg"]
 featured_image: "img/gocloak/gocloak-auth-proxy-og.jpg"
 toc: true
 ---
 
 > **Serie: Das gocloak-Universum.** [Teil 1: gocloak-mcp](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) · Teil 2: gocloak-auth-proxy (du bist hier) · [Teil 3: gocloak-Performance](/de/blog/gocloak-performance-json-v2-http-clients/) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · [Teil 5: pprof](/de/blog/gocloak-pprof-profiling/)
+
+**Update, 21. November 2026:** gocloak-auth-proxy v0.2.0 ist erschienen, mit schnellerem Token-Verifier, einem Cache für geprüfte Tokens und einer Benchmark-Suite im Repository. Ich habe seine Zahlen und Charts in den Benchmark-Teil aufgenommen und die Installationsbefehle aktualisiert; die Zahlen von v0.1.0 bleiben zum Vergleich stehen.
 
 In [Teil 1](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) habe ich über gocloak v15 und den darauf aufbauenden Keycloak MCP-Server geschrieben. Zur selben Zeit ging ein zweites Projekt online: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), ein Authentifizierungs-Proxy, der vor deinen Services sitzt und nur Requests mit gültigem Keycloak-Token durchlässt.
 
@@ -35,9 +37,9 @@ Er läuft in drei Modi:
 - Reverse-Proxy: Der Proxy leitet geprüfte Requests selbst an einen Upstream weiter.
 - Browser-SSO: OIDC Authorization Code Flow mit PKCE, verschlüsseltem Session-Cookie und Logout, für Web-Apps, die sich nicht selbst um OIDC kümmern sollen.
 
-Im projekteigenen Benchmark beantwortete er 15.825 Forward-Auth-Requests pro Sekunde, 2,4-mal so viele wie oauth2-proxy und 2,7-mal so viele wie gogatekeeper auf derselben Maschine. Unten findest du diese Zahlen samt Einschränkungen, meinen eigenen Micro-Benchmark-Lauf, das Sicherheitsmodell und ein Setup für Traefik und nginx.
+Im projekteigenen Benchmark beantwortete v0.2.0 mit vollständiger Signaturprüfung bei jedem Request 15.002 Forward-Auth-Requests pro Sekunde, 2,5-mal so viele wie oauth2-proxy auf derselben Maschine, und mit Token-Cache 25.169. Unten findest du diese Zahlen samt Einschränkungen, meinen eigenen Micro-Benchmark-Lauf, das Sicherheitsmodell und ein Setup für Traefik und nginx.
 
-v0.1.0 ist am 2026-11-21 erschienen. Niemand hat den Code bisher auditiert, und die meisten Alternativen weiter unten haben Jahre im Produktionseinsatz hinter sich.
+v0.1.0 ist am 2026-11-21 erschienen, v0.2.0 am Nachmittag desselben Tages. Niemand hat den Code bisher auditiert, und die meisten Alternativen weiter unten haben Jahre im Produktionseinsatz hinter sich.
 
 ## Warum noch ein Proxy für Keycloak
 
@@ -51,7 +53,7 @@ Keycloak hatte früher einen eigenen Proxy, Keycloak Gatekeeper, später in Louk
 | [Vouch Proxy](https://github.com/vouch/vouch-proxy) | Go | 3.290 | v0.50.0 | Generisch, nginx `auth_request` |
 | [traefik-forward-auth](https://github.com/thomseddon/traefik-forward-auth) | Go | 2.396 | v2.3.0 (2024-05-06) | Generisches OIDC |
 | [gogatekeeper](https://github.com/gogatekeeper/gatekeeper) | Go | 324 | 5.1.0 (2026-11-18) | Ja, der Community-Fork von Keycloak Gatekeeper |
-| **gocloak-auth-proxy** | Go | neu | v0.1.0 (2026-11-21) | Ja, gebaut auf gocloak v15 |
+| **gocloak-auth-proxy** | Go | neu | v0.2.0 (2026-11-21) | Ja, gebaut auf gocloak v15 |
 
 (Stars mit Stand 2026-11-21.)
 
@@ -93,9 +95,51 @@ Alle sind in aktuellen Releases behoben. Ich liste sie auf, weil gocloak-auth-pr
 
 ## Benchmarks
 
-### Direkter Vergleich
+### Direkter Vergleich (v0.2.0)
 
-Der Vergleich stammt aus dem README des Projekts. Alle drei Proxys liefen auf demselben Linux-Host (Intel Xeon 6985P-C) mit `GOMAXPROCS=2`, gegen ein lokales Mock-Keycloak-JWKS und einen lokalen Mock-Upstream, mit einem 2048-Bit-RS256-Bearer-Token bei jedem Request, 32 gleichzeitigen Verbindungen, abgeschaltetem Access-Log und null Fehlern in jedem Lauf. Die Lastskripte und die Konfigurationen der Konkurrenz liegen noch nicht im Repository, eins zu eins nachstellen lässt sich der Lauf also noch nicht.
+v0.2.0 bringt seine Benchmark-Suite ins Repository: `make bench-compare` startet [`bench/run_compare.sh`](https://github.com/Nerzal/gocloak-auth-proxy/blob/main/bench/run_compare.sh). Alle Proxys liefen auf demselben Linux-Host (Intel Xeon 6985P-C) mit `GOMAXPROCS=2`, 32 gleichzeitigen Verbindungen über 5 Sekunden, einem 2048-Bit-RS256-Bearer-Token, einem lokalen Mock-JWKS und einem lokalen Mock-Upstream, mit null Fehlern in jedem Lauf.
+
+Zum Lesen der Zahlen sind zwei Token-Modi wichtig. "Warm" schickt bei jedem Request dasselbe Token. "Cold" rotiert durch 2.000 verschiedene Tokens, und bei gocloak-auth-proxy ist der Token-Cache abgeschaltet (`TOKEN_CACHE_SIZE=0`), jeder Request bezahlt also eine vollständige Signaturprüfung.
+
+![Durchsatz, Latenz und Speicher von gocloak-auth-proxy v0.2.0 gegen oauth2-proxy und Referenz-Proxys in Rust, Java und Python](/img/gocloak/auth-proxy/benchmark-overview.svg)
+
+| Proxy | Tokens | Forward-Auth RPS | p50 | Reverse-Proxy RPS | p50 | Speicher unter Last |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| gocloak-auth-proxy v0.2.0 | warm | 25.169 | 1,08 ms | 11.248 | 2,51 ms | 15,3 bis 16,1 MB |
+| gocloak-auth-proxy v0.2.0 | cold | 15.002 | 1,99 ms | 7.583 | 3,90 ms | 15,7 bis 16,2 MB |
+| Rust-Referenz (Axum, `jsonwebtoken`) | cold | 21.616 | 1,32 ms | 10.629 | 2,86 ms | 3,8 bis 6,3 MB |
+| oauth2-proxy v7.15.6 | warm | 6.023 | 4,47 ms | 2.245 | 13,39 ms | 26,7 bis 27,8 MB |
+| Java-17-Referenz (`HttpServer`) | cold | 6.839 | 3,71 ms | 1.978 | 14,23 ms | 104,9 bis 114,4 MB |
+| Python-3.11-Referenz (Uvicorn, PyJWT) | cold | 5.811 | 5,14 ms | 734 | 32,95 ms | 14,7 MB (Master-Prozess) |
+
+Die Proxys in Rust, Java und Python sind keine Produkte. Es sind kleine Referenzimplementierungen in [`bench/competitors/`](https://github.com/Nerzal/gocloak-auth-proxy/tree/main/bench/competitors), geschrieben für diesen Benchmark, um zu zeigen, was jede Runtime mit derselben Aufgabe macht. oauth2-proxy ist das einzige etablierte Produkt im Lauf; gogatekeeper ist nicht mehr dabei.
+
+Fair verglichen, mit vollständiger Signaturprüfung bei jedem Request, schafft gocloak-auth-proxy im Forward-Auth-Modus den 2,5-fachen Durchsatz von oauth2-proxy und im Reverse-Proxy-Modus den 3,4-fachen. Mit Cache sind es das 4,2- und 5-Fache. Die Rust-Referenz ist schneller als gocloak-auth-proxy ohne Cache (21.616 gegen 15.002 Forward-Auth-Requests pro Sekunde) und braucht ein Viertel des Speichers; erst mit Cache liegt der Go-Proxy vorn. Das "#1"-Badge im Chart zählt den Warm-Lauf. Das beschreibt Produktion ganz gut, wo ein Client dasselbe Token bis zum Ablauf schickt, ist aber nicht dieselbe Last wie die Cold-Läufe der Referenz-Proxys.
+
+### Was v0.2.0 geändert hat
+
+![Bytes und Allokationen pro Token-Prüfung von v0.1.0 bis v0.2.0](/img/gocloak/auth-proxy/pprof-progression.svg)
+
+Zwei Änderungen kamen aus dem Profiling. Der JWS-Verifier liest die Claims jetzt mit dem Streaming-Paket `jsontext` aus `encoding/json/v2`, statt sie in Maps zu dekodieren. Bei einer kalten RS256-Prüfung sinken die Bytes damit von 6.412 auf 1.728 (-73 %) und die Allokationen von 79 auf 33 (-58 %); bei EdDSA mit eigenen Claim-Headern von 8.540 auf 624 Bytes (-93 %) und von 104 auf 24 Allokationen (-77 %). Die zweite Änderung ist ein geshardeter Cache geprüfter Tokens, mit dem SHA-256 des Tokens als Schlüssel. Ein Treffer dauert 463 ns und allokiert nichts. Er prüft bei jedem Treffer weiterhin `exp` und `nbf` und ob der Signaturschlüssel noch im aktuellen JWKS-Snapshot steht. Eine Schlüsselrotation in Keycloak macht also auch gecachte Tokens ungültig. Das Lesen eines OIDC-Session-Cookies wurde zusätzlich 40 % schneller.
+
+Die Micro-Benchmarks aus dem README von v0.2.0 (Go 1.27.4, gocloak v15.1.0, Intel Xeon 6985P-C):
+
+| Benchmark | Zeit pro Op | Bytes pro Op | Allocs pro Op |
+| --- | ---: | ---: | ---: |
+| `BenchmarkPolicy` | 128 ns | 0 | 0 |
+| `BenchmarkIntrospectorCacheHit` | 192 ns | 0 | 0 |
+| `BenchmarkVerifyCached` | 463 ns | 0 | 0 |
+| `BenchmarkForwardAuth` | 1,62 µs | 2.336 | 17 |
+| `BenchmarkReadSession` | 2,76 µs | 1.328 | 3 |
+| `BenchmarkVerify/RS256` | 30,0 µs | 1.728 | 33 |
+| `BenchmarkVerifyEdDSA` | 45,5 µs | 624 | 24 |
+| `BenchmarkVerify/ES256` | 67,7 µs | 1.536 | 44 |
+
+Sie stammen von einer anderen Maschine als mein Lauf mit v0.1.0 weiter unten, vergleiche also die Allokationsspalten, nicht die Zeiten.
+
+### Der Vergleich von v0.1.0
+
+Der Vergleich für v0.1.0 stammt aus dem README des Projekts. Alle drei Proxys liefen auf demselben Linux-Host (Intel Xeon 6985P-C) mit `GOMAXPROCS=2`, gegen ein lokales Mock-Keycloak-JWKS und einen lokalen Mock-Upstream, mit einem 2048-Bit-RS256-Bearer-Token bei jedem Request, 32 gleichzeitigen Verbindungen, abgeschaltetem Access-Log und null Fehlern in jedem Lauf. Die Lastskripte und die Konfigurationen der Konkurrenz lagen damals noch nicht im Repository, eins zu eins nachstellen lässt sich dieser Lauf also nicht.
 
 {{< diagram src="gocloak-auth-proxy-throughput.svg" caption="Forward-Auth ist der Modus, den Traefik und nginx nutzen. Dort ist der Abstand am größten, weil der Proxy nur prüft und antwortet; im Reverse-Proxy-Modus leitet er zusätzlich den Request-Body an den Upstream weiter." >}}
 
@@ -125,7 +169,7 @@ Ich habe `make bench` für v0.1.0 auf meinem Rechner laufen lassen (AMD Ryzen AI
 | `BenchmarkVerify/ES256` | 51,4 µs | 7.352 | 125 | Dasselbe mit ES256 (P-256) |
 | `BenchmarkVerifyEdDSA` | 85,0 µs | 10.576 | 176 | Ed25519 plus eigene Claim-Header |
 
-Die Zahlen im README stammen von Go 1.27 unter Linux und zeigen weniger Allokationen (zum Beispiel 79 für RS256), die Toolchain spielt hier also eine Rolle; vergleiche Läufe nur auf demselben Setup. Das Bild ist auf beiden gleich: Die Signaturprüfung macht etwa 95 Prozent der CPU-Zeit eines Requests aus, alles drumherum fällt kaum ins Gewicht. RS256 ist der am schnellsten zu prüfende Algorithmus, was praktisch ist, weil er der Standard in Keycloak ist.
+Die Zahlen im README von v0.1.0 stammen von Go 1.27 unter Linux und zeigen weniger Allokationen (zum Beispiel 79 für RS256), die Toolchain spielt hier also eine Rolle; vergleiche Läufe nur auf demselben Setup. Das Bild ist auf beiden gleich: Die Signaturprüfung macht etwa 95 Prozent der CPU-Zeit eines Requests aus, alles drumherum fällt kaum ins Gewicht. RS256 ist der am schnellsten zu prüfende Algorithmus, was praktisch ist, weil er der Standard in Keycloak ist.
 
 ## Einrichtung
 
@@ -147,10 +191,10 @@ docker run --rm -p 8080:8080 \
   -e ISSUER=https://keycloak.example.com/realms/myrealm \
   -e AUDIENCE=my-api \
   -e REQUIRED_REALM_ROLES=reader \
-  ghcr.io/nerzal/gocloak-auth-proxy:v0.1.0
+  ghcr.io/nerzal/gocloak-auth-proxy:v0.2.0
 
 # oder das Binary, mit Provenance-Prüfung
-VERSION=0.1.0; OS=linux; ARCH=amd64
+VERSION=0.2.0; OS=linux; ARCH=amd64
 curl -fsSLO "https://github.com/Nerzal/gocloak-auth-proxy/releases/download/v${VERSION}/gocloak-auth-proxy_${VERSION}_${OS}_${ARCH}.tar.gz"
 gh attestation verify "gocloak-auth-proxy_${VERSION}_${OS}_${ARCH}.tar.gz" -R Nerzal/gocloak-auth-proxy
 ```
@@ -163,9 +207,9 @@ docker run --rm -p 8080:8080 `
   -e ISSUER=https://keycloak.example.com/realms/myrealm `
   -e AUDIENCE=my-api `
   -e REQUIRED_REALM_ROLES=reader `
-  ghcr.io/nerzal/gocloak-auth-proxy:v0.1.0
+  ghcr.io/nerzal/gocloak-auth-proxy:v0.2.0
 
-# oder mit Go 1.26+ bauen
+# oder mit Go 1.27+ bauen
 go install github.com/Nerzal/gocloak-auth-proxy/cmd/gocloak-auth-proxy@latest
 ```
 
@@ -287,6 +331,6 @@ Wenn du Keycloak hinter einer eigenen CA oder mit Mutual TLS betreibst, decken `
 - Mehrere Identity Provider, oder GitHub- und Google-Login neben Keycloak: oauth2-proxy.
 - Identity-Aware Access für ein ganzes Unternehmen, mit Device Posture und einer Policy-Sprache: Pomerium.
 - Nur Keycloak, und du willst OPA-Policies, Sessions in Redis und ein Projekt mit jahrelanger Geschichte: gogatekeeper.
-- Nur Keycloak, Forward-Auth in Traefik oder nginx mit möglichst niedriger Latenz und kleinem Dependency-Baum, und v0.1.0 ist für dich in Ordnung: gocloak-auth-proxy.
+- Nur Keycloak, Forward-Auth in Traefik oder nginx mit möglichst niedriger Latenz und kleinem Dependency-Baum, und v0.2.0 ist für dich in Ordnung: gocloak-auth-proxy.
 
 Erfahrungen mit echtem Traffic, vor allem dazu, wo er kaputtgeht, sind als Issues oder vertrauliche Security-Reports im [Repository](https://github.com/Nerzal/gocloak-auth-proxy) willkommen.

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="650" viewBox="0 0 1120 650" role="img" aria-label="gocloak-mcp v0.3.0 Head-to-Head Benchmarks">
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+  <rect width="1120" height="650" rx="16" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="24" y="36" fill="#f0f6fc" font-size="20" font-weight="800">gocloak-mcp v0.3.0 — Head-to-Head Keycloak MCP Benchmarks</text>
+  <text x="24" y="57" fill="#8b949e" font-size="12.5">Measured on ubuntu-latest (4 vCPU x86_64) · Identical local mock Keycloak Admin API (50 users/call) · Go 1.27.4 + gocloak v15.1.0</text>
+  <rect x="890" y="20" width="206" height="30" rx="15" fill="#0d2b24" stroke="#00d4aa" stroke-width="1"/>
+  <text x="993" y="39" text-anchor="middle" fill="#00d4aa" font-size="12" font-weight="700">#1 Stdio &amp; Streamable HTTP</text>
+  <rect x="22" y="78" width="528" height="252" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="42" y="108" fill="#f0f6fc" font-size="15" font-weight="700">Stdio Throughput (req/s)</text>
+  <text x="42" y="126" fill="#8b949e" font-size="11.5">Higher is better · 50 users/call · 100 sequential calls</text>
+  <text x="188" y="170" text-anchor="end" fill="#00d4aa" font-size="12" font-weight="700">gocloak-mcp (Go)</text>
+  <rect x="200" y="154" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="154" width="238.8" height="20" rx="5" fill="#00d4aa"/>
+  <text x="446.8" y="170" fill="#00d4aa" font-size="12" font-weight="700">1,227 req/s</text>
+  <text x="188" y="210.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">MnemoShare (Go)</text>
+  <rect x="200" y="194.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="194.0" width="226.0" height="20" rx="5" fill="#58a6ff"/>
+  <text x="434.0" y="210.0" fill="#f0f6fc" font-size="12" font-weight="500">1,161 req/s</text>
+  <text x="188" y="250.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">Haitham (TS/Node)</text>
+  <rect x="200" y="234.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="234.0" width="93.5" height="20" rx="5" fill="#f59e0b"/>
+  <text x="301.5" y="250.0" fill="#f0f6fc" font-size="12" font-weight="500">480 req/s</text>
+  <text x="188" y="290.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">idoyudha (Python)</text>
+  <rect x="200" y="274.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="274.0" width="28.2" height="20" rx="5" fill="#a78bfa"/>
+  <text x="236.2" y="290.0" fill="#f0f6fc" font-size="12" font-weight="500">145 req/s</text>
+  <rect x="570" y="78" width="528" height="252" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="590" y="108" fill="#f0f6fc" font-size="15" font-weight="700">Streamable HTTP Throughput (req/s)</text>
+  <text x="590" y="126" fill="#8b949e" font-size="11.5">Higher is better · 50 users/call · 300 calls @ 10 workers</text>
+  <text x="736" y="170" text-anchor="end" fill="#00d4aa" font-size="12" font-weight="700">gocloak-mcp (Go)</text>
+  <rect x="748" y="154" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="154" width="221.8" height="20" rx="5" fill="#00d4aa"/>
+  <text x="977.8" y="170" fill="#00d4aa" font-size="12" font-weight="700">1,140 req/s</text>
+  <text x="736" y="210.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">MnemoShare (Go)</text>
+  <rect x="748" y="194.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="194.0" width="218.0" height="20" rx="5" fill="#58a6ff"/>
+  <text x="974.0" y="210.0" fill="#f0f6fc" font-size="12" font-weight="500">1,120 req/s</text>
+  <text x="736" y="250.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">sshaaf Quarkus Native</text>
+  <rect x="748" y="234.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="234.0" width="39.9" height="20" rx="5" fill="#f97316"/>
+  <text x="795.9" y="250.0" fill="#f0f6fc" font-size="12" font-weight="500">205 req/s</text>
+  <text x="736" y="290.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">sshaaf Quarkus JVM</text>
+  <rect x="748" y="274.0" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="274.0" width="30.8" height="20" rx="5" fill="#ef4444"/>
+  <text x="786.8" y="290.0" fill="#f0f6fc" font-size="12" font-weight="500">158 req/s</text>
+  <rect x="22" y="350" width="528" height="252" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="42" y="380" fill="#f0f6fc" font-size="15" font-weight="700">Cold Start Time (ms)</text>
+  <text x="42" y="398" fill="#8b949e" font-size="11.5">Lower is better · median to first MCP initialize response</text>
+  <text x="188" y="442" text-anchor="end" fill="#00d4aa" font-size="12" font-weight="700">gocloak-mcp (Stdio)</text>
+  <rect x="200" y="426" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="426" width="6.0" height="20" rx="5" fill="#00d4aa"/>
+  <text x="214.0" y="442" fill="#00d4aa" font-size="12" font-weight="700">9.9 ms</text>
+  <text x="188" y="468.6666666666667" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">MnemoShare (Stdio)</text>
+  <rect x="200" y="452.6666666666667" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="452.6666666666667" width="6.0" height="20" rx="5" fill="#58a6ff"/>
+  <text x="214.0" y="468.6666666666667" fill="#f0f6fc" font-size="12" font-weight="500">20.0 ms</text>
+  <text x="188" y="495.33333333333337" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">sshaaf Quarkus Native</text>
+  <rect x="200" y="479.33333333333337" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="479.33333333333337" width="7.7" height="20" rx="5" fill="#f97316"/>
+  <text x="215.7" y="495.33333333333337" fill="#f0f6fc" font-size="12" font-weight="500">63.5 ms</text>
+  <text x="188" y="522.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">Haitham (TS/Node)</text>
+  <rect x="200" y="506.00000000000006" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="506.00000000000006" width="13.7" height="20" rx="5" fill="#f59e0b"/>
+  <text x="221.7" y="522.0" fill="#f0f6fc" font-size="12" font-weight="500">114 ms</text>
+  <text x="188" y="548.6666666666667" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">idoyudha (Python)</text>
+  <rect x="200" y="532.6666666666667" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="532.6666666666667" width="71.2" height="20" rx="5" fill="#a78bfa"/>
+  <text x="279.2" y="548.6666666666667" fill="#f0f6fc" font-size="12" font-weight="500">591 ms</text>
+  <text x="188" y="575.3333333333334" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">sshaaf Quarkus JVM</text>
+  <rect x="200" y="559.3333333333334" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="200" y="559.3333333333334" width="243.9" height="20" rx="5" fill="#ef4444"/>
+  <text x="451.9" y="575.3333333333334" fill="#f0f6fc" font-size="12" font-weight="500">2,024 ms</text>
+  <rect x="570" y="350" width="528" height="252" rx="12" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="590" y="380" fill="#f0f6fc" font-size="15" font-weight="700">Memory Footprint Under Load (MB RSS)</text>
+  <text x="590" y="398" fill="#8b949e" font-size="11.5">Lower is better · sshaaf Native: 151.4 MB, JVM: 310.8 MB</text>
+  <text x="736" y="442" text-anchor="end" fill="#00d4aa" font-size="12" font-weight="700">gocloak-mcp (Stdio)</text>
+  <rect x="748" y="426" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="426" width="12.4" height="20" rx="5" fill="#00d4aa"/>
+  <text x="768.4" y="442" fill="#00d4aa" font-size="12" font-weight="700">16.2 MB</text>
+  <text x="736" y="468.6666666666667" text-anchor="end" fill="#00d4aa" font-size="12" font-weight="700">gocloak-mcp (HTTP)</text>
+  <rect x="748" y="452.6666666666667" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="452.6666666666667" width="13.3" height="20" rx="5" fill="#38bdf8"/>
+  <text x="769.3" y="468.6666666666667" fill="#00d4aa" font-size="12" font-weight="700">17.4 MB</text>
+  <text x="736" y="495.33333333333337" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">MnemoShare (HTTP)</text>
+  <rect x="748" y="479.33333333333337" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="479.33333333333337" width="14.2" height="20" rx="5" fill="#58a6ff"/>
+  <text x="770.2" y="495.33333333333337" fill="#f0f6fc" font-size="12" font-weight="500">18.5 MB</text>
+  <text x="736" y="522.0" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">idoyudha (Python)</text>
+  <rect x="748" y="506.00000000000006" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="506.00000000000006" width="49.1" height="20" rx="5" fill="#a78bfa"/>
+  <text x="805.1" y="522.0" fill="#f0f6fc" font-size="12" font-weight="500">64.1 MB</text>
+  <text x="736" y="548.6666666666667" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">Haitham (TS/Node)</text>
+  <rect x="748" y="532.6666666666667" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="532.6666666666667" width="74.8" height="20" rx="5" fill="#f59e0b"/>
+  <text x="830.8" y="548.6666666666667" fill="#f0f6fc" font-size="12" font-weight="500">97.6 MB</text>
+  <text x="736" y="575.3333333333334" text-anchor="end" fill="#f0f6fc" font-size="12" font-weight="500">sshaaf Native / JVM</text>
+  <rect x="748" y="559.3333333333334" width="253.0" height="20" rx="5" fill="#21262d"/>
+  <rect x="748" y="559.3333333333334" width="238.3" height="20" rx="5" fill="#ef4444"/>
+  <text x="994.3" y="575.3333333333334" fill="#f0f6fc" font-size="12" font-weight="500">311 MB</text>
+  <text x="24" y="636" fill="#8b949e" font-size="11">OCI Container Image: gocloak-mcp 21.1 MB (distroless nonroot) vs. sshaaf/keycloak-mcp-server 626 MB (29.7x larger) · Reproducible via benchmarks/run_benchmarks.py</text>
+</svg>
