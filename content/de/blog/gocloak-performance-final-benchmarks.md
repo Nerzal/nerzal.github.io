@@ -123,7 +123,7 @@ json/v2 spart also Allokationen und etwas CPU im Client. Das zählt beim Durchsa
 
 ## v15.0 auf Go 1.26 gegen v15.1 auf Go 1.27
 
-Die Befunde dieser Serie sind in gocloak v15.1.0 eingeflossen ([PR #543](https://github.com/Nerzal/gocloak/pull/543), zum Zeitpunkt des Schreibens noch offen): Go 1.27 als Mindestversion, womit json/v2 die Default-Engine ist, 100 Idle-Verbindungen pro Host und `SetDirectBodyRead()` als Opt-in. `./ab.sh ref main` vergleicht den Branch mit main, die Baseline mit Go 1.26.2 gebaut, verschränkt wie zuvor.
+Die Befunde dieser Serie sind in gocloak v15.1.0 eingeflossen ([Release Notes](https://github.com/Nerzal/gocloak/releases/tag/v15.1.0), erschienen am 21. November 2026): Go 1.27 als Mindestversion, womit json/v2 die Default-Engine ist, 100 Idle-Verbindungen pro Host und `SetDirectBodyRead()` als Opt-in. `./ab.sh ref main` vergleicht den Branch mit main, die Baseline mit Go 1.26.2 gebaut, verschränkt wie zuvor.
 
 Offline (n=10): `GetUsers` mit 1.000 Usern -24 % Zeit und -44 % Allokationen, Clients -20 % und -29 %, geometrisches Mittel über alle Endpoints -21 % Zeit und -27 % Allokationen. Der Pool-Benchmark fällt von 37,2 auf 15,8 µs pro Call (-57 %) und von 33,3 auf 0,64 neue Verbindungen pro 1.000 Calls.
 

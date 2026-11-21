@@ -219,7 +219,7 @@ Everything above was measured with Go 1.26.2, the version installed on my machin
 
 So I repeated the engine comparison on Go 1.27.4, with `GOEXPERIMENT=nojsonv2` as the old baseline (interleaved A/B, n=10). Unmarshalling: token response -70 %, JWKS -61 %, one user -37 %, 100 users -30 %, 1,000 users -35 %, clients -39 %, realm export -28 %. Marshalling a user +50 %, a client +44 %. Through gocloak, `GetUsers` gets 27 % faster for 1,000 users and 19 % for 100. Allocations drop by 40 % on geometric mean. The magnitudes match the experiment on Go 1.26; only the reason changes.
 
-gocloak v15.1.0 ([PR #543](https://github.com/Nerzal/gocloak/pull/543), still open at the time of writing) requires Go 1.27, which makes the v2 engine the baseline for every user without anyone setting a flag. If you stay on an older gocloak with Go 1.26, `GOEXPERIMENT=jsonv2` gives you the same engine.
+gocloak v15.1.0 ([release notes](https://github.com/Nerzal/gocloak/releases/tag/v15.1.0), released on 21 November 2026) requires Go 1.27, which makes the v2 engine the baseline for every user without anyone setting a flag. If you stay on an older gocloak with Go 1.26, `GOEXPERIMENT=jsonv2` gives you the same engine.
 
 If you use the v2 API directly, be aware that its defaults differ from v1: field names match case-sensitively, and duplicate names and invalid UTF-8 are rejected. The [package documentation](https://pkg.go.dev/encoding/json/v2) lists all differences. v1 code under the experiment flag keeps the v1 behavior, because the v1 API runs the v2 engine with v1-compatible options. When decoding the Keycloak payloads, none of this changed anything.
 

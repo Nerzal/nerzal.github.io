@@ -219,7 +219,7 @@ Alles oben habe ich mit Go 1.26.2 gemessen, der Version, die auf meinem Rechner 
 
 Also habe ich den Engine-Vergleich auf Go 1.27.4 wiederholt, mit `GOEXPERIMENT=nojsonv2` als alter Baseline (verschränkter A/B-Lauf, n=10). Unmarshal: Token-Response -70 %, JWKS -61 %, ein User -37 %, 100 User -30 %, 1.000 User -35 %, Clients -39 %, Realm-Export -28 %. Marshal eines Users +50 %, eines Clients +44 %. Über gocloak wird `GetUsers` bei 1.000 Usern 27 % schneller, bei 100 Usern 19 %. Die Allokationen sinken im geometrischen Mittel um 40 %. Die Größenordnungen decken sich mit dem Experiment auf Go 1.26, nur die Begründung ändert sich.
 
-gocloak v15.1.0 ([PR #543](https://github.com/Nerzal/gocloak/pull/543), zum Zeitpunkt des Schreibens noch offen) setzt Go 1.27 voraus. Damit ist die v2-Engine für alle Nutzer Baseline, ohne dass jemand ein Flag setzt. Wer bei einer älteren gocloak-Version mit Go 1.26 bleibt, bekommt dieselbe Engine per `GOEXPERIMENT=jsonv2`.
+gocloak v15.1.0 ([Release Notes](https://github.com/Nerzal/gocloak/releases/tag/v15.1.0), erschienen am 21. November 2026) setzt Go 1.27 voraus. Damit ist die v2-Engine für alle Nutzer Baseline, ohne dass jemand ein Flag setzt. Wer bei einer älteren gocloak-Version mit Go 1.26 bleibt, bekommt dieselbe Engine per `GOEXPERIMENT=jsonv2`.
 
 Wer die v2-API direkt nutzt, sollte wissen, dass ihre Defaults von v1 abweichen: Feldnamen werden case-sensitiv gematcht, doppelte Namen und ungültiges UTF-8 werden abgelehnt. Die [Paketdokumentation](https://pkg.go.dev/encoding/json/v2) listet alle Unterschiede. v1-Code unter dem Experiment-Flag behält das v1-Verhalten, weil die v1-API die v2-Engine mit v1-kompatiblen Optionen aufruft. Beim Dekodieren der Keycloak-Payloads hat nichts davon etwas geändert.
 
