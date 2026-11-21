@@ -19,7 +19,7 @@ tags:
   ]
 categories: ["Software Engineering"]
 series: ["The gocloak universe"]
-description: "The complete benchstat tables for gocloak against a fake and a real Keycloak: five HTTP stacks, connection pools, json/v2 over the whole request path, plus four benchmark traps: a cold JVM, a Docker port forwarder that one client poisoned for the next, Git Bash rewriting benchstat flags, and load changes between sequential runs."
+description: "The complete benchstat tables for gocloak against a fake and a real Keycloak: five HTTP stacks, connection pools, json/v2 over the whole request path, plus four benchmark traps: a cold JVM, a Docker port forwarder that one client poisoned for the next, Git Bash rewriting benchstat flags, and load changes between sequential runs. Plus what gocloak v15.1.0 on Go 1.27 changes."
 toc: true
 ---
 
@@ -31,7 +31,7 @@ In [Part 3](/blog/gocloak-performance-json-v2-http-clients/) I described how I b
 
 All numbers are benchstat medians with n=8 (n=10 for the interleaved A/B runs) and `GOMAXPROCS=4`, built with Go 1.26.2, against Keycloak 26.8.2 in Docker Desktop on Windows 11 (AMD Ryzen AI 9 HX 370). Other coding agents were running on the same machine. Time values scatter by 30 to 40 % in places, while allocations are deterministic (±0 %). "n.s." means not significant.
 
-The five stacks are gocloak with its defaults, gocloak with an idle pool of 256 connections per host, plain resty, net/http with a tuned pool and a streaming decoder, and fasthttp. The benchmark code is in [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/main/benchmarks) in the gocloak repository, together with `run.sh` and `profile.sh`.
+The five stacks are gocloak with its defaults, gocloak with an idle pool of 256 connections per host, plain resty, net/http with a tuned pool and a streaming decoder, and fasthttp. The benchmark code is in [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/v15.1.0/benchmarks) in the gocloak repository, together with `run.sh` and `profile.sh`. In v15.1.0 the default keeps 100 idle connections per host, so the benchmark names changed: `gocloak` is the new default, `gocloak-restypool` the old resty pool and `gocloak-direct` uses `SetDirectBodyRead()`. The tables below are from before that change.
 
 ## Offline: fake Keycloak, plain HTTP/1.1, one caller at a time
 
@@ -55,7 +55,7 @@ The bytes per call are deterministic and tell a clear story:
 | 1,000 users | 3.88 MiB | 2.42 MiB (-38 %) | 2.44 MiB (-37 %) | 1.93 MiB (-50 %) |
 | Token | 35.2 KiB | 27.6 KiB | 29.5 KiB | 9.5 KiB (-73 %) |
 
-All stacks need 45,100 to 45,200 allocations for 1,000 users, because the objects come from the JSON decoder. The extra 1.5 MiB in gocloak come from resty's body limit handling, which [Part 5](/blog/gocloak-pprof-profiling/) shows in the memory profile.
+All stacks need 45,100 to 45,200 allocations for 1,000 users, because the objects come from the JSON decoder. The extra 1.5 MiB in gocloak come from resty's body limit handling, which [Part 5](/blog/gocloak-pprof-profiling/) shows in the memory profile. v15.1.0 adds `SetDirectBodyRead()` as an opt-in that closes most of the gap.
 
 ## Offline: 16 parallel callers over TLS
 
@@ -119,7 +119,15 @@ Allocations drop everywhere: geometric mean -40 %, `GetUsers` -44 %, clients -29
 
 Live I only have the sequential `run.sh` comparison. Latency does not change significantly there: 1,000 users go from 39.8 to 38.1 ms with p=0.065, and the remaining differences are within noise. Allocations drop as offline.
 
-So json/v2 saves allocations and some CPU in the client. That counts for throughput under load. The latency of a single call does not change, because Keycloak dominates it.
+So json/v2 saves allocations and some CPU in the client. That counts for throughput under load. The latency of a single call does not change, because Keycloak dominates it. On Go 1.27 the v2 engine is the default, see [Part 3](/blog/gocloak-performance-json-v2-http-clients/).
+
+## v15.0 on Go 1.26 against v15.1 on Go 1.27
+
+The findings of this series went into gocloak v15.1.0 ([PR #543](https://github.com/Nerzal/gocloak/pull/543), still open at the time of writing): Go 1.27 as minimum version, which makes json/v2 the default engine, 100 idle connections per host, and `SetDirectBodyRead()` as an opt-in. `./ab.sh ref main` compares the branch against main, with the baseline built on Go 1.26.2, interleaved as before.
+
+Offline (n=10): `GetUsers` with 1,000 users -24 % time and -44 % allocations, clients -20 % and -29 %; geometric mean over all endpoints -21 % time and -27 % allocations. The pool benchmark drops from 37.2 to 15.8 µs per call (-57 %) and from 33.3 to 0.64 new connections per 1,000 calls.
+
+Live against Keycloak (n=6): no latency change, because Keycloak dominates. Allocations drop by 10 % (token) to 27 % (user lists), bytes by 3 to 12 %, and with 16 parallel callers the new connections by 70 % (187 to 55 per 1,000 calls).
 
 ## Four lessons from the final run
 
@@ -182,8 +190,8 @@ The same artifact produced an open question in my first draft of this post: the 
 The conclusions from Part 3 hold, with sharper numbers:
 
 - Live, the HTTP client does not matter for latency. All Go stacks are within noise of each other; fasthttp saves 6 to 10 % on small calls.
-- The connection pool matters under parallel load: 2.6 times faster offline over TLS in the interleaved A/B run, 36 % faster live without TLS, and 98 % fewer new connections.
+- The connection pool matters under parallel load: 2.6 times faster offline over TLS in the interleaved A/B run, 36 % faster live without TLS, and 98 % fewer new connections. v15.1.0 keeps 100 idle connections per host.
 - json/v2 cuts allocations by 9 to 44 % on every call. Through the whole gocloak path only the user lists get measurably faster (19 to 24 % offline), and live latency does not change.
-- gocloak allocates 30 to 60 % more bytes than plain resty because of the body limit handling.
+- gocloak allocates 30 to 60 % more bytes than plain resty because of the body limit handling. `SetDirectBodyRead()` in v15.1.0 cuts 39 % for 1,000 users.
 
 The question that remained: where exactly does the time go, and why does gocloak allocate so much? That is what the profiles in [Part 5](/blog/gocloak-pprof-profiling/) answer.

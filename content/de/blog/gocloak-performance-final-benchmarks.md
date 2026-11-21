@@ -19,7 +19,7 @@ tags:
   ]
 categories: ["Software Engineering"]
 series: ["Das gocloak-Universum"]
-description: "Die vollständigen benchstat-Tabellen für gocloak gegen ein Fake- und ein echtes Keycloak: fünf HTTP-Stacks, Connection-Pools, json/v2 über den ganzen Request-Pfad, dazu vier Benchmark-Fallen: eine kalte JVM, ein Docker-Portforwarder, den ein Client für den nächsten vergiftet hat, Git Bash, das benchstat-Flags umschreibt, und Laständerungen zwischen sequenziellen Läufen."
+description: "Die vollständigen benchstat-Tabellen für gocloak gegen ein Fake- und ein echtes Keycloak: fünf HTTP-Stacks, Connection-Pools, json/v2 über den ganzen Request-Pfad, dazu vier Benchmark-Fallen: eine kalte JVM, ein Docker-Portforwarder, den ein Client für den nächsten vergiftet hat, Git Bash, das benchstat-Flags umschreibt, und Laständerungen zwischen sequenziellen Läufen. Dazu, was gocloak v15.1.0 auf Go 1.27 ändert."
 toc: true
 ---
 
@@ -31,7 +31,7 @@ In [Teil 3](/de/blog/gocloak-performance-json-v2-http-clients/) habe ich beschri
 
 Alle Zahlen sind benchstat-Mediane mit n=8 (bei den verschränkten A/B-Läufen n=10) und `GOMAXPROCS=4`, gebaut mit Go 1.26.2, gegen Keycloak 26.8.2 in Docker Desktop unter Windows 11 (AMD Ryzen AI 9 HX 370). Auf derselben Maschine liefen andere Coding-Agents. Die Zeitwerte streuen stellenweise um 30 bis 40 %, die Allokationen sind deterministisch (±0 %). "n. s." heißt nicht signifikant.
 
-Die fünf Stacks sind gocloak mit seinen Defaults, gocloak mit einem Idle-Pool von 256 Verbindungen pro Host, reines resty, net/http mit getuntem Pool und Streaming-Decoder sowie fasthttp. Der Benchmark-Code liegt in [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/main/benchmarks) im gocloak-Repository, zusammen mit `run.sh` und `profile.sh`.
+Die fünf Stacks sind gocloak mit seinen Defaults, gocloak mit einem Idle-Pool von 256 Verbindungen pro Host, reines resty, net/http mit getuntem Pool und Streaming-Decoder sowie fasthttp. Der Benchmark-Code liegt in [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/v15.1.0/benchmarks) im gocloak-Repository, zusammen mit `run.sh` und `profile.sh`. In v15.1.0 hält der Default 100 Idle-Verbindungen pro Host, deshalb heißen die Benchmarks jetzt anders: `gocloak` ist der neue Default, `gocloak-restypool` der alte resty-Pool und `gocloak-direct` nutzt `SetDirectBodyRead()`. Die Tabellen unten stammen von vor dieser Änderung.
 
 ## Offline: Fake-Keycloak, Plain HTTP/1.1, ein Caller nach dem anderen
 
@@ -55,7 +55,7 @@ Die Bytes pro Call sind deterministisch und erzählen eine klare Geschichte:
 | 1.000 User | 3,88 MiB | 2,42 MiB (-38 %) | 2,44 MiB (-37 %) | 1,93 MiB (-50 %) |
 | Token | 35,2 KiB | 27,6 KiB | 29,5 KiB | 9,5 KiB (-73 %) |
 
-Alle Stacks brauchen für 1.000 User 45.100 bis 45.200 Allokationen, denn die Objekte stammen aus dem JSON-Decoder. Die zusätzlichen 1,5 MiB bei gocloak kommen aus restys Umgang mit dem Body-Limit, das zeigt [Teil 5](/de/blog/gocloak-pprof-profiling/) im Memory-Profil.
+Alle Stacks brauchen für 1.000 User 45.100 bis 45.200 Allokationen, denn die Objekte stammen aus dem JSON-Decoder. Die zusätzlichen 1,5 MiB bei gocloak kommen aus restys Umgang mit dem Body-Limit, das zeigt [Teil 5](/de/blog/gocloak-pprof-profiling/) im Memory-Profil. v15.1.0 bringt `SetDirectBodyRead()` als Opt-in mit, das den Großteil der Lücke schließt.
 
 ## Offline: 16 parallele Caller über TLS
 
@@ -119,7 +119,15 @@ Die Allokationen sinken überall: geometrisches Mittel -40 %, `GetUsers` -44 %, 
 
 Live habe ich nur den sequenziellen Vergleich aus `run.sh`. Die Latenz ändert sich dort nicht signifikant: 1.000 User gehen von 39,8 auf 38,1 ms bei p=0,065, die übrigen Unterschiede liegen im Rauschen. Die Allokationen sinken wie offline.
 
-json/v2 spart also Allokationen und etwas CPU im Client. Das zählt beim Durchsatz unter Last. Die Latenz eines einzelnen Calls ändert sich nicht, denn die dominiert Keycloak.
+json/v2 spart also Allokationen und etwas CPU im Client. Das zählt beim Durchsatz unter Last. Die Latenz eines einzelnen Calls ändert sich nicht, denn die dominiert Keycloak. Auf Go 1.27 ist die v2-Engine der Default, siehe [Teil 3](/de/blog/gocloak-performance-json-v2-http-clients/).
+
+## v15.0 auf Go 1.26 gegen v15.1 auf Go 1.27
+
+Die Befunde dieser Serie sind in gocloak v15.1.0 eingeflossen ([PR #543](https://github.com/Nerzal/gocloak/pull/543), zum Zeitpunkt des Schreibens noch offen): Go 1.27 als Mindestversion, womit json/v2 die Default-Engine ist, 100 Idle-Verbindungen pro Host und `SetDirectBodyRead()` als Opt-in. `./ab.sh ref main` vergleicht den Branch mit main, die Baseline mit Go 1.26.2 gebaut, verschränkt wie zuvor.
+
+Offline (n=10): `GetUsers` mit 1.000 Usern -24 % Zeit und -44 % Allokationen, Clients -20 % und -29 %, geometrisches Mittel über alle Endpoints -21 % Zeit und -27 % Allokationen. Der Pool-Benchmark fällt von 37,2 auf 15,8 µs pro Call (-57 %) und von 33,3 auf 0,64 neue Verbindungen pro 1.000 Calls.
+
+Live gegen Keycloak (n=6): keine Latenzänderung, denn Keycloak dominiert. Die Allokationen sinken um 10 % (Token) bis 27 % (User-Listen), die Bytes um 3 bis 12 %, und mit 16 parallelen Callern die neuen Verbindungen um 70 % (187 auf 55 pro 1.000 Calls).
 
 ## Vier Lektionen aus dem finalen Lauf
 
@@ -182,8 +190,8 @@ Dasselbe Artefakt hatte in meinem ersten Entwurf dieses Posts eine offene Frage 
 Die Schlussfolgerungen aus Teil 3 halten, mit schärferen Zahlen:
 
 - Live spielt der HTTP-Client für die Latenz keine Rolle. Alle Go-Stacks liegen im Rauschen beieinander, fasthttp spart bei kleinen Calls 6 bis 10 %.
-- Der Connection-Pool zählt unter paralleler Last: offline über TLS im verschränkten A/B-Lauf 2,6-mal so schnell, live ohne TLS 36 % schneller, und 98 % weniger neue Verbindungen.
+- Der Connection-Pool zählt unter paralleler Last: offline über TLS im verschränkten A/B-Lauf 2,6-mal so schnell, live ohne TLS 36 % schneller, und 98 % weniger neue Verbindungen. v15.1.0 hält 100 Idle-Verbindungen pro Host.
 - json/v2 senkt die Allokationen bei jedem Call um 9 bis 44 %. Über den ganzen gocloak-Pfad werden nur die User-Listen messbar schneller (offline 19 bis 24 %), und die Live-Latenz ändert sich nicht.
-- gocloak alloziert wegen des Body-Limits 30 bis 60 % mehr Bytes als reines resty.
+- gocloak alloziert wegen des Body-Limits 30 bis 60 % mehr Bytes als reines resty. `SetDirectBodyRead()` in v15.1.0 spart bei 1.000 Usern 39 %.
 
 Offen blieb die Frage, wo genau die Zeit hingeht und warum gocloak so viel alloziert. Darauf antworten die Profile in [Teil 5](/de/blog/gocloak-pprof-profiling/).

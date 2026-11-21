@@ -19,7 +19,7 @@ tags:
   ]
 categories: ["Software Engineering"]
 series: ["Das gocloak-Universum"]
-description: "gocloak gegen Keycloak 26 gebenchmarkt: encoding/json/v2 dekodiert Keycloak-Payloads ohne Codeänderung 26 bis 74 % schneller, kodiert kleine Structs aber langsamer, fasthttp gewinnt Mikrobenchmarks, spielt gegen ein echtes Keycloak aber kaum eine Rolle, und unter paralleler Last bremst vor allem der Default-Connection-Pool von resty."
+description: "gocloak gegen Keycloak 26 gebenchmarkt: encoding/json/v2 dekodiert Keycloak-Payloads ohne Codeänderung 26 bis 74 % schneller, kodiert kleine Structs aber langsamer, fasthttp gewinnt Mikrobenchmarks, spielt gegen ein echtes Keycloak aber kaum eine Rolle, und unter paralleler Last bremst vor allem der Default-Connection-Pool von resty. Go 1.27 macht json/v2 zum Default, gocloak v15.1.0 behebt den Pool."
 toc: true
 ---
 
@@ -31,7 +31,7 @@ Lässt sich in der Kommunikation zwischen gocloak, dem Go-Client für die Keyclo
 2. Hilft ein anderer HTTP-Client, [fasthttp](https://github.com/valyala/fasthttp) oder ein anderer?
 3. Gibt es sonst Hebel?
 
-Kurz gesagt: json/v2 dekodiert Keycloak-Payloads 26 bis 74 % schneller, ohne eine einzige Codezeile zu ändern (User-Listen rund ein Drittel), kodiert kleine Structs aber 39 bis 51 % langsamer. fasthttp ist in den meisten Mikrobenchmarks der schnellste Stack, spart gegen ein echtes Keycloak aber höchstens ein Zehntel bei kleinen Calls und nichts bei großen. Und unter paralleler Last bremst vor allem ein Default im Connection-Pool, auf den kaum jemand schaut.
+Kurz gesagt: json/v2 dekodiert Keycloak-Payloads 26 bis 74 % schneller, ohne eine einzige Codezeile zu ändern (User-Listen rund ein Drittel), kodiert kleine Structs aber 39 bis 51 % langsamer. fasthttp ist in den meisten Mikrobenchmarks der schnellste Stack, spart gegen ein echtes Keycloak aber höchstens ein Zehntel bei kleinen Calls und nichts bei großen. Und unter paralleler Last bremst vor allem ein Default im Connection-Pool, auf den kaum jemand schaut. Zwei Ergebnisse haben gocloak schon verändert: v15.1.0 setzt Go 1.27 voraus, wo json/v2 die Default-Engine ist, und hält 100 Idle-Verbindungen pro Host.
 
 Dieser Post zeigt, wie ich vorgegangen bin, was unterwegs schiefging und die Ergebnisse. [Teil 4](/de/blog/gocloak-performance-final-benchmarks/) enthält die vollständigen benchstat-Tabellen und was mich der finale Lauf gelehrt hat, [Teil 5](/de/blog/gocloak-pprof-profiling/) die CPU- und Memory-Profile.
 
@@ -43,7 +43,7 @@ Alle gocloak-Calls laufen über einen gemeinsamen resty-Client. `NewClient` erze
 
 Bevor ich den ersten Benchmark geschrieben habe, habe ich die Fakten geprüft, die ich zu kennen glaubte. Die Hälfte davon war falsch oder veraltet:
 
-- `go list encoding/json/v2` ohne Flag antwortet mit `build constraints exclude all Go files`. json/v2 steckt in Go 1.26 weiterhin hinter `GOEXPERIMENT=jsonv2`.
+- `go list encoding/json/v2` ohne Flag antwortet mit `build constraints exclude all Go files`. json/v2 steckt in Go 1.26 weiterhin hinter `GOEXPERIMENT=jsonv2`. Go 1.27 hat das geändert, was ich zuerst übersehen habe, dazu unten mehr.
 - resty v3 gibt es nur als Release Candidate (v3.0.0-rc.4) und scheidet damit aus.
 - fasthttp v1.79.0 ist aktuell.
 - resty hat `SetJSONMarshaler` und `SetJSONUnmarshaler`. Nutzer können die JSON-Implementierung also tauschen, ohne dass gocloak etwas ändern muss.
@@ -54,7 +54,7 @@ Beim Lesen des resty-Quelltexts kam der erste echte Befund. Der Default-Transpor
 
 ## Das Benchmark-Setup
 
-Die Benchmarks liegen in einem eigenen Go-Modul unter [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/main/benchmarks) im gocloak-Repository, mit eigener `go.mod` und einer `replace`-Direktive auf das Hauptmodul. So landen fasthttp und benchstat nie in den Abhängigkeiten der Library.
+Die Benchmarks liegen in einem eigenen Go-Modul unter [`benchmarks/`](https://github.com/Nerzal/gocloak/tree/v15.1.0/benchmarks) im gocloak-Repository, mit eigener `go.mod` und einer `replace`-Direktive auf das Hauptmodul. So landen fasthttp und benchstat nie in den Abhängigkeiten der Library.
 
 Es gibt zwei Stufen:
 
@@ -186,7 +186,7 @@ Meine erste Version dieser Abkühlzeit lag in der gemessenen Schleife. Mit `b.N 
 
 ## Ergebnis 1: encoding/json/v2
 
-Mit `GOEXPERIMENT=jsonv2` läuft auch die alte `encoding/json`-API (v1) auf der neuen v2-Engine. gocloaks Code bleibt, wie er ist, und das Dekodieren wird schneller.
+Mit `GOEXPERIMENT=jsonv2` läuft auch die alte `encoding/json`-API (v1) auf der neuen v2-Engine. gocloaks Code bleibt, wie er ist, und das Dekodieren wird schneller. Auf Go 1.27 passiert das ohne Flag, siehe unten.
 
 {{< diagram src="gocloak-jsonv2-unmarshal.svg" caption="Unmarshal mit der v1-API, Default-Build gegen `GOEXPERIMENT=jsonv2`. Verschränkter A/B-Lauf, Median aus 10, GOMAXPROCS=4." >}}
 
@@ -213,14 +213,13 @@ Mein erster, sequenzieller Lauf hatte bei 1.000 Usern -65 % und im Mittel -59 % 
 
 Geschwindigkeit ist wertlos, wenn die dekodierten Structs abweichen. Ein eigener Test, `TestJSONv2Equivalence`, dekodiert jeden Payload mit v1 und mit der direkten v2-API und vergleicht die Ergebnisse per `reflect.DeepEqual`. Alles ist identisch, auch gocloaks Custom-Typen `StringOrArray` und `EnforcedString`. Aussagekräftig ist dieser Test vor allem für den Realm-Export und die Clients, denn das ist echte Keycloak-Ausgabe. Die übrigen Payloads erzeugt gocloak selbst per `json.Marshal`, dort passen die Feldnamen trivialerweise. Der stärkere Beleg ist die komplette gocloak-Integrationstestsuite, die unter `GOEXPERIMENT=jsonv2` gegen das echte Keycloak grün lief.
 
-### Warum gocloak noch nicht umstellt
+### Was Go 1.27 ändert
 
-json/v2 ist in Go 1.26 noch ein Experiment. Würde gocloak `encoding/json/v2` direkt importieren, bräche bei allen Nutzern ohne das Flag der Build. Deshalb bleibt es vorerst Opt-in auf Nutzerseite, auf einem von zwei Wegen:
+Alles oben habe ich mit Go 1.26.2 gemessen, der Version, die auf meinem Rechner installiert war. Ich habe geprüft, ob json/v2 ein Flag braucht, aber nicht, ob 1.26 noch das aktuelle Go war. War es nicht. In Go 1.27 (zum Zeitpunkt des Schreibens 1.27.4) gehört JSONv2 zum Baseline-Set der Experimente: `encoding/json` läuft standardmäßig auf der v2-Engine, und `encoding/json/v2` lässt sich ohne Flag importieren. Gemerkt habe ich das erst, als später jemand fragte, warum ich mit einer älteren Toolchain messe.
 
-- Die eigene Anwendung mit `GOEXPERIMENT=jsonv2` bauen. Das tauscht die Engine unter dem gesamten v1-Code aus, gocloak eingeschlossen.
-- Einen auf v2 basierenden Unmarshaler per `client.RestyClient().SetJSONUnmarshaler(...)` in gocloaks resty-Client stecken.
+Also habe ich den Engine-Vergleich auf Go 1.27.4 wiederholt, mit `GOEXPERIMENT=nojsonv2` als alter Baseline (verschränkter A/B-Lauf, n=10). Unmarshal: Token-Response -70 %, JWKS -61 %, ein User -37 %, 100 User -30 %, 1.000 User -35 %, Clients -39 %, Realm-Export -28 %. Marshal eines Users +50 %, eines Clients +44 %. Über gocloak wird `GetUsers` bei 1.000 Usern 27 % schneller, bei 100 Usern 19 %. Die Allokationen sinken im geometrischen Mittel um 40 %. Die Größenordnungen decken sich mit dem Experiment auf Go 1.26, nur die Begründung ändert sich.
 
-gocloak stellt um, sobald json/v2 stabil ist.
+gocloak v15.1.0 ([PR #543](https://github.com/Nerzal/gocloak/pull/543), zum Zeitpunkt des Schreibens noch offen) setzt Go 1.27 voraus. Damit ist die v2-Engine für alle Nutzer Baseline, ohne dass jemand ein Flag setzt. Wer bei einer älteren gocloak-Version mit Go 1.26 bleibt, bekommt dieselbe Engine per `GOEXPERIMENT=jsonv2`.
 
 Wer die v2-API direkt nutzt, sollte wissen, dass ihre Defaults von v1 abweichen: Feldnamen werden case-sensitiv gematcht, doppelte Namen und ungültiges UTF-8 werden abgelehnt. Die [Paketdokumentation](https://pkg.go.dev/encoding/json/v2) listet alle Unterschiede. v1-Code unter dem Experiment-Flag behält das v1-Verhalten, weil die v1-API die v2-Engine mit v1-kompatiblen Optionen aufruft. Bei den Keycloak-Payloads hat nichts davon etwas geändert.
 
@@ -254,6 +253,8 @@ Alle Stacks brauchen für diesen Call rund 45.100 Allokationen. Die Objekte ents
 
 In diesem Lauf machte der größere Pool gocloak 1,8-mal so schnell. Default und großer Pool liefen nacheinander, deshalb habe ich genau diesen Vergleich als verschränkten A/B-Lauf wiederholt: 39,2 µs mit Default-Pool gegen 15,2 µs mit 256 Idle-Verbindungen, 2,6-mal so schnell (-61 %), und die neuen Verbindungen fielen von 33,0 auf 0,67 pro 1.000 Calls (-98 %). Das ist eine einzige Transport-Einstellung. Über HTTP/2 hat keiner der Go-Clients neue Verbindungen geöffnet, denn HTTP/2 multiplext alle Requests über eine einzige Verbindung.
 
+gocloak v15.1.0 setzt `MaxIdleConns` und `MaxIdleConnsPerHost` auf 100. Gemessen als v15.0 auf Go 1.26 gegen v15.1 auf Go 1.27 in einem verschränkten Lauf (n=10) fällt derselbe Benchmark von 37,2 auf 15,8 µs pro Call (-57 %) und von 33,3 auf 0,64 neue Verbindungen pro 1.000 Calls. Live über Plain HTTP sinken die neuen Verbindungen um 70 % (187 auf 55 pro 1.000 Calls), der Zeitunterschied ist dort nicht signifikant.
+
 ### Live gegen Keycloak
 
 Gegen das echte Keycloak in Docker, Plain HTTP, ein Caller nach dem anderen, sind alle Go-Varianten gleich schnell. Ein einzelner User dauert etwa 0,9 ms, ein Token 1,8 ms, die Liste mit 1.000 Usern rund 39 ms. fasthttp spart bei kleinen Calls 80 bis 180 µs (6 bis 10 %), bei großen nichts Messbares.
@@ -270,7 +271,15 @@ Die lokale Token-Verifikation (`DecodeAccessToken` mit echtem Keycloak-Token und
 
 gocloak setzt ein Limit für den Response-Body, damit ein fehlerhafter Server es nicht dazu bringen kann, eine riesige Antwort einzulesen. Ist ein Limit gesetzt, liest resty den Body in 512-Byte-Häppchen per `append` ein (`readAllWithLimit`) und alloziert nicht anhand von `Content-Length` vor. Laut [pprof](https://pkg.go.dev/runtime/pprof)-Memory-Profil verursacht `readAllWithLimit` beim Abruf von 1.000 Usern 61 bis 67 % aller allozierten Bytes, mehr als das JSON-Decoding. Deshalb alloziert gocloak pro Call 3,88 MiB, wo reines resty 2,42 MiB braucht, also rund 60 % mehr. Die Laufzeit ändert sich kaum, aber der Garbage Collector hat mehr zu tun. [Teil 5](/de/blog/gocloak-pprof-profiling/) zeigt das Profil.
 
-Würde man das Limit in den Transport verlagern, etwa indem man den Response-Body in einen `io.LimitReader` packt, könnte resty den Body per einfachem `io.ReadAll` lesen. Die oben gemessene Lücke, 3,88 gegen 2,42 MiB pro Call, ist ungefähr das, was das spart. Ein per `Content-Length` vorallozierter Buffer würde mehr sparen, geht aber nur, wenn gocloak den Body selbst liest und selbst dekodiert.
+gocloak v15.1.0 bringt dafür eine Opt-in-Option mit, `gocloak.SetDirectBodyRead()`. Damit liest und dekodiert gocloak den Body selbst, in einen per `Content-Length` vorallozierten Buffer (`Content-Length` wird nur bis zum Limit geglaubt), mit demselben Limit, demselben gzip-Handling und derselben Fehlerdekodierung wie resty. Ein Parity-Test verlangt identische Ergebnisse und Fehler. Einen Wrapper um den Transport habe ich verworfen, weil er `Transport()`, `SetTLSClientConfig` und `SetProxy` am resty-Client brechen würde.
+
+```go
+client := gocloak.NewClient("https://keycloak.example.com", gocloak.SetDirectBodyRead())
+```
+
+Im verschränkten Lauf offline fällt `GetUsers` mit 1.000 Usern von 3,65 auf 2,22 MiB pro Call (-39 %) und von 6,56 auf 5,14 ms (-22 %). 100 User: -24 % Bytes, -19 % Zeit. Clients: -34 % Bytes. Token und einzelner User bleiben unverändert. Live gehen 1.000 User von 3,09 auf 2,18 MiB (-29 %), ohne signifikanten Zeitunterschied.
+
+Opt-in ist es, weil resty für diese Calls seine Response-Middleware überspringt: `OnAfterResponse`-Hooks an `RestyClient()` laufen nicht, und `SetDebug` loggt den Response-Body nicht. resty v2 hält diese Hooks unexportiert, gocloak kann sie also nicht selbst aufrufen.
 
 ### Weniger Roundtrips schlagen jeden schnelleren Client
 
@@ -283,9 +292,9 @@ Der größte Hebel für Anwendungen ist die Zahl der Keycloak-Roundtrips, nicht 
 ## Was ich mitnehme
 
 1. Im HTTP-Client ist nichts "Massives" zu holen. Keycloak braucht Millisekunden, der Client Mikrosekunden. fasthttp ist in den meisten Mikrobenchmarks der schnellste Stack, spart live bei kleinen Calls 6 bis 10 % und bei großen nichts. Es kann außerdem kein HTTP/2, ist kein `http.RoundTripper` und würde `RestyClient()`/`SetRestyClient` sowie die Proxy-, TLS- und Tracing-Konfiguration der Nutzer brechen. Meine Empfehlung: nicht umsteigen.
-2. Der echte Hebel unter Last ist der Connection-Pool. Der resty-Default koppelt `MaxIdleConnsPerHost` an `GOMAXPROCS + 1`, in Containern also oft 2 oder 3. Parallele Last über HTTP/1.1 erzeugt dann ständig neue Verbindungen und TLS-Handshakes: im verschränkten A/B-Test 2,6-mal langsamer, im Extremfall mit abgelehnten Verbindungen. Die Lösung ist eine kleine Änderung in `NewClient`, die `MaxIdleConnsPerHost` hochsetzt. Die schlage ich für gocloak vor. Wer Keycloak über TLS mit HTTP/2 anspricht, hat das Problem nicht.
-3. json/v2 macht das Dekodieren ohne Codeänderung 26 bis 74 % schneller, per `GOEXPERIMENT=jsonv2` (User-Listen rund ein Drittel), und senkt die Allokationen um rund 40 %. Das Kodieren kleiner Structs wird 39 bis 51 % langsamer, was neben den Antwortzeiten von Keycloak keine Rolle spielt. Über den ganzen gocloak-Pfad werden nur die User-Listen messbar schneller (19 bis 24 %), und die Latenz eines Live-Calls ändert sich nicht, denn die dominiert Keycloak. Weil das Feature noch experimentell ist, bleibt es vorerst Opt-in für Nutzer.
-4. Das Body-Limit von resty in den Transport zu verlagern, würde gocloaks Bytes pro Call bei 1.000 Usern von 3,88 auf etwa 2,42 MiB senken.
-5. Zur Methodik: Erst die Fakten prüfen (`go list`, Modulversionen, den Quelltext der Library), dann messen. Benchmarks reproduzierbar machen mit Skript, festen Parametern, benchstat und protokollierter Umgebung, und offline und live trennen. Auf einer belasteten Maschine sind Einzelzahlen wertlos, nur Medianvergleiche mit p-Wert zählen. Und alt gegen neu nie in getrennten Läufen auf einer Maschine vergleichen, deren Last sich ändert, sondern die Läufe verschränken.
+2. Der echte Hebel unter Last ist der Connection-Pool. Der resty-Default koppelt `MaxIdleConnsPerHost` an `GOMAXPROCS + 1`, in Containern also oft 2 oder 3. Parallele Last über HTTP/1.1 erzeugt dann ständig neue Verbindungen und TLS-Handshakes: im verschränkten A/B-Test 2,6-mal langsamer, im Extremfall mit abgelehnten Verbindungen. gocloak v15.1.0 setzt in `NewClient` beide Idle-Limits auf 100: -57 % Zeit und 98 % weniger neue Verbindungen in diesem Benchmark. Wer Keycloak über TLS mit HTTP/2 anspricht, hat das Problem nicht.
+3. json/v2 macht das Dekodieren ohne Codeänderung 26 bis 74 % schneller (User-Listen rund ein Drittel) und senkt die Allokationen um rund 40 %. Das Kodieren kleiner Structs wird 39 bis 51 % langsamer, was neben den Antwortzeiten von Keycloak keine Rolle spielt. Über gocloak werden nur die User-Listen messbar schneller, und die Latenz eines Live-Calls ändert sich nicht, denn die dominiert Keycloak. Auf Go 1.27 ist die v2-Engine der Default, und gocloak v15.1.0 setzt Go 1.27 voraus.
+4. `SetDirectBodyRead()` senkt die Bytes pro Call bei 1.000 Usern um 39 %. Der Preis ist, dass restys Response-Hooks übersprungen werden, deshalb ist es Opt-in.
+5. Zur Methodik: Erst die Fakten prüfen (`go list`, Modulversionen, den Quelltext der Library), dann messen. Dazu gehört auch, welche Toolchain aktuell ist. Ich habe mit der Go-Version gemessen, die zufällig installiert war. Benchmarks reproduzierbar machen mit Skript, festen Parametern, benchstat und protokollierter Umgebung, und offline und live trennen. Auf einer belasteten Maschine sind Einzelzahlen wertlos, nur Medianvergleiche mit p-Wert zählen. Und alt gegen neu nie in getrennten Läufen auf einer Maschine vergleichen, deren Last sich ändert, sondern die Läufe verschränken.
 
 [Teil 4](/de/blog/gocloak-performance-final-benchmarks/) enthält die vollständigen benchstat-Tabellen, offline und live, und was mich der finale Lauf über JVM-Warmup und Benchmark-Clients gelehrt hat, die sich gegenseitig vergiften. [Teil 5](/de/blog/gocloak-pprof-profiling/) schaut in die CPU- und Memory-Profile.

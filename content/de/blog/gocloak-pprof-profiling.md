@@ -100,7 +100,7 @@ $env:Path += ";C:\Program Files\Graphviz\bin"
 {{< /os-tab >}}
 {{< /os-tabs >}}
 
-Im gocloak-Repository erledigt [`benchmarks/profile.sh`](https://github.com/Nerzal/gocloak/tree/main/benchmarks) das alles für fünf Szenarien. Jedes Szenario läuft zweimal 5 Sekunden: "alt" mit den heutigen Defaults (encoding/json v1, restys Default-Pool) und "neu" mit `GOEXPERIMENT=jsonv2` und, bei den Pool-Szenarien, einem Idle-Pool von 256. Die Zahlen in diesem Post stammen aus diesen einzelnen 5-Sekunden-Profiling-Läufen. Es sind nicht die benchstat-Mediane aus Teil 4, und wo beide vorkommen, kennzeichne ich das.
+Im gocloak-Repository erledigt [`benchmarks/profile.sh`](https://github.com/Nerzal/gocloak/tree/v15.1.0/benchmarks) das alles für fünf Szenarien. Jedes Szenario läuft zweimal 5 Sekunden: "alt" mit den heutigen Defaults (encoding/json v1, restys Default-Pool) und "neu" mit `GOEXPERIMENT=jsonv2` und, bei den Pool-Szenarien, einem Idle-Pool von 256. Die Zahlen in diesem Post stammen aus diesen einzelnen 5-Sekunden-Profiling-Läufen. Es sind nicht die benchstat-Mediane aus Teil 4, und wo beide vorkommen, kennzeichne ich das.
 
 ### Wie man die Graphen liest
 
@@ -146,7 +146,7 @@ Die Antwort ist etwa 470 KB groß, trotzdem alloziert das Einlesen rund 2,5 MB p
 
 Die CPU merkt davon wenig, das sind etwa 7 % der Client-CPU. Der Garbage Collector merkt es, denn er muss das alles wegräumen.
 
-Ohne Profil hätte ich die zusätzlichen Bytes von gocloak dem JSON-Decoder angelastet. Es gibt zwei Auswege, beides Vorschläge, keiner umgesetzt. Verlagert man das Limit in den Transport, indem man den Response-Body in einen `io.LimitReader` packt, kann resty den Body per einfachem `io.ReadAll` lesen. Die in Teil 4 gemessene Lücke, 3,88 gegen 2,42 MiB pro Call, ist ungefähr das, was das spart. Weiter ginge es, wenn gocloak den Body selbst liest und dekodiert und genau einmal alloziert, sobald der Server eine `Content-Length` mitschickt:
+Ohne Profil hätte ich die zusätzlichen Bytes von gocloak dem JSON-Decoder angelastet. gocloak v15.1.0 bietet jetzt ein Opt-in, `gocloak.SetDirectBodyRead()`: gocloak liest und dekodiert den Body selbst und alloziert einmal anhand von `Content-Length`, der es nur bis zum Limit glaubt. Einen Wrapper um den Transport habe ich verworfen, weil er `Transport()`, `SetTLSClientConfig` und `SetProxy` am resty-Client bricht. Bei 1.000 Usern sinken die Bytes pro Call um 39 %. Opt-in ist es, weil restys `OnAfterResponse`-Hooks und das Body-Logging von `SetDebug` für diese Calls nicht laufen. Die Kernidee als Skizze, die echte Umsetzung kümmert sich zusätzlich um gzip und dekodiert Fehlerantworten wie resty:
 
 ```go
 // sketch: read a body with a hard limit and a single allocation when Content-Length is known
@@ -192,7 +192,7 @@ Der Handshake-Anteil fällt auf 0,74 %. Vom Verbindungshandling bleibt nur `getC
 | Neue Verbindungen pro 1.000 Calls | 20,4 | 0,11 |
 | CPU-Anteil der TLS-Handshakes | 27,4 % | 0,74 % |
 
-Die absoluten Zeiten weichen von Teil 4 ab (39,2 und 15,2 µs im verschränkten A/B-Lauf), weil das hier ein einzelner, längerer Lauf bei anderer Last auf der Maschine war. Die Richtung ist dieselbe.
+Die absoluten Zeiten weichen von Teil 4 ab (39,2 und 15,2 µs im verschränkten A/B-Lauf), weil das hier ein einzelner, längerer Lauf bei anderer Last auf der Maschine war. Die Richtung ist dieselbe. gocloak v15.1.0 hält 100 Idle-Verbindungen pro Host.
 
 Für die Produktion zählt Folgendes: In diesem Benchmark laufen beide Seiten in einem Prozess, und der Server-Anteil am Handshake ist dreimal so groß wie der des Clients. In einem echten Deployment läuft die Serverseite dort, wo TLS für Keycloak terminiert wird, in Keycloak selbst oder in einem Ingress davor. Ein Client mit zu kleinem Pool bremst also nicht nur sich selbst. Er lässt den TLS-Endpunkt des Identity-Providers immer wieder teure RSA-Signaturen rechnen, und das bezahlen alle anderen Anwendungen mit, die mit demselben Keycloak sprechen.
 
@@ -204,12 +204,40 @@ Zwei Szenarien liefen gegen das echte Keycloak in Docker über Plain HTTP.
 
 `live-pool` mit 16 parallelen Callern ging von 277,7 µs auf 212,5 µs pro Call (-23 %), bei 308,5 gegen 4,0 neuen Verbindungen pro 1.000 Calls. Ohne TLS ist eine neue Verbindung billig, deshalb ist der Effekt kleiner als im TLS-Szenario offline.
 
+## Eine Behauptung eines anderen Tools prüfen
+
+Während ich diese Serie geschrieben habe, hat ein anderes KI-Coding-Tool eine Anwendung analysiert, die gocloak nutzt. Es behauptete, die Pointer-Felder in `gocloak.User` verursachten 37,6 % aller Objekt-Allokationen, und ein Streaming-Decoder würde helfen. Beides lässt sich messen (Go 1.27, 1.000 User, n=6):
+
+- User-Felder als Values statt Pointer: -40 % Allokationen, die erste Hälfte der Behauptung stimmt also. Es spart aber keine Zeit und kostet 49 % mehr Bytes, weil jedes Slice-Element größer wird. Und ein Update könnte kein `false`, `0` oder `""` mehr senden, weil der Nullwert wie "nicht gesetzt" aussähe. gocloak behält die Pointer.
+- Streaming mit `json.NewDecoder` statt `json.Unmarshal`: +10 % Zeit und +82 % Bytes. Diese Hälfte der Behauptung ist falsch.
+
+Der Hebel liegt in der Anwendung. Wer von vielen Usern nur wenige Felder liest, dekodiert in ein eigenes Struct. Mit einem Struct aus 8 Feldern spart das 54 % Zeit, 72 % Bytes und 84 % Allokationen. Die gocloak-README zeigt jetzt, wie:
+
+```go
+type userRow struct {
+    ID       string `json:"id"`
+    Username string `json:"username"`
+    Email    string `json:"email"`
+}
+
+var rows []userRow
+resp, err := client.GetRequestWithBearerAuth(ctx, token.AccessToken).
+    SetQueryParams(map[string]string{"briefRepresentation": "true", "max": "1000"}).
+    SetResult(&rows).
+    Get("https://keycloak.example.com/admin/realms/myrealm/users")
+if err == nil && resp.IsError() {
+    err = fmt.Errorf("get users: %s", resp.Status())
+}
+```
+
+Ein Profil zeigt, wo alloziert wird. Ob ein vorgeschlagener Fix hilft, zeigt erst eine Messung.
+
 ## Was die Profile dazugebracht haben
 
 Die Benchmark-Zahlen sagten "gocloak alloziert 60 % mehr als resty" und "der Default-Pool ist unter paralleler Last langsamer". Die Profile haben beides erklärt:
 
 1. encoding/json v1 validiert die komplette Eingabe in einem eigenen Durchgang, bevor es dekodiert. v2 erledigt beides in einem Durchgang, und das macht einen großen Teil seines Vorsprungs aus.
-2. Die zusätzlichen Bytes kommen vom Einlesen des Bodys mit Limit in 512-Byte-Schritten, nicht vom JSON. Ein `LimitReader` mit einem per `Content-Length` vorallozierten Buffer würde das beheben.
-3. Der kleine Pool kostet TLS-Handshakes, und der Großteil dieser Kosten landet auf der Serverseite, in der Produktion also auf der Keycloak-Seite.
+2. Die zusätzlichen Bytes kommen vom Einlesen des Bodys mit Limit in 512-Byte-Schritten, nicht vom JSON. `SetDirectBodyRead()` in v15.1.0 behebt das als Opt-in.
+3. Der kleine Pool kostet TLS-Handshakes, und der Großteil dieser Kosten landet auf der Serverseite, in der Produktion also auf der Keycloak-Seite. v15.1.0 hält 100 Idle-Verbindungen pro Host.
 
 Die Profile haben dieselbe Schwäche wie meine ersten Benchmark-Läufe: Alt und neu liefen nacheinander. Für die Frage, wie viel schneller etwas ist, sind die verschränkten A/B-Läufe aus Teil 3 und Teil 4 die Referenz. Für die Frage, wohin Zeit und Bytes gehen, sind es die Profile.
