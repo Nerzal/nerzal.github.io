@@ -2,8 +2,8 @@
 title: "Open Source"
 date: 2023-01-03T00:00:00+00:00
 draft: false
-description: "Maintainer of Gocloak, a full-featured Go client library for the Keycloak REST API, used in production by teams worldwide."
-metric: "1 library · 1000+ GitHub stars"
+description: "Maintainer of Gocloak, the Go client library for the Keycloak REST API, plus gocloak-mcp (a read-only Keycloak MCP server) and gocloak-auth-proxy."
+metric: "3 projects · 1200+ GitHub stars"
 ---
 
 ## Gocloak — Keycloak REST Client for Go
@@ -20,6 +20,14 @@ Gocloak covers the complete Keycloak Admin REST API and provides a clean, idioma
 The library is actively maintained and used in production by teams integrating Keycloak into Go-based microservice architectures. Contributions, issue reports, and feature requests are welcome.
 
 **Repository:** [github.com/Nerzal/gocloak](https://github.com/Nerzal/gocloak)
+
+## gocloak-mcp: Keycloak for AI agents
+
+[gocloak-mcp](https://github.com/Nerzal/gocloak-mcp) is a read-only [Model Context Protocol](https://modelcontextprotocol.io/) server for Keycloak, built on gocloak v15. It lets Claude, Cursor or VS Code answer questions about users, clients, roles and events without any tool that could change your realm. It installs with `brew install --cask nerzal/tap/gocloak-mcp`. The background is in [my release post](/blog/gocloak-mcp-first-mcp-server-homebrew/).
+
+## gocloak-auth-proxy
+
+[gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy) is a Keycloak authentication proxy for Traefik and nginx forward-auth, as a reverse proxy, or for browser SSO with OIDC and PKCE. It verifies JWTs locally against a cached JWKS. Benchmarks and the security model are in [the auth proxy post](/blog/gocloak-auth-proxy-keycloak/).
 
 ## TinyGo
 

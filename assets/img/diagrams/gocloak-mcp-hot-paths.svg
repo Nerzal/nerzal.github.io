@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 376" width="720" height="376">
+<text x="20" y="28" class="d-t d-bold" font-size="15">gocloak-mcp hot paths in nanoseconds per call (lower is better)</text>
+<text x="20" y="48" class="d-m" font-size="11.5">go test -bench, all of these allocate 0 bytes. Two machines; my run on v0.2.0.</text>
+<rect x="20" y="62" width="12" height="12" rx="3" fill="#4285f4"/>
+<text x="38" y="72" class="d-t" font-size="11.5">Xeon Platinum 8481C, Linux, Go 1.27 (README)</text>
+<rect x="343.6" y="62" width="12" height="12" rx="3" fill="#d97706"/>
+<text x="361.6" y="72" class="d-t" font-size="11.5">Ryzen AI 9 HX 370, Windows 11, Go 1.26.11 (my rerun)</text>
+<line x1="190.0" y1="84" x2="190.0" y2="324" class="d-divider"/>
+<text x="190.0" y="340" class="d-m" font-size="11" text-anchor="middle">0 ns</text>
+<line x1="343.3" y1="84" x2="343.3" y2="324" class="d-divider"/>
+<text x="343.3" y="340" class="d-m" font-size="11" text-anchor="middle">50 ns</text>
+<line x1="496.7" y1="84" x2="496.7" y2="324" class="d-divider"/>
+<text x="496.7" y="340" class="d-m" font-size="11" text-anchor="middle">100 ns</text>
+<line x1="650.0" y1="84" x2="650.0" y2="324" class="d-divider"/>
+<text x="650.0" y="340" class="d-m" font-size="11" text-anchor="middle">150 ns</text>
+<text x="180" y="116.0" class="d-t" font-size="12" text-anchor="end">Cached token hit</text>
+<path d="M190 92 H428.0 Q432.0 92 432.0 96 V106 Q432.0 110 428.0 110 H190 Z" fill="#4285f4"/>
+<text x="438.0" y="105" class="d-t" font-size="11">78.9 ns</text>
+<path d="M190 114 H230.5 Q234.5 114 234.5 118 V128 Q234.5 132 230.5 132 H190 Z" fill="#d97706"/>
+<text x="240.5" y="127" class="d-t" font-size="11">14.5 ns</text>
+<text x="180" y="178.0" class="d-t" font-size="12" text-anchor="end">Validate identifier</text>
+<path d="M190 154 H350.7 Q354.7 154 354.7 158 V168 Q354.7 172 350.7 172 H190 Z" fill="#4285f4"/>
+<text x="360.7" y="167" class="d-t" font-size="11">53.7 ns</text>
+<path d="M190 176 H382.5 Q386.5 176 386.5 180 V190 Q386.5 194 382.5 194 H190 Z" fill="#d97706"/>
+<text x="392.5" y="189" class="d-t" font-size="11">64.08 ns</text>
+<text x="180" y="240.0" class="d-t" font-size="12" text-anchor="end">Sanitize output (clean)</text>
+<path d="M190 216 H520.0 Q524.0 216 524.0 220 V230 Q524.0 234 520.0 234 H190 Z" fill="#4285f4"/>
+<text x="530.0" y="229" class="d-t" font-size="11">108.9 ns</text>
+<path d="M190 238 H504.9 Q508.9 238 508.9 242 V252 Q508.9 256 504.9 256 H190 Z" fill="#d97706"/>
+<text x="514.9" y="251" class="d-t" font-size="11">104 ns</text>
+<text x="180" y="302.0" class="d-t" font-size="12" text-anchor="end">Redact log attribute</text>
+<path d="M190 278 H588.7 Q592.7 278 592.7 282 V292 Q592.7 296 588.7 296 H190 Z" fill="#4285f4"/>
+<text x="598.7" y="291" class="d-t" font-size="11">131.3 ns</text>
+<path d="M190 300 H343.8 Q347.8 300 347.8 304 V314 Q347.8 318 343.8 318 H190 Z" fill="#d97706"/>
+<text x="353.8" y="313" class="d-t" font-size="11">51.46 ns</text>
+<line x1="190" y1="84" x2="190" y2="324" class="d-arrow"/>
+<text x="20" y="364" class="d-m" font-size="10.5">Source: gocloak-mcp docs/SECURITY_AND_BENCHMARKS.md and my own run of make bench on 2026-11-21.</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 296" width="720" height="296">
+<text x="20" y="28" class="d-t d-bold" font-size="15">Requests per second at 32 concurrent connections (higher is better)</text>
+<text x="20" y="48" class="d-m" font-size="11.5">Every request carries a 2048-bit RS256 JWT that the proxy verifies before it answers.</text>
+<rect x="20" y="62" width="12" height="12" rx="3" fill="#4285f4"/>
+<text x="38" y="72" class="d-t" font-size="11.5">gocloak-auth-proxy v0.1.0</text>
+<rect x="222.0" y="62" width="12" height="12" rx="3" fill="#d97706"/>
+<text x="240.0" y="72" class="d-t" font-size="11.5">gogatekeeper v5.1.0</text>
+<rect x="385.6" y="62" width="12" height="12" rx="3" fill="#a142f4"/>
+<text x="403.6" y="72" class="d-t" font-size="11.5">oauth2-proxy v7.15.6</text>
+<line x1="190.0" y1="84" x2="190.0" y2="244" class="d-divider"/>
+<text x="190.0" y="260" class="d-m" font-size="11" text-anchor="middle">0</text>
+<line x1="317.8" y1="84" x2="317.8" y2="244" class="d-divider"/>
+<text x="317.8" y="260" class="d-m" font-size="11" text-anchor="middle">5k</text>
+<line x1="445.6" y1="84" x2="445.6" y2="244" class="d-divider"/>
+<text x="445.6" y="260" class="d-m" font-size="11" text-anchor="middle">10k</text>
+<line x1="573.3" y1="84" x2="573.3" y2="244" class="d-divider"/>
+<text x="573.3" y="260" class="d-m" font-size="11" text-anchor="middle">15k</text>
+<text x="180" y="127.0" class="d-t" font-size="12" text-anchor="end">Forward-auth</text>
+<path d="M190 92 H590.4 Q594.4 92 594.4 96 V106 Q594.4 110 590.4 110 H190 Z" fill="#4285f4"/>
+<text x="600.4" y="105" class="d-t" font-size="11">15,825 RPS <tspan class="d-m">p50 1.80 ms</tspan></text>
+<path d="M190 114 H334.2 Q338.2 114 338.2 118 V128 Q338.2 132 334.2 132 H190 Z" fill="#d97706"/>
+<text x="344.2" y="127" class="d-t" font-size="11">5,801 RPS <tspan class="d-m">p50 5.04 ms</tspan></text>
+<path d="M190 136 H355.3 Q359.3 136 359.3 140 V150 Q359.3 154 355.3 154 H190 Z" fill="#a142f4"/>
+<text x="365.3" y="149" class="d-t" font-size="11">6,625 RPS <tspan class="d-m">p50 4.09 ms</tspan></text>
+<text x="180" y="211.0" class="d-t" font-size="12" text-anchor="end">Reverse proxy</text>
+<path d="M190 176 H409.3 Q413.3 176 413.3 180 V190 Q413.3 194 409.3 194 H190 Z" fill="#4285f4"/>
+<text x="419.3" y="189" class="d-t" font-size="11">8,737 RPS <tspan class="d-m">p50 3.36 ms</tspan></text>
+<path d="M190 198 H307.5 Q311.5 198 311.5 202 V212 Q311.5 216 307.5 216 H190 Z" fill="#d97706"/>
+<text x="317.5" y="211" class="d-t" font-size="11">4,754 RPS <tspan class="d-m">p50 6.22 ms</tspan></text>
+<path d="M190 220 H258.9 Q262.9 220 262.9 224 V234 Q262.9 238 258.9 238 H190 Z" fill="#a142f4"/>
+<text x="268.9" y="233" class="d-t" font-size="11">2,851 RPS <tspan class="d-m">p50 10.55 ms</tspan></text>
+<line x1="190" y1="84" x2="190" y2="244" class="d-arrow"/>
+<text x="20" y="284" class="d-m" font-size="10.5">Source: gocloak-auth-proxy README. Same host, Xeon 6985P-C, GOMAXPROCS=2, RS256 JWT, 0 errors.</text>
+</svg>

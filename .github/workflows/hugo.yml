@@ -11,8 +11,10 @@ on:
 
   # Daily rebuild so future-dated (scheduled) posts go live on their date.
   # Hugo skips future content at build time; without a rebuild nothing changes.
+  # 05:35 UTC = 06:35 CET, for early posts (e.g. Monday 06:30).
   # 07:30 UTC = 08:30 CET, shortly after the 08:00 publish time of scheduled posts.
   schedule:
+    - cron: "35 5 * * *"
     - cron: "30 7 * * *"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
