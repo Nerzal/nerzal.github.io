@@ -146,3 +146,12 @@ other = "Podcast-Folge"
 
 [listenOn]
 other = "Anhören auf"
+
+[tldrLabel]
+other = "Das Wichtigste in Kürze"
+
+[updated]
+other = "Aktualisiert"
+
+[breadcrumbHome]
+other = "Startseite"

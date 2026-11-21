@@ -1,130 +1,131 @@
-{{/* JSON-LD structured data */}}
+{{/*
+    JSON-LD structured data as one @graph per page.
+    The Person and WebSite nodes carry stable @ids so every article, profile and project
+    points at the same entity (https://schema.org/docs/datamodel.html, Google Article docs).
+    Built from dicts + jsonify so escaping is always valid JSON.
+*/}}
+{{- $root := "/" | absURL -}}
+{{- $personID := printf "%s#person" $root -}}
+{{- $websiteID := printf "%s#website" $root -}}
+{{- $home := site.Home -}}
+{{- $profilePage := site.GetPage "/page/resume" -}}
+{{- $personURL := cond (ne $profilePage nil) $profilePage.Permalink $root -}}
+{{- $personRef := dict "@type" "Person" "@id" $personID "name" site.Params.author "url" $personURL -}}
 
-{{ if and .IsPage (eq .Section "blog") }}
-{{/* ── TechArticle + BreadcrumbList for blog posts ── */}}
-{{ $img := partialCached "func/GetFeaturedImage.html" . .RelPermalink }}
-{{ $readingMins := .ReadingTime | default 1 }}
-{{ $sectionPage := site.GetPage "/blog" }}
-<script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": {{ .Title | jsonify }},
-    "description": {{ with .Description }}{{ . | jsonify }}{{ else }}{{ .Summary | jsonify }}{{ end }},
-    "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
-    "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
-    "url": "{{ .Permalink }}",
-    "inLanguage": "{{ .Language.Lang }}",
-    "wordCount": {{ .WordCount }},
-    "timeRequired": "PT{{ $readingMins }}M",
-    {{ with $img }}"image": "{{ . | absURL }}",{{ end }}
-    {{ with .Params.tags }}"keywords": {{ . | jsonify }},{{ end }}
-    "author": {
-      "@type": "Person",
-      "name": {{ site.Params.author | jsonify }},
-      "url": "{{ site.BaseURL }}",
-      "sameAs": [
-        {{ range $i, $s := site.Params.socials }}{{ if $i }},{{ end }}"{{ $s.url }}"{{ end }}
-      ]
-    },
-    "publisher": {
-      "@type": "Person",
-      "name": {{ site.Params.author | jsonify }},
-      "url": "{{ site.BaseURL }}",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "{{ (resources.Get "img/icon.png").Permalink | absURL }}"
-      }
-    },
-    "isPartOf": {
-      "@type": "Blog",
-      "name": {{ with $sectionPage }}{{ .Title | jsonify }}{{ else }}"Blog"{{ end }},
-      "url": "{{ with $sectionPage }}{{ .Permalink }}{{ else }}{{ site.BaseURL }}blog/{{ end }}"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "{{ .Permalink }}"
-    }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "{{ site.BaseURL }}"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": {{ with $sectionPage }}{{ .Title | jsonify }}{{ else }}"Blog"{{ end }},
-        "item": "{{ with $sectionPage }}{{ .Permalink }}{{ else }}{{ site.BaseURL }}blog/{{ end }}"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": {{ .Title | jsonify }},
-        "item": "{{ .Permalink }}"
-      }
-    ]
-  }
-]
-</script>
+{{- $sameAs := slice -}}
+{{- range site.Params.socials }}{{ $sameAs = $sameAs | append .url }}{{ end -}}
+{{- $person := dict
+    "@type" "Person"
+    "@id" $personID
+    "name" site.Params.author
+    "alternateName" "Nerzal"
+    "url" $personURL
+    "jobTitle" site.Params.tagline
+    "description" site.Params.description
+    "homeLocation" (dict "@type" "Place" "name" site.Params.location)
+    "knowsAbout" (slice "Go" "Cloud-Native Architecture" "Kubernetes" "Keycloak" "OpenID Connect" "Domain-Driven Design" "TinyGo" "Linux Server Hardening" "Agentic AI" "Game Development")
+    "sameAs" $sameAs
+-}}
+{{- with resources.Get "img/profile2.jpg" }}{{ $person = merge $person (dict "image" .Permalink) }}{{ end -}}
 
-{{ else if .IsHome }}
-{{/* ── ProfilePage + WebSite for home ── */}}
-<script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    "url": "{{ .Permalink }}",
-    "name": {{ site.Title | jsonify }},
-    "description": {{ site.Params.description | jsonify }},
-    "mainEntity": {
-      "@type": "Person",
-      "name": {{ site.Params.author | jsonify }},
-      "jobTitle": {{ site.Params.tagline | jsonify }},
-      "url": "{{ site.BaseURL }}",
-      "sameAs": [
-        {{ range $i, $s := site.Params.socials }}{{ if $i }},{{ end }}"{{ $s.url }}"{{ end }}
-      ]
-    }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": "{{ site.BaseURL }}",
-    "name": {{ site.Title | jsonify }},
-    "description": {{ site.Params.description | jsonify }},
-    "inLanguage": "{{ .Language.Lang }}"
-  }
-]
-</script>
+{{- $website := dict
+    "@type" "WebSite"
+    "@id" $websiteID
+    "url" $root
+    "name" site.Title
+    "description" site.Params.description
+    "inLanguage" (slice "en" "de")
+    "publisher" (dict "@id" $personID)
+-}}
 
-{{ else if and .IsPage .CurrentSection }}
-{{/* ── BreadcrumbList for other single pages ── */}}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "{{ site.BaseURL }}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": {{ .Title | jsonify }},
-      "item": "{{ .Permalink }}"
-    }
-  ]
-}
-</script>
-{{ end }}
+{{- $homeCrumb := dict "@type" "ListItem" "position" 1 "name" (i18n "breadcrumbHome") "item" $home.Permalink -}}
+{{- $graph := slice $person $website -}}
+
+{{- if and .IsPage (eq .Section "blog") -}}
+  {{- $sectionPage := site.GetPage "/blog" -}}
+  {{- $blogID := printf "%s#blog" $sectionPage.Permalink -}}
+  {{- $post := dict
+      "@type" "BlogPosting"
+      "@id" (printf "%s#article" .Permalink)
+      "headline" .Title
+      "description" (.Description | default (.Summary | plainify))
+      "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+      "url" .Permalink
+      "mainEntityOfPage" .Permalink
+      "inLanguage" .Language.Lang
+      "wordCount" .WordCount
+      "timeRequired" (printf "PT%dM" (.ReadingTime | default 1))
+      "author" $personRef
+      "publisher" (dict "@id" $personID)
+      "isPartOf" (slice (dict "@type" "Blog" "@id" $blogID "name" $sectionPage.Title "url" $sectionPage.Permalink))
+  -}}
+  {{- with partialCached "func/GetFeaturedImage.html" . .RelPermalink }}{{ $post = merge $post (dict "image" (. | absURL)) }}{{ end -}}
+  {{- with .Params.tags }}{{ $post = merge $post (dict "keywords" (delimit . ", ")) }}{{ end -}}
+  {{- with .Params.categories }}{{ $post = merge $post (dict "articleSection" (index . 0)) }}{{ end -}}
+  {{- with .Params.series }}{{ $post = merge $post (dict "isPartOf" ($post.isPartOf | append (dict "@type" "CreativeWorkSeries" "name" (index . 0)))) }}{{ end -}}
+  {{- /* Link language versions of the same article: English is the original, German the translation. */ -}}
+  {{- range .Translations -}}
+    {{- $ref := dict "@id" (printf "%s#article" .Permalink) "url" .Permalink "inLanguage" .Language.Lang -}}
+    {{- if eq .Language.Lang "en" }}{{ $post = merge $post (dict "translationOfWork" $ref) }}{{ else }}{{ $post = merge $post (dict "workTranslation" $ref) }}{{ end -}}
+  {{- end -}}
+  {{- with .OutputFormats.Get "markdown" }}{{ $post = merge $post (dict "encoding" (dict "@type" "MediaObject" "encodingFormat" "text/markdown" "contentUrl" .Permalink)) }}{{ end -}}
+  {{- $graph = $graph | append $post (dict
+      "@type" "BreadcrumbList"
+      "itemListElement" (slice
+        $homeCrumb
+        (dict "@type" "ListItem" "position" 2 "name" $sectionPage.Title "item" $sectionPage.Permalink)
+        (dict "@type" "ListItem" "position" 3 "name" .Title "item" .Permalink))
+  ) -}}
+
+{{- else if .IsHome -}}
+  {{- $graph = $graph | append (dict
+      "@type" "ProfilePage"
+      "@id" (printf "%s#webpage" .Permalink)
+      "url" .Permalink
+      "name" site.Title
+      "description" site.Params.description
+      "inLanguage" .Language.Lang
+      "isPartOf" (dict "@id" $websiteID)
+      "mainEntity" (dict "@id" $personID)
+  ) -}}
+
+{{- else if and (eq .Kind "section") (eq .Section "blog") -}}
+  {{- $graph = $graph | append (dict
+      "@type" "Blog"
+      "@id" (printf "%s#blog" .Permalink)
+      "url" .Permalink
+      "name" .Title
+      "inLanguage" .Language.Lang
+      "isPartOf" (dict "@id" $websiteID)
+      "author" (dict "@id" $personID)
+  ) -}}
+
+{{- else if .IsPage -}}
+  {{- $isProfile := and $profilePage (eq .Permalink $profilePage.Permalink) -}}
+  {{- $page := dict
+      "@type" (cond $isProfile "ProfilePage" "WebPage")
+      "@id" (printf "%s#webpage" .Permalink)
+      "url" .Permalink
+      "name" .Title
+      "inLanguage" .Language.Lang
+      "isPartOf" (dict "@id" $websiteID)
+  -}}
+  {{- with .Description }}{{ $page = merge $page (dict "description" .) }}{{ end -}}
+  {{- if $isProfile }}{{ $page = merge $page (dict "mainEntity" (dict "@id" $personID)) }}{{ end -}}
+  {{- /* Portfolio pages describe concrete works (book, projects, talks, games) from data/structured_data.yaml. */ -}}
+  {{- $works := slice -}}
+  {{- range index hugo.Data.structured_data .File.ContentBaseName -}}
+    {{- $work := . -}}
+    {{- if not (isset $work "author") }}{{ $work = merge $work (dict "author" $personRef) }}{{ end -}}
+    {{- with $work.image }}{{ $work = merge $work (dict "image" (. | absURL)) }}{{ end -}}
+    {{- $works = $works | append $work -}}
+  {{- end -}}
+  {{- with $works }}{{ $page = merge $page (dict "mainEntity" .) }}{{ end -}}
+  {{- $graph = $graph | append $page (dict
+      "@type" "BreadcrumbList"
+      "itemListElement" (slice $homeCrumb (dict "@type" "ListItem" "position" 2 "name" .Title "item" .Permalink))
+  ) -}}
+{{- end -}}
+
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>

@@ -1,0 +1,42 @@
+{{- $isGerman := eq .Language.Lang "de" -}}
+{{- $posts := where (where site.RegularPages "Section" "blog") "Params.private" "!=" true -}}
+{{- $seriesNames := slice -}}
+{{- range $posts }}{{ with .Params.series }}{{ $seriesNames = $seriesNames | append (index . 0) }}{{ end }}{{ end -}}
+# {{ site.Params.author }}: {{ site.Params.tagline }}
+
+> {{ site.Params.description }}
+
+{{ if $isGerman -}}
+Persönlicher Blog und Portfolio von {{ site.Params.author }} ({{ site.Params.location }}). Praxisartikel zu Go, Keycloak und gocloak, Kubernetes, Linux-Server-Härtung, Agentic-AI-Tooling und Spieleentwicklung. Alle Artikel gibt es auf Deutsch und Englisch. Jeder Link unten zeigt auf eine reine Markdown-Fassung; die HTML-Seite liegt unter derselben URL ohne `index.md`.
+{{- else -}}
+Personal blog and portfolio of {{ site.Params.author }} ({{ site.Params.location }}). Hands-on articles on Go, Keycloak and gocloak, Kubernetes, Linux server hardening, agentic AI tooling and game development, each written in English and German. Every link below points to a plain Markdown copy; the HTML page lives at the same URL without `index.md`.
+{{- end }}
+
+{{ range uniq $seriesNames -}}
+{{ $name := . -}}
+## {{ if $isGerman }}Serie{{ else }}Series{{ end }}: {{ $name }}
+
+{{ range ($posts.ByDate) }}{{ if in .Params.series $name }}{{ partial "func/GetLlmsLink.html" . }}
+{{ end }}{{ end }}
+{{ end -}}
+## {{ if $isGerman }}Weitere Artikel{{ else }}Articles{{ end }}
+
+{{ range $posts }}{{ if not .Params.series }}{{ partial "func/GetLlmsLink.html" . }}
+{{ end }}{{ end }}
+## {{ if $isGerman }}Projekte und Publikationen{{ else }}Projects and publications{{ end }}
+
+{{ range site.Params.publications }}{{ with site.GetPage .path }}{{ partial "func/GetLlmsLink.html" . }}
+{{ end }}{{ end }}
+## {{ if $isGerman }}Über mich{{ else }}About{{ end }}
+
+{{ with site.GetPage "/page/resume" }}{{ partial "func/GetLlmsLink.html" . }}
+{{ end }}{{ with site.GetPage "/page/contact" }}{{ printf "- [%s](%s): %s" .Title .Permalink .Description }}{{/* contact form lives in the layout, so the HTML page is the useful target */}}
+{{ end }}- [GitHub](https://github.com/Nerzal)
+{{ range site.Params.socials }}{{ if ne .name "github" }}- [{{ replace (.name | title) "Linkedin" "LinkedIn" }}]({{ .url }})
+{{ end }}{{ end }}
+## Optional
+
+- [{{ if $isGerman }}Volltext aller Artikel{{ else }}Full text of all articles{{ end }}]({{ "llms-full.txt" | absLangURL }})
+{{ range .Translations }}- [{{ .Language.Label }}]({{ .Permalink }}llms.txt): {{ if eq .Language.Lang "de" }}German version of this file{{ else }}English version of this file{{ end }}
+{{ end }}{{ with .OutputFormats.Get "RSS" }}- [RSS feed]({{ .Permalink }})
+{{ end }}

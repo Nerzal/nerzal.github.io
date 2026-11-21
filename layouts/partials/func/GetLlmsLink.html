@@ -1,0 +1,6 @@
+{{- /* Returns one llms.txt list entry linking to the page's Markdown copy (HTML as fallback). Returned, not printed, so the plain-text caller does no HTML escaping. */ -}}
+{{- $url := .Permalink -}}
+{{- with .OutputFormats.Get "markdown" }}{{ $url = .Permalink }}{{ end -}}
+{{- $entry := printf "- [%s](%s)" .Title $url -}}
+{{- with .Description }}{{ $entry = printf "%s: %s" $entry . }}{{ end -}}
+{{- return $entry -}}

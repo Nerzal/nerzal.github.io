@@ -1,5 +1,5 @@
 baseURL = 'https://blog.noobygames.de'
-locale = 'en-US'
+locale = 'en'
 title = 'Tobias Theel | Senior Software Engineer'
 theme = "ananke"
 DefaultContentLanguage = "en"
@@ -16,6 +16,43 @@ enableRobotsTXT = true
     label = "Deutsch"
     weight = 2
     contentDir = "content/de"
+    locale = "de"
+
+# Machine-readable outputs for AI agents and answer engines:
+# - llms / llmsfull: /llms.txt and /llms-full.txt (https://llmstxt.org/), generated from content on every build
+# - markdown: a clean Markdown copy of every page at <permalink>index.md, linked via rel="alternate"
+[mediaTypes]
+  [mediaTypes."text/markdown"]
+    suffixes = ["md"]
+
+[outputFormats]
+  [outputFormats.llms]
+    mediaType = "text/plain"
+    baseName = "llms"
+    isPlainText = true
+    notAlternative = true
+  [outputFormats.llmsfull]
+    mediaType = "text/plain"
+    baseName = "llms-full"
+    isPlainText = true
+    notAlternative = true
+  [outputFormats.markdown]
+    mediaType = "text/markdown"
+    baseName = "index"
+    isPlainText = true
+    notAlternative = true
+
+[outputs]
+  home = ["html", "rss", "llms", "llmsfull"]
+  section = ["html", "rss"]
+  page = ["html", "markdown"]
+
+# Tag and category listings are thin pages: keep them out of the sitemap (they also get noindex in baseof.html).
+[[cascade]]
+  [cascade.sitemap]
+    disable = true
+  [cascade.target]
+    kind = "{taxonomy,term}"
 
 [sitemap]
   changefreq = "monthly"

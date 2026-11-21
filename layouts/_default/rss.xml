@@ -1,0 +1,46 @@
+{{- /*
+    RSS 2.0 with the full article in content:encoded, so feed readers and crawlers that poll feeds
+    get the complete text; <description> keeps the short summary.
+*/ -}}
+{{- $authorName := site.Params.author -}}
+{{- $pctx := . -}}
+{{- if .IsHome }}{{ $pctx = site }}{{ end -}}
+{{- $pages := slice -}}
+{{- if $.IsHome }}{{ $pages = where site.RegularPages "Section" "blog" }}{{ else if $.IsSection }}{{ $pages = $pctx.RegularPages }}{{ else }}{{ $pages = $pctx.Pages }}{{ end -}}
+{{- $pages = where $pages "Params.private" "!=" true -}}
+{{- $limit := site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 }}{{ $pages = $pages | first $limit }}{{ end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>{{ if or .IsHome (eq .Title site.Title) }}{{ site.Title }}{{ else }}{{ with .Title }}{{ . }} | {{ end }}{{ site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ site.Params.description }}</description>
+    <generator>Hugo</generator>
+    <language>{{ site.Language.Lang }}</language>
+    <copyright>© {{ now.Year }} {{ $authorName }}</copyright>
+    {{- if not .Date.IsZero }}
+    <lastBuildDate>{{ (index $pages.ByLastmod.Reverse 0).Lastmod.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    {{- end }}
+    {{- with .OutputFormats.Get "RSS" }}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end }}
+    {{- range $pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <dc:creator>{{ $authorName }}</dc:creator>
+      <guid isPermaLink="true">{{ .Permalink }}</guid>
+      {{- range .Params.categories }}
+      <category>{{ . }}</category>
+      {{- end }}
+      {{- range .Params.tags }}
+      <category>{{ . }}</category>
+      {{- end }}
+      <description>{{ .Description | default (.Summary | plainify) }}</description>
+      <content:encoded>{{ printf "<![CDATA[%s]]>" (replace .Content "]]>" "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

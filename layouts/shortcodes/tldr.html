@@ -1,0 +1,5 @@
+{{- /* Key-takeaways box at the top of a post: a short, quotable summary for readers and answer engines. Inner is Markdown, usually a bullet list. */ -}}
+<aside class="tldr" aria-label="{{ i18n "tldrLabel" }}">
+<p class="tldr-title">TL;DR</p>
+{{ .Inner | .Page.RenderString (dict "display" "block") }}
+</aside>

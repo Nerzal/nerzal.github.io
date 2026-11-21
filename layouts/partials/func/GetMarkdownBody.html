@@ -1,0 +1,25 @@
+{{- /*
+    Returns the raw Markdown of a page with shortcodes turned into plain Markdown,
+    so agents reading /index.md, /llms-full.txt get clean text instead of Hugo syntax.
+    Root-relative links become absolute because the Markdown is read outside the site.
+*/ -}}
+{{- $md := .RawContent -}}
+{{- $md = replaceRE `\{\{<\s*tldr\s*>\}\}` "**TL;DR**\n" $md -}}
+{{- $md = replaceRE `\{\{<\s*os-tab\s+"([^"]+)"\s*>\}\}` "**$1:**\n" $md -}}
+{{- $md = replaceRE `\{\{<\s*diagram\b[^>]*?caption="([^"]*)"[^>]*>\}\}` "*Diagram: $1*" $md -}}
+{{- $md = replaceRE `\{\{<\s*youtube\b[^>]*?src="?([^"\s>]+)"?[^>]*?title="([^"]*)"[^>]*>\}\}` "[Video: $2]($1)\n" $md -}}
+{{- $md = replaceRE `\{\{<\s*figure\b[^>]*?src="([^"]*)"[^>]*?(?:alt|caption)="([^"]*)"[^>]*>\}\}` "![$2]($1)" $md -}}
+{{- $md = replaceRE `\{\{<\s*image(?:-text)?\b[^>]*?image="([^"]*)"[^>]*?imageAlt="([^"]*)"[^>]*>\}\}` "![$2]($1)\n" $md -}}
+{{- $md = replaceRE `\{\{<\s*go-time\s*>\}\}` "[Go Time 199: Go on hardware: TinyGo in the wild](https://changelog.com/gotime/199)" $md -}}
+{{- /* Anything left (closing tags, layout-only shortcodes like skip-to or timeline) carries no text. */ -}}
+{{- $md = replaceRE `\{\{[<%][^}]*[>%]\}\}\n?` "" $md -}}
+{{- /* Links to posts or pages that are not built yet (scheduled) become plain text, like render-link.html does for HTML. */ -}}
+{{- $languagePrefix := printf "/%s/" .Language.Lang -}}
+{{- range findRESubmatch `\[([^\]]+)\]\((/(?:[a-z]{2}/)?(?:blog|page)/[^)\s#]*)(?:#[^)\s]*)?\)` $md -}}
+  {{- $path := index . 2 -}}
+  {{- if hasPrefix $path $languagePrefix }}{{ $path = strings.TrimPrefix (printf "/%s" $.Language.Lang) $path }}{{ end -}}
+  {{- if not (site.GetPage (strings.TrimSuffix "/" $path)) }}{{ $md = replace $md (index . 0) (index . 1) }}{{ end -}}
+{{- end -}}
+{{- $md = replaceRE `\]\(/` (printf "](%s" ("/" | absURL)) $md -}}
+{{- $md = replaceRE `\n{3,}` "\n\n" $md -}}
+{{- return (trim $md "\n ") -}}

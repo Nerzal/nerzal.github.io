@@ -1,5 +1,5 @@
 <ul class="timeline">
-  {{- range index site.Data.timeline .Page.Language.Lang }}
+  {{- range index hugo.Data.timeline .Page.Language.Lang }}
   <li class="timeline-item">
     <div class="timeline-content">
       <span class="timeline-date">{{ .date }}</span>

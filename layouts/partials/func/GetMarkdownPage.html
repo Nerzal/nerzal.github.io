@@ -1,0 +1,11 @@
+{{- /* Returns a page as a self-contained Markdown document: title, metadata list, cleaned body. */ -}}
+{{- $meta := slice (printf "- URL: %s" .Permalink) (printf "- Author: %s" site.Params.author) (printf "- Language: %s" .Language.Lang) -}}
+{{- if not .Date.IsZero }}{{ $meta = $meta | append (printf "- Published: %s" (.Date.Format "2006-01-02")) }}{{ end -}}
+{{- if and (not .Lastmod.IsZero) (gt .Lastmod .Date) }}{{ $meta = $meta | append (printf "- Updated: %s" (.Lastmod.Format "2006-01-02")) }}{{ end -}}
+{{- with .Params.series }}{{ $meta = $meta | append (printf "- Series: %s" (delimit . ", ")) }}{{ end -}}
+{{- with .Params.tags }}{{ $meta = $meta | append (printf "- Tags: %s" (delimit . ", ")) }}{{ end -}}
+{{- range .Translations }}{{ $meta = $meta | append (printf "- Translation (%s): %s" .Language.Lang .Permalink) }}{{ end -}}
+{{- $doc := printf "# %s\n\n" .Title -}}
+{{- with .Description }}{{ $doc = printf "%s> %s\n\n" $doc . }}{{ end -}}
+{{- $doc = printf "%s%s\n\n%s\n" $doc (delimit $meta "\n") (partial "func/GetMarkdownBody.html" .) -}}
+{{- return $doc -}}

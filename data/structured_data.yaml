@@ -1,0 +1,85 @@
+# Extra schema.org nodes for portfolio pages, keyed by the page's content file name.
+# Facts only, as stated on the pages themselves. The template adds "author" (the site Person)
+# to every node that has none, so authorship stays in one place.
+book:
+  - "@type": Book
+    name: Creative DIY Microcontroller Projects With TinyGo and WebAssembly
+    isbn: "9781800560208"
+    numberOfPages: 322
+    datePublished: "2021-05"
+    inLanguage: en
+    publisher: { "@type": Organization, name: Packt }
+    url: https://www.packtpub.com/product/creative-diy-microcontroller-projects-with-tinygo-and-webassembly/9781800560208
+    image: /img/book-cover.png
+    about: [TinyGo, WebAssembly, Microcontrollers, Go]
+
+open-source:
+  - "@type": SoftwareSourceCode
+    name: gocloak
+    description: Go client library for the Keycloak REST API.
+    codeRepository: https://github.com/Nerzal/gocloak
+    programmingLanguage: Go
+    about: [Keycloak, OpenID Connect, OAuth 2.0]
+  - "@type": SoftwareSourceCode
+    name: gocloak-mcp
+    description: Model Context Protocol server for Keycloak, built on gocloak.
+    codeRepository: https://github.com/Nerzal/gocloak-mcp
+    programmingLanguage: Go
+    about: [Keycloak, Model Context Protocol]
+  - "@type": SoftwareSourceCode
+    name: gocloak-auth-proxy
+    description: Keycloak authentication proxy for Traefik and nginx forward-auth, reverse proxy mode and OIDC browser SSO.
+    codeRepository: https://github.com/Nerzal/gocloak-auth-proxy
+    programmingLanguage: Go
+    about: [Keycloak, JWT, OpenID Connect]
+
+level-time:
+  # SoftwareSourceCode, not SoftwareApplication: Google treats SoftwareApplication as a rich result
+  # that requires ratings or reviews, which these free addons do not collect.
+  - "@type": SoftwareSourceCode
+    name: Level Time
+    description: World of Warcraft addon for leveling stats, XP per hour, speedrun splits and stream tools. Free on CurseForge, one build for Retail, Classic Era, TBC Anniversary and WoW Forever.
+    codeRepository: https://github.com/Noobygames/wow-statistics
+    programmingLanguage: Lua
+    url: https://www.curseforge.com/wow/addons/level-time
+    about: World of Warcraft
+  - "@type": SoftwareSourceCode
+    name: Level Time Goals
+    description: World of Warcraft addon that shows goals, bingo cards and a goal wheel as on-screen cards. Free on CurseForge.
+    codeRepository: https://github.com/Noobygames/wow-statistics
+    programmingLanguage: Lua
+    url: https://www.curseforge.com/wow/addons/streamer-goals
+    about: World of Warcraft
+
+neuroclip:
+  - "@type": CreativeWork
+    additionalType: https://schema.org/SoftwareApplication
+    name: Neuroclip
+    description: Turns Twitch streams into subtitled shorts and YouTube episodes, with OBS alarms and facecam upscaling. Single-user beta, early access.
+    image: /img/neuroclip/og.png
+
+talks:
+  - "@type": PodcastEpisode
+    name: "Go Time 199: Go on hardware: TinyGo in the wild"
+    url: https://changelog.com/gotime/199
+    episodeNumber: "199"
+    partOfSeries: { "@type": PodcastSeries, name: Go Time, url: https://changelog.com/gotime }
+    about: TinyGo
+  - "@type": CreativeWork
+    name: IoT in TinyGo
+    description: Talk at EmbeddedFest 2021.
+    url: https://www.youtube.com/watch?v=F1UWNr4HaIo
+    about: TinyGo
+  - "@type": CreativeWork
+    name: Hello TinyGopher
+    description: Talk at GoDevNet 2021.
+    url: https://www.youtube.com/watch?v=8MhRldqCkX8
+    about: TinyGo
+
+games:
+  - { "@type": Game, name: "Goo'n'Ghosts", url: https://nerzal.itch.io/goonghosts, description: Ludum Dare 42 entry (2018). 2D platformer., contributor: [{ "@type": Person, name: Wr4thon }] }
+  - { "@type": Game, name: Dudes of Wizardry, url: https://nerzal.itch.io/dudes-of-wizardry, description: Ludum Dare 44 entry (2019)., contributor: [{ "@type": Person, name: Wr4thon }] }
+  - { "@type": Game, name: Racoonventure, url: https://nerzal.itch.io/racoonventure, description: Ludum Dare 45 entry (2019). }
+  - { "@type": Game, name: "Ignitus Dead Paw: The Revenge", url: https://nerzal.itch.io/ignitus-dead-paw-the-revenge, description: Ludum Dare 46 entry (2020)., contributor: [{ "@type": Person, name: Wr4thon }, { "@type": Person, name: WelverinRaven }, { "@type": Person, name: iFratze }] }
+  - { "@type": Game, name: Book of the Dread, url: https://nerzal.itch.io/book-of-the-dread, description: Ludum Dare 48 entry (2021)., contributor: [{ "@type": Person, name: Wr4thon }, { "@type": Person, name: Welverin }] }
+  - { "@type": Game, name: "Sir Blackmoon's Nightmare", url: https://nerzal.itch.io/sir-blackmoons-nightmare, description: Ludum Dare 50 entry (2022)., contributor: [{ "@type": Person, name: Wr4thon }] }

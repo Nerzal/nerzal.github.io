@@ -3445,3 +3445,29 @@ body.is-restoring {
 .os-tabs.is-enhanced .os-tab-label {
     display: none;
 }
+
+/* ── TL;DR key-takeaways box ─────────────────────────────────────────── */
+.tldr {
+    margin: 1.5rem 0 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--highlight-color);
+    border-radius: 0.375rem;
+    background: rgba(var(--text-rgb), 0.05);
+    font-size: 0.9em;
+}
+
+.tldr-title {
+    margin: 0 0 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--highlight-color);
+}
+
+.tldr ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.tldr li + li {
+    margin-top: 0.35rem;
+}
