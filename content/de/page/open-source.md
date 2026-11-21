@@ -2,7 +2,7 @@
 title: "Open Source"
 date: 2023-01-03T00:00:00+00:00
 draft: false
-description: "Maintainer von Gocloak, der Go-Client-Bibliothek für die Keycloak REST API, dazu gocloak-mcp (ein read-only Keycloak MCP-Server) und gocloak-auth-proxy."
+description: "Maintainer von Gocloak, der Go-Client-Bibliothek für die Keycloak REST API, dazu gocloak-mcp (ein Keycloak MCP-Server) und gocloak-auth-proxy."
 metric: "3 Projekte · 1200+ GitHub Stars"
 ---
 
@@ -23,7 +23,7 @@ Die Bibliothek wird aktiv gepflegt und produktiv von Teams eingesetzt, die Keycl
 
 ## gocloak-mcp: Keycloak für KI-Agenten
 
-[gocloak-mcp](https://github.com/Nerzal/gocloak-mcp) ist ein read-only [Model Context Protocol](https://modelcontextprotocol.io/) Server für Keycloak auf Basis von gocloak v15. Claude, Cursor oder VS Code können damit Fragen zu Benutzern, Clients, Rollen und Events beantworten, ohne dass es ein einziges Tool gibt, das deinen Realm verändern könnte. Installation: `brew install --cask nerzal/tap/gocloak-mcp`. Die Hintergründe stehen in [meinem Release-Artikel](/de/blog/gocloak-mcp-first-mcp-server-homebrew/).
+[gocloak-mcp](https://github.com/Nerzal/gocloak-mcp) ist ein [Model Context Protocol](https://modelcontextprotocol.io/) Server für Keycloak auf Basis von gocloak v15. Claude, Cursor oder VS Code können damit Fragen zu Benutzern, Clients, Rollen und Events beantworten. Installation: `brew install --cask nerzal/tap/gocloak-mcp`. Die Hintergründe stehen in [meinem Release-Artikel](/de/blog/gocloak-mcp-first-mcp-server-homebrew/).
 
 ## gocloak-auth-proxy
 

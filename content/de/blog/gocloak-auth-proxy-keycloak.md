@@ -27,7 +27,7 @@ toc: true
 
 > **Serie: Das gocloak-Universum.** [Teil 1: gocloak-mcp](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) · Teil 2: gocloak-auth-proxy (du bist hier) · [Teil 3: gocloak-Performance](/de/blog/gocloak-performance-json-v2-http-clients/) · [Teil 4: die finalen Benchmark-Zahlen](/de/blog/gocloak-performance-final-benchmarks/) · [Teil 5: pprof](/de/blog/gocloak-pprof-profiling/)
 
-In [Teil 1](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) habe ich über gocloak v15 und den darauf aufbauenden Read-only-MCP-Server geschrieben. Zur selben Zeit ging ein zweites Projekt online: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), ein Authentifizierungs-Proxy, der vor deinen Services sitzt und nur Requests mit gültigem Keycloak-Token durchlässt.
+In [Teil 1](/de/blog/gocloak-mcp-first-mcp-server-homebrew/) habe ich über gocloak v15 und den darauf aufbauenden Keycloak MCP-Server geschrieben. Zur selben Zeit ging ein zweites Projekt online: [gocloak-auth-proxy](https://github.com/Nerzal/gocloak-auth-proxy), ein Authentifizierungs-Proxy, der vor deinen Services sitzt und nur Requests mit gültigem Keycloak-Token durchlässt.
 
 Er läuft in drei Modi:
 
