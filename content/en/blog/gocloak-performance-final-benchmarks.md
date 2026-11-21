@@ -129,6 +129,14 @@ Offline (n=10): `GetUsers` with 1,000 users -24 % time and -44 % allocations, cl
 
 Live against Keycloak (n=6): no latency change, because Keycloak dominates. Allocations drop by 10 % (token) to 27 % (user lists), bytes by 3 to 12 %, and with 16 parallel callers the new connections by 70 % (187 to 55 per 1,000 calls).
 
+v15.1.0 has no breaking API changes. The models and the generated `GoCloakIface` are unchanged, and the only new export is `SetDirectBodyRead()`. Three things still change for users:
+
+- `go.mod` requires Go 1.27. With the default `GOTOOLCHAIN=auto` the go command downloads 1.27 itself; with `GOTOOLCHAIN=local` and an older Go the build fails.
+- The idle pool is 100 connections per host instead of GOMAXPROCS+1.
+- On Go 1.27 `encoding/json` can return different error texts for invalid JSON. If your code matches error strings, check it. `GOEXPERIMENT=nojsonv2` selects the old engine.
+
+If you look at the diff, the test files now write `PolicyRepresentation{Clients: []string{...}}` instead of going through the embedded `ClientPolicyRepresentation`. That is new Go 1.27 syntax: composite literals can set promoted fields of embedded structs directly, and the linter's `embedlit` modernize check asks for it. The struct is the same, and the old notation still compiles.
+
 ## Four lessons from the final run
 
 ### A cold JVM lies to you

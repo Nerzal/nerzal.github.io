@@ -221,7 +221,15 @@ So I repeated the engine comparison on Go 1.27.4, with `GOEXPERIMENT=nojsonv2` a
 
 gocloak v15.1.0 ([PR #543](https://github.com/Nerzal/gocloak/pull/543), still open at the time of writing) requires Go 1.27, which makes the v2 engine the baseline for every user without anyone setting a flag. If you stay on an older gocloak with Go 1.26, `GOEXPERIMENT=jsonv2` gives you the same engine.
 
-If you use the v2 API directly, be aware that its defaults differ from v1: field names match case-sensitively, and duplicate names and invalid UTF-8 are rejected. The [package documentation](https://pkg.go.dev/encoding/json/v2) lists all differences. v1 code under the experiment flag keeps the v1 behavior, because the v1 API runs the v2 engine with v1-compatible options. For the Keycloak payloads none of this changed anything.
+If you use the v2 API directly, be aware that its defaults differ from v1: field names match case-sensitively, and duplicate names and invalid UTF-8 are rejected. The [package documentation](https://pkg.go.dev/encoding/json/v2) lists all differences. v1 code under the experiment flag keeps the v1 behavior, because the v1 API runs the v2 engine with v1-compatible options. When decoding the Keycloak payloads, none of this changed anything.
+
+### Why gocloak keeps the v1 API
+
+The gains above come from the engine alone: gocloak still calls `encoding/json`, and on Go 1.27 that runs on the v2 engine. I also measured the direct `encoding/json/v2` API against the v1 API, both on the v2 engine. This was a single run with n=8, not interleaved, so it is less reliable than the A/B numbers. Decoding one user or the JWKS got 28 to 43 % faster with the v2 API. User lists, groups, clients and the realm export showed no significant difference. Encoding got 13 % faster and needed 45 to 57 % fewer allocations. The token response looked 86 % faster, but that value scattered by ±24 % and the v1 API on the v2 engine was already at 4 µs, so I do not count it.
+
+`TestJSONv2Equivalence` shows that the v2 API decodes every payload exactly like v1. Encoding is different: nil slices become `[]` instead of `null`, `omitempty` omits different values, and field names match case-sensitively. For a Keycloak client that matters, because Keycloak treats a field missing from a PUT body as "keep the current value". If the encoding changes, an update can change different things than before. With `json.DefaultOptionsV1()` the v2 API behaves like v1 again, and then the advantage is gone too.
+
+So gocloak stays on the v1 API. If you want v2 for request bodies anyway, you can set it on the resty client with `client.RestyClient().SetJSONMarshaler(...)`, without a change in gocloak. The big gain came for free from the engine. The new API would only help where Keycloak dominates the call anyway: small request bodies.
 
 ## Result 2: HTTP clients
 
